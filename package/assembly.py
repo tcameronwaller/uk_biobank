@@ -246,6 +246,9 @@ def extract_organize_variables_types(
     return variables_types
 
 
+# TODO: read the uk_biobank_phenotype_variables table from the uk_biobank parameters directory
+
+
 def read_source(
     path_dock=None,
     report=None,

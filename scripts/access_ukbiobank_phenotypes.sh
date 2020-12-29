@@ -7,7 +7,7 @@
 ###########################################################################
 # This script accesses local information about persons and phenotypes in
 # the UKBiobank.
-# argument 1: path to local file with variable identifiers
+# argument 1: path to local file with variable identifiers to access
 # --- format is text file with new line delimiters
 # argument 2: path to local file matching IID to EID
 # --- format is text file with comma delimiters and two columns with
@@ -34,12 +34,11 @@ echo "----------------------------------------------------------------------"
 ###########################################################################
 # Organize arguments.
 path_variables=$1
-path_table_variables=$2
-path_identifier_pairs=$3
-path_exclusion=$4
-path_phenotype_data=$5
-path_tools=$6
-path_destination=$7
+path_identifier_pairs=$2
+path_exclusion=$3
+path_phenotype_data=$4
+path_tools=$5
+path_destination=$6
 
 ###########################################################################
 # Copy auxiliary files.
@@ -47,7 +46,6 @@ path_destination=$7
 # Copy UK Biobank phenotype variables to destination directory.
 cp $path_variables "$path_destination/uk_biobank_phenotype_variables.txt"
 cp $path_variables "$path_destination/variables.txt"
-cp $path_table_variables "$path_destination/table_ukbiobank_phenotype_variables.tsv"
 
 # Copy table of identifier pairs to destination directory.
 cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
