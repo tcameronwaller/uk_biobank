@@ -268,16 +268,20 @@ def read_source(
         "table_ukbiobank_phenotype_variables.tsv"
     )
     path_exclusion_identifiers = os.path.join(
-        path_dock, "access", "list_exclusion_identifiers.txt"
+        path_dock, "access", "ukbiobank_phenotypes",
+        "list_exclusion_identifiers.txt"
     )
     path_table_identifier_pairs = os.path.join(
-        path_dock, "access", "table_identifier_pairs.csv"
+        path_dock, "access", "ukbiobank_phenotypes",
+        "table_identifier_pairs.csv"
     )
     path_table_ukb_41826 = os.path.join(
-        path_dock, "access", "ukb41826.raw.csv"
+        path_dock, "access", "ukbiobank_phenotypes",
+        "ukb41826.raw.csv"
     )
     path_table_ukb_43878 = os.path.join(
-        path_dock, "access", "ukb43878.raw.csv"
+        path_dock, "access", "ukbiobank_phenotypes",
+        "ukb43878.raw.csv"
     )
     # Read all column names from UK Biobank tables.
     columns_accession = read_collect_ukbiobank_accession_column_names(
