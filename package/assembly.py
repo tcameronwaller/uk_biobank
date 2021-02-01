@@ -313,7 +313,7 @@ def read_source(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print(variables_types["31-0.0"])
+        print("31-0.0: " + str(variables_types["31-0.0"]))
         print("21022-0.0: " + str(variables_types["21022-0.0"]))
     # Read information from file.
     exclusion_identifiers = utility.read_file_text_list(
@@ -416,10 +416,10 @@ def determine_keep_column_field_instance(
         column_instance = column.split("-")[1].strip()
         # int(column_field)
         instances_array = table_ukbiobank_variables.at[
-            column_field, "instances_array",
+            int(column_field), "instances_array",
         ]
         instances_keep_raw = table_ukbiobank_variables.at[
-            column_field, "instances_keep",
+            int(column_field), "instances_keep",
         ]
         # Report.
         if (
