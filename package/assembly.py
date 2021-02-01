@@ -314,7 +314,7 @@ def read_source(
     if report:
         utility.print_terminal_partition(level=2)
         print(variables_types["31-0.0"])
-        print("20117-0.0: " + str(variables_types["20117-0.0"]))
+        print("21022-0.0: " + str(variables_types["21022-0.0"]))
     # Read information from file.
     exclusion_identifiers = utility.read_file_text_list(
         delimiter="\n",
