@@ -1,6 +1,13 @@
 
 """
-...
+
+This module contains functions for general organization of the raw extraction
+data from the UK Biobank accessions.
+
+Combine information from multiple UK Biobank accessions.
+Integrate identifier matchings.
+Exclude individual cases (persons) who subsequently withdrew consent.
+It is also necessary to handle the somewhat awkward format of array fields.
 
 """
 
@@ -32,7 +39,6 @@ import itertools
 import numpy
 import pandas
 import scipy.stats
-
 
 # Custom
 import promiscuity.utility as utility
@@ -76,12 +82,6 @@ def initialize_directories(
     paths["inspection"] = os.path.join(
         path_dock, "assembly", "inspection"
     )
-    paths["alcohol"] = os.path.join(
-        path_dock, "assembly", "alcohol"
-    )
-    paths["plot"] = os.path.join(
-        path_dock, "assembly", "plot"
-    )
     # Remove previous files to avoid version or batch confusion.
     if restore:
         utility.remove_directory(path=paths["assembly"])
@@ -94,12 +94,6 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["inspection"]
-    )
-    utility.create_directories(
-        path=paths["alcohol"]
-    )
-    utility.create_directories(
-        path=paths["plot"]
     )
     # Return information.
     return paths
@@ -246,9 +240,6 @@ def extract_organize_variables_types(
     return variables_types
 
 
-# TODO: read the uk_biobank_phenotype_variables table from the uk_biobank parameters directory
-
-
 def read_source(
     path_dock=None,
     report=None,
@@ -273,7 +264,8 @@ def read_source(
 
     # Specify directories and files.
     path_table_ukbiobank_variables = os.path.join(
-        path_dock, "access", "table_ukbiobank_phenotype_variables.tsv"
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_phenotype_variables.tsv"
     )
     path_exclusion_identifiers = os.path.join(
         path_dock, "access", "list_exclusion_identifiers.txt"
@@ -305,6 +297,7 @@ def read_source(
         sep="\t",
         header=0,
     )
+    table_ukbiobank_variables["field"].astype("string")
     variables_types = extract_organize_variables_types(
         table_ukbiobank_variables=table_ukbiobank_variables,
         columns=columns_accession,
@@ -356,8 +349,9 @@ def read_source(
     }
 
 
+
 ##########
-# Organization
+# Remove irrelevant field columns
 
 
 def parse_field_instance_columns_to_keep(
@@ -416,11 +410,12 @@ def determine_keep_column_field_instance(
         # Organize information.
         column_field = column.split("-")[0].strip()
         column_instance = column.split("-")[1].strip()
+        # int(column_field)
         instances_array = table_ukbiobank_variables.at[
-            int(column_field), "instances_array",
+            column_field, "instances_array",
         ]
         instances_keep_raw = table_ukbiobank_variables.at[
-            int(column_field), "instances_keep",
+            column_field, "instances_keep",
         ]
         # Report.
         if (
@@ -491,6 +486,7 @@ def determine_ukbiobank_field_instance_columns_keep(
             "field", "instances_array", "instances_keep"
         ])
     ]
+    table_ukbiobank_variables["field"].astype("string")
     table_ukbiobank_variables.set_index(
         "field",
         drop=True,
@@ -588,6 +584,10 @@ def remove_table_irrelevant_field_instance_columns(
     return bucket
 
 
+##########
+# Organization
+
+
 def simplify_field_instances_array_row(
     row=None,
     field=None,
@@ -676,6 +676,7 @@ def simplify_field_instances_array_columns(
     table_ukb = table_ukb_raw.copy(deep=True)
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
+    table_variables["field"].astype("string")
     table_variables = table_variables.loc[
         :, table_variables.columns.isin(["field", "type", "instances_array"])
     ]
@@ -1090,7 +1091,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 3")
+    print("version check: 1")
 
     # Initialize directories.
     paths = initialize_directories(
@@ -1158,8 +1159,3 @@ def execute_procedure(
         information=information
     )
     pass
-
-
-
-if (__name__ == "__main__"):
-    execute_procedure()
