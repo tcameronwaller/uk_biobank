@@ -250,6 +250,9 @@ def read_source(
     Notice that Pandas does not accommodate missing values within series of
     integer variable types.
 
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
     arguments:
         path_dock (str): path to dock directory for source and product
             directories and files

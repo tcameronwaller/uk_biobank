@@ -4669,3 +4669,53 @@ def organize_basic_characteristics(
         print(table_hormone)
     # Return information.
     return table_hormone
+
+
+def organize_alcohol_consumption(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about basic characteristic phenotypes across UK
+    Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    # Organize information about alcohol consumption.
+    pail_alcohol_consumption = organize_alcohol_consumption_variables(
+        table=table,
+        report=False,
+    )
+    #print(pail_alcohol_consumption["quantity"]["table_clean"])
+
+    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
+    pail_audit = organize_alcohol_audit_questionnaire_variables(
+        table=pail_alcohol_consumption["quantity"]["table_clean"],
+        report=False,
+    )
+    #print(pail_audit["audit"]["table_clean"])
+
+    # Copy data.
+    table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("Report from organize_alcohol_consumption()")
+        utility.print_terminal_partition(level=3)
+        print(table_alcohol)
+    # Return information.
+    return table_alcohol
