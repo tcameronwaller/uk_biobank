@@ -561,7 +561,8 @@ def organize_sex_age_body_variables(
     # Organize information for report.
     table_report = table.copy(deep=True)
     columns_report = [
-        "eid", "IID",
+        #"eid",
+        "IID",
         "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
     ]
     table_report = table_report.loc[
@@ -656,7 +657,8 @@ def organize_sex_hormone_variables(
     # Organize information for report.
     table_report = table.copy(deep=True)
     columns_report = [
-        "eid", "IID",
+        #"eid",
+        "IID",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "testosterone", "testosterone_log", "oestradiol", "oestradiol_log",
     ]
