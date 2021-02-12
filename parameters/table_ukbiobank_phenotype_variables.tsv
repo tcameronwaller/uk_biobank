@@ -1,4 +1,5 @@
 field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	instances_array	instances_keep	note
+22009	float32		genotype	unit	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
 31	float32		sex	female: 0; male: 1	502492	nominal	Sex	Baseline characteristics		0.0;	
 22001	float32		sex_genotype	female: 0; male: 1	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
 21022	float32		age	years	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
@@ -51,4 +52,3 @@ field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	
 20124	string		depression_moderate	category	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0.0;	
 20125	string		depression_severe	category	9398	nominal	Probable recurrent major depression (severe)	Mental health		0.0;	
 20126	string		bipolar_or_depression	category	122973	nominal	Bipolar and major depression status	Mental health		0.0;	
-22009	float32		genotype	unit	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
