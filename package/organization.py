@@ -540,7 +540,7 @@ def organize_sex_age_body_variables(
         axis="columns", # apply across rows
     )
     # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_continuous_ratio_variables(
+    table = utility.transform_normalize_table_continuous_ratio_variables(
         variables=["body_mass_index"],
         table=table,
     )
@@ -634,7 +634,7 @@ def organize_sex_hormone_variables(
         table=table,
     )
     # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_continuous_ratio_variables(
+    table = utility.transform_normalize_table_continuous_ratio_variables(
         variables=["albumin", "steroid_globulin", "testosterone", "oestradiol"],
         table=table,
     )
