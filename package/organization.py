@@ -1009,6 +1009,14 @@ def organize_female_pregnancy_menopause_variables(
 
     # Copy data.
     table = table.copy(deep=True)
+    # Convert variable types.
+    columns_type = [
+        "2724-0.0", "3591-0.0", "2834-0.0", "3140-0.0",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
     # Determine whether female persons have experienced menopause.
     # 0: pre-menopause
     # 1: post-menopause (menopause, hysterectomy, or oophorectomy)
