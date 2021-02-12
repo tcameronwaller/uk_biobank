@@ -573,6 +573,8 @@ def organize_sex_age_body_variables(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
+        print("report: organize_sex_age_body_variables()")
+        utility.print_terminal_partition(level=3)
         print("translations of general attribute column names...")
         for old in translations.keys():
             print("   " + old + ": " + translations[old])
@@ -670,6 +672,8 @@ def organize_sex_hormone_variables(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
+        print("report: organize_sex_hormone_variables()")
+        utility.print_terminal_partition(level=3)
         print("translations of hormone column names...")
         for old in translations.keys():
             print("   " + old + ": " + translations[old])
@@ -4723,7 +4727,7 @@ def execute_genotype_sex_age_body(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("Report from organize_basic_characteristics()")
+        print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
         print(pail_sex_age_body["table_clean"])
     # Return information.
@@ -4751,7 +4755,7 @@ def execute_sex_hormones(
 
     # Organize information about sex hormones.
     pail_hormone = organize_sex_hormone_variables(
-        table=table_sex_age_body,
+        table=table,
         report=report,
     )
 
@@ -4762,7 +4766,7 @@ def execute_sex_hormones(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("Report from organize_basic_characteristics()")
+        print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
         print(pail_hormone["table_clean"])
     # Return information.
