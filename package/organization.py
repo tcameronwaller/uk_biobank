@@ -545,11 +545,15 @@ def organize_sex_age_body_variables(
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
+    # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
     table_clean.drop(
         labels=[
-            "31-0.0", "22001-0.0", "21022-0.0", "21002-0.0", "50-0.0",
-            "21001-0.0", "23104-0.0",
+            "31-0.0",
+            #"22001-0.0", "21022-0.0",
+            "21002-0.0", "50-0.0",
+            #"21001-0.0",
+            "23104-0.0",
         ],
         axis="columns",
         inplace=True
@@ -639,14 +643,16 @@ def organize_sex_hormone_variables(
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
+    # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
-    table_clean.drop(
-        labels=[
-            "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
-        ],
-        axis="columns",
-        inplace=True
-    )
+    if False:
+        table_clean.drop(
+            labels=[
+                "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
+            ],
+            axis="columns",
+            inplace=True
+        )
     # Organize information for report.
     table_report = table.copy(deep=True)
     columns_report = [
