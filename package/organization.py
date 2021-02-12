@@ -527,7 +527,7 @@ def organize_sex_age_body_variables(
     columns_type = [
         "sex", "age", "body_mass_index"
     ]
-    table_type = convert_table_columns_variables_types_float(
+    table = convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -539,6 +539,31 @@ def organize_sex_age_body_variables(
             ),
         axis="columns", # apply across rows
     )
+    # Transform variables' values to normalize distributions.
+    table = utility.transform_normalize_continuous_ratio_variables(
+        variables=["body_mass_index"],
+        table=table,
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "31-0.0", "22001-0.0", "21022-0.0", "21002-0.0", "50-0.0",
+            "21001-0.0", "23104-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        "eid", "IID",
+        "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
     # Report.
     if report:
         # Column name translations.
@@ -547,14 +572,6 @@ def organize_sex_age_body_variables(
         for old in translations.keys():
             print("   " + old + ": " + translations[old])
         utility.print_terminal_partition(level=3)
-        # Organize data for report.
-        table_report = table.copy(deep=True)
-        table_report = table_report.loc[
-            :, table_report.columns.isin([
-                "eid", "IID",
-                "sex", "sex_text", "age", "body_mass_index",
-            ])
-        ]
         utility.print_terminal_partition(level=2)
         print("Translation of columns for general attributes: ")
         print(table_report)
@@ -564,8 +581,13 @@ def organize_sex_age_body_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
     # Return information.
-    return table
+    return pail
 
 
 ##########
@@ -607,10 +629,35 @@ def organize_sex_hormone_variables(
     columns_hormones = [
         "albumin", "steroid_globulin", "testosterone", "oestradiol"
     ]
-    table_type = convert_table_columns_variables_types_float(
+    table = convert_table_columns_variables_types_float(
         columns=columns_hormones,
         table=table,
     )
+    # Transform variables' values to normalize distributions.
+    table = utility.transform_normalize_continuous_ratio_variables(
+        variables=["albumin", "steroid_globulin", "testosterone", "oestradiol"],
+        table=table,
+    )
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        "eid", "IID",
+        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+        "testosterone", "testosterone_log", "oestradiol", "oestradiol_log",
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
     # Report.
     if report:
         # Column name translations.
@@ -619,10 +666,6 @@ def organize_sex_hormone_variables(
         for old in translations.keys():
             print("   " + old + ": " + translations[old])
         utility.print_terminal_partition(level=3)
-        # Column names and values.
-        table_report = table.loc[
-            :, table.columns.isin(columns_hormones)
-        ]
         utility.print_terminal_partition(level=2)
         print("Translation of columns for hormones: ")
         print(table_report)
@@ -632,8 +675,93 @@ def organize_sex_hormone_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
     # Return information.
-    return table
+    return pail
+
+
+# TODO: derive "hysterectomy" and "oophrectomy" separately
+# TODO: then derive "menopause"
+
+def organize_female_pregnancy_menopause_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about whether female persons have experienced
+    menopause.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Calculate sum of drinks weekly.
+    table["menopause"] = table.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    table["hysterectomy"] = table.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    table["oophorectomy"] = table.apply(
+        lambda row:
+            calculate_sum_drinks(
+                beer_cider=row["1588-0.0"],
+                wine_red=row["1568-0.0"],
+                wine_white=row["1578-0.0"],
+                port=row["1608-0.0"],
+                liquor=row["1598-0.0"],
+                other=row["5364-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("Final data dimensions: " + str(table_exclusion.shape))
+    # Return information.
+    return table_exclusion
+
+
+
+
+##########
+# Psychiatric disorder diagnoses
+
+
 
 
 ##########
@@ -4352,78 +4480,6 @@ def organize_plot_variable_histogram_summary_charts(
     pass
 
 
-# TODO: derive "hysterectomy" and "oophrectomy" separately
-# TODO: then derive "menopause"
-
-def organize_female_menopause(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about whether female persons have experienced
-    menopause.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Calculate sum of drinks weekly.
-    table["menopause"] = table.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["1588-0.0"],
-                wine_red=row["1568-0.0"],
-                wine_white=row["1578-0.0"],
-                port=row["1608-0.0"],
-                liquor=row["1598-0.0"],
-                other=row["5364-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    table["hysterectomy"] = table.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["1588-0.0"],
-                wine_red=row["1568-0.0"],
-                wine_white=row["1578-0.0"],
-                port=row["1608-0.0"],
-                liquor=row["1598-0.0"],
-                other=row["5364-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    table["oophorectomy"] = table.apply(
-        lambda row:
-            calculate_sum_drinks(
-                beer_cider=row["1588-0.0"],
-                wine_red=row["1568-0.0"],
-                wine_white=row["1578-0.0"],
-                port=row["1608-0.0"],
-                liquor=row["1598-0.0"],
-                other=row["5364-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=4)
-        print("Final data dimensions: " + str(table_exclusion.shape))
-    # Return information.
-    return table_exclusion
-
-
 ##########
 # Write
 
@@ -4624,13 +4680,13 @@ def write_product(
 # Procedure
 
 
-def organize_basic_characteristics(
+def execute_genotype_sex_age_body(
     table=None,
     report=None,
 ):
     """
-    Organizes information about basic characteristic phenotypes across UK
-    Biobank.
+    Organizes information about persons' genotypes, sex, age, and body mass
+    index across UK Biobank.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -4650,13 +4706,8 @@ def organize_basic_characteristics(
         report=report,
     )
     # Organize information about general attributes.
-    table_sex_age_body = organize_sex_age_body_variables(
+    pail_sex_age_body = organize_sex_age_body_variables(
         table=table_genotype,
-        report=report,
-    )
-    # Organize information about hormones.
-    table_hormone = organize_sex_hormone_variables(
-        table=table_sex_age_body,
         report=report,
     )
 
@@ -4666,9 +4717,48 @@ def organize_basic_characteristics(
         utility.print_terminal_partition(level=2)
         print("Report from organize_basic_characteristics()")
         utility.print_terminal_partition(level=3)
-        print(table_hormone)
+        print(pail_sex_age_body["table_clean"])
     # Return information.
-    return table_hormone
+    return pail_sex_age_body["table_clean"]
+
+
+def execute_sex_hormones(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about persons' sex hormones across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    # Organize information about sex hormones.
+    pail_hormone = organize_sex_hormone_variables(
+        table=table_sex_age_body,
+        report=report,
+    )
+
+    # TODO: organize variables for pregnancy and menopause...
+    #pail_pregnancy = organize_female_pregnancy_menopause_variables()
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("Report from organize_basic_characteristics()")
+        utility.print_terminal_partition(level=3)
+        print(pail_hormone["table_clean"])
+    # Return information.
+    return pail_hormone["table_clean"]
 
 
 def organize_alcohol_consumption(
