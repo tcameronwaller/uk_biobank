@@ -47,7 +47,7 @@ cp $path_variables "$path_destination/variables.txt"
 # Copy table of identifier pairs to destination directory.
 cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
 # Copy table of exclusion identifiers to destination directory.
-cp $path_exclusion "$path_destination/list_exclusion_identifiers.txt"
+cp $path_exclusion "${path_destination}/list_exclusion_identifiers.txt"
 
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.

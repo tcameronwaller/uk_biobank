@@ -4470,69 +4470,6 @@ def scrap_record_cohorts_variables_by_sex_alcoholism_split(
 # ... in progress...
 
 # Scrap now...
-def match_ukb_genotype_phenotype_sample_identifiers(
-    table_phenotypes=None,
-    table_ukb_samples=None,
-    report=None,
-):
-    """
-    Organize table of phenotypes and covariates for GWAS.
-
-    arguments:
-        table_phenotypes (object): Pandas data frame of information about UK
-            Biobank phenotype variables
-        table_ukb_samples (object): Pandas data frame of information about UK
-            Biobank genotype samples
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy data.
-    table_phenotypes = table_phenotypes.copy(deep=True)
-    table_ukb_samples = table_ukb_samples.copy(deep=True)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("... before match ...")
-        print(table_phenotypes)
-        utility.print_terminal_partition(level=3)
-        print(table_ukb_samples)
-        utility.print_terminal_partition(level=3)
-    # Select random identifiers.
-    table_phenotypes["IID"].astype("string")
-    table_phenotypes.set_index(
-        "IID",
-        drop=True,
-        inplace=True,
-    )
-    table_ukb_samples["ID_1"].astype("string")
-    table_ukb_samples.set_index(
-        "ID_1",
-        drop=True,
-        inplace=True,
-    )
-    samples = table_ukb_samples.index.to_list()
-    identifiers_random = random.sample(samples, 100)
-    # Select table records for identifiers.
-    table_phenotypes_match = table_phenotypes.loc[
-        table_phenotypes.index.isin(identifiers_random), :
-    ]
-    table_ukb_samples_match = table_ukb_samples.loc[
-        table_ukb_samples.index.isin(identifiers_random), :
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("... match IID's between phenotype and genotype ...")
-        print(table_phenotypes_match)
-        utility.print_terminal_partition(level=4)
-        print(table_ukb_samples_match)
-        utility.print_terminal_partition(level=4)
-    pass
 
 
 def translate_alcohol_none_auditc(
@@ -5110,7 +5047,6 @@ def execute_sex_hormones(
         table=pail_hormone["table_clean"],
         report=report,
     )
-
     # Report.
     if report:
         # Column name translations.
@@ -5122,13 +5058,13 @@ def execute_sex_hormones(
     return pail_pregnancy["table_clean"]
 
 
-def organize_alcohol_consumption(
+def execute_alcohol(
     table=None,
     report=None,
 ):
     """
-    Organizes information about basic characteristic phenotypes across UK
-    Biobank.
+    Organizes information about persons' alcohol consumption and dependence
+    across UK Biobank.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -5158,9 +5094,26 @@ def organize_alcohol_consumption(
     )
     #print(pail_audit["audit"]["table_clean"])
 
+    # Organize International Classification of Disease (ICD) ICD9 and ICD10
+    # codes for diagnoses relevant to alcoholism.
+    # Organize codes for self diagnoses relevant to alcoholism.
+    pail_diagnosis = organize_alcoholism_diagnosis_variables(
+        table=pail_audit["audit"]["table_clean"],
+        report=False,
+    )
+    #print(pail_diagnosis["table_clean"])
+
+    # Organize alcoholism cases and controls.
+    # Report females and males who consume alcohol and are candidates for
+    # either controls or cases of alcoholism.
+    pail_alcoholism = organize_alcoholism_cases_controls_variables(
+        table=pail_diagnosis["table_clean"],
+        report=True,
+    )
+    #print(pail_alcoholism["table_clean"])
+
     # Copy data.
     table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
-
     # Report.
     if report:
         # Column name translations.
