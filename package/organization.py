@@ -1118,6 +1118,99 @@ def organize_female_pregnancy_menopause_variables(
 
 
 ##########
+# Neuroticism
+
+
+def organize_neuroticism_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about general attributes.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Translate column names.
+    translations = dict()
+    translations["20127-0.0"] = "neuroticism"
+    table.rename(
+        columns=translations,
+        inplace=True,
+    )
+    # Convert variable types.
+    columns_type = [
+        "neuroticism"
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+    # Transform variables' values to normalize distributions.
+    table = utility.transform_normalize_table_continuous_ratio_variables(
+        columns=["neuroticism"],
+        table=table,
+    )
+    # Remove columns for variables that are not necessary anymore.
+    # Pandas drop throws error if column names do not exist.
+    table_clean = table.copy(deep=True)
+    if False:
+        table_clean.drop(
+            labels=[
+                "20127-0.0",
+            ],
+            axis="columns",
+            inplace=True
+        )
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        #"eid",
+        "IID",
+        "sex_text", "age", "neuroticism", "neuroticism_log",
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_neuroticism_variables()")
+        utility.print_terminal_partition(level=3)
+        print("translations of general attribute column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
+
+##########
 # Psychiatric disorder diagnoses
 
 
@@ -5094,25 +5187,26 @@ def execute_alcohol(
     )
     #print(pail_audit["audit"]["table_clean"])
 
-    # Organize International Classification of Disease (ICD) ICD9 and ICD10
-    # codes for diagnoses relevant to alcoholism.
-    # Organize codes for self diagnoses relevant to alcoholism.
-    pail_diagnosis = organize_alcoholism_diagnosis_variables(
-        table=pail_audit["audit"]["table_clean"],
-        report=False,
-    )
-    #print(pail_diagnosis["table_clean"])
+    if False:
+        # Organize International Classification of Disease (ICD) ICD9 and ICD10
+        # codes for diagnoses relevant to alcoholism.
+        # Organize codes for self diagnoses relevant to alcoholism.
+        pail_diagnosis = organize_alcoholism_diagnosis_variables(
+            table=pail_audit["audit"]["table_clean"],
+            report=False,
+        )
+        #print(pail_diagnosis["table_clean"])
 
-    # Organize alcoholism cases and controls.
-    # Report females and males who consume alcohol and are candidates for
-    # either controls or cases of alcoholism.
-    pail_alcoholism = organize_alcoholism_cases_controls_variables(
-        table=pail_diagnosis["table_clean"],
-        report=True,
-    )
-    #print(pail_alcoholism["table_clean"])
+        # Organize alcoholism cases and controls.
+        # Report females and males who consume alcohol and are candidates for
+        # either controls or cases of alcoholism.
+        pail_alcoholism = organize_alcoholism_cases_controls_variables(
+            table=pail_diagnosis["table_clean"],
+            report=True,
+        )
+        #print(pail_alcoholism["table_clean"])
 
-    # Copy data.
+    # Copy information.
     table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
     # Report.
     if report:
@@ -5123,3 +5217,41 @@ def execute_alcohol(
         print(table_alcohol)
     # Return information.
     return table_alcohol
+
+
+def execute_mental_health(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about persons' mental health across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    # Organize information about neuroticism.
+    pail_neuroticism = organize_neuroticism_variables(
+        table=table,
+        report=report,
+    )
+
+    # Copy information.
+    table_mental_health = pail_neuroticism["table_clean"].copy(deep=True)
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: execute_genotype_sex_age_body()")
+        utility.print_terminal_partition(level=3)
+        print(table_mental_health)
+    # Return information.
+    return table_mental_health
