@@ -903,7 +903,7 @@ def determine_female_menopause(
     return menopause
 
 
-def interpret_pregnancy(
+def interpret_pregnancy_broad(
     field_3140=None,
 ):
     """
@@ -951,15 +951,107 @@ def interpret_pregnancy(
     return interpretation
 
 
-def determine_female_pregnancy(
+def interpret_pregnancy(
+    field_3140=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3140.
+
+    Data-Field "3140": "Pregnant"
+    UK Biobank data coding "100267" for variable field "3140".
+    "no": 0
+    "yes": 1
+    "unsure": 2
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3140)) and
+        (-0.5 <= field_3140 and field_3140 < 2.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_3140 and field_3140 < 0.5):
+            # 0: "no"
+            interpretation = False
+        elif (0.5 <= field_3140 and field_3140 < 1.5):
+            # 1: "yes"
+            interpretation = True
+        elif (1.5 <= field_3140 and field_3140 < 2.5):
+            # 2: "unsure"
+            interpretation = False
+        else:
+            interpretation = False
+    else:
+        # null
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def determine_female_pregnancy_broad(
     sex_text=None,
     field_3140=None,
 ):
     """
     Determine whether female persons were pregnant.
 
+    This function uses a broad definition of pregnancy that does not consider
+    menopause and also includes uncertain cases.
+
     arguments:
         sex_text (str): textual representation of sex selection
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret pregnancy.
+    pregnancy_boolean = interpret_pregnancy_broad(
+        field_3140=field_3140,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        if (pregnancy_boolean):
+            pregnancy = 1
+        else:
+            pregnancy = 0
+    else:
+        # Pregnancy undefined for males.
+        pregnancy = float("nan")
+    # Return information.
+    return pregnancy
+
+
+def determine_female_pregnancy(
+    sex_text=None,
+    menopause=None,
+    field_3140=None,
+):
+    """
+    Determine whether female persons were pregnant.
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause (float): whether person has experienced menopause,
+            hysterectomy, or oophorectomy
         field_3140 (float): UK Biobank field 3140, whether person was pregnant
 
     raises:
@@ -974,8 +1066,11 @@ def determine_female_pregnancy(
         field_3140=field_3140,
     )
     # Comparison.
-    if (sex_text == "female"):
-        if (pregnancy_boolean):
+    # Only define pregnancy for females who are pre-menopausal.
+    if (
+        (sex_text == "female")
+    ):
+        if ((menopause < 0.5) and (pregnancy_boolean)):
             pregnancy = 1
         else:
             pregnancy = 0
@@ -1030,13 +1125,25 @@ def organize_female_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
-    # Determine whether female persons are pregnant.
+    # Determine whether female persons are pregnant by broad definition.
     # 0: not pregnant
     # 1: pregnant (yes or unsure)
+    table["pregnancy_broad"] = table.apply(
+        lambda row:
+            determine_female_pregnancy_broad(
+                sex_text=row["sex_text"],
+                field_3140=row["3140-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons are pregnant by narrow definition.
+    # 0: not pregnant
+    # 1: pregnant (yes)
     table["pregnancy"] = table.apply(
         lambda row:
             determine_female_pregnancy(
                 sex_text=row["sex_text"],
+                menopause=row["menopause"],
                 field_3140=row["3140-0.0"],
             ),
         axis="columns", # apply across rows
@@ -1058,7 +1165,7 @@ def organize_female_pregnancy_menopause_variables(
         #"eid",
         "IID",
         "sex_text", "menopause", "2724-0.0", "3591-0.0", "2834-0.0",
-        "pregnancy", "3140-0.0",
+        "pregnancy_broad", "pregnancy", "3140-0.0",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -1086,7 +1193,7 @@ def organize_female_pregnancy_menopause_variables(
         (table_female["pregnancy"] > 0.5), :
     ]
     table_pregnant_postmenopause = table_postmenopause.loc[
-        (table_postmenopause["pregnancy"] > 0.5), :
+        (table_postmenopause["pregnancy_broad"] > 0.5), :
     ]
     # Report.
     if report:
@@ -1111,7 +1218,7 @@ def organize_female_pregnancy_menopause_variables(
             "Count pregnant females: " + str(table_pregnant.shape[0])
         )
         print(
-            "Count pregnant post-menopause females: " +
+            "Count broadly pregnant post-menopause females: " +
             str(table_pregnant_postmenopause.shape[0])
         )
         utility.print_terminal_partition(level=3)
@@ -5392,9 +5499,9 @@ def execute_plot_hormones(
     pail.update(pail_female)
 
 
-    # Filter to pre-menopausal females.
+    # Filter to pre-menopausal, not pregnant females.
 
-    # Filter to post-menopausal females.
+    # Filter to post-menopausal, not pregnant females.
 
     # Filter to pregnant females.
 
