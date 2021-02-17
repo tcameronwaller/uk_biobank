@@ -5368,7 +5368,8 @@ def execute_plot_hormones(
     # Collect information for plots.
     pail = dict()
     # All persons in UK Biobank.
-    pail = organize_plot_cohort_sex_hormone_distributions(
+    pail = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="",
         table=table,
     )
     # Filter to females.
