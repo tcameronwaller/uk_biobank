@@ -1269,6 +1269,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
         "testosterone", "testosterone_log",
         "steroid_globulin", "steroid_globulin_log",
         "albumin", "albumin_log",
+        "age",
     ]
     for column in columns:
         if len(str(prefix)) > 0:
@@ -5178,7 +5179,7 @@ def plot_variable_values_histogram(
         line=True,
         line_position=numpy.nanmean(array),
         label_text=name, # ""
-        label_count=True,
+        label_report=True,
     )
     # Return.
     return pail
