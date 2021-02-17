@@ -34,7 +34,7 @@ path_destination=$2
 # Organize paths.
 cd ~/paths
 path_ukb_phenotype_data=$(<"./ukbiobank_phenotype.txt")
-path_exclusion="$path_ukb_phenotype/exclude.csv"
+path_exclusion="$path_ukb_phenotype_data/exclude.csv"
 path_ukb_parameter=$(<"./ukbiobank_parameter.txt")
 path_identifier_pairs="$path_ukb_parameter/link.file.csv"
 path_ukb_tools=$(<"./ukbiobank_tools.txt")
