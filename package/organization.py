@@ -956,8 +956,7 @@ def determine_female_pregnancy(
     field_3140=None,
 ):
     """
-    Determine whether female persons have experienced menopause or another
-    halt to menstrual cycle.
+    Determine whether female persons were pregnant.
 
     arguments:
         sex_text (str): textual representation of sex selection
@@ -1086,6 +1085,9 @@ def organize_female_pregnancy_menopause_variables(
     table_pregnant = table_female.loc[
         (table_female["pregnancy"] > 0.5), :
     ]
+    table_pregnant_postmenopause = table_postmenopause.loc[
+        (table_postmenopause["pregnancy"] > 0.5), :
+    ]
     # Report.
     if report:
         # Column name translations.
@@ -1107,6 +1109,10 @@ def organize_female_pregnancy_menopause_variables(
         )
         print(
             "Count pregnant females: " + str(table_pregnant.shape[0])
+        )
+        print(
+            "Count pregnant post-menopause females: " +
+            str(table_pregnant_postmenopause.shape[0])
         )
         utility.print_terminal_partition(level=3)
     # Collect information.
