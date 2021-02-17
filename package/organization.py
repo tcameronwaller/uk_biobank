@@ -1081,10 +1081,10 @@ def organize_female_pregnancy_menopause_variables(
         (table_female["menopause"] > 0.5), :
     ]
     table_not_pregnant = table_female.loc[
-        (table_female["pregnant"] < 0.5), :
+        (table_female["pregnancy"] < 0.5), :
     ]
     table_pregnant = table_female.loc[
-        (table_female["pregnant"] > 0.5), :
+        (table_female["pregnancy"] > 0.5), :
     ]
     # Report.
     if report:
@@ -5327,20 +5327,19 @@ def execute_sex_hormones(
         report=report,
     )
     # Organize information about female persons' pregnancy and menopause.
-    if False:
-        pail_pregnancy = organize_female_pregnancy_menopause_variables(
-            table=pail_hormone["table_clean"],
-            report=report,
-        )
+    pail_pregnancy = organize_female_pregnancy_menopause_variables(
+        table=pail_hormone["table_clean"],
+        report=report,
+    )
     # Report.
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
-        print(pail_hormone["table_clean"])
+        print(pail_pregnancy["table_clean"])
     # Return information.
-    return pail_hormone["table_clean"]
+    return pail_pregnancy["table_clean"]
 
 
 def execute_plot_hormones(
