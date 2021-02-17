@@ -5519,7 +5519,7 @@ def execute_plot_hormones(
     ]
     pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pre-menopause",
-        bins=100,
+        bins=50,
         table=table_premenopause,
     )
     pail.update(pail_premenopause)
@@ -5529,7 +5529,7 @@ def execute_plot_hormones(
     ]
     pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="post-menopause",
-        bins=100,
+        bins=50,
         table=table_postmenopause,
     )
     pail.update(pail_postmenopause)
