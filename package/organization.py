@@ -1147,11 +1147,14 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
         "albumin", "albumin_log",
     ]
     for column in columns:
-        name = str(prefix + "_" + column)
+        if len(str(prefix)) > 0:
+            name = str(prefix + "_" + column)
+        else:
+            name = column
         pail[name] = plot_variable_values_histogram(
             name=name,
             array=table[column].dropna().to_numpy(),
-            bins=None,
+            bins=500,
         )
     # Return information.
     return pail
