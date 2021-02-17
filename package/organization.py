@@ -31,6 +31,7 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 
 # Custom
 import promiscuity.utility as utility
+import promiscuity.plot as plot
 
 ###############################################################################
 # Functionality
@@ -4959,6 +4960,61 @@ def organize_plot_variable_histogram_summary_charts(
     pass
 
 
+
+
+##########
+# Plot
+
+
+def plot_variable_values_histogram(
+    name=None,
+    array=None,
+    bins=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        name (str): name for plot
+        array (object): NumPy array of values to bin and plot in histogram
+        bins (int): count of bins for histogram
+
+    raises:
+
+    returns:
+
+    """
+
+    # Collect information about plot.
+    pail = dict()
+    pail["name"] = name
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+    # Determine bin method.
+    if bins is None:
+        bin_method = "auto"
+    else:
+        bin_method = "count"
+    # Create figure.
+    pail["figure"] = plot.plot_distribution_histogram(
+        array=array,
+        name="",
+        bin_method=bin_method, # "auto" or "count"
+        bin_count=bins,
+        label_bins="values",
+        label_counts="counts per bin",
+        fonts=fonts,
+        colors=colors,
+        line=True,
+        position=numpy.nanmean(array),
+        text=name, # ""
+    )
+    # Return.
+    return pail
+
+
 ##########
 # Write
 
@@ -5239,6 +5295,50 @@ def execute_sex_hormones(
         print(pail_pregnancy["table_clean"])
     # Return information.
     return pail_pregnancy["table_clean"]
+
+
+def execute_plot_hormones(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about persons' sex hormones across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    # TODO: each entry in dict needs key, "figure", and "file_name"
+
+    # Collect information for plots.
+    pail = dict()
+    pail["testosterone"] = plot_variable_values_histogram(
+        name="testosterone",
+        array=table["testosterone"].dropna().to_numpy(),
+        bins=None,
+    )
+    pail["testosterone_log"] = plot_variable_values_histogram(
+        name="testosterone_log",
+        array=table["testosterone_log"].dropna().to_numpy(),
+        bins=None,
+    )
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: execute_plot_hormones()")
+        utility.print_terminal_partition(level=3)
+    # Return information.
+    return pail
 
 
 def execute_alcohol(
