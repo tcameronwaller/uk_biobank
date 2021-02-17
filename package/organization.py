@@ -1154,7 +1154,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
         pail[name] = plot_variable_values_histogram(
             name=name,
             array=table[column].dropna().to_numpy(),
-            bins=500,
+            bins=250,
         )
     # Return information.
     return pail
