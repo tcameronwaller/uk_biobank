@@ -5282,19 +5282,20 @@ def execute_sex_hormones(
         report=report,
     )
     # Organize information about female persons' pregnancy and menopause.
-    pail_pregnancy = organize_female_pregnancy_menopause_variables(
-        table=pail_hormone["table_clean"],
-        report=report,
-    )
+    if False:
+        pail_pregnancy = organize_female_pregnancy_menopause_variables(
+            table=pail_hormone["table_clean"],
+            report=report,
+        )
     # Report.
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
-        print(pail_pregnancy["table_clean"])
+        print(pail_hormone["table_clean"])
     # Return information.
-    return pail_pregnancy["table_clean"]
+    return pail_hormone["table_clean"]
 
 
 def execute_plot_hormones(
@@ -5316,7 +5317,10 @@ def execute_plot_hormones(
 
     """
 
-    # TODO: each entry in dict needs key, "figure", and "file_name"
+    # TODO: new function to plot the subsets
+    # TODO: pass this function tables subsetted by sex, menopause, pregnancy, etc
+    # TODO: pass this function a "prefix" for "male", "female", "female_post-menopause", etc
+    # TODO: use dict() update() to collect the dicts from this function...
 
     # Collect information for plots.
     pail = dict()
