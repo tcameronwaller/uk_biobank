@@ -1211,6 +1211,96 @@ def organize_neuroticism_variables(
 
 
 ##########
+# Depression
+
+
+# ICD9 and ICD10 codes...
+# Bespoke?
+# Patient Health Questionnaire 9-Questions (PHQ-9)
+# Composite International Diagnostic Interview - Short Form (CIDI-SF)
+
+
+
+def organize_depression_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about general attributes.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+
+
+    # TODO: interpret ICD9 / ICD10 codes for depression...
+
+
+
+
+    # Remove columns for variables that are not necessary anymore.
+    # Pandas drop throws error if column names do not exist.
+    table_clean = table.copy(deep=True)
+    if False:
+        table_clean.drop(
+            labels=[
+                "20127-0.0",
+            ],
+            axis="columns",
+            inplace=True
+        )
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        #"eid",
+        "IID",
+        "sex_text", "age", "neuroticism", "neuroticism_log",
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_neuroticism_variables()")
+        utility.print_terminal_partition(level=3)
+        print("translations of general attribute column names...")
+        for old in translations.keys():
+            print("   " + old + ": " + translations[old])
+        utility.print_terminal_partition(level=3)
+        print(table_report)
+        utility.print_terminal_partition(level=3)
+        # Variable types.
+        utility.print_terminal_partition(level=2)
+        print("After type conversion")
+        print(table_report.dtypes)
+        utility.print_terminal_partition(level=3)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
+
+
+
+
+
+##########
 # Psychiatric disorder diagnoses
 
 
