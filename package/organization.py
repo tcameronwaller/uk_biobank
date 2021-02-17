@@ -5488,11 +5488,6 @@ def execute_plot_hormones(
 
     """
 
-    # TODO: new function to plot the subsets
-    # TODO: pass this function tables subsetted by sex, menopause, pregnancy, etc
-    # TODO: pass this function a "prefix" for "male", "female", "female_post-menopause", etc
-    # TODO: use dict() update() to collect the dicts from this function...
-
     # Copy information.
     table = table.copy(deep=True)
     # Collect information for plots.
@@ -5500,7 +5495,7 @@ def execute_plot_hormones(
     # All persons in UK Biobank.
     pail = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="",
-        bins=100,
+        bins=70,
         table=table,
     )
     # Filter to females.
@@ -5509,7 +5504,7 @@ def execute_plot_hormones(
     ]
     pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="female",
-        bins=100,
+        bins=70,
         table=table_female,
     )
     pail.update(pail_female)
@@ -5549,11 +5544,10 @@ def execute_plot_hormones(
     ]
     pail_male = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="male",
-        bins=100,
+        bins=70,
         table=table_male,
     )
     pail.update(pail_male)
-
 
     # Report.
     if report:
