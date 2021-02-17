@@ -1244,6 +1244,7 @@ def organize_female_pregnancy_menopause_variables(
 
 def organize_plot_cohort_sex_hormone_variable_distributions(
     prefix=None,
+    bins=None,
     table=None,
 ):
     """
@@ -1251,6 +1252,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
 
     arguments:
         prefix (str): prefix for cohort and figure name
+        bins (int): count of bins for histogram
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -1279,7 +1281,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
         pail[name] = plot_variable_values_histogram(
             name=name,
             array=table[column].dropna().to_numpy(),
-            bins=100,
+            bins=bins,
         )
     # Return information.
     return pail
@@ -5498,6 +5500,7 @@ def execute_plot_hormones(
     # All persons in UK Biobank.
     pail = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="",
+        bins=100,
         table=table,
     )
     # Filter to females.
@@ -5506,6 +5509,7 @@ def execute_plot_hormones(
     ]
     pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="female",
+        bins=100,
         table=table_female,
     )
     pail.update(pail_female)
@@ -5515,6 +5519,7 @@ def execute_plot_hormones(
     ]
     pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pre-menopause",
+        bins=100,
         table=table_premenopause,
     )
     pail.update(pail_premenopause)
@@ -5524,6 +5529,7 @@ def execute_plot_hormones(
     ]
     pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="post-menopause",
+        bins=100,
         table=table_postmenopause,
     )
     pail.update(pail_postmenopause)
@@ -5533,6 +5539,7 @@ def execute_plot_hormones(
     ]
     pail_pregnancy = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pregnancy",
+        bins=10,
         table=table_pregnancy,
     )
     pail.update(pail_pregnancy)
@@ -5542,6 +5549,7 @@ def execute_plot_hormones(
     ]
     pail_male = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="male",
+        bins=100,
         table=table_male,
     )
     pail.update(pail_male)
