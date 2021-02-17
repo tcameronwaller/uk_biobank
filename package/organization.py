@@ -1192,6 +1192,9 @@ def organize_female_pregnancy_menopause_variables(
     table_pregnant = table_female.loc[
         (table_female["pregnancy"] > 0.5), :
     ]
+    table_pregnant_broad = table_female.loc[
+        (table_female["pregnancy_broad"] > 0.5), :
+    ]
     table_pregnant_postmenopause = table_postmenopause.loc[
         (table_postmenopause["pregnancy_broad"] > 0.5), :
     ]
@@ -1216,6 +1219,14 @@ def organize_female_pregnancy_menopause_variables(
         )
         print(
             "Count pregnant females: " + str(table_pregnant.shape[0])
+        )
+        print(
+            "Note that broad definition of pregnancy includes 'unsure' cases " +
+            "and allows post-menopausal pregnancy."
+        )
+        print(
+            "Count broadly pregnant females: " +
+            str(table_pregnant_broad.shape[0])
         )
         print(
             "Count broadly pregnant post-menopause females: " +
@@ -5497,14 +5508,33 @@ def execute_plot_hormones(
         table=table_female,
     )
     pail.update(pail_female)
-
-
     # Filter to pre-menopausal, not pregnant females.
-
+    table_premenopause = table_female.loc[
+        (table_female["menopause"] < 0.5), :
+    ]
+    pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="pre-menopause",
+        table=table_premenopause,
+    )
+    pail.update(pail_premenopause)
     # Filter to post-menopausal, not pregnant females.
-
+    table_postmenopause = table_female.loc[
+        (table_female["menopause"] >= 0.5), :
+    ]
+    pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="post-menopause",
+        table=table_postmenopause,
+    )
+    pail.update(pail_postmenopause)
     # Filter to pregnant females.
-
+    table_pregnancy = table_female.loc[
+        (table_female["pregnancy"] >= 0.5), :
+    ]
+    pail_pregnancy = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="pregnancy",
+        table=table_pregnancy,
+    )
+    pail.update(pail_pregnancy)
     # Filter to males.
     table_male = table.loc[
         (table["sex_text"] == "male"), :
