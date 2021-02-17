@@ -1118,6 +1118,47 @@ def organize_female_pregnancy_menopause_variables(
     return pail
 
 
+def organize_plot_cohort_sex_hormone_variable_distributions(
+    prefix=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        prefix (str): prefix for cohort and figure name
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about figures
+
+    """
+
+    # Collect information for plots.
+    pail = dict()
+    # Iterate on relevant variables.
+    columns = [
+        "oestradiol", "oestradiol_log",
+        "testosterone", "testosterone_log",
+        "steroid_globulin", "steroid_globulin_log",
+        "albumin", "albumin_log",
+    ]
+    for column in columns:
+        name = str(prefix + "_" + column)
+        pail[name] = plot_variable_values_histogram(
+            name=name,
+            array=table[column].dropna().to_numpy(),
+            bins=None,
+        )
+    # Return information.
+    return pail
+
+
+
+
 ##########
 # Neuroticism
 
@@ -5322,18 +5363,41 @@ def execute_plot_hormones(
     # TODO: pass this function a "prefix" for "male", "female", "female_post-menopause", etc
     # TODO: use dict() update() to collect the dicts from this function...
 
+    # Copy information.
+    table = table.copy(deep=True)
     # Collect information for plots.
     pail = dict()
-    pail["testosterone"] = plot_variable_values_histogram(
-        name="testosterone",
-        array=table["testosterone"].dropna().to_numpy(),
-        bins=None,
+    # All persons in UK Biobank.
+    pail = organize_plot_cohort_sex_hormone_distributions(
+        table=table,
     )
-    pail["testosterone_log"] = plot_variable_values_histogram(
-        name="testosterone_log",
-        array=table["testosterone_log"].dropna().to_numpy(),
-        bins=None,
+    # Filter to females.
+    table_female = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="female",
+        table=table_female,
     )
+    pail.update(pail_female)
+
+
+    # Filter to pre-menopausal females.
+
+    # Filter to post-menopausal females.
+
+    # Filter to pregnant females.
+
+    # Filter to males.
+    table_male = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    pail_male = organize_plot_cohort_sex_hormone_variable_distributions(
+        prefix="male",
+        table=table_male,
+    )
+    pail.update(pail_male)
+
 
     # Report.
     if report:
