@@ -5493,10 +5493,13 @@ def execute_plot_hormones(
     # Collect information for plots.
     pail = dict()
     # All persons in UK Biobank.
+    table_not_pregnant = table.loc[
+        (table["pregnancy"] < 0.5), :
+    ]
     pail = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="",
         bins=70,
-        table=table,
+        table=table_not_pregnant,
     )
     # Filter to females.
     table_female = table.loc[
