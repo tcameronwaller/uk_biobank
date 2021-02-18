@@ -675,10 +675,10 @@ def organize_sex_hormone_variables(
     table_bioavailability = select_valid_records_all_specific_variables(
         names=[
             "eid", "IID",
-            "sex", "sex_text", "age", "body_mass_index",
+            "sex", "sex_text",# "age", "body_mass_index",
             "testosterone", "steroid_globulin", "albumin",
         ],
-        prefixes=["genotype_pc_",],
+        prefixes=[],#["genotype_pc_",],
         table=table_clean,
         drop_columns=True,
         report=False,
