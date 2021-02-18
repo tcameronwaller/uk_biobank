@@ -5502,15 +5502,18 @@ def execute_plot_hormones(
     table_female = table.loc[
         (table["sex_text"] == "female"), :
     ]
+    table_female_not_pregnant = table_female.loc[
+        (table_female["pregnancy"] < 0.5), :
+    ]
     pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="female",
         bins=70,
-        table=table_female,
+        table=table_female_not_pregnant,
     )
     pail.update(pail_female)
     # Filter to pre-menopausal, not pregnant females.
-    table_premenopause = table_female.loc[
-        (table_female["menopause"] < 0.5), :
+    table_premenopause = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["menopause"] < 0.5), :
     ]
     pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pre-menopause",
@@ -5519,8 +5522,8 @@ def execute_plot_hormones(
     )
     pail.update(pail_premenopause)
     # Filter to post-menopausal, not pregnant females.
-    table_postmenopause = table_female.loc[
-        (table_female["menopause"] >= 0.5), :
+    table_postmenopause = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["menopause"] >= 0.5), :
     ]
     pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="post-menopause",
