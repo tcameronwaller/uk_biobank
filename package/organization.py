@@ -898,7 +898,9 @@ def determine_female_menopause(
             menopause = 0
     else:
         # Menopause undefined for males.
-        menopause = float("nan")
+        #menopause = float("nan")
+        # Set to false for males for convenience.
+        menopause = 0
     # Return information.
     return menopause
 
@@ -1032,7 +1034,9 @@ def determine_female_pregnancy_broad(
             pregnancy = 0
     else:
         # Pregnancy undefined for males.
-        pregnancy = float("nan")
+        #pregnancy = float("nan")
+        # Set to false for males for convenience.
+        pregnancy = 0
     # Return information.
     return pregnancy
 
@@ -1076,7 +1080,9 @@ def determine_female_pregnancy(
             pregnancy = 0
     else:
         # Pregnancy undefined for males.
-        pregnancy = float("nan")
+        #pregnancy = float("nan")
+        # Set to false for males for convenience.
+        pregnancy = 0
     # Return information.
     return pregnancy
 
