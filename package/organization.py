@@ -602,6 +602,118 @@ def organize_sex_age_body_variables(
 # Sex hormones
 
 
+def calculate_estimate_free_testosterone(
+    testosterone=None,
+    albumin=None,
+    steroid_globulin=None,
+    association_albumin=None,
+    association_globulin=None,
+):
+    """
+    Calculates an estimate of free testosterone.
+
+    Applies the formula in Chung, Journal of Pathology Informatics, 2017
+    (PubMed:28828199), which is a solution for free testosterone of the
+    Equation IV from Vermeulen, Journal of Clinical Endocrinology and
+    Metabolism, 1999 (PubMed:10523012).
+
+    arguments:
+        testosterone (float): concentration in moles per liter (mol/L) of total
+            testosterone in blood
+        albumin (float): concentration in moles per liter (mol/L) of albumin in
+            blood
+        steroid_globulin (float): concentration in moles per liter (mol/L) of
+            steroid hormone binding globulin in blood
+        association_albumin (float): association constant in liters per mole for
+            testosterone binding to ablumin, reported as 3.6E4 L/mol
+            (PubMed:10523012) or 2.0E4 - 4.1E4 L/mol (PubMed:28673039)
+        association_globulin (float): association constant in liters per mole
+            for testosterone binding to steroid hormone binding globulin (SHBG),
+            reported as 1E9 L/mol (PubMed:10523012; PubMed:28673039)
+
+    raises:
+
+    returns:
+        (float): estimate concentration in moles per liter of free testosterone
+
+    """
+
+    # Calculate simplification variables: a and b.
+    a = (
+        association_albumin + association_globulin + (
+            (association_albumin * association_globulin) * (
+                steroid_globulin + albumin - testosterone
+            )
+        )
+    )
+    b = (
+        1 + (association_globulin * steroid_globulin) +
+        (association_albumin * albumin) -
+        ((association_albumin + association_globulin) * testosterone)
+    )
+    # Calculate free testosterone.
+    testosterone_free = (
+        (-1 * b) + math.sqrt(
+            math.pow(b, 2) + (4 * a * testosterone)
+        )
+    ) / (2 * a)
+    # Return information.
+    return testosterone_free
+
+
+def convert_hormone_concentration_units_moles_per_liter(
+    table=None,
+):
+    """
+    Converts hormone concentrations to units of moles per liter (mol/L).
+
+    UK Biobank field 30600, concentration in grams per liter (g/L) of albumin in
+    blood
+
+    UK Biobank field 30830, concentration in nanomoles per liter (nmol/L) of
+    steroid hormone binding globulin (SHBG) in blood
+
+    UK Biobank field 30800, concentration in picomoles per liter (pmol/L) of
+    oestradiol in blood
+
+    UK Biobank field 30850, concentration in nanomoles per liter (nmol/L) of
+    total testosterone in blood
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Convert concentrations to units of moles per liter (mol/L).
+    table["albumin"] = table.apply(
+        lambda row: (row["30600-0.0"] / 66472.2),
+        axis="columns", # apply across rows
+    ) # 1 mole = 66472.2 g
+    table["steroid_globulin"] = table.apply(
+        lambda row: (row["30830-0.0"] / 1E9),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E9 nmol
+    table["oestradiol"] = table.apply(
+        lambda row: (row["30800-0.0"] / 1E12),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E12 pmol
+    table["testosterone"] = table.apply(
+        lambda row: (row["30850-0.0"] / 1E9),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E9 nmol
+    # Return information.
+    return table
+
+
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -623,19 +735,26 @@ def organize_sex_hormone_variables(
 
     # Copy data.
     table = table.copy(deep=True)
-    # Translate column names.
-    translations = dict()
-    translations["30600-0.0"] = "albumin"
-    translations["30830-0.0"] = "steroid_globulin"
-    translations["30850-0.0"] = "testosterone"
-    translations["30800-0.0"] = "oestradiol"
-    table.rename(
-        columns=translations,
-        inplace=True,
+    # Convert concentrations to units of moles per liter (mol/L).
+    table = convert_hormone_concentration_units_moles_per_liter(
+        table=table,
+    )
+    # Organize calculation estimate of free, bioavailable testosterone.
+    table["testosterone_free"] = table.apply(
+        lambda row:
+            calculate_estimate_free_testosterone(
+                testosterone=row["testosterone"],
+                albumin=row["albumin"],
+                steroid_globulin=row["steroid_globulin"],
+                association_albumin=3.6E4, # 2.0E4 - 4.1E4 L/mol
+                association_globulin=1E9, # 1E9 L/mol
+            ),
+        axis="columns", # apply across rows
     )
     # Convert variable types.
     columns_hormones = [
-        "albumin", "steroid_globulin", "testosterone", "oestradiol"
+        "albumin", "steroid_globulin", "oestradiol",
+        "testosterone", "testosterone_free",
     ]
     table = convert_table_columns_variables_types_float(
         columns=columns_hormones,
@@ -643,27 +762,28 @@ def organize_sex_hormone_variables(
     )
     # Transform variables' values to normalize distributions.
     table = utility.transform_normalize_table_continuous_ratio_variables(
-        columns=["albumin", "steroid_globulin", "testosterone", "oestradiol"],
+        columns=columns_hormones,
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
-    if False:
-        table_clean.drop(
-            labels=[
-                "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
-            ],
-            axis="columns",
-            inplace=True
-        )
+    table_clean.drop(
+        labels=[
+            "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
     # Organize information for report.
     table_report = table.copy(deep=True)
     columns_report = [
         #"eid",
         "IID",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-        "testosterone", "testosterone_log", "oestradiol", "oestradiol_log",
+        "oestradiol", "oestradiol_log",
+        "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -884,9 +1004,11 @@ def interpret_oophorectomy(
 
 def determine_female_menopause(
     sex_text=None,
+    age=None,
     field_2724=None,
     field_3591=None,
     field_2834=None,
+    threshold_age=None,
 ):
     """
     Determine whether female persons have experienced menopause or another
@@ -894,12 +1016,15 @@ def determine_female_menopause(
 
     arguments:
         sex_text (str): textual representation of sex selection
+        age (int): age of person in years
         field_2724 (float): UK Biobank field 2724, whether person has
             experienced menopause
         field_3591 (float): UK Biobank field 3591, whether person has had a
             hysterectomy
         field_2834 (float): UK Biobank field 2834, whether person has had an
             oophorectomy
+        threshold_age (int): threshold age in years, beyond which to consider
+            all females post-menopausal, 50 - 70 years
 
     raises:
 
@@ -922,7 +1047,12 @@ def determine_female_menopause(
     )
     # Comparison.
     if (sex_text == "female"):
-        if (menopause_boolean or hysterectomy_boolean or oophorectomy_boolean):
+        if (
+            menopause_boolean or
+            hysterectomy_boolean or
+            oophorectomy_boolean or
+            (age >= threshold_age)
+        ):
             menopause = 1
         else:
             menopause = 0
@@ -1117,6 +1247,99 @@ def determine_female_pregnancy(
     return pregnancy
 
 
+def interpret_menstruation_day(
+    field_3700=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3700.
+
+    Data-Field "3700": "time since last menstrual period"
+    UK Biobank data coding "100291" for variable field "3700".
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3700)) and
+        (-0.5 <= field_3700 and field_3700 <= 365)
+    ):
+        # The variable has a valid value.
+        value = float(field_3700)
+    else:
+        # null
+        # "do not know" or "prefer not to answer"
+        value = float("nan")
+    # Return.
+    return value
+
+
+
+def determine_female_premenopause_menstruation_day(
+    sex_text=None,
+    menopause=None,
+    pregnancy=None,
+    field_3700=None,
+):
+    """
+    Determine count of days since previous menstruation (menstrual period).
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause (float): whether person has experienced menopause,
+            hysterectomy, or oophorectomy
+        pregnancy (float): whether person was pregnant
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret pregnancy.
+    menstruation_day = interpret_menstruation_day(
+        field_3700=field_3700,
+    )
+    # Comparison.
+    # Only define pregnancy for females who are pre-menopausal.
+    if (
+        (sex_text == "female")
+    ):
+        if ((menopause < 0.5) and (pregnancy_boolean)):
+            pregnancy = 1
+        else:
+            pregnancy = 0
+    else:
+        # Pregnancy undefined for males.
+        #pregnancy = float("nan")
+        # Set to false for males for convenience.
+        pregnancy = 0
+    # Return information.
+    return pregnancy
+
+
+# TODO: include age threshold for menopause...
+# TODO: also include menstrual phase variable
+
+
 def organize_female_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -1155,9 +1378,11 @@ def organize_female_pregnancy_menopause_variables(
         lambda row:
             determine_female_menopause(
                 sex_text=row["sex_text"],
+                age=row["age"],
                 field_2724=row["2724-0.0"],
                 field_3591=row["3591-0.0"],
                 field_2834=row["2834-0.0"],
+                threshold_age=55, # 55 - 70 years
             ),
         axis="columns", # apply across rows
     )
@@ -1184,6 +1409,18 @@ def organize_female_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+    # Determine count of days sense person's last menstrual period.
+    if False:
+        table["menstruation_day"] = table.apply(
+            lambda row:
+                determine_menstruation_day(
+                    sex_text=row["sex_text"],
+                    menopause=row["menopause"],
+                    pregnancy=row["pregnancy"],
+                    field_3700=row["3700-0.0"],
+                ),
+            axis="columns", # apply across rows
+        )
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
@@ -1202,6 +1439,7 @@ def organize_female_pregnancy_menopause_variables(
         "IID",
         "sex_text", "menopause", "2724-0.0", "3591-0.0", "2834-0.0",
         "pregnancy_broad", "pregnancy", "3140-0.0",
+        #"menstruation_day", "3700-0.0",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -1305,6 +1543,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
     columns = [
         "oestradiol", "oestradiol_log",
         "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
         "steroid_globulin", "steroid_globulin_log",
         "albumin", "albumin_log",
         "age",
@@ -1321,8 +1560,6 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
         )
     # Return information.
     return pail
-
-
 
 
 ##########
@@ -1733,6 +1970,7 @@ def determine_previous_alcohol_consumption(
         alcohol_previous = float("nan")
     # Return information.
     return alcohol_previous
+
 
 # TODO: code alcohol_none as True / False / None
 def determine_alcohol_none(
@@ -5127,6 +5365,8 @@ def execute_sex_hormones(
     # Return information.
     return pail_pregnancy["table_clean"]
 
+
+# TODO: include histogram for menstruation_day, but only for premenopausal females
 
 def execute_plot_hormones(
     table=None,
