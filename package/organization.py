@@ -606,6 +606,7 @@ def calculate_estimate_free_testosterone(
     testosterone=None,
     albumin=None,
     steroid_globulin=None,
+    factor_concentration=None,
     association_albumin=None,
     association_globulin=None,
 ):
@@ -624,6 +625,8 @@ def calculate_estimate_free_testosterone(
             blood
         steroid_globulin (float): concentration in moles per liter (mol/L) of
             steroid hormone binding globulin in blood
+        factor_concentration (float): factor by which to multiply concentrations
+            for the sake of visualization and analysis
         association_albumin (float): association constant in liters per mole for
             testosterone binding to ablumin, reported as 3.6E4 L/mol
             (PubMed:10523012) or 2.0E4 - 4.1E4 L/mol (PubMed:28673039)
@@ -638,31 +641,39 @@ def calculate_estimate_free_testosterone(
 
     """
 
+    # Convert concentrations to unit of moles per liter (mol/L).
+    testosterone_unit = (testosterone / factor_concentration)
+    albumin_unit = (albumin / factor_concentration)
+    steroid_globulin_unit = (steroid_globulin / factor_concentration)
+
     # Calculate simplification variables: a and b.
     a = (
         association_albumin + association_globulin + (
             (association_albumin * association_globulin) * (
-                steroid_globulin + albumin - testosterone
+                steroid_globulin_unit + albumin_unit - testosterone_unit
             )
         )
     )
     b = (
-        1 + (association_globulin * steroid_globulin) +
-        (association_albumin * albumin) -
-        ((association_albumin + association_globulin) * testosterone)
+        1 + (association_globulin * steroid_globulin_unit) +
+        (association_albumin * albumin_unit) -
+        ((association_albumin + association_globulin) * testosterone_unit)
     )
     # Calculate free testosterone.
     testosterone_free = (
         (-1 * b) + math.sqrt(
-            math.pow(b, 2) + (4 * a * testosterone)
+            math.pow(b, 2) + (4 * a * testosterone_unit)
         )
     ) / (2 * a)
+    # Convert units by factor.
+    testosterone_free_factor = (testosterone_free * factor_concentration)
     # Return information.
-    return testosterone_free
+    return testosterone_free_factor
 
 
 def convert_hormone_concentration_units_moles_per_liter(
     table=None,
+    factor_concentration=None,
 ):
     """
     Converts hormone concentrations to units of moles per liter (mol/L).
@@ -682,6 +693,8 @@ def convert_hormone_concentration_units_moles_per_liter(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        factor_concentration (float): factor by which to multiply concentrations
+            for the sake of visualization and analysis
 
     raises:
 
@@ -695,19 +708,19 @@ def convert_hormone_concentration_units_moles_per_liter(
     table = table.copy(deep=True)
     # Convert concentrations to units of moles per liter (mol/L).
     table["albumin"] = table.apply(
-        lambda row: (row["30600-0.0"] / 66472.2),
+        lambda row: ((row["30600-0.0"] / 66472.2) * factor_concentration),
         axis="columns", # apply across rows
     ) # 1 mole = 66472.2 g
     table["steroid_globulin"] = table.apply(
-        lambda row: (row["30830-0.0"] / 1E9),
+        lambda row: ((row["30830-0.0"] / 1E9) * factor_concentration),
         axis="columns", # apply across rows
     ) # 1 mol = 1E9 nmol
     table["oestradiol"] = table.apply(
-        lambda row: (row["30800-0.0"] / 1E12),
+        lambda row: ((row["30800-0.0"] / 1E12) * factor_concentration),
         axis="columns", # apply across rows
     ) # 1 mol = 1E12 pmol
     table["testosterone"] = table.apply(
-        lambda row: (row["30850-0.0"] / 1E9),
+        lambda row: ((row["30850-0.0"] / 1E9) * factor_concentration),
         axis="columns", # apply across rows
     ) # 1 mol = 1E9 nmol
     # Return information.
@@ -735,17 +748,21 @@ def organize_sex_hormone_variables(
 
     # Copy data.
     table = table.copy(deep=True)
-    # Convert concentrations to units of moles per liter (mol/L).
+    # Convert concentrations to units of moles per liter (mol/L) by some factor.
+    # units: pmol / L
     table = convert_hormone_concentration_units_moles_per_liter(
         table=table,
+        factor_concentration=1E12, # pmol / L
     )
     # Organize calculation estimate of free, bioavailable testosterone.
+    # units: pmol / L
     table["testosterone_free"] = table.apply(
         lambda row:
             calculate_estimate_free_testosterone(
                 testosterone=row["testosterone"],
                 albumin=row["albumin"],
                 steroid_globulin=row["steroid_globulin"],
+                factor_concentration=1E12, # pmol / L
                 association_albumin=3.6E4, # 2.0E4 - 4.1E4 L/mol
                 association_globulin=1E9, # 1E9 L/mol
             ),
