@@ -815,11 +815,6 @@ def organize_sex_hormone_variables(
         utility.print_terminal_partition(level=2)
         print("report: organize_sex_hormone_variables()")
         utility.print_terminal_partition(level=3)
-        print("translations of hormone column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        utility.print_terminal_partition(level=2)
         print("Translation of columns for hormones: ")
         print(table_report)
         utility.print_terminal_partition(level=3)
