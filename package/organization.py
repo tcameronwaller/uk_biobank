@@ -602,21 +602,37 @@ def organize_sex_age_body_variables(
 # Sex hormones
 
 
-def calculate_estimate_free_testosterone(
+def calculate_estimation_free_testosterone(
     testosterone=None,
     albumin=None,
     steroid_globulin=None,
     factors_concentration=None,
-    association_albumin=None,
-    association_globulin=None,
+    associations=None,
 ):
     """
-    Calculates an estimate of free testosterone.
+    Calculates an estimation of free testosterone (neither bound to albumin nor
+    steroid hormone binding globulin).
 
-    Applies the formula in Chung, Journal of Pathology Informatics, 2017
-    (PubMed:28828199), which is a solution for free testosterone of the
-    Equation IV from Vermeulen, Journal of Clinical Endocrinology and
-    Metabolism, 1999 (PubMed:10523012).
+    This function applies the formula of Sodergard, Journal of Steroid
+    Biochemistry, 1982 (PubMed:7202083).
+
+    The specific structure of this formula appears in the following articles:
+    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822) [check... also oestradiol]
+    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641) [check... also oestradiol]
+    de Ronde, Clinical Chemistry, 2006 (PubMed:16793931) [check]
+    Chung, Pathology Informatics, 2017 (PubMed:28828199) [check]
+
+    The structure of this formula is slightly different, though presumably
+    equivalent in the following articles:
+    Vermeulen, Clinical Endocrinology & Metabolism, 1999 (PubMed:10523012)
+    Emadi-Konjin, Clinical Biochemistry, 2003 (PubMed:14636872)
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    testosterone:
+    5.97E8 - 1.4E9 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for albumin to testosterone:
+    1.3E4 - 4.06E4 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
 
     arguments:
         testosterone (float): concentration in moles per liter (mol/L) of total
@@ -627,12 +643,8 @@ def calculate_estimate_free_testosterone(
             steroid hormone binding globulin in blood
         factors_concentration (dict<float>): factors by which to multiply
             concentrations for the sake of visualization and analysis
-        association_albumin (float): association constant in liters per mole for
-            testosterone binding to ablumin, reported as 3.6E4 L/mol
-            (PubMed:10523012) or 2.0E4 - 4.1E4 L/mol (PubMed:28673039)
-        association_globulin (float): association constant in liters per mole
-            for testosterone binding to steroid hormone binding globulin (SHBG),
-            reported as 1E9 L/mol (PubMed:10523012; PubMed:28673039)
+        associations (dict<float>): association constants in liters per mole for
+            steroid hormone binding globulin (SHBG) and ablumin
 
     raises:
 
@@ -652,29 +664,147 @@ def calculate_estimate_free_testosterone(
 
     # Calculate simplification variables: a and b.
     a = (
-        association_albumin + association_globulin + (
-            (association_albumin * association_globulin) * (
-                steroid_globulin_unit + albumin_unit - testosterone_unit
-            )
+        associations["albumin_test"] +
+        associations["shbg_test"] +
+        (
+            (associations["albumin_test"] * associations["shbg_test"]) *
+            (steroid_globulin_unit + albumin_unit - testosterone_unit)
         )
-    )
+    ) # unit: L/mol
     b = (
-        1 + (association_globulin * steroid_globulin_unit) +
-        (association_albumin * albumin_unit) -
-        ((association_albumin + association_globulin) * testosterone_unit)
-    )
-    # Calculate free testosterone.
-    testosterone_free = (
-        (-1 * b) + math.sqrt(
-            math.pow(b, 2) + (4 * a * testosterone_unit)
+        1 +
+        (associations["shbg_test"] * steroid_globulin_unit) +
+        (associations["albumin_test"] * albumin_unit) -
+        (
+            (associations["albumin_test"] + associations["shbg_test"]) *
+            testosterone_unit
         )
+    ) # unit: 1
+    # Calculate free testosterone.
+    testosterone_free_unit = (
+        (-1 * b) + math.sqrt(math.pow(b, 2) + (4 * a * testosterone_unit))
     ) / (2 * a)
     # Convert units by factor.
-    testosterone_free_factor = (
-        testosterone_free * factors_concentration["testosterone_free"]
+    testosterone_free = (
+        testosterone_free_unit * factors_concentration["testosterone_free"]
     )
     # Return information.
-    return testosterone_free_factor
+    return testosterone_free
+
+
+def calculate_estimation_free_oestradiol(
+    oestradiol=None,
+    testosterone_free=None,
+    albumin=None,
+    steroid_globulin=None,
+    factors_concentration=None,
+    associations=None,
+):
+    """
+    Calculates an estimation of free oestradiol (neither bound to albumin nor
+    steroid hormone binding globulin).
+
+    This function applies the formula of Sodergard, Journal of Steroid
+    Biochemistry, 1982 (PubMed:7202083).
+
+    The specific structure of this formula appears in the following articles:
+    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641)
+
+    Notice that there is a discrepancy with the formula in the following
+    articles:
+    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822)
+    This article seems to introduce an extra term for the concentration of SHBG
+    in both the "b" and "c" formulas.
+    This extra concentration term is likely erroneous as it would disrupt the
+    units of the "b" and "c" formulas.
+    It would also disrupt the final units (mol/L) of the total formula.
+    Compare to the formula for free testosterone.
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    testosterone:
+    5.97E8 - 1.4E9 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for albumin to testosterone:
+    1.3E4 - 4.06E4 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    oestradiol:
+    3.14E8 - 6.8E8 L/mol (PubMed:7202083, PubMed:7195404)
+
+    Association constant for albumin to oestradiol:
+    4.21E4 L/mol (PubMed:7202083)
+
+
+    arguments:
+        testosterone (float): concentration in moles per liter (mol/L) of total
+            testosterone in blood
+        albumin (float): concentration in moles per liter (mol/L) of albumin in
+            blood
+        steroid_globulin (float): concentration in moles per liter (mol/L) of
+            steroid hormone binding globulin in blood
+        factors_concentration (dict<float>): factors by which to multiply
+            concentrations for the sake of visualization and analysis
+        associations (dict<float>): association constants in liters per mole for
+            steroid hormone binding globulin (SHBG) and ablumin
+
+    raises:
+
+    returns:
+        (float): estimate concentration in moles per liter of free testosterone
+
+    """
+
+    # Convert concentrations to unit of moles per liter (mol/L).
+    oestradiol_unit = (
+        oestradiol / factors_concentration["oestradiol"]
+    )
+    testosterone_free_unit = (
+        testosterone_free / factors_concentration["testosterone_free"]
+    )
+    albumin_unit = (albumin / factors_concentration["albumin"])
+    steroid_globulin_unit = (
+        steroid_globulin / factors_concentration["steroid_globulin"]
+    )
+
+    # Calculate simplification variables: a, b, and c
+    a = (
+        associations["shbg_oest"] *
+        (1 + (associations["albumin_test"] * albumin_unit))
+    ) # unit: L/mol
+    b = (
+        (oestradiol_unit * associations["shbg_oest"]) -
+        (
+            (1 + (associations["albumin_oest"] * albumin_unit)) *
+            (
+                1 +
+                (
+                    associations["shbg_test"] *
+                    testosterone_free_unit
+                )
+            )
+        ) -
+        (associations["shbg_oest"] * steroid_globulin_unit)
+    ) # unit: 1
+    c = (
+        oestradiol_unit *
+        (
+            1 +
+            (
+                associations["shbg_test"] *
+                testosterone_free_unit
+            )
+        )
+    ) # unit: mol/L
+    # Calculate free oestradiol.
+    oestradiol_free_unit = (
+        (-1 * b) - math.sqrt(math.pow(b, 2) - (4 * a * c))
+    ) / (2 * a)
+    # Convert units by factor.
+    oestradiol_free = (
+        oestradiol_free_unit * factors_concentration["oestradiol_free"]
+    )
+    # Return information.
+    return oestradiol_free
 
 
 def convert_hormone_concentration_units_moles_per_liter(
@@ -762,27 +892,48 @@ def organize_sex_hormone_variables(
 
     # Copy data.
     table = table.copy(deep=True)
-    # Convert concentrations to units of moles per liter (mol/L) by some factor.
+    # Convert concentrations to units of moles per liter (mol/L) with adjustment
+    # by specific factors for appropriate scale in analyses (and floats).
     factors_concentration = dict()
     factors_concentration["albumin"] = 1E6 # 1 umol / L
     factors_concentration["steroid_globulin"] = 1E9 # 1 nmol / L
     factors_concentration["oestradiol"] = 1E12 # 1 pmol / L
+    factors_concentration["oestradiol_free"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
     table = convert_hormone_concentration_units_moles_per_liter(
         table=table,
         factors_concentration=factors_concentration,
     )
-    # Organize calculation estimate of free, bioavailable testosterone.
+    # Define association constants for calculation of free hormones.
+    # units: L/mol
+    associations = dict()
+    associations["shbg_test"] = 5.97E8 #
+    associations["shbg_oest"] = 3.14E8 #
+    associations["albumin_test"] = 4.06E4 #
+    associations["albumin_oest"] = 4.21E4 #
+    # Calculate estimation of free, bioavailable testosterone.
     table["testosterone_free"] = table.apply(
         lambda row:
-            calculate_estimate_free_testosterone(
+            calculate_estimation_free_testosterone(
                 testosterone=row["testosterone"],
                 albumin=row["albumin"],
                 steroid_globulin=row["steroid_globulin"],
                 factors_concentration=factors_concentration,
-                association_albumin=3.6E4, # 2.0E4 - 4.1E4 L/mol
-                association_globulin=1E9, # 1E9 L/mol
+                associations=associations,
+            ),
+        axis="columns", # apply across rows
+    )
+    # Calculate estimation of free, bioavailable oestradiol.
+    table["oestradiol_free"] = table.apply(
+        lambda row:
+            calculate_estimation_free_oestradiol(
+                oestradiol=row["oestradiol"],
+                testosterone_free=row["testosterone_free"],
+                albumin=row["albumin"],
+                steroid_globulin=row["steroid_globulin"],
+                factors_concentration=factors_concentration,
+                associations=associations,
             ),
         axis="columns", # apply across rows
     )
