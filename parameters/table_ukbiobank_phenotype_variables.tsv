@@ -1,55 +1,62 @@
-field	type	category	name	unit, code	coverage	scale	ukb_description	ukb_category	instances_array	instances_keep	note
-22009	float32		genotype	unit	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
-31	float32		sex	female: 0; male: 1	502492	nominal	Sex	Baseline characteristics		0.0;	
-22001	float32		sex_genotype	female: 0; male: 1	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
-21022	float32		age	years	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
-21002	float32		weight	kg	499809	ratio	Weight	Body size measures		0.0;	
-50	float32		height	cm	500031	ratio	Standing height	Body size measures		0.0;	
-21001	float32		body_mass_index	kg/m2	499494	ratio	Body mass index (BMI)	Body size measures		0.0;	
-23104	float32		body_mass_index_impedance	kg/m2	493075	ratio	Body mass index (BMI)	Impedance measures		0.0;	
-30600	float32	hormone	albumin	g/L	432326	ratio	Albumin	Blood biochemistry		0.0;	greater coverage than albumin_urine
-30830	float32	hormone	steroid_globulin	nmol/L	428164	ratio	SHBG	Blood biochemistry		0.0;	
-30850	float32	hormone	testosterone	nmol/L	427051	ratio	Testosterone	Blood biochemistry		0.0;	
-30800	float32	hormone	oestradiol	pmol/L	77713	ratio	Oestradiol	Blood biochemistry		0.0;	
-2724	string	hormone	menopause	yes: 1; no: 0; not sure - had a hysterectomy: 2; not sure - other reason: 3; prefer not to answer: -3	272914	nominal	Had menopause	Female-specific factors		0.0;	hysterectomy mimics menopause
-3591	string	hormone	hysterectomy	yes: 1; no: 0; not sure: -5; prefer not to answer: -3	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0.0;	hysterectomy mimics menopause
-2834	string	hormone	oophorectomy	yes: 1; no: 0; not sure: -5; prefer not to answer: -3	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	oophorectomy mimics menopause
-3140	string		pregnancy		272558	nominal	Pregnant			0.0;	
-1558	string		alcohol_frequency	daily or almost daily: 1; three or four times a week: 2; ounce or twice a week: 3; one to three times a month: 4; special occasions only: 5; never: 6; prefer not to answer: -3	501612	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
-20117	string		alcohol_status	never: 0; previous: 1; current: 2; prefer not to answer: -3	501612	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
-3731	string		alcohol_previous	yes: 1; no: 0; prefer not to answer: -3	42317	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
-1628	string		alcohol_trend	category	460892	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
-1618	string		alcohol_meal	category	395102	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
-1588	float32	alcohol_consumption	alcohol_weekly_beer	count drinks; do not know: -1; prefer not to answer: -3	349120	ratio	Average weekly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1568	float32	alcohol_consumption	alcohol_weekly_wine_red	count drinks; do not know: -1; prefer not to answer: -3	349121	ratio	Average weekly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1578	float32	alcohol_consumption	alcohol_weekly_wine_white	count drinks; do not know: -1; prefer not to answer: -3	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1608	float32	alcohol_consumption	alcohol_weekly_port	count drinks; do not know: -1; prefer not to answer: -3	349120	ratio	Average weekly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1598	float32	alcohol_consumption	alcohol_weekly_liquor	count drinks; do not know: -1; prefer not to answer: -3	349120	ratio	Average weekly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-5364	float32	alcohol_consumption	alcohol_weekly_other	count drinks; do not know: -1; prefer not to answer: -3	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4429	float32	alcohol_consumption	alcohol_monthly_beer	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4407	float32	alcohol_consumption	alcohol_monthly_wine_red	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4418	float32	alcohol_consumption	alcohol_monthly_wine_white	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4451	float32	alcohol_consumption	alcohol_monthly_port	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4440	float32	alcohol_consumption	alcohol_monthly_liquor	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-4462	float32	alcohol_consumption	alcohol_monthly_other	count drinks; do not know: -1; prefer not to answer: -3	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-20414	string	alcohol_questionnaire	audit_c_1	never: 0; monthly or less: 1; two to four times a month: 2; two to three times a week: 3; four or more times a week: 4; prefer not to answer: -818	157339	ordinal	Frequency of drinking alcohol	Alcohol use		0.0;	AUDIT-C question 1
-20403	string	alcohol_questionnaire	audit_c_2	one or two: 1; three or four: 2; five or six: 3; seven, eight, or nine: 4; ten or more: 5; prefer not to answer: -818	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use		0.0;	AUDIT-C question 2
-20416	string	alcohol_questionnaire	audit_c_3	never: 1; less than monthly: 2; monthly: 3; weekly: 4; daily or almost daily: 5; prefer not to answer: -818	143658	ordinal	Frequency of consuming six of more units of alcohol	Alcohol use		0.0;	AUDIT-C question 3
-20413	string	alcohol_questionnaire	audit_4		85196	ordinal				0.0;	
-20407	string	alcohol_questionnaire	audit_5		85196	ordinal				0.0;	
-20412	string	alcohol_questionnaire	audit_6		85196	ordinal				0.0;	
-20409	string	alcohol_questionnaire	audit_7		85196	ordinal				0.0;	
-20408	string	alcohol_questionnaire	audit_8		85196	ordinal				0.0;	
-20411	string	alcohol_questionnaire	audit_9		157339	ordinal				0.0;	
-20405	string	alcohol_questionnaire	audit_10		157339	ordinal				0.0;	
-41271	string	diagnosis	icd9_summary		20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	null	
-41203	string	diagnosis	icd9_primary		20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	null	
-41205	string	diagnosis	icd9_secondary		8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	null	
-41270	string	diagnosis	icd10_summary		410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	null	
-41202	string	diagnosis	icd10_primary		410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	null	
-41204	string	diagnosis	icd10_secondary		340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	null	
-20002	string	diagnosis	diagnosis_self	1408: alcohol dependency; 1604: alcoholic liver disease, alcoholic cirrhosis	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	null	
-20127	string	mental_health	neuroticism		401562	ordinal	Neuroticism score	Mental health		0.0;	derivation from Data-Fields: 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030
-20124	string	mental_health	depression_moderate	category	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0.0;	
-20125	string	mental_health	depression_severe	category	9398	nominal	Probable recurrent major depression (severe)	Mental health		0.0;	
-20126	string	mental_health	bipolar_or_depression	category	122973	nominal	Bipolar and major depression status	Mental health		0.0;	
+field	type	category	name	coverage	scale	ukb_description	ukb_category	instances_array	instances_keep	note
+22009	float32		genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
+31	float32		sex	502492	nominal	Sex	Baseline characteristics		0.0;	
+22001	float32		sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
+21022	float32		age	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
+21002	float32		weight	499809	ratio	Weight	Body size measures		0.0;	
+50	float32		height	500031	ratio	Standing height	Body size measures		0.0;	
+21001	float32		body_mass_index	499494	ratio	Body mass index (BMI)	Body size measures		0.0;	
+23104	float32		body_mass_index_impedance	493075	ratio	Body mass index (BMI)	Impedance measures		0.0;	
+30600	float32	hormone	albumin	432326	ratio	Albumin	Blood biochemistry		0.0;	greater coverage than albumin_urine
+30830	float32	hormone	steroid_globulin	428164	ratio	SHBG	Blood biochemistry		0.0;	
+30850	float32	hormone	testosterone	427051	ratio	Testosterone	Blood biochemistry		0.0;	
+30800	float32	hormone	oestradiol	77713	ratio	Oestradiol	Blood biochemistry		0.0;	
+2724	string	hormone	menopause	272914	nominal	Had menopause	Female-specific factors		0.0;	hysterectomy mimics menopause
+3591	string	hormone	hysterectomy	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0.0;	hysterectomy mimics menopause
+2834	string	hormone	oophorectomy	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	oophorectomy mimics menopause
+3140	string	hormone	pregnancy	272558	nominal	Pregnant			0.0;	
+3700	string	hormone	menstruation	64174		Time since last menstrual period	Female-specific factors		0.0;	only for pre-menopausal females (field 2724)
+2814	string	hormone		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+3536	string	hormone		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+3546	string	hormone		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+2784	string	hormone		272909		Ever taken oral contraceptive pill	Female-specific factors		0.0;	
+2794	string	hormone		220791		Age started oral contraceptive pill	Female-specific factors		0.0;	
+2804	string	hormone		220473		Age when last used oral contraceptive pill	Female-specific factors		0.0;	
+1558	string	alcohol_consumption	alcohol_frequency	501612	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
+20117	string	alcohol_consumption	alcohol_status	501612	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
+3731	string	alcohol_consumption	alcohol_previous	42317	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
+1628	string	alcohol_consumption	alcohol_trend	460892	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
+1618	string	alcohol_consumption	alcohol_meal	395102	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
+1588	float32	alcohol_consumption	alcohol_weekly_beer	349120	ratio	Average weekly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+1568	float32	alcohol_consumption	alcohol_weekly_wine_red	349121	ratio	Average weekly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+1578	float32	alcohol_consumption	alcohol_weekly_wine_white	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+1608	float32	alcohol_consumption	alcohol_weekly_port	349120	ratio	Average weekly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+1598	float32	alcohol_consumption	alcohol_weekly_liquor	349120	ratio	Average weekly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+5364	float32	alcohol_consumption	alcohol_weekly_other	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4429	float32	alcohol_consumption	alcohol_monthly_beer	52045	ratio	Average monthly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4407	float32	alcohol_consumption	alcohol_monthly_wine_red	52045	ratio	Average monthly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4418	float32	alcohol_consumption	alcohol_monthly_wine_white	52045	ratio	Average monthly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4451	float32	alcohol_consumption	alcohol_monthly_port	52045	ratio	Average monthly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4440	float32	alcohol_consumption	alcohol_monthly_liquor	52045	ratio	Average monthly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+4462	float32	alcohol_consumption	alcohol_monthly_other	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
+20414	string	alcohol_questionnaire	audit_c_1	157339	ordinal	Frequency of drinking alcohol	Alcohol use		0.0;	AUDIT-C question 1
+20403	string	alcohol_questionnaire	audit_c_2	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use		0.0;	AUDIT-C question 2
+20416	string	alcohol_questionnaire	audit_c_3	143658	ordinal	Frequency of consuming six of more units of alcohol	Alcohol use		0.0;	AUDIT-C question 3
+20413	string	alcohol_questionnaire	audit_4	85196	ordinal				0.0;	
+20407	string	alcohol_questionnaire	audit_5	85196	ordinal				0.0;	
+20412	string	alcohol_questionnaire	audit_6	85196	ordinal				0.0;	
+20409	string	alcohol_questionnaire	audit_7	85196	ordinal				0.0;	
+20408	string	alcohol_questionnaire	audit_8	85196	ordinal				0.0;	
+20411	string	alcohol_questionnaire	audit_9	157339	ordinal				0.0;	
+20405	string	alcohol_questionnaire	audit_10	157339	ordinal				0.0;	
+41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	null	
+41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	null	
+41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	null	
+41270	string	diagnosis	icd10_summary	410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	null	
+41202	string	diagnosis	icd10_primary	410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	null	
+41204	string	diagnosis	icd10_secondary	340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	null	
+20002	string	diagnosis	diagnosis_self	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	null	
+20127	string	mental_health	neuroticism	401562	ordinal	Neuroticism score	Mental health		0.0;	derivation from Data-Fields: 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030
+20124	string	mental_health	depression_moderate	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0.0;	
+20125	string	mental_health	depression_severe	9398	nominal	Probable recurrent major depression (severe)	Mental health		0.0;	
+20126	string	mental_health	bipolar_or_depression	122973	nominal	Bipolar and major depression status	Mental health		0.0;	
