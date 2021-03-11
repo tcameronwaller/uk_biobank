@@ -5929,6 +5929,49 @@ def execute_plot_hormones(
         table=table_female_not_pregnant,
     )
     pail.update(pail_female)
+    # Stratify not pregnant females by recent use of oral contraception.
+    table_contraception_no = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["oral_contraception"] < 0.5), :
+    ]
+    pail_contraception_no = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="contraception_no",
+            bins=50,
+            table=table_contraception_no,
+    ))
+    pail.update(pail_contraception_no)
+    table_contraception_yes = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["oral_contraception"] >= 0.5), :
+    ]
+    pail_contraception_yes = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="contraception_yes",
+            bins=50,
+            table=table_contraception_yes,
+    ))
+    pail.update(pail_contraception_yes)
+    # Stratify by pre-menopausal, not pregnant females by recent use of
+    # hormone replacement therapy.
+    table_replacement_no = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["hormone_therapy"] < 0.5), :
+    ]
+    pail_replacement_no = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="replacement_no",
+            bins=50,
+            table=table_replacement_no,
+    ))
+    pail.update(pail_replacement_no)
+    table_replacement_yes = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["hormone_therapy"] >= 0.5), :
+    ]
+    pail_replacement_yes = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="replacement_yes",
+            bins=50,
+            table=table_replacement_yes,
+    ))
+    pail.update(pail_replacement_yes)
     # Filter to pre-menopausal, not pregnant females.
     table_premenopause = table_female_not_pregnant.loc[
         (table_female_not_pregnant["menopause"] < 0.5), :
@@ -5948,50 +5991,6 @@ def execute_plot_hormones(
             bins=50,
     ))
     pail.update(pail_menstruation)
-    # Stratify by pre-menopausal, not pregnant females by recent use of oral
-    # contraception.
-    table_contraception_no = table_premenopause.loc[
-        (table_premenopause["oral_contraception"] < 0.5), :
-    ]
-    pail_contraception_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="contraception_no",
-            bins=50,
-            table=table_contraception_no,
-    ))
-    pail.update(pail_contraception_no)
-    table_contraception_yes = table_premenopause.loc[
-        (table_premenopause["oral_contraception"] >= 0.5), :
-    ]
-    pail_contraception_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="contraception_yes",
-            bins=50,
-            table=table_contraception_yes,
-    ))
-    pail.update(pail_contraception_yes)
-    # Stratify by pre-menopausal, not pregnant females by recent use of
-    # hormone replacement therapy.
-    table_replacement_no = table_premenopause.loc[
-        (table_premenopause["hormone_therapy"] < 0.5), :
-    ]
-    pail_replacement_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="replacement_no",
-            bins=50,
-            table=table_replacement_no,
-    ))
-    pail.update(pail_replacement_no)
-    table_replacement_yes = table_premenopause.loc[
-        (table_premenopause["hormone_therapy"] >= 0.5), :
-    ]
-    pail_replacement_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="replacement_yes",
-            bins=50,
-            table=table_replacement_yes,
-    ))
-    pail.update(pail_replacement_yes)
     # Filter to post-menopausal, not pregnant females.
     table_postmenopause = table_female_not_pregnant.loc[
         (table_female_not_pregnant["menopause"] >= 0.5), :
