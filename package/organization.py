@@ -603,7 +603,7 @@ def organize_sex_age_body_variables(
 # Review:
 # 11 March 2021: TCW verified logic in determination functions (next level).
 # 11 March 2021: TCW verified logic in interpretation functions.
-# 11 March 2021: TCW verified UK Biobank field codings.
+# 11 March 2021: TCW verified UK Biobank fields and their codings.
 
 
 def interpret_menopause(
@@ -1599,8 +1599,72 @@ def organize_female_pregnancy_menopause_variables(
 ##########
 # Sex hormones
 # Review:
-# ________ 2021: TCW verified formulas for estimation of free oestradiol
-# ________ 2021: TCW verified formulas for estimation of free testosterone
+# 11 March 2021: TCW verified formulas for estimation of free oestradiol
+# 11 March 2021: TCW verified formulas for estimation of free testosterone
+# 11 March 2021: TCW verified UK Biobank fields and their codings.
+
+def convert_hormone_concentration_units_moles_per_liter(
+    table=None,
+    factors_concentration=None,
+):
+    """
+    Converts hormone concentrations to units of moles per liter (mol/L).
+
+    UK Biobank field 30600, concentration in grams per liter (g/L) of albumin in
+    blood
+
+    UK Biobank field 30830, concentration in nanomoles per liter (nmol/L) of
+    steroid hormone binding globulin (SHBG) in blood
+
+    UK Biobank field 30800, concentration in picomoles per liter (pmol/L) of
+    oestradiol in blood
+
+    UK Biobank field 30850, concentration in nanomoles per liter (nmol/L) of
+    total testosterone in blood
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        factors_concentration (dict<float>): factors by which to multiply
+            concentrations for the sake of visualization and analysis
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Convert concentrations to units of moles per liter (mol/L).
+    table["albumin"] = table.apply(
+        lambda row: float(
+            (row["30600-0.0"] / 66472.2) * factors_concentration["albumin"]
+        ),
+        axis="columns", # apply across rows
+    ) # 1 mole = 66472.2 g
+    table["steroid_globulin"] = table.apply(
+        lambda row: float(
+            (row["30830-0.0"] / 1E9) * factors_concentration["steroid_globulin"]
+        ),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E9 nmol
+    table["oestradiol"] = table.apply(
+        lambda row: float(
+            (row["30800-0.0"] / 1E12) * factors_concentration["oestradiol"]
+        ),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E12 pmol
+    table["testosterone"] = table.apply(
+        lambda row: float(
+            (row["30850-0.0"] / 1E9) * factors_concentration["testosterone"]
+        ),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E9 nmol
+    # Return information.
+    return table
 
 
 def calculate_estimation_free_testosterone(
@@ -1618,10 +1682,10 @@ def calculate_estimation_free_testosterone(
     Biochemistry, 1982 (PubMed:7202083).
 
     The specific structure of this formula appears in the following articles:
-    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822) [check... also oestradiol]
-    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641) [check... also oestradiol]
-    de Ronde, Clinical Chemistry, 2006 (PubMed:16793931) [check]
-    Chung, Pathology Informatics, 2017 (PubMed:28828199) [check]
+    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822)
+    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641)
+    de Ronde, Clinical Chemistry, 2006 (PubMed:16793931)
+    Chung, Pathology Informatics, 2017 (PubMed:28828199)
 
     The structure of this formula is slightly different, though presumably
     equivalent in the following articles:
@@ -1655,11 +1719,11 @@ def calculate_estimation_free_testosterone(
     """
 
     # Convert concentrations to unit of moles per liter (mol/L).
-    testosterone_unit = (
+    testosterone_unit = float(
         testosterone / factors_concentration["testosterone"]
     )
-    albumin_unit = (albumin / factors_concentration["albumin"])
-    steroid_globulin_unit = (
+    albumin_unit = float(albumin / factors_concentration["albumin"])
+    steroid_globulin_unit = float(
         steroid_globulin / factors_concentration["steroid_globulin"]
     )
 
@@ -1684,9 +1748,9 @@ def calculate_estimation_free_testosterone(
     # Calculate free testosterone.
     testosterone_free_unit = (
         (-1 * b) + math.sqrt(math.pow(b, 2) + (4 * a * testosterone_unit))
-    ) / (2 * a)
+    ) / (2 * a) # unit: mol/L
     # Convert units by factor.
-    testosterone_free = (
+    testosterone_free = float(
         testosterone_free_unit * factors_concentration["testosterone_free"]
     )
     # Return information.
@@ -1756,14 +1820,14 @@ def calculate_estimation_free_oestradiol(
     """
 
     # Convert concentrations to unit of moles per liter (mol/L).
-    oestradiol_unit = (
+    oestradiol_unit = float(
         oestradiol / factors_concentration["oestradiol"]
     )
-    testosterone_free_unit = (
+    testosterone_free_unit = float(
         testosterone_free / factors_concentration["testosterone_free"]
     )
-    albumin_unit = (albumin / factors_concentration["albumin"])
-    steroid_globulin_unit = (
+    albumin_unit = float(albumin / factors_concentration["albumin"])
+    steroid_globulin_unit = float(
         steroid_globulin / factors_concentration["steroid_globulin"]
     )
 
@@ -1776,100 +1840,24 @@ def calculate_estimation_free_oestradiol(
         (oestradiol_unit * associations["shbg_oest"]) -
         (
             (1 + (associations["albumin_oest"] * albumin_unit)) *
-            (
-                1 +
-                (
-                    associations["shbg_test"] *
-                    testosterone_free_unit
-                )
-            )
+            (1 + (associations["shbg_test"] * testosterone_free_unit))
         ) -
         (associations["shbg_oest"] * steroid_globulin_unit)
     ) # unit: 1
     c = (
         oestradiol_unit *
-        (
-            1 +
-            (
-                associations["shbg_test"] *
-                testosterone_free_unit
-            )
-        )
+        (1 + (associations["shbg_test"] * testosterone_free_unit))
     ) # unit: mol/L
     # Calculate free oestradiol.
     oestradiol_free_unit = (
         (-1 * b) - math.sqrt(math.pow(b, 2) - (4 * a * c))
     ) / (2 * a)
     # Convert units by factor.
-    oestradiol_free = (
+    oestradiol_free = float(
         oestradiol_free_unit * factors_concentration["oestradiol_free"]
     )
     # Return information.
     return oestradiol_free
-
-
-def convert_hormone_concentration_units_moles_per_liter(
-    table=None,
-    factors_concentration=None,
-):
-    """
-    Converts hormone concentrations to units of moles per liter (mol/L).
-
-    UK Biobank field 30600, concentration in grams per liter (g/L) of albumin in
-    blood
-
-    UK Biobank field 30830, concentration in nanomoles per liter (nmol/L) of
-    steroid hormone binding globulin (SHBG) in blood
-
-    UK Biobank field 30800, concentration in picomoles per liter (pmol/L) of
-    oestradiol in blood
-
-    UK Biobank field 30850, concentration in nanomoles per liter (nmol/L) of
-    total testosterone in blood
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        factors_concentration (dict<float>): factors by which to multiply
-            concentrations for the sake of visualization and analysis
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Convert concentrations to units of moles per liter (mol/L).
-    table["albumin"] = table.apply(
-        lambda row: (
-            (row["30600-0.0"] / 66472.2) * factors_concentration["albumin"]
-        ),
-        axis="columns", # apply across rows
-    ) # 1 mole = 66472.2 g
-    table["steroid_globulin"] = table.apply(
-        lambda row: (
-            (row["30830-0.0"] / 1E9) * factors_concentration["steroid_globulin"]
-        ),
-        axis="columns", # apply across rows
-    ) # 1 mol = 1E9 nmol
-    table["oestradiol"] = table.apply(
-        lambda row: (
-            (row["30800-0.0"] / 1E12) * factors_concentration["oestradiol"]
-        ),
-        axis="columns", # apply across rows
-    ) # 1 mol = 1E12 pmol
-    table["testosterone"] = table.apply(
-        lambda row: (
-            (row["30850-0.0"] / 1E9) * factors_concentration["testosterone"]
-        ),
-        axis="columns", # apply across rows
-    ) # 1 mol = 1E9 nmol
-    # Return information.
-    return table
 
 
 def organize_sex_hormone_variables(
@@ -1940,7 +1928,8 @@ def organize_sex_hormone_variables(
     )
     # Convert variable types.
     columns_hormones = [
-        "albumin", "steroid_globulin", "oestradiol",
+        "albumin", "steroid_globulin",
+        "oestradiol", "oestradiol_free",
         "testosterone", "testosterone_free",
     ]
     table = convert_table_columns_variables_types_float(
@@ -1969,6 +1958,7 @@ def organize_sex_hormone_variables(
         "IID",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
     ]
@@ -2029,10 +2019,6 @@ def organize_sex_hormone_variables(
     return pail
 
 
-# TODO: stratify female plots by...
-# TODO: pregnancy, menopause, menstruation period (threshold at 14 days?)
-# TODO: contraception, and hormone-replacement therapy (HRT)
-
 def organize_plot_cohort_sex_hormone_variable_distributions(
     prefix=None,
     bins=None,
@@ -2059,6 +2045,7 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
     # Iterate on relevant variables.
     columns = [
         "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
         "steroid_globulin", "steroid_globulin_log",
@@ -5882,7 +5869,6 @@ def execute_sex_hormones(
     # Return information.
     return pail_pregnancy["table_clean"]
 
-# TODO: include histogram for menstruation_day, but only for premenopausal females
 
 def execute_plot_hormones(
     table=None,
@@ -5913,7 +5899,7 @@ def execute_plot_hormones(
     ]
     pail = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="",
-        bins=70,
+        bins=50,
         table=table_not_pregnant,
     )
     # Filter to females.
@@ -5925,7 +5911,7 @@ def execute_plot_hormones(
     ]
     pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="female",
-        bins=70,
+        bins=50,
         table=table_female_not_pregnant,
     )
     pail.update(pail_female)
@@ -6017,7 +6003,7 @@ def execute_plot_hormones(
     ]
     pail_male = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="male",
-        bins=70,
+        bins=50,
         table=table_male,
     )
     pail.update(pail_male)
