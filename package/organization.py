@@ -1382,6 +1382,51 @@ def determine_female_hormone_replacement_therapy(
     return value
 
 
+def determine_female_any_hormone_alteration_medication(
+    sex_text=None,
+    oral_contraception=None,
+    hormone_therapy=None,
+):
+    """
+    Determine count of days since previous menstruation (menstrual period).
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        oral_contraception (float): binary logical representation of whether
+            person used oral contraception recently
+        hormone_therapy (float): binary logical representation of whether
+            person used hormone replacement therapy recently
+
+    raises:
+
+    returns:
+        (float): binary logical representation of whether person used any
+            hormone-alteration medications recently
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (0.5 <= oral_contraception and oral_contraception < 1.5) or
+            (0.5 <= hormone_therapy and hormone_therapy < 1.5)
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # This specific variable is undefined for males.
+        # Set to false for males for convenience.
+        value = 0
+    # Return information.
+    return value
+
+
+
+
 def organize_female_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -1466,7 +1511,7 @@ def organize_female_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
-    # Determine whether person was using oral contraception currently.
+    # Determine whether person was using oral contraception recently.
     table["oral_contraception"] = table.apply(
         lambda row:
             determine_female_oral_contraception(
@@ -1480,7 +1525,7 @@ def organize_female_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
-    # Determine whether person was using hormone replacement therapy currently.
+    # Determine whether person was using hormone replacement therapy recently.
     table["hormone_therapy"] = table.apply(
         lambda row:
             determine_female_hormone_replacement_therapy(
@@ -1494,6 +1539,21 @@ def organize_female_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+    # Determine whether person was using any hormone-altering medications
+    # recently.
+    table["hormone_alteration"] = table.apply(
+        lambda row:
+            determine_female_any_hormone_alteration_medication(
+                sex_text=row["sex_text"],
+                oral_contraception=row["oral_contraception"],
+                hormone_therapy=row["hormone_therapy"],
+             ),
+        axis="columns", # apply across rows
+    )
+
+    # TODO: now define the combination menopause X hormone_alteration
+    # TODO: using a generalizable function
+
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
@@ -5958,6 +6018,16 @@ def execute_plot_hormones(
             table=table_replacement_yes,
     ))
     pail.update(pail_replacement_yes)
+    table_any_alteration = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["hormone_alteration"] >= 0.5), :
+    ]
+    pail_any_alteration = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="any_hormone_alteration",
+            bins=50,
+            table=table_any_alteration,
+    ))
+    pail.update(pail_any_alteration)
     # Filter to pre-menopausal, not pregnant females.
     table_premenopause = table_female_not_pregnant.loc[
         (table_female_not_pregnant["menopause"] < 0.5), :
