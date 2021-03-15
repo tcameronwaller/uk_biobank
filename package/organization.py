@@ -1426,6 +1426,142 @@ def determine_female_any_hormone_alteration_medication(
 
 
 
+# TODO: this is actually a bit more complicated... need to consider null (missing) values...
+# TODO: I think I need to pass the first and second values to you a separate function...
+
+
+def determine_binary_categorical_product_of_two_binary_variables(
+    product=None,
+    first=None,
+    second=None,
+):
+    """
+    Inteprets recent use of hormone replacement therapy.
+
+    arguments:
+        product (int): count of product definition, 1 through 4
+        recent_range (int): years within current age to consider recent
+        field_2814 (float): UK Biobank field 2814, ever taken hormone
+            replacement therapy (HRT)
+        field_3536 (float): UK Biobank field 3536, age started hormone
+            replacement therapy (HRT)
+        field_3546 (float): UK Biobank field 3546, age stopped hormone
+            replacement therapy (HRT)
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (pandas.isna(first)) or
+        (pandas.isna(second))
+    ):
+        value = float("nan")
+    else:
+        # The relevant variables have valid values.
+        # TODO: determine proper value... 1 or 0
+        value = False
+    # Return.
+    return value
+
+
+def determine_binary_categorical_products_of_two_binary_variables(
+    table=None,
+    first=None,
+    second=None,
+    prefix=None,
+    report=None,
+):
+    """
+    Determines four binary categorical variables that represent the product of
+    two binary variables.
+    Uses a prefix in the names of the four product variables.
+
+    Here are the combinations in which each product variable has a binary true
+    value (1).
+
+    [prefix]_1: ("first" variable = 0) and ("second" variable = 0)
+    [prefix]_2: ("first" variable = 0) and ("second" variable = 1)
+    [prefix]_3: ("first" variable = 1) and ("second" variable = 0)
+    [prefix]_4: ("first" variable = 1) and ("second" variable = 1)
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        first (str): name of first column with binary logical representation of
+            a variable
+        second (str): name of second column with binary logical representation
+            of a variable
+        prefix (str): prefix for name of the four product columns
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Define product variables.
+    table[str(prefix + "_1")] = table.apply(
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=1,
+                first=row[first],
+                second=row[second],
+            ),
+        axis="columns", # apply across rows
+    )
+
+    table[str(prefix + "_1")] = table.apply(
+        lambda row: (
+            1 if (
+                (-0.5 <= row[first] and row[first] < 0.5) and
+                (-0.5 <= row[second] and row[second] < 0.5)
+            ) else 0
+        ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_2")] = table.apply(
+        lambda row: (
+            1 if (
+                (-0.5 <= row[first] and row[first] < 0.5) and
+                (0.5 <= row[second] and row[second] < 1.5)
+            ) else 0
+        ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_3")] = table.apply(
+        lambda row: (
+            1 if (
+                (0.5 <= row[first] and row[first] < 1.5) and
+                (-0.5 <= row[second] and row[second] < 0.5)
+            ) else 0
+        ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_4")] = table.apply(
+        lambda row: (
+            1 if (
+                (0.5 <= row[first] and row[first] < 1.5) and
+                (0.5 <= row[second] and row[second] < 1.5)
+            ) else 0
+        ),
+        axis="columns", # apply across rows
+    )
+    # Return information.
+    return table
+
+
+
+
 
 def organize_female_pregnancy_menopause_variables(
     table=None,
@@ -1761,23 +1897,25 @@ def calculate_estimation_free_testosterone(
 
     arguments:
         testosterone (float): concentration in moles per liter (mol/L) of total
-            testosterone in blood
+            testosterone in blood, with concentration factor
         albumin (float): concentration in moles per liter (mol/L) of albumin in
-            blood
+            blood, with concentration factor
         steroid_globulin (float): concentration in moles per liter (mol/L) of
-            steroid hormone binding globulin in blood
+            steroid hormone binding globulin in blood, with concentration factor
         factors_concentration (dict<float>): factors by which to multiply
-            concentrations for the sake of visualization and analysis
+            concentrations for the sake of float storage and analysis
         associations (dict<float>): association constants in liters per mole for
             steroid hormone binding globulin (SHBG) and ablumin
 
     raises:
 
     returns:
-        (float): estimate concentration in moles per liter of free testosterone
+        (float): estimate concentration in moles per liter of free testosterone,
+            with concentration factor
 
     """
 
+    # Raw values are stored with a concentration factor.
     # Convert concentrations to unit of moles per liter (mol/L).
     testosterone_unit = float(
         testosterone / factors_concentration["testosterone"]
@@ -1836,7 +1974,7 @@ def calculate_estimation_free_oestradiol(
     de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641)
 
     Notice that there is a discrepancy with the formula in the following
-    articles:
+    article:
     van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822)
     This article seems to introduce an extra term for the concentration of SHBG
     in both the "b" and "c" formulas.
@@ -1862,23 +2000,25 @@ def calculate_estimation_free_oestradiol(
 
     arguments:
         testosterone (float): concentration in moles per liter (mol/L) of total
-            testosterone in blood
+            testosterone in blood, with concentration factor
         albumin (float): concentration in moles per liter (mol/L) of albumin in
-            blood
+            blood, with concentration factor
         steroid_globulin (float): concentration in moles per liter (mol/L) of
-            steroid hormone binding globulin in blood
+            steroid hormone binding globulin in blood, with concentration factor
         factors_concentration (dict<float>): factors by which to multiply
-            concentrations for the sake of visualization and analysis
+            concentrations for the sake of float storage and analysis
         associations (dict<float>): association constants in liters per mole for
             steroid hormone binding globulin (SHBG) and ablumin
 
     raises:
 
     returns:
-        (float): estimate concentration in moles per liter of free testosterone
+        (float): estimate concentration in moles per liter of free testosterone,
+            with concentration factor
 
     """
 
+    # Raw values are stored with a concentration factor.
     # Convert concentrations to unit of moles per liter (mol/L).
     oestradiol_unit = float(
         oestradiol / factors_concentration["oestradiol"]
