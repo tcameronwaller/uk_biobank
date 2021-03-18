@@ -2093,8 +2093,8 @@ def organize_report_column_pair_correlations(
         table[column_two].to_numpy(),
     )
     spearman_correlation, spearman_probability = scipy.stats.spearmanr(
-        table_report[column_one].to_numpy(),
-        table_report[column_two].to_numpy(),
+        table[column_one].to_numpy(),
+        table[column_two].to_numpy(),
     )
     # Report.
     utility.print_terminal_partition(level=2)
