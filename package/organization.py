@@ -2060,6 +2060,56 @@ def calculate_estimation_free_oestradiol(
     return oestradiol_free
 
 
+
+def organize_report_column_pair_correlations(
+    column_one=None,
+    column_two=None,
+    table=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        column_one (str): name of first column
+        column_two (str): name of second column
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    table = table.copy(deep=True)
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=[column_one, column_two],
+        inplace=True,
+    )
+    pearson_correlation, pearson_probability = scipy.stats.pearsonr(
+        table[column_one].to_numpy(),
+        table[column_two].to_numpy(),
+    )
+    spearman_correlation, spearman_probability = scipy.stats.spearmanr(
+        table_report[column_one].to_numpy(),
+        table_report[column_two].to_numpy(),
+    )
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("Correlations between pair of columns")
+    print("column one: " + str(column_one))
+    print("column_two: " + str(column_two))
+    print("Pearson correlation: " + str(pearson_correlation))
+    print("Pearson prob: " + str(pearson_probability))
+    print("Spearman correlation: " + str(spearman_correlation))
+    print("Spearman prob: " + str(spearman_probability))
+
+    pass
+
+
+
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -2210,6 +2260,16 @@ def organize_sex_hormone_variables(
             "Count males: " + str(table_bioavailability_male.shape[0])
         )
         utility.print_terminal_partition(level=3)
+        organize_report_column_pair_correlations(
+            column_one="testosterone",
+            column_two="testosterone_free",
+            table=table_report,
+        )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol",
+            column_two="oestradiol_free",
+            table=table_report,
+        )
     # Collect information.
     pail = dict()
     pail["table"] = table
