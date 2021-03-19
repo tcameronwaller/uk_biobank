@@ -1599,16 +1599,16 @@ def determine_binary_categorical_products_of_two_binary_variables(
         inplace=True,
     )
     table_1 = table_report.loc[
-        (table_report[str(prefix + "_1")] > 1), :
+        (table_report[str(prefix + "_1")] > 0.5), :
     ]
     table_2 = table_report.loc[
-        (table_report[str(prefix + "_2")] > 1), :
+        (table_report[str(prefix + "_2")] > 0.5), :
     ]
     table_3 = table_report.loc[
-        (table_report[str(prefix + "_3")] > 1), :
+        (table_report[str(prefix + "_3")] > 0.5), :
     ]
     table_4 = table_report.loc[
-        (table_report[str(prefix + "_4")] > 1), :
+        (table_report[str(prefix + "_4")] > 0.5), :
     ]
     # Report.
     if report:
