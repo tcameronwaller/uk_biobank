@@ -2060,7 +2060,6 @@ def calculate_estimation_free_oestradiol(
     return oestradiol_free
 
 
-
 def organize_report_column_pair_correlations(
     column_one=None,
     column_two=None,
@@ -2102,12 +2101,11 @@ def organize_report_column_pair_correlations(
     print("column one: " + str(column_one))
     print("column_two: " + str(column_two))
     print("Pearson correlation: " + str(pearson_correlation))
-    print("Pearson prob: " + str(pearson_probability))
+    print("Pearson probability: " + str(pearson_probability))
     print("Spearman correlation: " + str(spearman_correlation))
-    print("Spearman prob: " + str(spearman_probability))
+    print("Spearman probability: " + str(spearman_probability))
 
     pass
-
 
 
 def organize_sex_hormone_variables(
