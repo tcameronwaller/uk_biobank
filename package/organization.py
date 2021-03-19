@@ -1468,7 +1468,7 @@ def determine_binary_categorical_product_of_two_binary_variables(
             if (
                 (-0.5 <= first and first < 0.5) and
                 (-0.5 <= second and second < 0.5)
-            )
+            ):
                 # first = 0
                 # second = 0
                 value = 1
@@ -1478,7 +1478,7 @@ def determine_binary_categorical_product_of_two_binary_variables(
             if (
                 (-0.5 <= first and first < 0.5) and
                 (0.5 <= second and second < 1.5)
-            )
+            ):
                 # first = 0
                 # second = 1
                 value = 1
@@ -1488,7 +1488,7 @@ def determine_binary_categorical_product_of_two_binary_variables(
             if (
                 (0.5 <= first and first < 1.5) and
                 (-0.5 <= second and second < 0.5)
-            )
+            ):
                 # first = 1
                 # second = 0
                 value = 1
@@ -1498,7 +1498,7 @@ def determine_binary_categorical_product_of_two_binary_variables(
             if (
                 (0.5 <= first and first < 1.5) and
                 (0.5 <= second and second < 1.5)
-            )
+            ):
                 # first = 1
                 # second = 1
                 value = 1
