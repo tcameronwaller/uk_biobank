@@ -1434,10 +1434,10 @@ def determine_binary_categorical_product_of_two_binary_variables(
     Here are the combinations in which each product variable has a binary true
     value (1).
 
-    [prefix]_1: ("first" variable = 0) and ("second" variable = 0)
-    [prefix]_2: ("first" variable = 0) and ("second" variable = 1)
-    [prefix]_3: ("first" variable = 1) and ("second" variable = 0)
-    [prefix]_4: ("first" variable = 1) and ("second" variable = 1)
+    [prefix]_1: ("first" variable = 1) and ("second" variable = 1)
+    [prefix]_2: ("first" variable = 1) and ("second" variable = 0)
+    [prefix]_3: ("first" variable = 0) and ("second" variable = 1)
+    [prefix]_4: ("first" variable = 0) and ("second" variable = 0)
 
     If either "first" or "second" variables have null, missing values then all
     product variables also have null, missing values.
@@ -1466,26 +1466,16 @@ def determine_binary_categorical_product_of_two_binary_variables(
         # The relevant variables have valid values.
         if (product == 1):
             if (
-                (-0.5 <= first and first < 0.5) and
-                (-0.5 <= second and second < 0.5)
+                (0.5 <= first and first < 1.5) and
+                (0.5 <= second and second < 1.5)
             ):
-                # first = 0
-                # second = 0
+                # first = 1
+                # second = 1
                 value = 1
             else:
                 value = 0
         elif (product == 2):
             if (
-                (-0.5 <= first and first < 0.5) and
-                (0.5 <= second and second < 1.5)
-            ):
-                # first = 0
-                # second = 1
-                value = 1
-            else:
-                value = 0
-        elif (product == 3):
-            if (
                 (0.5 <= first and first < 1.5) and
                 (-0.5 <= second and second < 0.5)
             ):
@@ -1494,13 +1484,23 @@ def determine_binary_categorical_product_of_two_binary_variables(
                 value = 1
             else:
                 value = 0
-        elif (product == 4):
+        elif (product == 3):
             if (
-                (0.5 <= first and first < 1.5) and
+                (-0.5 <= first and first < 0.5) and
                 (0.5 <= second and second < 1.5)
             ):
-                # first = 1
+                # first = 0
                 # second = 1
+                value = 1
+            else:
+                value = 0
+        elif (product == 4):
+            if (
+                (-0.5 <= first and first < 0.5) and
+                (-0.5 <= second and second < 0.5)
+            ):
+                # first = 0
+                # second = 0
                 value = 1
             else:
                 value = 0
