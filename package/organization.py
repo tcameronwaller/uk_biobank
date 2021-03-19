@@ -811,9 +811,9 @@ def determine_female_menopause(
             menopause = 0
     else:
         # Menopause undefined for males.
-        #menopause = float("nan")
+        menopause = float("nan")
         # Set to false for males for convenience.
-        menopause = 0
+        #menopause = 0
     # Return information.
     return menopause
 
@@ -947,9 +947,9 @@ def determine_female_pregnancy_broad(
             pregnancy = 0
     else:
         # Pregnancy undefined for males.
-        #pregnancy = float("nan")
+        pregnancy = float("nan")
         # Set to false for males for convenience.
-        pregnancy = 0
+        #pregnancy = 0
     # Return information.
     return pregnancy
 
@@ -993,9 +993,9 @@ def determine_female_pregnancy(
             pregnancy = 0
     else:
         # Pregnancy undefined for males.
-        #pregnancy = float("nan")
+        pregnancy = float("nan")
         # Set to false for males for convenience.
-        pregnancy = 0
+        #pregnancy = 0
     # Return information.
     return pregnancy
 
@@ -1228,8 +1228,7 @@ def determine_female_oral_contraception(
             value = 0
     else:
         # This specific variable is undefined for males.
-        # Set to false for males for convenience.
-        value = 0
+        value = float("nan")
     # Return information.
     return value
 
@@ -1376,8 +1375,7 @@ def determine_female_hormone_replacement_therapy(
             value = 0
     else:
         # This specific variable is undefined for males.
-        # Set to false for males for convenience.
-        value = 0
+        value = float("nan")
     # Return information.
     return value
 
@@ -1419,15 +1417,9 @@ def determine_female_any_hormone_alteration_medication(
             value = 0
     else:
         # This specific variable is undefined for males.
-        # Set to false for males for convenience.
-        value = 0
+        value = float("nan")
     # Return information.
     return value
-
-
-
-# TODO: this is actually a bit more complicated... need to consider null (missing) values...
-# TODO: I think I need to pass the first and second values to you a separate function...
 
 
 def determine_binary_categorical_product_of_two_binary_variables(
@@ -1436,17 +1428,26 @@ def determine_binary_categorical_product_of_two_binary_variables(
     second=None,
 ):
     """
-    Inteprets recent use of hormone replacement therapy.
+    Determines any one of four binary categorical variables that represent the
+    product of two binary variables.
+
+    Here are the combinations in which each product variable has a binary true
+    value (1).
+
+    [prefix]_1: ("first" variable = 0) and ("second" variable = 0)
+    [prefix]_2: ("first" variable = 0) and ("second" variable = 1)
+    [prefix]_3: ("first" variable = 1) and ("second" variable = 0)
+    [prefix]_4: ("first" variable = 1) and ("second" variable = 1)
+
+    If either "first" or "second" variables have null, missing values then all
+    product variables also have null, missing values.
 
     arguments:
         product (int): count of product definition, 1 through 4
-        recent_range (int): years within current age to consider recent
-        field_2814 (float): UK Biobank field 2814, ever taken hormone
-            replacement therapy (HRT)
-        field_3536 (float): UK Biobank field 3536, age started hormone
-            replacement therapy (HRT)
-        field_3546 (float): UK Biobank field 3546, age stopped hormone
-            replacement therapy (HRT)
+        first (str): name of first column with binary logical representation of
+            a variable
+        second (str): name of second column with binary logical representation
+            of a variable
 
     raises:
 
@@ -1455,7 +1456,7 @@ def determine_binary_categorical_product_of_two_binary_variables(
 
     """
 
-    # Interpret field code.
+    # Determine product value.
     if (
         (pandas.isna(first)) or
         (pandas.isna(second))
@@ -1463,8 +1464,48 @@ def determine_binary_categorical_product_of_two_binary_variables(
         value = float("nan")
     else:
         # The relevant variables have valid values.
-        # TODO: determine proper value... 1 or 0
-        value = False
+        if (product == 1):
+            if (
+                (-0.5 <= first and first < 0.5) and
+                (-0.5 <= second and second < 0.5)
+            )
+                # first = 0
+                # second = 0
+                value = 1
+            else:
+                value = 0
+        elif (product == 2):
+            if (
+                (-0.5 <= first and first < 0.5) and
+                (0.5 <= second and second < 1.5)
+            )
+                # first = 0
+                # second = 1
+                value = 1
+            else:
+                value = 0
+        elif (product == 3):
+            if (
+                (0.5 <= first and first < 1.5) and
+                (-0.5 <= second and second < 0.5)
+            )
+                # first = 1
+                # second = 0
+                value = 1
+            else:
+                value = 0
+        elif (product == 4):
+            if (
+                (0.5 <= first and first < 1.5) and
+                (0.5 <= second and second < 1.5)
+            )
+                # first = 1
+                # second = 1
+                value = 1
+            else:
+                value = 0
+            pass
+        pass
     # Return.
     return value
 
@@ -1480,14 +1521,6 @@ def determine_binary_categorical_products_of_two_binary_variables(
     Determines four binary categorical variables that represent the product of
     two binary variables.
     Uses a prefix in the names of the four product variables.
-
-    Here are the combinations in which each product variable has a binary true
-    value (1).
-
-    [prefix]_1: ("first" variable = 0) and ("second" variable = 0)
-    [prefix]_2: ("first" variable = 0) and ("second" variable = 1)
-    [prefix]_3: ("first" variable = 1) and ("second" variable = 0)
-    [prefix]_4: ("first" variable = 1) and ("second" variable = 1)
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -1519,48 +1552,80 @@ def determine_binary_categorical_products_of_two_binary_variables(
             ),
         axis="columns", # apply across rows
     )
-
-    table[str(prefix + "_1")] = table.apply(
-        lambda row: (
-            1 if (
-                (-0.5 <= row[first] and row[first] < 0.5) and
-                (-0.5 <= row[second] and row[second] < 0.5)
-            ) else 0
-        ),
-        axis="columns", # apply across rows
-    )
     table[str(prefix + "_2")] = table.apply(
-        lambda row: (
-            1 if (
-                (-0.5 <= row[first] and row[first] < 0.5) and
-                (0.5 <= row[second] and row[second] < 1.5)
-            ) else 0
-        ),
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=2,
+                first=row[first],
+                second=row[second],
+            ),
         axis="columns", # apply across rows
     )
     table[str(prefix + "_3")] = table.apply(
-        lambda row: (
-            1 if (
-                (0.5 <= row[first] and row[first] < 1.5) and
-                (-0.5 <= row[second] and row[second] < 0.5)
-            ) else 0
-        ),
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=3,
+                first=row[first],
+                second=row[second],
+            ),
         axis="columns", # apply across rows
     )
     table[str(prefix + "_4")] = table.apply(
-        lambda row: (
-            1 if (
-                (0.5 <= row[first] and row[first] < 1.5) and
-                (0.5 <= row[second] and row[second] < 1.5)
-            ) else 0
-        ),
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=4,
+                first=row[first],
+                second=row[second],
+            ),
         axis="columns", # apply across rows
     )
+
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        str(prefix + "_1"),
+        str(prefix + "_2"),
+        str(prefix + "_3"),
+        str(prefix + "_4"),
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
+    table_report.dropna(
+        axis="index",
+        how="any",
+        subset=columns_report,
+        inplace=True,
+    )
+    table_1 = table_report.loc[
+        (table_report[str(prefix + "_1")] > 1), :
+    ]
+    table_2 = table_report.loc[
+        (table_report[str(prefix + "_2")] > 1), :
+    ]
+    table_3 = table_report.loc[
+        (table_report[str(prefix + "_3")] > 1), :
+    ]
+    table_4 = table_report.loc[
+        (table_report[str(prefix + "_4")] > 1), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "determine_binary_categorical_products_of_two_binary_variables()"
+        )
+        utility.print_terminal_partition(level=3)
+        print("Counts of records (rows) in each product category...")
+        print("Category 1: " + str(table_1.shape[0]))
+        print("Category 2: " + str(table_2.shape[0]))
+        print("Category 3: " + str(table_3.shape[0]))
+        print("Category 4: " + str(table_4.shape[0]))
+        pass
     # Return information.
     return table
-
-
-
 
 
 def organize_female_pregnancy_menopause_variables(
@@ -1686,9 +1751,19 @@ def organize_female_pregnancy_menopause_variables(
              ),
         axis="columns", # apply across rows
     )
+    # Determine combination categories by menopause and hormone-atering therapy.
 
-    # TODO: now define the combination menopause X hormone_alteration
-    # TODO: using a generalizable function
+    # TODO: IMPORTANT!!!
+    # TODO: make sure that menopause and hormone_alteration have null values for males
+
+    table = determine_binary_categorical_products_of_two_binary_variables(
+        table=table,
+        first="menopause",
+        second="hormone_alteration",
+        prefix="menopause_hormone_category",
+        report=report,
+    )
+
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
