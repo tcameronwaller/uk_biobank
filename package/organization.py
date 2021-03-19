@@ -1715,7 +1715,6 @@ def organize_female_pregnancy_menopause_variables(
         "menstruation_day", "3700-0.0",
         "oral_contraception", "2784-0.0",
         "hormone_therapy", "2814-0.0",
-
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -2098,6 +2097,7 @@ def organize_report_column_pair_correlations(
     # Report.
     utility.print_terminal_partition(level=2)
     print("Correlations between pair of columns")
+    print("valid value pairs for correlation: " + str(table.shape[0]))
     print("column one: " + str(column_one))
     print("column_two: " + str(column_two))
     print("Pearson correlation: " + str(pearson_correlation))
