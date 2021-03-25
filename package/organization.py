@@ -5521,8 +5521,6 @@ def select_records_by_sex_specific_valid_variables_values(
             table_female,
             ignore_index=True,
         )
-        print("female table...")
-        print("Count records: " + str(table_female.shape[0]))
         pass
     # Select records for males.
     if male:
@@ -5535,8 +5533,6 @@ def select_records_by_sex_specific_valid_variables_values(
             table_male,
             ignore_index=True,
         )
-        print("male table...")
-        print("Count records: " + str(table_male.shape[0]))
         pass
     # Organize table.
     table_collection.reset_index(
@@ -5550,8 +5546,6 @@ def select_records_by_sex_specific_valid_variables_values(
         drop=True,
         inplace=True
     )
-    print("collection table...")
-    print("Count records: " + str(table_collection.shape[0]))
     # Return information.
     return table_collection
 
