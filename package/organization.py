@@ -5463,7 +5463,7 @@ def select_records_by_male_specific_valid_variables_values(
         level=None,
         inplace=True
     )
-    # Select records for females.
+    # Select records for males.
     table = table.loc[
         (table["sex"] >= 0.5), :
     ]
@@ -5538,7 +5538,6 @@ def select_records_by_sex_specific_valid_variables_values(
             ignore_index=False,
         )
         pass
-
     # Organize table.
     table_collection.reset_index(
         level=None,
@@ -5552,9 +5551,6 @@ def select_records_by_sex_specific_valid_variables_values(
     )
     # Return information.
     return table_collection
-
-
-
 
 
 def translate_boolean_phenotype_plink(
