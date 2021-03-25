@@ -1754,10 +1754,6 @@ def organize_female_pregnancy_menopause_variables(
         axis="columns", # apply across rows
     )
     # Determine combination categories by menopause and hormone-atering therapy.
-
-    # TODO: IMPORTANT!!!
-    # TODO: make sure that menopause and hormone_alteration have null values for males
-
     table = determine_binary_categorical_products_of_two_binary_variables(
         table=table,
         first="menopause",
@@ -1765,7 +1761,6 @@ def organize_female_pregnancy_menopause_variables(
         prefix="menopause_hormone_category",
         report=report,
     )
-
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
