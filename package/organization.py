@@ -5935,7 +5935,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     return pail
 
 
-def select_organize_plink_cohorts_variables_by_sex_hormones(
+def select_organize_plink_cohorts_by_sex_hormones(
     table=None,
     report=None,
 ):
@@ -5988,7 +5988,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormones(
     if report:
         utility.print_terminal_partition(level=2)
         print(
-            "report: select_organize_plink_cohorts_variables_by_sex_hormones()"
+            "report: select_organize_plink_cohorts_by_sex_hormones()"
         )
         for table_name in pail.keys():
             utility.print_terminal_partition(level=5)
