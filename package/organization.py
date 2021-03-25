@@ -5739,12 +5739,13 @@ def organize_phenotype_covariate_table_plink_format(
         inplace=True
     )
     # Remove table rows with any empty cells or missing values.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=None,
-        inplace=True,
-    )
+    if False:
+        table.dropna(
+            axis="index",
+            how="any",
+            subset=None,
+            inplace=True,
+        )
     # Introduce family identifier.
     table["FID"] = table["IID"]
     # Sort column sequence.
