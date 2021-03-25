@@ -5670,6 +5670,7 @@ def organize_phenotype_covariate_table_plink_format(
     boolean_phenotypes=None,
     binary_phenotypes=None,
     continuous_variables=None,
+    remove_null_records=None,
     table=None,
 ):
     """
@@ -5695,6 +5696,8 @@ def organize_phenotype_covariate_table_plink_format(
         continuous_variables (list<str>): names of columns that PLINK ought
             to interpret as continuous variables (ordinal discrete, interval
             continuous, or ratio continuous)
+        remove_null_records (bool): whether to remove records with any null
+            values
         table (object): Pandas data frame of information about phenotype and
             covariate variables for GWAS
 
@@ -5739,7 +5742,7 @@ def organize_phenotype_covariate_table_plink_format(
         inplace=True
     )
     # Remove table rows with any empty cells or missing values.
-    if False:
+    if remove_null_records:
         table.dropna(
             axis="index",
             how="any",
