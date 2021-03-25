@@ -5536,7 +5536,8 @@ def select_records_by_sex_specific_valid_variables_values(
     # Organize table.
     table_collection.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=True,
     )
     table_collection.set_index(
         "eid",
