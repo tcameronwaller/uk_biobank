@@ -1633,8 +1633,10 @@ def organize_female_pregnancy_menopause_variables(
     report=None,
 ):
     """
-    Organizes information about whether female persons have experienced
-    menopause or were pregnant.
+    Organizes information about female persons' menopause, pregnancy,
+    menstruation, oral contraception, and hormone therapy.
+
+    These variables are specific to females and have null values for males.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -1790,6 +1792,9 @@ def organize_female_pregnancy_menopause_variables(
         "menstruation_day", "3700-0.0",
         "oral_contraception", "2784-0.0",
         "hormone_therapy", "2814-0.0",
+        "hormone_alteration",
+        "menopause_hormone_category_1", "menopause_hormone_category_2",
+        "menopause_hormone_category_3", "menopause_hormone_category_4",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -5345,6 +5350,211 @@ def select_valid_records_all_specific_variables(
         print(table)
     # Return information.
     return table
+
+
+def select_records_by_female_specific_valid_variables_values(
+    menopause=None,
+    pregnancy=None,
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for females with sex-specific criteria.
+
+    arguments:
+        menopause (str): which menopausal categories to include for
+            females: "both", "pre", or "post"
+        pregnancy (bool): whether to include records for females who
+            were pregnant
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    # Select records for females.
+    table = table.loc[
+        (table["sex"] < 0.5), :
+    ]
+    # Determine whether to filter by menopause.
+    if (menopause == "pre"):
+        # Select records for pre-menopausal females.
+        table = table.loc[
+            (table["menopause"] < 0.5), :
+        ]
+    elif (menopause == "post"):
+        # Select records for post-menopausal females.
+        table = table.loc[
+            (table["menopause"] >= 0.5), :
+        ]
+    # Determine whether to filter by pregnancy.
+    if (not pregnancy):
+        # Select records for females who were not pregnant.
+        table = table.loc[
+            (table["pregnancy"] < 0.5), :
+        ]
+    # Return information.
+    return table
+
+
+def select_records_by_male_specific_valid_variables_values(
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for males with sex-specific criteria.
+
+    arguments:
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    # Select records for females.
+    table = table.loc[
+        (table["sex"] >= 0.5), :
+    ]
+    # Return information.
+    return table
+
+
+def select_records_by_sex_specific_valid_variables_values(
+    female=None,
+    female_menopause=None,
+    female_pregnancy=None,
+    female_variables=None,
+    female_prefixes=None,
+    male=None,
+    male_variables=None,
+    male_prefixes=None,
+    table=None,
+):
+    """
+    Selects records by sex and by sex-specific criteria and variables.
+
+    arguments:
+        female (bool): whether to include records for females
+        female_menopause (str): which menopausal categories to include for
+            females: "both", "pre", or "post"
+        female_pregnancy (bool): whether to include records for females who
+            were pregnant
+        female_variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records for females
+        female_prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records for females
+        male (bool): whether to include records for males
+        male_variables (list<str>): names of columns for variables in which rows
+            must have valid values to keep records for males
+        male_prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records for males
+        table (object): Pandas data frame of values
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Collect records.
+    table_collection = pandas.DataFrame()
+    # Select records for females.
+    if female:
+        table_female = select_records_by_female_specific_valid_variables_values(
+            menopause=female_menopause,
+            pregnancy=female_pregnancy,
+            variables=female_variables,
+            prefixes=female_prefixes,
+            table=table,
+        )
+        table_collection = table_collection.append(
+            table_female,
+            ignore_index=False,
+        )
+        pass
+    # Select records for males.
+    if male:
+        table_male = select_records_by_male_specific_valid_variables_values(
+            variables=male_variables,
+            prefixes=male_prefixes,
+            table=table,
+        )
+        table_collection = table_collection.append(
+            table_male,
+            ignore_index=False,
+        )
+        pass
+
+    # Organize table.
+    table_collection.reset_index(
+        level=None,
+        inplace=True
+    )
+    table_collection.set_index(
+        "eid",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    # Return information.
+    return table_collection
+
+
+
 
 
 def translate_boolean_phenotype_plink(
