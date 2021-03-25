@@ -5507,7 +5507,6 @@ def select_records_by_sex_specific_valid_variables_values(
 
     # Collect records.
     table_collection = pandas.DataFrame()
-    utility.print_terminal_partition(level=5)
     # Select records for females.
     if female:
         table_female = select_records_by_female_specific_valid_variables_values(
