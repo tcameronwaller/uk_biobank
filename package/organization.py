@@ -5379,6 +5379,11 @@ def select_records_by_female_specific_valid_variables_values(
 
     # Copy information.
     table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
     table = select_valid_records_all_specific_variables(
@@ -5387,11 +5392,6 @@ def select_records_by_female_specific_valid_variables_values(
         table=table,
         drop_columns=True,
         report=False,
-    )
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True
     )
     # Select records for females.
     table = table.loc[
@@ -5444,6 +5444,11 @@ def select_records_by_male_specific_valid_variables_values(
 
     # Copy information.
     table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
     table = select_valid_records_all_specific_variables(
@@ -5452,11 +5457,6 @@ def select_records_by_male_specific_valid_variables_values(
         table=table,
         drop_columns=True,
         report=False,
-    )
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True
     )
     # Select records for males.
     table = table.loc[
@@ -5518,7 +5518,7 @@ def select_records_by_sex_specific_valid_variables_values(
         )
         table_collection = table_collection.append(
             table_female,
-            ignore_index=False,
+            ignore_index=True,
         )
         pass
     # Select records for males.
@@ -5530,7 +5530,7 @@ def select_records_by_sex_specific_valid_variables_values(
         )
         table_collection = table_collection.append(
             table_male,
-            ignore_index=False,
+            ignore_index=True,
         )
         pass
     # Organize table.
@@ -5746,6 +5746,7 @@ def organize_phenotype_covariate_table_plink_format(
         lambda element: element not in ["eid", "IID", "FID"],
         columns
     ))
+    columns_sequence.insert(0, "eid") # third column
     columns_sequence.insert(0, "IID") # second column
     columns_sequence.insert(0, "FID") # first column
     table_columns = table.loc[
