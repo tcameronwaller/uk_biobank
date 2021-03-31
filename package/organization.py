@@ -1895,24 +1895,31 @@ def organize_female_pregnancy_menopause_variables(
     table_female = table_report.loc[
         (table_report["sex_text"] == "female"), :
     ]
-    table_premenopause = table_female.loc[
-        (table_female["menopause"] < 0.5), :
-    ]
-    table_postmenopause = table_female.loc[
-        (table_female["menopause"] > 0.5), :
+    table_pregnant = table_female.loc[
+        (table_female["pregnancy"] >= 0.5), :
     ]
     table_not_pregnant = table_female.loc[
         (table_female["pregnancy"] < 0.5), :
     ]
-    table_pregnant = table_female.loc[
-        (table_female["pregnancy"] > 0.5), :
+    table_premenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause"] < 0.5), :
     ]
-    table_pregnant_broad = table_female.loc[
-        (table_female["pregnancy_broad"] > 0.5), :
+    table_postmenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause"] >= 0.5), :
     ]
-    table_pregnant_postmenopause = table_postmenopause.loc[
-        (table_postmenopause["pregnancy_broad"] > 0.5), :
+    table_premenopause_alteration_no = table_premenopause.loc[
+        (table_premenopause["hormone_alteration"] < 0.5), :
     ]
+    table_premenopause_alteration_yes = table_premenopause.loc[
+        (table_premenopause["hormone_alteration"] >= 0.5), :
+    ]
+    table_postmenopause_alteration_no = table_postmenopause.loc[
+        (table_postmenopause["hormone_alteration"] < 0.5), :
+    ]
+    table_postmenopause_alteration_yes = table_postmenopause.loc[
+        (table_postmenopause["hormone_alteration"] >= 0.5), :
+    ]
+
     # Report.
     if report:
         # Column name translations.
@@ -1924,28 +1931,32 @@ def organize_female_pregnancy_menopause_variables(
         utility.print_terminal_partition(level=3)
         print("Count females: " + str(table_female.shape[0]))
         print(
+            "Count pregnant females: " + str(table_pregnant.shape[0])
+        )
+        print("Remaining groups were not pregnant.")
+        print(
             "Count pre-menopause females: " + str(table_premenopause.shape[0])
         )
         print(
             "Count post-menopause females: " + str(table_postmenopause.shape[0])
         )
+        utility.print_terminal_partition(level=5)
         print(
-            "Count not pregnant females: " + str(table_not_pregnant.shape[0])
+            "Count pre-menopause females, yes OC or HRT: " +
+            str(table_premenopause_alteration_yes.shape[0])
         )
         print(
-            "Count pregnant females: " + str(table_pregnant.shape[0])
+            "Count pre-menopause females, no OC or HRT: " +
+            str(table_premenopause_alteration_no.shape[0])
+        )
+        utility.print_terminal_partition(level=5)
+        print(
+            "Count post-menopause females, yes OC or HRT: " +
+            str(table_postmenopause_alteration_yes.shape[0])
         )
         print(
-            "Note that broad definition of pregnancy includes 'unsure' cases " +
-            "and allows post-menopausal pregnancy."
-        )
-        print(
-            "Count broadly pregnant females: " +
-            str(table_pregnant_broad.shape[0])
-        )
-        print(
-            "Count broadly pregnant post-menopause females: " +
-            str(table_pregnant_postmenopause.shape[0])
+            "Count post-menopause females, no OC or HRT: " +
+            str(table_postmenopause_alteration_no.shape[0])
         )
         utility.print_terminal_partition(level=3)
     # Collect information.
