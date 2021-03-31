@@ -1712,6 +1712,8 @@ def determine_binary_categorical_products_of_two_binary_variables(
     return table
 
 
+# TODO: revert to interpreting "nulls" as False for OC and HRT
+
 def organize_female_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -1809,7 +1811,7 @@ def organize_female_pregnancy_menopause_variables(
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
-                null_false=True, # whether to interpret nulls as False
+                null_false=False, # whether to interpret nulls as False
                 field_2784=row["2784-0.0"],
                 field_2794=row["2794-0.0"],
                 field_2804=row["2804-0.0"],
@@ -1817,7 +1819,7 @@ def organize_female_pregnancy_menopause_variables(
         axis="columns", # apply across rows
     )
     # Determine whether person was using hormone replacement therapy recently.
-    table["hormone_therapy"] = table.apply(
+    table["hormone_replacement"] = table.apply(
         lambda row:
             determine_female_hormone_replacement_therapy(
                 sex_text=row["sex_text"],
@@ -1825,7 +1827,7 @@ def organize_female_pregnancy_menopause_variables(
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
-                null_false=True, # whether to interpret nulls as False
+                null_false=False, # whether to interpret nulls as False
                 field_2814=row["2814-0.0"],
                 field_3536=row["3536-0.0"],
                 field_3546=row["3546-0.0"],
@@ -1839,7 +1841,7 @@ def organize_female_pregnancy_menopause_variables(
             determine_female_any_hormone_alteration_medication(
                 sex_text=row["sex_text"],
                 oral_contraception=row["oral_contraception"],
-                hormone_therapy=row["hormone_therapy"],
+                hormone_therapy=row["hormone_replacement"],
              ),
         axis="columns", # apply across rows
     )
@@ -1876,7 +1878,7 @@ def organize_female_pregnancy_menopause_variables(
         "pregnancy_broad", "pregnancy", "3140-0.0",
         "menstruation_day", "3700-0.0",
         "oral_contraception", "2784-0.0",
-        "hormone_therapy", "2814-0.0",
+        "hormone_replacement", "2814-0.0",
         "hormone_alteration",
         "menopause_hormone_category_1", "menopause_hormone_category_2",
         "menopause_hormone_category_3", "menopause_hormone_category_4",
@@ -1924,7 +1926,7 @@ def organize_female_pregnancy_menopause_variables(
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: organize_female_pregnancy_menopause_variables()")
-        print("version check: tortoise")
+        print("version check: turtle ... interpret nulls as nulls...")
         utility.print_terminal_partition(level=3)
         print("Translation of columns for hormones: ")
         print(table_female)
@@ -6829,7 +6831,7 @@ def execute_plot_hormones(
     # Stratify by pre-menopausal, not pregnant females by recent use of
     # hormone replacement therapy.
     table_replacement_no = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_therapy"] == 0), :
+        (table_female_not_pregnant["hormone_replacement"] == 0), :
     ]
     pail_replacement_no = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6839,7 +6841,7 @@ def execute_plot_hormones(
     ))
     pail.update(pail_replacement_no)
     table_replacement_yes = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_therapy"] == 1), :
+        (table_female_not_pregnant["hormone_replacement"] == 1), :
     ]
     pail_replacement_yes = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6922,8 +6924,6 @@ def execute_plot_hormones(
     ))
     pail.update(pail_postmenopause_alteration_no)
 
-
-
     # Filter to pregnant females.
     table_pregnancy = table_female.loc[
         (table_female["pregnancy"] == 1), :
@@ -6934,8 +6934,6 @@ def execute_plot_hormones(
         table=table_pregnancy,
     )
     pail.update(pail_pregnancy)
-
-
 
     # Filter to males.
     table_male = table.loc[
