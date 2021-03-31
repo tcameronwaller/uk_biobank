@@ -1763,7 +1763,7 @@ def organize_female_pregnancy_menopause_variables(
                 field_2834=row["2834-0.0"],
                 field_3700=row["3700-0.0"],
                 threshold_menstruation_days=60, # 60 days based on UK Biobank
-                threshold_age=55, # 55 - 70 years
+                threshold_age=60, # 55 - 70 years
             ),
         axis="columns", # apply across rows
     )
