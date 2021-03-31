@@ -1809,7 +1809,7 @@ def organize_female_pregnancy_menopause_variables(
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
-                null_false=False, # whether to interpret nulls as False
+                null_false=True, # whether to interpret nulls as False
                 field_2784=row["2784-0.0"],
                 field_2794=row["2794-0.0"],
                 field_2804=row["2804-0.0"],
@@ -1825,7 +1825,7 @@ def organize_female_pregnancy_menopause_variables(
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
-                null_false=False, # whether to interpret nulls as False
+                null_false=True, # whether to interpret nulls as False
                 field_2814=row["2814-0.0"],
                 field_3536=row["3536-0.0"],
                 field_3546=row["3546-0.0"],
