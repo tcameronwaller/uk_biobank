@@ -1488,12 +1488,17 @@ def determine_female_any_hormone_alteration_medication(
     # Comparison.
     if (sex_text == "female"):
         if (
-            (0.5 <= oral_contraception and oral_contraception < 1.5) or
-            (0.5 <= hormone_therapy and hormone_therapy < 1.5)
+            (oral_contraception == 1) or
+            (hormone_therapy == 1)
         ):
             value = 1
-        else:
+        elif (
+            (oral_contraception == 0) and
+            (hormone_therapy == 0)
+        ):
             value = 0
+        else:
+            value = float("nan")
     else:
         # This specific variable is undefined for males.
         value = float("nan")
@@ -1919,7 +1924,7 @@ def organize_female_pregnancy_menopause_variables(
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: organize_female_pregnancy_menopause_variables()")
-        print("version check: platypus")
+        print("version check: tortoise")
         utility.print_terminal_partition(level=3)
         print("Translation of columns for hormones: ")
         print(table_female)
