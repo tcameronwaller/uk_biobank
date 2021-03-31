@@ -1896,28 +1896,28 @@ def organize_female_pregnancy_menopause_variables(
         (table_report["sex_text"] == "female"), :
     ]
     table_pregnant = table_female.loc[
-        (table_female["pregnancy"] >= 0.5), :
+        (table_female["pregnancy"] == 1), :
     ]
     table_not_pregnant = table_female.loc[
-        (table_female["pregnancy"] < 0.5), :
+        (table_female["pregnancy"] == 0), :
     ]
     table_premenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause"] < 0.5), :
+        (table_not_pregnant["menopause"] == 0), :
     ]
     table_postmenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause"] >= 0.5), :
+        (table_not_pregnant["menopause"] == 1), :
     ]
     table_premenopause_alteration_no = table_premenopause.loc[
-        (table_premenopause["hormone_alteration"] < 0.5), :
+        (table_premenopause["hormone_alteration"] == 0), :
     ]
     table_premenopause_alteration_yes = table_premenopause.loc[
-        (table_premenopause["hormone_alteration"] >= 0.5), :
+        (table_premenopause["hormone_alteration"] == 1), :
     ]
     table_postmenopause_alteration_no = table_postmenopause.loc[
-        (table_postmenopause["hormone_alteration"] < 0.5), :
+        (table_postmenopause["hormone_alteration"] == 0), :
     ]
     table_postmenopause_alteration_yes = table_postmenopause.loc[
-        (table_postmenopause["hormone_alteration"] >= 0.5), :
+        (table_postmenopause["hormone_alteration"] == 1), :
     ]
 
     # Report.
