@@ -601,6 +601,8 @@ def organize_sex_age_body_variables(
 ##########
 # Menstruation, pregnancy, menopause, contraception, hormone therapy
 # Review:
+# 31 March 2021: TCW verified UK Biobank fields and their codings,
+# interpretations, and logic in determination functions.
 # 11 March 2021: TCW verified logic in determination functions (next level).
 # 11 March 2021: TCW verified logic in interpretation functions.
 # 11 March 2021: TCW verified UK Biobank fields and their codings.
@@ -755,12 +757,100 @@ def interpret_oophorectomy(
     return interpretation
 
 
+def interpret_menstruation_day(
+    field_3700=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3700.
+
+    Data-Field "3700": "time since last menstrual period"
+    UK Biobank data coding "100291" for variable field "3700".
+    "days": 0 - 365
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3700)) and
+        (0 <= field_3700 and field_3700 <= 365)
+    ):
+        # The variable has a valid value.
+        value = float(field_3700)
+    else:
+        # null, "do not know", or "prefer not to answer"
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_menstruation_day_perimenopause(
+    field_3700=None,
+    threshold_menstruation_days=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3700.
+
+    Data-Field "3700": "time since last menstrual period"
+    UK Biobank data coding "100291" for variable field "3700".
+    "days": 0 - 365
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+        threshold_menstruation_days (int): threshold in days since last
+            menstrual period, beyond which to consider perimenopause
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret days since previous menstruation.
+    menstruation_day = interpret_menstruation_day(
+        field_3700=field_3700,
+    )
+    # Interpret field code.
+    if (not pandas.isna(menstruation_day)):
+        # The variable has a valid value.
+        if (menstruation_day >= threshold_menstruation_days):
+            value = True
+        else:
+            value = False
+    else:
+        # Variable has a null value.
+        # Do not assert perimenopause on basis of a null value.
+        value = False
+    # Return.
+    return value
+
+
 def determine_female_menopause(
     sex_text=None,
     age=None,
     field_2724=None,
     field_3591=None,
     field_2834=None,
+    field_3700=None,
+    threshold_menstruation_days=None,
     threshold_age=None,
 ):
     """
@@ -776,6 +866,10 @@ def determine_female_menopause(
             hysterectomy
         field_2834 (float): UK Biobank field 2834, whether person has had an
             oophorectomy
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+        threshold_menstruation_days (int): threshold in days since last
+            menstrual period, beyond which to consider perimenopause
         threshold_age (int): threshold age in years, beyond which to consider
             all females post-menopausal, 50 - 70 years
 
@@ -798,12 +892,18 @@ def determine_female_menopause(
     oophorectomy_boolean = interpret_oophorectomy(
         field_2834=field_2834,
     )
+    # Interpret menstruation as potential indicator of perimenopause.
+    menstruation_boolean = interpret_menstruation_day_perimenopause(
+        field_3700=field_3700,
+        threshold_menstruation_days=threshold_menstruation_days,
+    )
     # Comparison.
     if (sex_text == "female"):
         if (
             menopause_boolean or
             hysterectomy_boolean or
             oophorectomy_boolean or
+            menstruation_boolean or
             (age >= threshold_age)
         ):
             menopause = 1
@@ -812,8 +912,6 @@ def determine_female_menopause(
     else:
         # Menopause undefined for males.
         menopause = float("nan")
-        # Set to false for males for convenience.
-        #menopause = 0
     # Return information.
     return menopause
 
@@ -1000,45 +1098,6 @@ def determine_female_pregnancy(
     return pregnancy
 
 
-def interpret_menstruation_day(
-    field_3700=None,
-):
-    """
-    Intepret UK Biobank's coding for field 3700.
-
-    Data-Field "3700": "time since last menstrual period"
-    UK Biobank data coding "100291" for variable field "3700".
-    "days": 0 - 365
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_3700 (float): UK Biobank field 3700, days since previous
-            menstruation (menstrual period)
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_3700)) and
-        (0 <= field_3700 and field_3700 <= 365)
-    ):
-        # The variable has a valid value.
-        value = float(field_3700)
-    else:
-        # null, "do not know", or "prefer not to answer"
-        value = float("nan")
-    # Return.
-    return value
-
-
 def determine_female_premenopause_menstruation_day(
     sex_text=None,
     menopause=None,
@@ -1066,7 +1125,7 @@ def determine_female_premenopause_menstruation_day(
 
     """
 
-    # Interpret pregnancy.
+    # Interpret days since previous menstruation.
     menstruation_day = interpret_menstruation_day(
         field_3700=field_3700,
     )
@@ -1094,6 +1153,7 @@ def determine_female_premenopause_menstruation_day(
 def interpret_recent_oral_contraception(
     age=None,
     recent_range=None,
+    null_false=None,
     field_2784=None,
     field_2794=None,
     field_2804=None,
@@ -1132,6 +1192,7 @@ def interpret_recent_oral_contraception(
     arguments:
         age (int): age of person in years
         recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
         field_2784 (float): UK Biobank field 2784, ever taken oral contraception
         field_2794 (float): UK Biobank field 2794, age started oral
             contraception
@@ -1161,22 +1222,28 @@ def interpret_recent_oral_contraception(
                 (-3.5 <= age_stop and age_stop < -0.5)
             ):
                 # null, "do not know", or "prefer not to answer"
-                value = False
+                if (null_false):
+                    value = 0
+                else:
+                    value = float("nan")
             elif (-11.5 <= age_stop and age_stop < -10.5):
                 # Person used oral contraception currently.
-                value = True
+                value = 1
             elif ((age - recent_range) <= age_stop and age_stop <= age):
                 # Person used therapy within recent range of current age.
-                value = True
+                value = 1
             else:
                 # Person ceased use of therapy longer than recently.
-                value = False
+                value = 0
         else:
             # Person has not used therapy.
-            value = False
+            value = 0
     else:
         # null, "do not know", or "prefer not to answer"
-        value = False
+        if (null_false):
+            value = 0
+        else:
+            value = float("nan")
     # Return.
     return value
 
@@ -1186,6 +1253,8 @@ def determine_female_oral_contraception(
     age=None,
     menopause=None,
     pregnancy=None,
+    recent_range=None,
+    null_false=None,
     field_2784=None,
     field_2794=None,
     field_2804=None,
@@ -1199,6 +1268,8 @@ def determine_female_oral_contraception(
         menopause (float): whether person has experienced menopause,
             hysterectomy, or oophorectomy
         pregnancy (float): whether person was pregnant
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
         field_2784 (float): UK Biobank field 2784, ever taken oral contraception
         field_2794 (float): UK Biobank field 2794, age started oral
             contraception
@@ -1215,14 +1286,15 @@ def determine_female_oral_contraception(
     # Interpret oral contraception.
     contraception = interpret_recent_oral_contraception(
         age=age,
-        recent_range=1, # recent range in years
+        recent_range=recent_range, # recent range in years
+        null_false=null_false,
         field_2784=field_2784,
         field_2794=field_2794,
         field_2804=field_2804,
     )
     # Comparison.
     if (sex_text == "female"):
-        if (contraception):
+        if (contraception == 1):
             value = 1
         else:
             value = 0
@@ -1236,6 +1308,7 @@ def determine_female_oral_contraception(
 def interpret_recent_hormone_replacement_therapy(
     age=None,
     recent_range=None,
+    null_false=None,
     field_2814=None,
     field_3536=None,
     field_3546=None,
@@ -1274,6 +1347,7 @@ def interpret_recent_hormone_replacement_therapy(
     arguments:
         age (int): age of person in years
         recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
         field_2814 (float): UK Biobank field 2814, ever taken hormone
             replacement therapy (HRT)
         field_3536 (float): UK Biobank field 3536, age started hormone
@@ -1304,22 +1378,28 @@ def interpret_recent_hormone_replacement_therapy(
                 (-3.5 <= age_stop and age_stop < -0.5)
             ):
                 # null, "do not know", or "prefer not to answer"
-                value = False
+                if (null_false):
+                    value = 0
+                else:
+                    value = float("nan")
             elif (-11.5 <= age_stop and age_stop < -10.5):
                 # Person used oral contraception currently.
-                value = True
+                value = 1
             elif ((age - recent_range) <= age_stop and age_stop <= age):
                 # Person used therapy within recent range of current age.
-                value = True
+                value = 1
             else:
                 # Person ceased use of therapy longer than recently.
-                value = False
+                value = 0
         else:
             # Person has not used therapy.
-            value = False
+            value = 0
     else:
         # null, "do not know", or "prefer not to answer"
-        value = False
+        if (null_false):
+            value = 0
+        else:
+            value = float("nan")
     # Return.
     return value
 
@@ -1329,6 +1409,8 @@ def determine_female_hormone_replacement_therapy(
     age=None,
     menopause=None,
     pregnancy=None,
+    recent_range=None,
+    null_false=None,
     field_2814=None,
     field_3536=None,
     field_3546=None,
@@ -1345,6 +1427,8 @@ def determine_female_hormone_replacement_therapy(
         menopause (float): whether person has experienced menopause,
             hysterectomy, or oophorectomy
         pregnancy (float): whether person was pregnant
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
         field_2814 (float): UK Biobank field 2784, ever taken hormone
             replacement therapy
         field_3536 (float): UK Biobank field 2794, age started hormone
@@ -1362,14 +1446,15 @@ def determine_female_hormone_replacement_therapy(
     # Interpret hormone replacement therapy.
     therapy = interpret_recent_hormone_replacement_therapy(
         age=age,
-        recent_range=1,
+        recent_range=recent_range,
+        null_false=null_false,
         field_2814=field_2814,
         field_3536=field_3536,
         field_3546=field_3546,
     )
     # Comparison.
     if (sex_text == "female"):
-        if (therapy):
+        if (therapy == 1):
             value = 1
         else:
             value = 0
@@ -1676,6 +1761,8 @@ def organize_female_pregnancy_menopause_variables(
                 field_2724=row["2724-0.0"],
                 field_3591=row["3591-0.0"],
                 field_2834=row["2834-0.0"],
+                field_3700=row["3700-0.0"],
+                threshold_menstruation_days=60, # 60 days based on UK Biobank
                 threshold_age=55, # 55 - 70 years
             ),
         axis="columns", # apply across rows
@@ -1722,6 +1809,8 @@ def organize_female_pregnancy_menopause_variables(
                 age=row["age"],
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
+                recent_range=1,
+                null_false=False, # whether to interpret nulls as False
                 field_2784=row["2784-0.0"],
                 field_2794=row["2794-0.0"],
                 field_2804=row["2804-0.0"],
@@ -1736,6 +1825,8 @@ def organize_female_pregnancy_menopause_variables(
                 age=row["age"],
                 menopause=row["menopause"],
                 pregnancy=row["pregnancy"],
+                recent_range=1,
+                null_false=False, # whether to interpret nulls as False
                 field_2814=row["2814-0.0"],
                 field_3536=row["3536-0.0"],
                 field_3546=row["3546-0.0"],
@@ -6636,7 +6727,7 @@ def execute_sex_hormones(
     )
     # Organize information about female persons' pregnancy and menopause.
     pail_pregnancy = organize_female_pregnancy_menopause_variables(
-        table=pail_hormone["table_clean"],
+        table=pail_hormone["table"], # pail_hormone["table_clean"]
         report=report,
     )
     # Report.
@@ -6647,7 +6738,7 @@ def execute_sex_hormones(
         utility.print_terminal_partition(level=3)
         print(pail_pregnancy["table_clean"])
     # Return information.
-    return pail_pregnancy["table_clean"]
+    return pail_pregnancy["table"] # pail_hormone["table_clean"]
 
 
 def execute_plot_hormones(
