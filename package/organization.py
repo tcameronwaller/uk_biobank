@@ -6703,6 +6703,7 @@ def execute_genotype_sex_age_body(
 
 def execute_sex_hormones(
     table=None,
+    clean=None,
     report=None,
 ):
     """
@@ -6711,6 +6712,8 @@ def execute_sex_hormones(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        clean (bool): whether to return clean tables, with removal of original
+            data fields from UK Biobank
         report (bool): whether to print reports
 
     raises:
@@ -6720,6 +6723,11 @@ def execute_sex_hormones(
 
     """
 
+    # Iterpret whether to clean tables.
+    if clean:
+        selection = "table"
+    else:
+        selection = "table_clean"
     # Organize information about sex hormones.
     pail_hormone = organize_sex_hormone_variables(
         table=table,
@@ -6727,7 +6735,7 @@ def execute_sex_hormones(
     )
     # Organize information about female persons' pregnancy and menopause.
     pail_pregnancy = organize_female_pregnancy_menopause_variables(
-        table=pail_hormone["table"], # pail_hormone["table_clean"]
+        table=pail_hormone[selection],
         report=report,
     )
     # Report.
@@ -6736,9 +6744,9 @@ def execute_sex_hormones(
         utility.print_terminal_partition(level=2)
         print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
-        print(pail_pregnancy["table_clean"])
+        print(pail_pregnancy[selection])
     # Return information.
-    return pail_pregnancy["table"] # pail_hormone["table_clean"]
+    return pail_pregnancy[selection]
 
 
 def execute_plot_hormones(
