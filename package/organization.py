@@ -1294,10 +1294,7 @@ def determine_female_oral_contraception(
     )
     # Comparison.
     if (sex_text == "female"):
-        if (contraception == 1):
-            value = 1
-        else:
-            value = 0
+        value = contraception
     else:
         # This specific variable is undefined for males.
         value = float("nan")
@@ -1454,10 +1451,7 @@ def determine_female_hormone_replacement_therapy(
     )
     # Comparison.
     if (sex_text == "female"):
-        if (therapy == 1):
-            value = 1
-        else:
-            value = 0
+        value = therapy
     else:
         # This specific variable is undefined for males.
         value = float("nan")
@@ -6797,7 +6791,7 @@ def execute_plot_hormones(
         (table["sex_text"] == "female"), :
     ]
     table_female_not_pregnant = table_female.loc[
-        (table_female["pregnancy"] < 0.5), :
+        (table_female["pregnancy"] == 0), :
     ]
     pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="female",
@@ -6807,7 +6801,7 @@ def execute_plot_hormones(
     pail.update(pail_female)
     # Stratify not pregnant females by recent use of oral contraception.
     table_contraception_no = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["oral_contraception"] < 0.5), :
+        (table_female_not_pregnant["oral_contraception"] == 0), :
     ]
     pail_contraception_no = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6817,7 +6811,7 @@ def execute_plot_hormones(
     ))
     pail.update(pail_contraception_no)
     table_contraception_yes = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["oral_contraception"] >= 0.5), :
+        (table_female_not_pregnant["oral_contraception"] == 1), :
     ]
     pail_contraception_yes = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6829,7 +6823,7 @@ def execute_plot_hormones(
     # Stratify by pre-menopausal, not pregnant females by recent use of
     # hormone replacement therapy.
     table_replacement_no = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_therapy"] < 0.5), :
+        (table_female_not_pregnant["hormone_therapy"] == 0), :
     ]
     pail_replacement_no = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6839,7 +6833,7 @@ def execute_plot_hormones(
     ))
     pail.update(pail_replacement_no)
     table_replacement_yes = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_therapy"] >= 0.5), :
+        (table_female_not_pregnant["hormone_therapy"] == 1), :
     ]
     pail_replacement_yes = (
         organize_plot_cohort_sex_hormone_variable_distributions(
@@ -6848,19 +6842,10 @@ def execute_plot_hormones(
             table=table_replacement_yes,
     ))
     pail.update(pail_replacement_yes)
-    table_any_alteration = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_alteration"] >= 0.5), :
-    ]
-    pail_any_alteration = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="any_hormone_alteration",
-            bins=50,
-            table=table_any_alteration,
-    ))
-    pail.update(pail_any_alteration)
+
     # Filter to pre-menopausal, not pregnant females.
     table_premenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause"] < 0.5), :
+        (table_female_not_pregnant["menopause"] == 0), :
     ]
     pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pre-menopause",
@@ -6879,7 +6864,7 @@ def execute_plot_hormones(
     pail.update(pail_menstruation)
     # Filter to post-menopausal, not pregnant females.
     table_postmenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause"] >= 0.5), :
+        (table_female_not_pregnant["menopause"] == 1), :
     ]
     pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="post-menopause",
@@ -6887,9 +6872,55 @@ def execute_plot_hormones(
         table=table_postmenopause,
     )
     pail.update(pail_postmenopause)
+
+    # Any hormone alteration (oral contraception or hormone-replacement).
+    table_premenopause_alteration_yes = table_premenopause.loc[
+        (table_premenopause["hormone_alteration"] == 1), :
+    ]
+    pail_premenopause_alteration_yes = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="premenopause_hormone_alteration_yes",
+            bins=50,
+            table=table_premenopause_alteration_yes,
+    ))
+    pail.update(pail_premenopause_alteration_yes)
+    table_premenopause_alteration_no = table_premenopause.loc[
+        (table_premenopause["hormone_alteration"] == 0), :
+    ]
+    pail_premenopause_alteration_no = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="premenopause_hormone_alteration_no",
+            bins=50,
+            table=table_premenopause_alteration_no,
+    ))
+    pail.update(pail_premenopause_alteration_no)
+
+    table_postmenopause_alteration_yes = table_postmenopause.loc[
+        (table_postmenopause["hormone_alteration"] == 1), :
+    ]
+    pail_postmenopause_alteration_yes = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="postmenopause_hormone_alteration_yes",
+            bins=50,
+            table=table_postmenopause_alteration_yes,
+    ))
+    pail.update(pail_postmenopause_alteration_yes)
+    table_postmenopause_alteration_no = table_postmenopause.loc[
+        (table_postmenopause["hormone_alteration"] == 0), :
+    ]
+    pail_postmenopause_alteration_no = (
+        organize_plot_cohort_sex_hormone_variable_distributions(
+            prefix="postmenopause_hormone_alteration_no",
+            bins=50,
+            table=table_postmenopause_alteration_no,
+    ))
+    pail.update(pail_postmenopause_alteration_no)
+
+
+
     # Filter to pregnant females.
     table_pregnancy = table_female.loc[
-        (table_female["pregnancy"] >= 0.5), :
+        (table_female["pregnancy"] == 1), :
     ]
     pail_pregnancy = organize_plot_cohort_sex_hormone_variable_distributions(
         prefix="pregnancy",
@@ -6897,6 +6928,9 @@ def execute_plot_hormones(
         table=table_pregnancy,
     )
     pail.update(pail_pregnancy)
+
+
+
     # Filter to males.
     table_male = table.loc[
         (table["sex_text"] == "male"), :
