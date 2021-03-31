@@ -1919,6 +1919,7 @@ def organize_female_pregnancy_menopause_variables(
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: organize_female_pregnancy_menopause_variables()")
+        print("version check: platypus")
         utility.print_terminal_partition(level=3)
         print("Translation of columns for hormones: ")
         print(table_female)
