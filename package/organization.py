@@ -6738,9 +6738,9 @@ def execute_sex_hormones(
 
     # Iterpret whether to clean tables.
     if clean:
-        selection = "table"
-    else:
         selection = "table_clean"
+    else:
+        selection = "table"
     # Organize information about sex hormones.
     pail_hormone = organize_sex_hormone_variables(
         table=table,
