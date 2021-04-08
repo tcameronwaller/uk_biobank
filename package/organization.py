@@ -601,6 +601,9 @@ def organize_sex_age_body_variables(
 ##########
 # Menstruation, pregnancy, menopause, contraception, hormone therapy
 # Review:
+
+# TODO: I need to review new definitions of menopause variables...
+
 # 31 March 2021: TCW verified UK Biobank fields and their codings,
 # interpretations, and logic in determination functions.
 # 11 March 2021: TCW verified logic in determination functions (next level).
@@ -608,11 +611,14 @@ def organize_sex_age_body_variables(
 # 11 March 2021: TCW verified UK Biobank fields and their codings.
 
 
-def interpret_menopause(
+def interpret_menopause_natural(
     field_2724=None,
 ):
     """
     Intepret UK Biobank's coding for field 2724.
+
+    Only interpret whether the variable indicates that the person had a
+    natural menopause not involving hysterectomy.
 
     Data-Field "2724": "Had menopause"
     UK Biobank data coding "100579" for variable field "2724".
@@ -649,10 +655,58 @@ def interpret_menopause(
             interpretation = True
         elif (1.5 <= field_2724 and field_2724 < 2.5):
             # 2: "not sure - had a hysterectomy"
-            interpretation = True
+            interpretation = False
         elif (2.5 <= field_2724 and field_2724 < 3.5):
             # 3: "not sure - other reason"
             interpretation = False
+        else:
+            interpretation = False
+    else:
+        # null or "prefer not to answer"
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_menopause_hysterectomy(
+    field_2724=None,
+):
+    """
+    Intepret UK Biobank's coding for field 2724.
+
+    Only interpret whether the variable indicates that the person had a
+    hysterectomy.
+
+    Data-Field "2724": "Had menopause"
+    UK Biobank data coding "100579" for variable field "2724".
+    "no": 0
+    "yes": 1
+    "not sure - had a hysterectomy": 2
+    "not sure - other reason": 3
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2724)) and
+        (-0.5 <= field_2724 and field_2724 < 3.5)
+    ):
+        # The variable has a valid value.
+        if (1.5 <= field_2724 and field_2724 < 2.5):
+            # 2: "not sure - had a hysterectomy"
+            interpretation = True
         else:
             interpretation = False
     else:
@@ -757,6 +811,61 @@ def interpret_oophorectomy(
     return interpretation
 
 
+def determine_female_hysterectomy_or_oophorectomy(
+    sex_text=None,
+    field_2724=None,
+    field_3591=None,
+    field_2834=None,
+):
+    """
+    Determine whether female persons have experienced either an hysterectomy or
+    an oophorectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+        field_3591 (float): UK Biobank field 3591, whether person has had a
+            hysterectomy
+        field_2834 (float): UK Biobank field 2834, whether person has had an
+            oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret menopause.
+    menopause_hysterectomy_boolean = interpret_menopause_hysterectomy(
+        field_2724=field_2724,
+    )
+    # Interpret hysterectomy.
+    hysterectomy_boolean = interpret_hysterectomy(
+        field_3591=field_3591,
+    )
+    # Interpret oophorectomy.
+    oophorectomy_boolean = interpret_oophorectomy(
+        field_2834=field_2834,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            menopause_hysterectomy_boolean or
+            hysterectomy_boolean or
+            oophorectomy_boolean
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Hysterectomy and oophorectomy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def interpret_menstruation_day(
     field_3700=None,
 ):
@@ -832,46 +941,48 @@ def interpret_menstruation_day_perimenopause(
     if (not pandas.isna(menstruation_day)):
         # The variable has a valid value.
         if (menstruation_day >= threshold_menstruation_days):
-            value = True
+            interpretation = True
         else:
-            value = False
+            interpretation = False
     else:
         # Variable has a null value.
         # Do not assert perimenopause on basis of a null value.
-        value = False
+        interpretation = False
     # Return.
-    return value
+    return interpretation
 
 
-def determine_female_menopause(
+def determine_female_natural_menopause(
     sex_text=None,
     age=None,
     field_2724=None,
-    field_3591=None,
-    field_2834=None,
     field_3700=None,
     threshold_menstruation_days=None,
     threshold_age=None,
+    hysterectomy_or_oophorectomy=None,
 ):
     """
-    Determine whether female persons have experienced menopause or another
-    halt to menstrual cycle.
+    Determine whether female persons have experienced natural menopause, a halt
+    to menstruation cycle.
+
+    Natural menopause does not involve either hysterectomy or oophorectomy.
+    Natural menopause definition includes self report, a threshold by days
+    since previous menstruation, and a threshold by age.
+    Natural menopause definition excludes cases of hysterectomy or oophorectomy.
 
     arguments:
         sex_text (str): textual representation of sex selection
         age (int): age of person in years
         field_2724 (float): UK Biobank field 2724, whether person has
             experienced menopause
-        field_3591 (float): UK Biobank field 3591, whether person has had a
-            hysterectomy
-        field_2834 (float): UK Biobank field 2834, whether person has had an
-            oophorectomy
         field_3700 (float): UK Biobank field 3700, days since previous
             menstruation (menstrual period)
         threshold_menstruation_days (int): threshold in days since last
             menstrual period, beyond which to consider perimenopause
         threshold_age (int): threshold age in years, beyond which to consider
             all females post-menopausal, 50 - 70 years
+        hysterectomy_or_oophorectomy (float): binary logical representation of
+            whether person has had either an hysterectomy or an oophorectomy
 
     raises:
 
@@ -881,16 +992,8 @@ def determine_female_menopause(
     """
 
     # Interpret menopause.
-    menopause_boolean = interpret_menopause(
+    menopause_boolean = interpret_menopause_natural(
         field_2724=field_2724,
-    )
-    # Interpret hysterectomy.
-    hysterectomy_boolean = interpret_hysterectomy(
-        field_3591=field_3591,
-    )
-    # Interpret oophorectomy.
-    oophorectomy_boolean = interpret_oophorectomy(
-        field_2834=field_2834,
     )
     # Interpret menstruation as potential indicator of perimenopause.
     menstruation_boolean = interpret_menstruation_day_perimenopause(
@@ -899,21 +1002,127 @@ def determine_female_menopause(
     )
     # Comparison.
     if (sex_text == "female"):
-        if (
-            menopause_boolean or
-            hysterectomy_boolean or
-            oophorectomy_boolean or
-            menstruation_boolean or
-            (age >= threshold_age)
-        ):
-            menopause = 1
+        if (hysterectomy_or_oophorectomy < 0.5):
+            # Persons has not had an hysterectomy or an oophorectomy.
+            if (
+                menopause_boolean or
+                menstruation_boolean or
+                (age >= threshold_age)
+            ):
+                # Person has experienced natural menopause.
+                value = 1
+            else:
+                value = 0
         else:
-            menopause = 0
+            # Menopause was unnatural in case of hysterectomy or oophorectomy.
+            value = 0
     else:
         # Menopause undefined for males.
-        menopause = float("nan")
+        value = float("nan")
     # Return information.
-    return menopause
+    return value
+
+
+def determine_female_menopause(
+    sex_text=None,
+    menopause_natural=None,
+    hysterectomy_or_oophorectomy=None,
+):
+    """
+    Determine whether female persons have experienced menopause or another
+    halt to menstrual cycle, whether natural or unnatural (involving
+    hysterectomy or oophorectomy).
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_natural (float): binary logical representation of whether
+            person has experienced natural menopause
+        hysterectomy_or_oophorectomy (float): binary logical representation of
+            whether person has had either an hysterectomy or an oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(hysterectomy_or_oophorectomy)) and
+                (hysterectomy_or_oophorectomy == 1)
+            )
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Menopause undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_postmenopause_natural(
+    sex_text=None,
+    menopause=None,
+    menopause_natural=None,
+    hysterectomy_or_oophorectomy=None,
+):
+    """
+    Determine whether female persons who have experienced menopause
+    (postmenopause) had a natural menopause (not involving
+    hysterectomy or oophorectomy).
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause (float): binary logical representation of whether person has
+            experienced menopause, either natural or unnatural
+        menopause_natural (float): binary logical representation of whether
+            person has experienced natural menopause
+        hysterectomy_or_oophorectomy (float): binary logical representation of
+            whether person has had either an hysterectomy or an oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (
+        (sex_text == "female") and
+        (not pandas.isna(menopause)) and
+        (menopause == 1)
+    ):
+        # Person is female.
+        # Person has experience menopause, either natural or unnatural.
+        if (
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(hysterectomy_or_oophorectomy)) and
+                (hysterectomy_or_oophorectomy == 0)
+            )
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Variable undefined for males.
+        # Variable undefine for premenopausal females.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 def interpret_pregnancy_broad(
@@ -1712,7 +1921,7 @@ def determine_binary_categorical_products_of_two_binary_variables(
     return table
 
 
-def organize_female_pregnancy_menopause_variables(
+def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
 ):
@@ -1749,23 +1958,66 @@ def organize_female_pregnancy_menopause_variables(
         columns=columns_type,
         table=table,
     )
-    # Determine whether female persons have experienced menopause.
-    # 0: pre-menopause
-    # 1: post-menopause (menopause, hysterectomy, or oophorectomy)
+
+    # Determine whether female persons have experienced either hysterectomy or
+    # oophorectomy.
+    table["hysterectomy_or_oophorectomy"] = table.apply(
+        lambda row:
+            determine_female_hysterectomy_or_oophorectomy(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+                field_2834=row["2834-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons have experienced natural menopause.
+    # Natural menopause does not involve either hysterectomy or oophorectomy.
+    # Natural menopause definition includes self report, a threshold by days
+    # since previous menstruation, and a threshold by age.
+    table["menopause_natural"] = table.apply(
+        lambda row:
+            determine_female_natural_menopause(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                field_2724=row["2724-0.0"],
+                field_3700=row["3700-0.0"],
+                threshold_menstruation_days=60, # 60 days based on UK Biobank
+                threshold_age=60, # 55 - 70 years
+                hysterectomy_or_oophorectomy=(
+                    row["hysterectomy_or_oophorectomy"]
+                ),
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons have experienced menopause, either
+    # natural or unnatural, involving hysterectomy or oophorectomy.
     table["menopause"] = table.apply(
         lambda row:
             determine_female_menopause(
                 sex_text=row["sex_text"],
-                age=row["age"],
-                field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
-                field_2834=row["2834-0.0"],
-                field_3700=row["3700-0.0"],
-                threshold_menstruation_days=60, # 60 days based on UK Biobank
-                threshold_age=60, # 55 - 70 years
+                menopause_natural=row["menopause_natural"],
+                hysterectomy_or_oophorectomy=(
+                    row["hysterectomy_or_oophorectomy"]
+                ),
             ),
         axis="columns", # apply across rows
     )
+    # Determine whether postmenopause female persons have experienced a natural
+    # menopause, not involving hysterectomy or oophorectomy.
+    table["postmenopause_natural"] = table.apply(
+        lambda row:
+            determine_female_postmenopause_natural(
+                sex_text=row["sex_text"],
+                menopause=row["menopause"],
+                menopause_natural=row["menopause_natural"],
+                hysterectomy_or_oophorectomy=(
+                    row["hysterectomy_or_oophorectomy"]
+                ),
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine whether female persons are pregnant by broad definition.
     # 0: not pregnant
     # 1: pregnant (yes or unsure)
@@ -1872,7 +2124,9 @@ def organize_female_pregnancy_menopause_variables(
         #"eid",
         "IID",
         "sex_text",
-        "menopause", "2724-0.0", "3591-0.0", "2834-0.0",
+        "2724-0.0", "3591-0.0", "2834-0.0",
+        "hysterectomy_or_oophorectomy", "menopause_natural",
+        "menopause", "postmenopause_natural",
         "pregnancy_broad", "pregnancy", "3140-0.0",
         "menstruation_day", "3700-0.0",
         "oral_contraception", "2784-0.0",
@@ -6745,7 +6999,7 @@ def execute_sex_hormones(
         report=report,
     )
     # Organize information about female persons' pregnancy and menopause.
-    pail_pregnancy = organize_female_pregnancy_menopause_variables(
+    pail_female = organize_female_menstruation_pregnancy_menopause_variables(
         table=pail_hormone[selection],
         report=report,
     )
@@ -6755,9 +7009,10 @@ def execute_sex_hormones(
         utility.print_terminal_partition(level=2)
         print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
-        print(pail_pregnancy[selection])
+        print(pail_female[selection])
     # Return information.
-    return pail_pregnancy[selection]
+    #return pail_female[selection]
+    return pail_female["table_report"]
 
 
 def execute_plot_hormones(
