@@ -2051,6 +2051,39 @@ def organize_report_female_cohorts_sex_hormones(
         table=table_female,
     )
 
+    table_female_not_pregnant = table_female.loc[
+        (table_female["pregnancy"] == 0), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_not_pregnant",
+        table=table_female_not_pregnant,
+    )
+
+    table_female_premenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 0), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_premenopause",
+        table=table_female_premenopause,
+    )
+
+    table_female_perimenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 1), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_perimenopause",
+        table=table_female_perimenopause,
+    )
+
+    table_female_postmenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 1), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_postmenopause",
+        table=table_female_postmenopause,
+    )
+
+
     table_male = table.loc[
         (table["sex_text"] == "male"), :
     ]
@@ -2060,15 +2093,6 @@ def organize_report_female_cohorts_sex_hormones(
     )
 
     if False:
-        table_pregnant = table_female.loc[
-            (table_female["pregnancy"] == 1), :
-        ]
-        table_not_pregnant = table_female.loc[
-            (table_female["pregnancy"] == 0), :
-        ]
-        table_premenopause = table_not_pregnant.loc[
-            (table_not_pregnant["menopause"] == 0), :
-        ]
         table_postmenopause = table_not_pregnant.loc[
             (table_not_pregnant["menopause"] == 1), :
         ]
