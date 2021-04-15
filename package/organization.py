@@ -1075,25 +1075,41 @@ def determine_female_menopause_binary(
     if (sex_text == "female"):
         # Determine postmenopause.
         if (
-            (menopause_natural) or
-            (oophorectomy == 1) or
-            (menstruation_days >= threshold_menstruation_days) or
-            (age >= threshold_age)
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(oophorectomy)) and
+                (oophorectomy == 1)
+            ) or
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age >= threshold_age)
+            )
         ):
             # Person qualifies for postmenopause.
             value = 1
         # Determine premenopause.
         elif (
-            (not menopause_natural) and
-            (oophorectomy == 0) and
-            (menstruation_days < threshold_menstruation_days) and
-            (age < threshold_age)
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days < threshold_menstruation_days)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age < threshold_age)
+            )
         ):
             # Person qualifies for premenopause.
             value = 0
         else:
-            # Persons does not qualify for any categories, and there might be
-            # a logical error.
+            # Person does not qualify for any categories, probably due to
+            # missing or null values (including age).
             #print("potential error in determine_female_menopause_binary()")
             value = float("nan")
     else:
@@ -2304,7 +2320,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         utility.print_terminal_partition(level=2)
         print("report: organize_female_menstruation_pregnancy_menopause_variables()")
         organize_report_female_cohorts_sex_hormones(
-            table=table_report,
+            table=table_clean,
         )
     # Collect information.
     pail = dict()
