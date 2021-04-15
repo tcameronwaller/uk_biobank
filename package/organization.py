@@ -988,7 +988,7 @@ def interpret_menopause_natural(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -1000,23 +1000,23 @@ def interpret_menopause_natural(
         # The variable has a valid value.
         if (-0.5 <= field_2724 and field_2724 < 0.5):
             # 0: "no"
-            interpretation = False
+            value = 0
         elif (0.5 <= field_2724 and field_2724 < 1.5):
             # 1: "yes"
-            interpretation = True
+            value = 1
         elif (1.5 <= field_2724 and field_2724 < 2.5):
             # 2: "not sure - had a hysterectomy"
-            interpretation = False
+            value = float("nan")
         elif (2.5 <= field_2724 and field_2724 < 3.5):
             # 3: "not sure - other reason"
-            interpretation = False
+            value = float("nan")
         else:
-            interpretation = False
+            value = float("nan")
     else:
         # null or "prefer not to answer"
-        interpretation = False
+        value = float("nan")
     # Return.
-    return interpretation
+    return value
 
 
 def determine_female_menopause_binary(
@@ -1165,42 +1165,57 @@ def determine_female_menopause_ordinal(
     if (sex_text == "female"):
         # Determine postmenopause.
         if (
-            (menopause_natural) or
-            (oophorectomy == 1) or
-            (menstruation_days >= threshold_menstruation_days_post) or
-            (age >= threshold_age_post)
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(oophorectomy)) and
+                (oophorectomy == 1)
+            ) or
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days_post)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age >= threshold_age_post)
+            )
         ):
             # Person qualifies for postmenopause.
             value = 2
         # Determine perimenopause
         elif (
             (
-                (not menopause_natural) and
-                (oophorectomy == 0)
-            ) and
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days_pre) and
+                (menstruation_days < threshold_menstruation_days_post)
+            ) or
             (
-                (
-                    threshold_menstruation_days_pre <= menstruation_days and
-                    menstruation_days < threshold_menstruation_days_post
-                ) or
-                (threshold_age_pre <= age and age < threshold_age_post)
+                (not pandas.isna(age)) and
+                (age >= threshold_age_pre) and
+                (age < threshold_age_post)
             )
         ):
             # Person qualitifies for perimenopause.
             value = 1
         # Determine premenopause.
         elif (
-            (not menopause_natural) and
-            (oophorectomy == 0) and
-            (menstruation_days < threshold_menstruation_days_pre) and
-            (age < threshold_age_pre)
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days < threshold_menstruation_days_pre)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age < threshold_age_pre)
+            )
         ):
             # Person qualifies for premenopause.
             value = 0
         else:
-            # Persons does not qualify for any categories, and there might be
-            # a logical error.
-            print("potential error in determine_female_menopause_binary()")
+            # Person does not qualify for any categories, probably due to
+            # missing or null values (including age).
+            #print("potential error in determine_female_menopause_binary()")
             value = float("nan")
     else:
         # Menopause undefined for males.
@@ -2262,6 +2277,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         #"eid",
         "IID",
         "sex_text",
+        "age",
         "menstruation_days",
         "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
         "menopause_binary", "menopause_ordinal",
