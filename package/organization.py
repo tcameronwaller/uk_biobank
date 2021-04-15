@@ -1094,7 +1094,7 @@ def determine_female_menopause_binary(
         else:
             # Persons does not qualify for any categories, and there might be
             # a logical error.
-            print("potential error in determine_female_menopause_binary()")
+            #print("potential error in determine_female_menopause_binary()")
             value = float("nan")
     else:
         # Menopause undefined for males.
@@ -2185,7 +2185,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_pregnancy(
                 sex_text=row["sex_text"],
-                menopause=row["menopause"],
+                menopause=row["menopause_binary"],
                 field_3140=row["3140-0.0"],
             ),
         axis="columns", # apply across rows
@@ -2196,7 +2196,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             determine_female_oral_contraception(
                 sex_text=row["sex_text"],
                 age=row["age"],
-                menopause=row["menopause"],
+                menopause=row["menopause_binary"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
                 null_false=True, # whether to interpret nulls as False
@@ -2212,7 +2212,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             determine_female_hormone_replacement_therapy(
                 sex_text=row["sex_text"],
                 age=row["age"],
-                menopause=row["menopause"],
+                menopause=row["menopause_binary"],
                 pregnancy=row["pregnancy"],
                 recent_range=1,
                 null_false=True, # whether to interpret nulls as False
@@ -2236,7 +2236,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     # Determine combination categories by menopause and hormone-atering therapy.
     table = determine_binary_categorical_products_of_two_binary_variables(
         table=table,
-        first="menopause",
+        first="menopause_binary",
         second="hormone_alteration",
         prefix="menopause_hormone_category",
         report=report,
@@ -2277,7 +2277,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     ]
     table_report = table_report[[*columns_report]]
     table_report.sort_values(
-        by=["pregnancy", "menopause"],
+        by=["pregnancy", "menopause_binary"],
         axis="index",
         ascending=False,
         inplace=True,
