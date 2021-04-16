@@ -454,17 +454,77 @@ def organize_genotype_principal_component_variables(
 # Sex, age, and body
 
 
+def interpret_sex_consensus(
+    field_31=None,
+    field_22001=None,
+):
+    """
+    Determine consensus sex (biological sex, not social gender).
+    Prioritize interpretation of the genetic sex variable.
+
+    Data-Field "31": "sex"
+    UK Biobank data coding "9" for variable field "31".
+    "female": 0
+    "male": 1
+
+    Data-Field "22001": "genetic sex"
+    UK Biobank data coding "9" for variable field "22001".
+    "female": 0
+    "male": 1
+
+    arguments:
+        field_31 (float): UK Biobank field 31, person's self-reported sex
+        field_22001 (float): UK Biobank field 22001, ...
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    if (
+        (
+            (not pandas.isna(field_22001)) and
+            (-0.5 <= field_22001 and field_22001 < 1.5)
+        )
+    ):
+        # Genetic sex variable has a valid value.
+        # Prioritize interpretation of the genetic sex variable.
+        if (-0.5 <= field_22001 and field_22001 < 0.5):
+            # "female": 0
+            value = 0
+        elif (0.5 <= field_22001 and field_22001 < 1.5):
+            # "male": 1
+            value = 1
+    elif (
+        (
+            (not pandas.isna(field_31)) and
+            (-0.5 <= field_31 and field_31 < 1.5)
+        )
+    ):
+        # Self-reported sex variable has a valid value.
+        if (-0.5 <= field_31 and field_31 < 0.5):
+            # "female": 0
+            value = 0
+        elif (0.5 <= field_31 and field_31 < 1.5):
+            # "male": 1
+            value = 1
+    else:
+        # Sex is missing in both variables.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def determine_sex_text(
     sex=None,
 ):
     """
-    Translate information from UK Biobank about whether person
-    never consumes any alcohol.
-
-    Accommodate inexact float values.
+    Translate binary representation of sex to textual representation.
 
     arguments:
-        sex (float): person's sex, UK Biobank field 31
+        sex (float): binary representation of person's sex
 
     raises:
 
@@ -476,18 +536,21 @@ def determine_sex_text(
     # Determine whether the variable has a valid (non-missing) value.
     if (
         (not pandas.isna(sex)) and
-        (-0.5 <= sex and sex < 1.5)
+        (
+            (sex == 0) or
+            (sex == 1)
+        )
     ):
         # The variable has a valid value.
-        if (-0.5 <= sex and sex < 0.5):
+        if (sex == 0):
             # "female"
             sex_text = "female"
-        elif (0.5 <= sex and sex < 1.5):
+        elif (sex == 1):
             # "male"
             sex_text = "male"
     else:
         # null
-        sex_text = float("nan")
+        sex_text = "nan"
     # Return information.
     return sex_text
 
@@ -513,30 +576,38 @@ def organize_sex_age_body_variables(
 
     # Copy data.
     table = table.copy(deep=True)
+
+    # Convert variable types.
+    columns_type = [
+        "31-0.0", "22001-0.0", "21022-0.0", "21001-0.0"
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+
     # Translate column names.
     translations = dict()
-    #translations["31-0.0"] = "sex"
-    # Use genotypic sex to avoid data entry errors or confusion with gender.
-    translations["22001-0.0"] = "sex"
     translations["21022-0.0"] = "age"
     translations["21001-0.0"] = "body_mass_index"
     table.rename(
         columns=translations,
         inplace=True,
     )
-    # Convert variable types.
-    columns_type = [
-        "sex", "age", "body_mass_index"
-    ]
-    table = convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
+    # Determine sex consensus between self-report and genotypic sex.
+    table["sex_consensus"] = table.apply(
+        lambda row:
+            interpret_sex_consensus(
+                field_31=row["31-0.0"],
+                field_22001=row["22001-0.0"],
+            ),
+        axis="columns", # apply across rows
     )
     # Determine text representation of person's sex.
     table["sex_text"] = table.apply(
         lambda row:
             determine_sex_text(
-                sex=row["sex"],
+                sex=row["sex_consensus"],
             ),
         axis="columns", # apply across rows
     )
@@ -551,7 +622,7 @@ def organize_sex_age_body_variables(
     table_clean.drop(
         labels=[
             "31-0.0",
-            #"22001-0.0", "21022-0.0",
+            "22001-0.0", #"21022-0.0",
             "21002-0.0", "50-0.0",
             #"21001-0.0",
             "23104-0.0",
@@ -589,1763 +660,6 @@ def organize_sex_age_body_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
-    # Collect information.
-    pail = dict()
-    pail["table"] = table
-    pail["table_clean"] = table_clean
-    pail["table_report"] = table_report
-    # Return information.
-    return pail
-
-
-##########
-# Menstruation, pregnancy, menopause, contraception, hormone therapy
-# Review:
-
-# TODO: I need to review new definitions of menopause variables...
-
-# 31 March 2021: TCW verified UK Biobank fields and their codings.
-# 11 March 2021: TCW verified UK Biobank fields and their codings.
-
-
-def interpret_menstruation_days(
-    field_3700=None,
-):
-    """
-    Intepret UK Biobank's coding for field 3700.
-
-    Data-Field "3700": "time since last menstrual period"
-    UK Biobank data coding "100291" for variable field "3700".
-    "days": 0 - 365
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_3700 (float): UK Biobank field 3700, count of days since previous
-            menstruation (menstrual period)
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_3700)) and
-        (0 <= field_3700 and field_3700 < 500)
-    ):
-        # The variable has a valid value.
-        value = float(field_3700)
-    else:
-        # null, "do not know", or "prefer not to answer"
-        value = float("nan")
-    # Return.
-    return value
-
-
-def determine_female_menstruation_days(
-    sex_text=None,
-    field_3700=None,
-):
-    """
-    Determine count of days since previous menstruation (menstrual period).
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        field_3700 (float): UK Biobank field 3700, days since previous
-            menstruation (menstrual period)
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret days since previous menstruation.
-    menstruation_days = interpret_menstruation_days(
-        field_3700=field_3700,
-    )
-    # Comparison.
-    # Only define days since previous menstruation for female persons.
-    if (
-        (sex_text == "female")
-    ):
-        # Female.
-        value = menstruation_days
-    else:
-        # Male.
-        # Menstruation undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def interpret_menopause_hysterectomy(
-    field_2724=None,
-):
-    """
-    Intepret UK Biobank's coding for field 2724.
-
-    Only interpret whether the variable indicates that the person had a
-    hysterectomy.
-
-    Data-Field "2724": "Had menopause"
-    UK Biobank data coding "100579" for variable field "2724".
-    "no": 0
-    "yes": 1
-    "not sure - had a hysterectomy": 2
-    "not sure - other reason": 3
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_2724)) and
-        (-0.5 <= field_2724 and field_2724 < 3.5)
-    ):
-        # The variable has a valid value.
-        if (1.5 <= field_2724 and field_2724 < 2.5):
-            # 2: "not sure - had a hysterectomy"
-            interpretation = True
-        else:
-            interpretation = False
-    else:
-        # null or "prefer not to answer"
-        interpretation = False
-    # Return.
-    return interpretation
-
-
-def interpret_hysterectomy(
-    field_3591=None,
-):
-    """
-    Intepret UK Biobank's coding for field 3591.
-
-    Data-Field "3591": "Ever had hysterectomy (womb removed)"
-    UK Biobank data coding "100599" for variable field "3591".
-    "no": 0
-    "yes": 1
-    "not sure": -5
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    Interpret missing or null values as False.
-
-    arguments:
-        field_3591 (float): UK Biobank field 3591, whether person has had a
-            hysterectomy
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_3591)) and
-        (-0.5 <= field_3591 and field_3591 < 1.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= field_3591 and field_3591 < 0.5):
-            # 0: "no"
-            interpretation = False
-        elif (0.5 <= field_3591 and field_3591 < 1.5):
-            # 1: "yes"
-            interpretation = True
-        else:
-            interpretation = False
-    else:
-        # null, "not sure", or "prefer not to answer"
-        interpretation = False
-    # Return.
-    return interpretation
-
-
-def determine_female_hysterectomy(
-    sex_text=None,
-    field_2724=None,
-    field_3591=None,
-):
-    """
-    Determine whether female persons experienced hysterectomy.
-
-    arguments:
-        sex_text (str): textual representation of sex
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
-        field_3591 (float): UK Biobank field 3591, whether person has had a
-            hysterectomy
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret menopause.
-    menopause_hysterectomy_boolean = interpret_menopause_hysterectomy(
-        field_2724=field_2724,
-    )
-    # Interpret hysterectomy.
-    hysterectomy_boolean = interpret_hysterectomy(
-        field_3591=field_3591,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        if (
-            menopause_hysterectomy_boolean or
-            hysterectomy_boolean
-        ):
-            value = 1
-        else:
-            value = 0
-    else:
-        # Hysterectomy is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def interpret_oophorectomy(
-    field_2834=None,
-):
-    """
-    Intepret UK Biobank's coding for field 2834.
-
-    Data-Field "2834": "Bilateral oophorectomy (both ovaries
-    removed)"
-    UK Biobank data coding "100599" for variable field "2834".
-    "no": 0
-    "yes": 1
-    "not sure": -5
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    Interpret missing or null values as False.
-
-    arguments:
-        field_2834 (float): UK Biobank field 2834, whether person has had an
-            oophorectomy
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_2834)) and
-        (-0.5 <= field_2834 and field_2834 < 1.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= field_2834 and field_2834 < 0.5):
-            # 0: "no"
-            interpretation = False
-        elif (0.5 <= field_2834 and field_2834 < 1.5):
-            # 1: "yes"
-            interpretation = True
-        else:
-            interpretation = False
-    else:
-        # null, "not sure", or "prefer not to answer"
-        interpretation = False
-    # Return.
-    return interpretation
-
-
-def determine_female_oophorectomy(
-    sex_text=None,
-    field_2834=None,
-):
-    """
-    Determine whether female persons experienced bilateral oophorectomy.
-
-    arguments:
-        sex_text (str): textual representation of sex
-        field_2834 (float): UK Biobank field 2834, whether person has had an
-            oophorectomy
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret oophorectomy.
-    oophorectomy_boolean = interpret_oophorectomy(
-        field_2834=field_2834,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        if (
-            oophorectomy_boolean
-        ):
-            value = 1
-        else:
-            value = 0
-    else:
-        # Oophorectomy is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_female_hysterectomy_or_oophorectomy(
-    sex_text=None,
-    hysterectomy=None,
-    oophorectomy=None,
-):
-    """
-    Determine whether female persons experienced hysterectomy.
-
-    arguments:
-        sex_text (str): textual representation of sex
-        hysterectomy (float): binary logical representation of whether person
-            has had an hysterectomy
-        oophorectomy (float): binary logical representation of whether person
-            has had a bilateral oophorectomy
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Comparison.
-    if (sex_text == "female"):
-        if (
-            (hysterectomy == 1) or
-            (oophorectomy == 1)
-        ):
-            value = 1
-        else:
-            value = 0
-    else:
-        # Hysterectomy and oophorectomy are undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def interpret_menopause_natural(
-    field_2724=None,
-):
-    """
-    Intepret UK Biobank's coding for field 2724.
-
-    Only interpret whether the variable indicates that the person had a
-    natural menopause, not involving hysterectomy.
-
-    Data-Field "2724": "Had menopause"
-    UK Biobank data coding "100579" for variable field "2724".
-    "no": 0
-    "yes": 1
-    "not sure - had a hysterectomy": 2
-    "not sure - other reason": 3
-    "prefer not to answer": -3
-
-    Accommodate inexact float values.
-
-    Interpret missing or null values as False.
-    The main justification is to avoid loss of persons from cohorts.
-    This interpretation simplifies the definitions of "menopause_binary" and
-    "menopause_ordinal".
-    Only a "True" value of "menopause_natural" asserts postmenopause definition.
-    A "False" (or null) value of "menopause_natural" relies on other variables
-    for definition, including "oophorectomy", "menstruation_days", and "age".
-
-    arguments:
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_2724)) and
-        (-0.5 <= field_2724 and field_2724 < 3.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= field_2724 and field_2724 < 0.5):
-            # 0: "no"
-            value = 0
-        elif (0.5 <= field_2724 and field_2724 < 1.5):
-            # 1: "yes"
-            value = 1
-        elif (1.5 <= field_2724 and field_2724 < 2.5):
-            # 2: "not sure - had a hysterectomy"
-            value = float("nan")
-        elif (2.5 <= field_2724 and field_2724 < 3.5):
-            # 3: "not sure - other reason"
-            value = float("nan")
-        else:
-            value = float("nan")
-    else:
-        # null or "prefer not to answer"
-        value = float("nan")
-    # Return.
-    return value
-
-
-def determine_female_menopause_binary(
-    sex_text=None,
-    age=None,
-    threshold_age=None,
-    menstruation_days=None,
-    threshold_menstruation_days=None,
-    field_2724=None,
-    hysterectomy=None,
-    oophorectomy=None,
-):
-    """
-    Determine whether female persons qualify for premenopause or postmenopause
-    categories.
-    This definition's encoding is binary.
-
-    Pay close attention to "and", "or" logic in comparisons.
-
-    priority:
-    1. (self report of menopause) or (oophorectomy)
-    2. (days since previous menstruation)
-    3. (age)
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        threshold_age (int): threshold age in years, above which to
-            consider all females postmenopausal
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
-        threshold_menstruation_days (int): threshold in days since last
-            menstrual period, above which to consider females postmenopausal
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
-        hysterectomy (float): binary logical representation of whether person
-            has had an hysterectomy
-        oophorectomy (float): binary logical representation of whether person
-            has had a bilateral oophorectomy
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret menopause.
-    # Interpret whether person self-reported menopause that did not involve
-    # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
-        field_2724=field_2724,
-    )
-    # Determine categories for menopause.
-    # Pay close attention to "and", "or" logic in comparisons.
-    if (sex_text == "female"):
-        # Determine postmenopause.
-        if (
-            (
-                (not pandas.isna(menopause_natural)) and
-                (menopause_natural == 1)
-            ) or
-            (
-                (not pandas.isna(oophorectomy)) and
-                (oophorectomy == 1)
-            ) or
-            (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days >= threshold_menstruation_days)
-            ) or
-            (
-                (not pandas.isna(age)) and
-                (age >= threshold_age)
-            )
-        ):
-            # Person qualifies for postmenopause.
-            value = 1
-        # Determine premenopause.
-        elif (
-            (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days < threshold_menstruation_days)
-            ) or
-            (
-                (not pandas.isna(age)) and
-                (age < threshold_age)
-            )
-        ):
-            # Person qualifies for premenopause.
-            value = 0
-        else:
-            # Person does not qualify for any categories, probably due to
-            # missing or null values (including age).
-            #print("potential error in determine_female_menopause_binary()")
-            value = float("nan")
-    else:
-        # Menopause undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_female_menopause_ordinal(
-    sex_text=None,
-    age=None,
-    threshold_age_pre=None,
-    threshold_age_post=None,
-    menstruation_days=None,
-    threshold_menstruation_days_pre=None,
-    threshold_menstruation_days_post=None,
-    field_2724=None,
-    hysterectomy=None,
-    oophorectomy=None,
-):
-    """
-    Determine whether female persons qualify for premenopause, perimenopause,
-    or postmenopause categories.
-    This definition's encoding is ordinal.
-
-    Pay close attention to "and", "or" logic in comparisons.
-
-    priority:
-    1. (self report of menopause) or (oophorectomy)
-    2. (days since previous menstruation)
-    3. (age)
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        threshold_age_pre (int): threshold age in years, below which to consider
-            females premenopausal
-        threshold_age_post (int): threshold age in years, above which to
-            consider all females postmenopausal
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
-        threshold_menstruation_days_pre (int): threshold in days since last
-            menstrual period, below which to consider females premenopausal
-        threshold_menstruation_days_post (int): threshold in days since last
-            menstrual period, above which to consider all females postmenopausal
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
-        hysterectomy (float): binary logical representation of whether person
-            has had an hysterectomy
-        oophorectomy (float): binary logical representation of whether person
-            has had a bilateral oophorectomy
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret menopause.
-    # Interpret whether person self-reported menopause that did not involve
-    # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
-        field_2724=field_2724,
-    )
-    # Determine categories for menopause.
-    # Pay close attention to "and", "or" logic in comparisons.
-    if (sex_text == "female"):
-        # Determine postmenopause.
-        if (
-            (
-                (not pandas.isna(menopause_natural)) and
-                (menopause_natural == 1)
-            ) or
-            (
-                (not pandas.isna(oophorectomy)) and
-                (oophorectomy == 1)
-            ) or
-            (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days >= threshold_menstruation_days_post)
-            ) or
-            (
-                (not pandas.isna(age)) and
-                (age >= threshold_age_post)
-            )
-        ):
-            # Person qualifies for postmenopause.
-            value = 2
-        # Determine perimenopause
-        elif (
-            (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days >= threshold_menstruation_days_pre) and
-                (menstruation_days < threshold_menstruation_days_post)
-            ) or
-            (
-                (not pandas.isna(age)) and
-                (age >= threshold_age_pre) and
-                (age < threshold_age_post)
-            )
-        ):
-            # Person qualitifies for perimenopause.
-            value = 1
-        # Determine premenopause.
-        elif (
-            (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days < threshold_menstruation_days_pre)
-            ) or
-            (
-                (not pandas.isna(age)) and
-                (age < threshold_age_pre)
-            )
-        ):
-            # Person qualifies for premenopause.
-            value = 0
-        else:
-            # Person does not qualify for any categories, probably due to
-            # missing or null values (including age).
-            #print("potential error in determine_female_menopause_binary()")
-            value = float("nan")
-    else:
-        # Menopause undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def interpret_pregnancy_broad(
-    field_3140=None,
-):
-    """
-    Intepret UK Biobank's coding for field 3140.
-
-    Data-Field "3140": "Pregnant"
-    UK Biobank data coding "100267" for variable field "3140".
-    "no": 0
-    "yes": 1
-    "unsure": 2
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_3140 (float): UK Biobank field 3140, whether person was pregnant
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_3140)) and
-        (-0.5 <= field_3140 and field_3140 < 2.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= field_3140 and field_3140 < 0.5):
-            # 0: "no"
-            interpretation = False
-        elif (0.5 <= field_3140 and field_3140 < 1.5):
-            # 1: "yes"
-            interpretation = True
-        elif (1.5 <= field_3140 and field_3140 < 2.5):
-            # 2: "unsure"
-            interpretation = True
-        else:
-            interpretation = False
-    else:
-        # null
-        interpretation = False
-    # Return.
-    return interpretation
-
-
-def interpret_pregnancy(
-    field_3140=None,
-):
-    """
-    Intepret UK Biobank's coding for field 3140.
-
-    Data-Field "3140": "Pregnant"
-    UK Biobank data coding "100267" for variable field "3140".
-    "no": 0
-    "yes": 1
-    "unsure": 2
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_3140 (float): UK Biobank field 3140, whether person was pregnant
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_3140)) and
-        (-0.5 <= field_3140 and field_3140 < 2.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= field_3140 and field_3140 < 0.5):
-            # 0: "no"
-            interpretation = False
-        elif (0.5 <= field_3140 and field_3140 < 1.5):
-            # 1: "yes"
-            interpretation = True
-        elif (1.5 <= field_3140 and field_3140 < 2.5):
-            # 2: "unsure"
-            interpretation = False
-        else:
-            interpretation = False
-    else:
-        # null
-        interpretation = False
-    # Return.
-    return interpretation
-
-
-def determine_female_pregnancy_broad(
-    sex_text=None,
-    field_3140=None,
-):
-    """
-    Determine whether female persons were pregnant.
-
-    This function uses a broad definition of pregnancy that does not consider
-    menopause and also includes uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        field_3140 (float): UK Biobank field 3140, whether person was pregnant
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret pregnancy.
-    pregnancy_boolean = interpret_pregnancy_broad(
-        field_3140=field_3140,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        if (pregnancy_boolean):
-            pregnancy = 1
-        else:
-            pregnancy = 0
-    else:
-        # Pregnancy undefined for males.
-        pregnancy = float("nan")
-        # Set to false for males for convenience.
-        #pregnancy = 0
-    # Return information.
-    return pregnancy
-
-
-def determine_female_pregnancy(
-    sex_text=None,
-    menopause=None,
-    field_3140=None,
-):
-    """
-    Determine whether female persons were pregnant.
-
-    This function uses a specific definition of pregnancy that considers
-    menopause and does not include uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        menopause (float): whether person has experienced menopause,
-            hysterectomy, or oophorectomy
-        field_3140 (float): UK Biobank field 3140, whether person was pregnant
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret pregnancy.
-    pregnancy_boolean = interpret_pregnancy(
-        field_3140=field_3140,
-    )
-    # Comparison.
-    # Only define pregnancy for females who are pre-menopausal.
-    if (
-        (sex_text == "female")
-    ):
-        if ((menopause < 0.5) and (pregnancy_boolean)):
-            pregnancy = 1
-        else:
-            pregnancy = 0
-    else:
-        # Pregnancy undefined for males.
-        pregnancy = float("nan")
-        # Set to false for males for convenience.
-        #pregnancy = 0
-    # Return information.
-    return pregnancy
-
-
-def interpret_recent_oral_contraception(
-    age=None,
-    recent_range=None,
-    null_false=None,
-    field_2784=None,
-    field_2794=None,
-    field_2804=None,
-):
-    """
-    Inteprets recent use of oral contraception.
-
-    Recent use of oral contraception will be a covariate in analyses.
-    To preserve samples in analyses, do not perpetuate null values.
-    Interpret null values as false.
-    Hence the greatest confidence will be in true values, and these will drive
-    much of the signal in analyses.
-
-    Data-Field "2784": "ever taken oral contraceptive pill"
-    UK Biobank data coding "100349" for variable field "2784".
-    "yes": 1
-    "no": 0
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "2794": "age started oral contraceptive pill"
-    UK Biobank data coding "100291" for variable field "2794".
-    "age in years": 5 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "2804": "age when last used oral contraceptive pill"
-    UK Biobank data coding "100595" for variable field "2804".
-    "age in years": 5 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-    "still taking the pill": -11
-
-    Accommodate inexact float values.
-
-    arguments:
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        null_false (bool): whether to interpret null or missing values as false
-        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
-        field_2794 (float): UK Biobank field 2794, age started oral
-            contraception
-        field_2804 (float): UK Biobank field 2804, age stopped oral
-            contraception
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Designate variables.
-    ever = field_2784
-    age_stop = field_2804
-    # Interpret field code.
-    if (
-        (not pandas.isna(ever)) and
-        (-0.5 <= ever and ever < 1.5)
-    ):
-        # The relevant variables have valid values.
-        if (0.5 <= ever and ever < 1.5):
-            # Person has used therapy.
-            if (
-                (pandas.isna(age_stop)) or
-                (-3.5 <= age_stop and age_stop < -0.5)
-            ):
-                # null, "do not know", or "prefer not to answer"
-                if (null_false):
-                    value = 0
-                else:
-                    value = float("nan")
-            elif (-11.5 <= age_stop and age_stop < -10.5):
-                # Person used oral contraception currently.
-                value = 1
-            elif ((age - recent_range) <= age_stop and age_stop <= age):
-                # Person used therapy within recent range of current age.
-                value = 1
-            else:
-                # Person ceased use of therapy longer than recently.
-                value = 0
-        else:
-            # Person has not used therapy.
-            value = 0
-    else:
-        # null, "do not know", or "prefer not to answer"
-        if (null_false):
-            value = 0
-        else:
-            value = float("nan")
-    # Return.
-    return value
-
-
-def determine_female_oral_contraception(
-    sex_text=None,
-    age=None,
-    menopause=None,
-    pregnancy=None,
-    recent_range=None,
-    null_false=None,
-    field_2784=None,
-    field_2794=None,
-    field_2804=None,
-):
-    """
-    Determine whether person used oral contraception recently or currently.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        menopause (float): whether person has experienced menopause,
-            hysterectomy, or oophorectomy
-        pregnancy (float): whether person was pregnant
-        recent_range (int): years within current age to consider recent
-        null_false (bool): whether to interpret null or missing values as false
-        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
-        field_2794 (float): UK Biobank field 2794, age started oral
-            contraception
-        field_2804 (float): UK Biobank field 2804, age stopped oral
-            contraception
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret oral contraception.
-    contraception = interpret_recent_oral_contraception(
-        age=age,
-        recent_range=recent_range, # recent range in years
-        null_false=null_false,
-        field_2784=field_2784,
-        field_2794=field_2794,
-        field_2804=field_2804,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        value = contraception
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def interpret_recent_hormone_replacement_therapy(
-    age=None,
-    recent_range=None,
-    null_false=None,
-    field_2814=None,
-    field_3536=None,
-    field_3546=None,
-):
-    """
-    Inteprets recent use of hormone replacement therapy.
-
-    Recent use of hormone replacement therapy will be a covariate in analyses.
-    To preserve samples in analyses, do not perpetuate null values.
-    Interpret null values as false.
-    Hence the greatest confidence will be in true values, and these will drive
-    much of the signal in analyses.
-
-    Data-Field "2814": "ever used hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100349" for variable field "2814".
-    "yes": 1
-    "no": 0
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "3536": "age started hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100291" for variable field "3536".
-    "age in years": 16 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "3546": "age last used hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100598" for variable field "3546".
-    "age in years": 20 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-    "still taking HRT": -11
-
-    Accommodate inexact float values.
-
-    arguments:
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        null_false (bool): whether to interpret null or missing values as false
-        field_2814 (float): UK Biobank field 2814, ever taken hormone
-            replacement therapy (HRT)
-        field_3536 (float): UK Biobank field 3536, age started hormone
-            replacement therapy (HRT)
-        field_3546 (float): UK Biobank field 3546, age stopped hormone
-            replacement therapy (HRT)
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Designate variables.
-    ever = field_2814
-    age_stop = field_3546
-    # Interpret field code.
-    if (
-        (not pandas.isna(ever)) and
-        (-0.5 <= ever and ever < 1.5)
-    ):
-        # The relevant variables have valid values.
-        if (0.5 <= ever and ever < 1.5):
-            # Person has used therapy.
-            if (
-                (pandas.isna(age_stop)) or
-                (-3.5 <= age_stop and age_stop < -0.5)
-            ):
-                # null, "do not know", or "prefer not to answer"
-                if (null_false):
-                    value = 0
-                else:
-                    value = float("nan")
-            elif (-11.5 <= age_stop and age_stop < -10.5):
-                # Person used oral contraception currently.
-                value = 1
-            elif ((age - recent_range) <= age_stop and age_stop <= age):
-                # Person used therapy within recent range of current age.
-                value = 1
-            else:
-                # Person ceased use of therapy longer than recently.
-                value = 0
-        else:
-            # Person has not used therapy.
-            value = 0
-    else:
-        # null, "do not know", or "prefer not to answer"
-        if (null_false):
-            value = 0
-        else:
-            value = float("nan")
-    # Return.
-    return value
-
-
-def determine_female_hormone_replacement_therapy(
-    sex_text=None,
-    age=None,
-    menopause=None,
-    pregnancy=None,
-    recent_range=None,
-    null_false=None,
-    field_2814=None,
-    field_3536=None,
-    field_3546=None,
-):
-    """
-    Determine count of days since previous menstruation (menstrual period).
-
-    This function uses a specific definition of pregnancy that considers
-    menopause and does not include uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        menopause (float): whether person has experienced menopause,
-            hysterectomy, or oophorectomy
-        pregnancy (float): whether person was pregnant
-        recent_range (int): years within current age to consider recent
-        null_false (bool): whether to interpret null or missing values as false
-        field_2814 (float): UK Biobank field 2784, ever taken hormone
-            replacement therapy
-        field_3536 (float): UK Biobank field 2794, age started hormone
-            replacement therapy (HRT)
-        field_3546 (float): UK Biobank field 2804, age stopped hormone
-            replacement therapy (HRT)
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret hormone replacement therapy.
-    therapy = interpret_recent_hormone_replacement_therapy(
-        age=age,
-        recent_range=recent_range,
-        null_false=null_false,
-        field_2814=field_2814,
-        field_3536=field_3536,
-        field_3546=field_3546,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        value = therapy
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_female_any_hormone_alteration_medication(
-    sex_text=None,
-    oral_contraception=None,
-    hormone_therapy=None,
-):
-    """
-    Determine count of days since previous menstruation (menstrual period).
-
-    This function uses a specific definition of pregnancy that considers
-    menopause and does not include uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        oral_contraception (float): binary logical representation of whether
-            person used oral contraception recently
-        hormone_therapy (float): binary logical representation of whether
-            person used hormone replacement therapy recently
-
-    raises:
-
-    returns:
-        (float): binary logical representation of whether person used any
-            hormone-alteration medications recently
-
-    """
-
-    # Comparison.
-    if (sex_text == "female"):
-        if (
-            (oral_contraception == 1) or
-            (hormone_therapy == 1)
-        ):
-            value = 1
-        elif (
-            (oral_contraception == 0) and
-            (hormone_therapy == 0)
-        ):
-            value = 0
-        else:
-            value = float("nan")
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_binary_categorical_product_of_two_binary_variables(
-    product=None,
-    first=None,
-    second=None,
-):
-    """
-    Determines any one of four binary categorical variables that represent the
-    product of two binary variables.
-
-    Here are the combinations in which each product variable has a binary true
-    value (1).
-
-    [prefix]_1: ("first" variable = 1) and ("second" variable = 1)
-    [prefix]_2: ("first" variable = 1) and ("second" variable = 0)
-    [prefix]_3: ("first" variable = 0) and ("second" variable = 1)
-    [prefix]_4: ("first" variable = 0) and ("second" variable = 0)
-
-    If either "first" or "second" variables have null, missing values then all
-    product variables also have null, missing values.
-
-    arguments:
-        product (int): count of product definition, 1 through 4
-        first (str): name of first column with binary logical representation of
-            a variable
-        second (str): name of second column with binary logical representation
-            of a variable
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Determine product value.
-    if (
-        (pandas.isna(first)) or
-        (pandas.isna(second))
-    ):
-        value = float("nan")
-    else:
-        # The relevant variables have valid values.
-        if (product == 1):
-            if (
-                (0.5 <= first and first < 1.5) and
-                (0.5 <= second and second < 1.5)
-            ):
-                # first = 1
-                # second = 1
-                value = 1
-            else:
-                value = 0
-        elif (product == 2):
-            if (
-                (0.5 <= first and first < 1.5) and
-                (-0.5 <= second and second < 0.5)
-            ):
-                # first = 1
-                # second = 0
-                value = 1
-            else:
-                value = 0
-        elif (product == 3):
-            if (
-                (-0.5 <= first and first < 0.5) and
-                (0.5 <= second and second < 1.5)
-            ):
-                # first = 0
-                # second = 1
-                value = 1
-            else:
-                value = 0
-        elif (product == 4):
-            if (
-                (-0.5 <= first and first < 0.5) and
-                (-0.5 <= second and second < 0.5)
-            ):
-                # first = 0
-                # second = 0
-                value = 1
-            else:
-                value = 0
-            pass
-        pass
-    # Return.
-    return value
-
-
-def determine_binary_categorical_products_of_two_binary_variables(
-    table=None,
-    first=None,
-    second=None,
-    prefix=None,
-    report=None,
-):
-    """
-    Determines four binary categorical variables that represent the product of
-    two binary variables.
-    Uses a prefix in the names of the four product variables.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        first (str): name of first column with binary logical representation of
-            a variable
-        second (str): name of second column with binary logical representation
-            of a variable
-        prefix (str): prefix for name of the four product columns
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Define product variables.
-    table[str(prefix + "_1")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=1,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_2")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=2,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_3")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=3,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_4")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=4,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-
-    # Organize information for report.
-    table_report = table.copy(deep=True)
-    columns_report = [
-        str(prefix + "_1"),
-        str(prefix + "_2"),
-        str(prefix + "_3"),
-        str(prefix + "_4"),
-    ]
-    table_report = table_report.loc[
-        :, table_report.columns.isin(columns_report)
-    ]
-    table_report = table_report[[*columns_report]]
-    table_report.dropna(
-        axis="index",
-        how="any",
-        subset=columns_report,
-        inplace=True,
-    )
-    table_1 = table_report.loc[
-        (table_report[str(prefix + "_1")] > 0.5), :
-    ]
-    table_2 = table_report.loc[
-        (table_report[str(prefix + "_2")] > 0.5), :
-    ]
-    table_3 = table_report.loc[
-        (table_report[str(prefix + "_3")] > 0.5), :
-    ]
-    table_4 = table_report.loc[
-        (table_report[str(prefix + "_4")] > 0.5), :
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(
-            "report: " +
-            "determine_binary_categorical_products_of_two_binary_variables()"
-        )
-        utility.print_terminal_partition(level=3)
-        print("Counts of records (rows) in each product category...")
-        print("Category 1: " + str(table_1.shape[0]))
-        print("Category 2: " + str(table_2.shape[0]))
-        print("Category 3: " + str(table_3.shape[0]))
-        print("Category 4: " + str(table_4.shape[0]))
-        pass
-    # Return information.
-    return table
-
-
-def organize_report_cohort_sex_hormones_by_table(
-    cohort=None,
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        cohort (str): name of cohort
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Report.
-    utility.print_terminal_partition(level=5)
-    print("cohort: " + str(cohort))
-    print("count: " + str(table.shape[0]))
-    print("column...count...mean...median")
-    # Iterate on relevant variables.
-    columns = [
-        "age",
-        "oestradiol", "oestradiol_free",
-        "testosterone", "testosterone_free",
-        "steroid_globulin", "albumin",
-    ]
-    for column in columns:
-        array = table[column].dropna().to_numpy()
-        # Determine count, mean, and median of values in array.
-        count = int(array.size)
-        mean = round(numpy.nanmean(array), 2)
-        median = round(numpy.nanmedian(array), 2)
-        print(column + ": " + str(count) + " " + str(mean) + " " + str(median))
-    pass
-
-
-def organize_report_female_cohorts_sex_hormones(
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-
-    table_female = table.loc[
-        (table["sex_text"] == "female"), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="female",
-        table=table_female,
-    )
-
-    table_female_not_pregnant = table_female.loc[
-        (table_female["pregnancy"] == 0), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="female_not_pregnant",
-        table=table_female_not_pregnant,
-    )
-
-    table_female_premenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 0), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="female_premenopause",
-        table=table_female_premenopause,
-    )
-
-    table_female_perimenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 1), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="female_perimenopause",
-        table=table_female_perimenopause,
-    )
-
-    table_female_postmenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 1), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="female_postmenopause",
-        table=table_female_postmenopause,
-    )
-
-
-    table_male = table.loc[
-        (table["sex_text"] == "male"), :
-    ]
-    organize_report_cohort_sex_hormones_by_table(
-        cohort="male",
-        table=table_male,
-    )
-
-    if False:
-        table_postmenopause = table_not_pregnant.loc[
-            (table_not_pregnant["menopause"] == 1), :
-        ]
-        table_premenopause_alteration_no = table_premenopause.loc[
-            (table_premenopause["hormone_alteration"] == 0), :
-        ]
-        table_premenopause_alteration_yes = table_premenopause.loc[
-            (table_premenopause["hormone_alteration"] == 1), :
-        ]
-        table_postmenopause_alteration_no = table_postmenopause.loc[
-            (table_postmenopause["hormone_alteration"] == 0), :
-        ]
-        table_postmenopause_alteration_yes = table_postmenopause.loc[
-            (table_postmenopause["hormone_alteration"] == 1), :
-        ]
-    pass
-
-
-def organize_female_menstruation_pregnancy_menopause_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about female persons' menopause, pregnancy,
-    menstruation, oral contraception, and hormone therapy.
-
-    These variables are specific to females and have null values for males.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Convert variable types.
-    columns_type = [
-        "2724-0.0", "3591-0.0", "2834-0.0",
-        "3140-0.0",
-        "3700-0.0",
-        "2784-0.0", "2794-0.0", "2804-0.0",
-        "2814-0.0", "3536-0.0", "3546-0.0",
-    ]
-    table = convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
-    )
-
-    # Determine count of days since person's last menstrual period.
-    table["menstruation_days"] = table.apply(
-        lambda row:
-            determine_female_menstruation_days(
-                sex_text=row["sex_text"],
-                field_3700=row["3700-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons experienced hysterectomy.
-    table["hysterectomy"] = table.apply(
-        lambda row:
-            determine_female_hysterectomy(
-                sex_text=row["sex_text"],
-                field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons experienced bilateral oophorectomy.
-    table["oophorectomy"] = table.apply(
-        lambda row:
-            determine_female_oophorectomy(
-                sex_text=row["sex_text"],
-                field_2834=row["2834-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons have experienced either hysterectomy or
-    # oophorectomy.
-    table["hysterectomy_or_oophorectomy"] = table.apply(
-        lambda row:
-            determine_female_hysterectomy_or_oophorectomy(
-                sex_text=row["sex_text"],
-                hysterectomy=row["hysterectomy"],
-                oophorectomy=row["oophorectomy"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons have experienced menopause.
-    # This definition is binary.
-    table["menopause_binary"] = table.apply(
-        lambda row:
-            determine_female_menopause_binary(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                threshold_age=51, # threshold age in years
-                menstruation_days=row["menstruation_days"],
-                threshold_menstruation_days=60, # threshold in days
-                field_2724=row["2724-0.0"],
-                hysterectomy=row["hysterectomy"],
-                oophorectomy=row["oophorectomy"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons have experienced menopause.
-    # This definition is ordinal.
-    table["menopause_ordinal"] = table.apply(
-        lambda row:
-            determine_female_menopause_ordinal(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                threshold_age_pre=47, # threshold age in years
-                threshold_age_post=55, # threshold age in years
-                menstruation_days=row["menstruation_days"],
-                threshold_menstruation_days_pre=60, # threshold in days
-                threshold_menstruation_days_post=365, # threshold in days
-                field_2724=row["2724-0.0"],
-                hysterectomy=row["hysterectomy"],
-                oophorectomy=row["oophorectomy"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons are pregnant by broad definition.
-    # 0: not pregnant
-    # 1: pregnant (yes or unsure)
-    table["pregnancy_broad"] = table.apply(
-        lambda row:
-            determine_female_pregnancy_broad(
-                sex_text=row["sex_text"],
-                field_3140=row["3140-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether female persons are pregnant by narrow definition.
-    # 0: not pregnant
-    # 1: pregnant (yes)
-    table["pregnancy"] = table.apply(
-        lambda row:
-            determine_female_pregnancy(
-                sex_text=row["sex_text"],
-                menopause=row["menopause_binary"],
-                field_3140=row["3140-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether person was using oral contraception recently.
-    table["oral_contraception"] = table.apply(
-        lambda row:
-            determine_female_oral_contraception(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                menopause=row["menopause_binary"],
-                pregnancy=row["pregnancy"],
-                recent_range=1,
-                null_false=True, # whether to interpret nulls as False
-                field_2784=row["2784-0.0"],
-                field_2794=row["2794-0.0"],
-                field_2804=row["2804-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether person was using hormone replacement therapy recently.
-    table["hormone_replacement"] = table.apply(
-        lambda row:
-            determine_female_hormone_replacement_therapy(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                menopause=row["menopause_binary"],
-                pregnancy=row["pregnancy"],
-                recent_range=1,
-                null_false=True, # whether to interpret nulls as False
-                field_2814=row["2814-0.0"],
-                field_3536=row["3536-0.0"],
-                field_3546=row["3546-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine whether person was using any hormone-altering medications
-    # recently.
-    table["hormone_alteration"] = table.apply(
-        lambda row:
-            determine_female_any_hormone_alteration_medication(
-                sex_text=row["sex_text"],
-                oral_contraception=row["oral_contraception"],
-                hormone_therapy=row["hormone_replacement"],
-             ),
-        axis="columns", # apply across rows
-    )
-    # Determine combination categories by menopause and hormone-atering therapy.
-    table = determine_binary_categorical_products_of_two_binary_variables(
-        table=table,
-        first="menopause_binary",
-        second="hormone_alteration",
-        prefix="menopause_hormone_category",
-        report=report,
-    )
-
-    # Remove columns for variables that are not necessary anymore.
-    # Pandas drop throws error if column names do not exist.
-    table_clean = table.copy(deep=True)
-    table_clean.drop(
-        labels=[
-            "2724-0.0", "3591-0.0", "2834-0.0",
-            "3140-0.0",
-            "3700-0.0",
-            "2784-0.0", "2794-0.0", "2804-0.0",
-            "2814-0.0", "3536-0.0", "3546-0.0",
-        ],
-        axis="columns",
-        inplace=True
-    )
-    # Organize information for report.
-    table_report = table.copy(deep=True)
-    columns_report = [
-        #"eid",
-        "IID",
-        "sex_text",
-        "age",
-        "menstruation_days",
-        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
-        "menopause_binary", "menopause_ordinal",
-        "pregnancy_broad", "pregnancy",
-        "oral_contraception",
-        "hormone_replacement",
-        "hormone_alteration",
-        "menopause_hormone_category_1", "menopause_hormone_category_2",
-        "menopause_hormone_category_3", "menopause_hormone_category_4",
-    ]
-    table_report = table_report.loc[
-        :, table_report.columns.isin(columns_report)
-    ]
-    table_report = table_report[[*columns_report]]
-    table_report.sort_values(
-        by=["pregnancy", "menopause_binary"],
-        axis="index",
-        ascending=False,
-        inplace=True,
-    )
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("report: organize_female_menstruation_pregnancy_menopause_variables()")
-        organize_report_female_cohorts_sex_hormones(
-            table=table_clean,
-        )
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -2884,6 +1198,1811 @@ def organize_plot_cohort_sex_hormone_variable_distributions(
             array=table[column].dropna().to_numpy(),
             bins=bins,
         )
+    # Return information.
+    return pail
+
+
+##########
+# Menstruation, pregnancy, menopause, contraception, hormone therapy
+# Review:
+
+# TODO: I need to review new definitions of menopause variables...
+
+# 31 March 2021: TCW verified UK Biobank fields and their codings.
+# 11 March 2021: TCW verified UK Biobank fields and their codings.
+
+
+def interpret_menstruation_days(
+    field_3700=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3700.
+
+    Data-Field "3700": "time since last menstrual period"
+    UK Biobank data coding "100291" for variable field "3700".
+    "days": 0 - 365
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3700 (float): UK Biobank field 3700, count of days since previous
+            menstruation (menstrual period)
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3700)) and
+        (0 <= field_3700 and field_3700 < 1000)
+    ):
+        # The variable has a valid value.
+        value = float(field_3700)
+    else:
+        # null, "do not know", or "prefer not to answer"
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_menopause_hysterectomy(
+    field_2724=None,
+):
+    """
+    Intepret UK Biobank's coding for field 2724.
+
+    Only interpret whether the variable indicates that the person had a
+    hysterectomy.
+
+    Data-Field "2724": "Had menopause"
+    UK Biobank data coding "100579" for variable field "2724".
+    "no": 0
+    "yes": 1
+    "not sure - had a hysterectomy": 2
+    "not sure - other reason": 3
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2724)) and
+        (-0.5 <= field_2724 and field_2724 < 3.5)
+    ):
+        # The variable has a valid value.
+        if (1.5 <= field_2724 and field_2724 < 2.5):
+            # 2: "not sure - had a hysterectomy"
+            interpretation = True
+        else:
+            interpretation = False
+    else:
+        # null or "prefer not to answer"
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_menopause_natural(
+    field_2724=None,
+):
+    """
+    Intepret UK Biobank's coding for field 2724.
+
+    Only interpret whether the variable indicates that the person had a
+    natural menopause, not involving hysterectomy.
+
+    Data-Field "2724": "Had menopause"
+    UK Biobank data coding "100579" for variable field "2724".
+    "no": 0
+    "yes": 1
+    "not sure - had a hysterectomy": 2
+    "not sure - other reason": 3
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    Interpret missing or null values as False.
+    The main justification is to avoid loss of persons from cohorts.
+    This interpretation simplifies the definitions of "menopause_binary" and
+    "menopause_ordinal".
+    Only a "True" value of "menopause_natural" asserts postmenopause definition.
+    A "False" (or null) value of "menopause_natural" relies on other variables
+    for definition, including "oophorectomy", "menstruation_days", and "age".
+
+    arguments:
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2724)) and
+        (-0.5 <= field_2724 and field_2724 < 3.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_2724 and field_2724 < 0.5):
+            # 0: "no"
+            value = 0
+        elif (0.5 <= field_2724 and field_2724 < 1.5):
+            # 1: "yes"
+            value = 1
+        elif (1.5 <= field_2724 and field_2724 < 2.5):
+            # 2: "not sure - had a hysterectomy"
+            value = float("nan")
+        elif (2.5 <= field_2724 and field_2724 < 3.5):
+            # 3: "not sure - other reason"
+            value = float("nan")
+        else:
+            value = float("nan")
+    else:
+        # null or "prefer not to answer"
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_hysterectomy(
+    field_3591=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3591.
+
+    Data-Field "3591": "Ever had hysterectomy (womb removed)"
+    UK Biobank data coding "100599" for variable field "3591".
+    "no": 0
+    "yes": 1
+    "not sure": -5
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    Interpret missing or null values as False.
+
+    arguments:
+        field_3591 (float): UK Biobank field 3591, whether person has had a
+            hysterectomy
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3591)) and
+        (-0.5 <= field_3591 and field_3591 < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_3591 and field_3591 < 0.5):
+            # 0: "no"
+            interpretation = False
+        elif (0.5 <= field_3591 and field_3591 < 1.5):
+            # 1: "yes"
+            interpretation = True
+        else:
+            interpretation = False
+    else:
+        # null, "not sure", or "prefer not to answer"
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_oophorectomy(
+    field_2834=None,
+):
+    """
+    Intepret UK Biobank's coding for field 2834.
+
+    Data-Field "2834": "Bilateral oophorectomy (both ovaries
+    removed)"
+    UK Biobank data coding "100599" for variable field "2834".
+    "no": 0
+    "yes": 1
+    "not sure": -5
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    Interpret missing or null values as False.
+
+    arguments:
+        field_2834 (float): UK Biobank field 2834, whether person has had an
+            oophorectomy
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2834)) and
+        (-0.5 <= field_2834 and field_2834 < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_2834 and field_2834 < 0.5):
+            # 0: "no"
+            interpretation = False
+        elif (0.5 <= field_2834 and field_2834 < 1.5):
+            # 1: "yes"
+            interpretation = True
+        else:
+            interpretation = False
+    else:
+        # null, "not sure", or "prefer not to answer"
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_pregnancy_broad(
+    field_3140=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3140.
+
+    Data-Field "3140": "Pregnant"
+    UK Biobank data coding "100267" for variable field "3140".
+    "no": 0
+    "yes": 1
+    "unsure": 2
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3140)) and
+        (-0.5 <= field_3140 and field_3140 < 2.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_3140 and field_3140 < 0.5):
+            # 0: "no"
+            interpretation = False
+        elif (0.5 <= field_3140 and field_3140 < 1.5):
+            # 1: "yes"
+            interpretation = True
+        elif (1.5 <= field_3140 and field_3140 < 2.5):
+            # 2: "unsure"
+            interpretation = True
+        else:
+            interpretation = False
+    else:
+        # null
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_pregnancy(
+    field_3140=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3140.
+
+    Data-Field "3140": "Pregnant"
+    UK Biobank data coding "100267" for variable field "3140".
+    "no": 0
+    "yes": 1
+    "unsure": 2
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3140)) and
+        (-0.5 <= field_3140 and field_3140 < 2.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_3140 and field_3140 < 0.5):
+            # 0: "no"
+            interpretation = False
+        elif (0.5 <= field_3140 and field_3140 < 1.5):
+            # 1: "yes"
+            interpretation = True
+        elif (1.5 <= field_3140 and field_3140 < 2.5):
+            # 2: "unsure"
+            interpretation = False
+        else:
+            interpretation = False
+    else:
+        # null
+        interpretation = False
+    # Return.
+    return interpretation
+
+
+def interpret_recent_oral_contraception(
+    age=None,
+    recent_range=None,
+    null_false=None,
+    field_2784=None,
+    field_2794=None,
+    field_2804=None,
+):
+    """
+    Inteprets recent use of oral contraception.
+
+    Recent use of oral contraception will be a covariate in analyses.
+    To preserve samples in analyses, do not perpetuate null values.
+    Interpret null values as false.
+    Hence the greatest confidence will be in true values, and these will drive
+    much of the signal in analyses.
+
+    Data-Field "2784": "ever taken oral contraceptive pill"
+    UK Biobank data coding "100349" for variable field "2784".
+    "yes": 1
+    "no": 0
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Data-Field "2794": "age started oral contraceptive pill"
+    UK Biobank data coding "100291" for variable field "2794".
+    "age in years": 5 - person's age
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Data-Field "2804": "age when last used oral contraceptive pill"
+    UK Biobank data coding "100595" for variable field "2804".
+    "age in years": 5 - person's age
+    "do not know": -1
+    "prefer not to answer": -3
+    "still taking the pill": -11
+
+    Accommodate inexact float values.
+
+    arguments:
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
+        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
+        field_2794 (float): UK Biobank field 2794, age started oral
+            contraception
+        field_2804 (float): UK Biobank field 2804, age stopped oral
+            contraception
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Designate variables.
+    ever = field_2784
+    age_stop = field_2804
+    # Interpret field code.
+    if (
+        (not pandas.isna(ever)) and
+        (-0.5 <= ever and ever < 1.5)
+    ):
+        # The relevant variables have valid values.
+        if (0.5 <= ever and ever < 1.5):
+            # Person has used therapy.
+            if (
+                (pandas.isna(age_stop)) or
+                (-3.5 <= age_stop and age_stop < -0.5)
+            ):
+                # null, "do not know", or "prefer not to answer"
+                if (null_false):
+                    value = 0
+                else:
+                    value = float("nan")
+            elif (-11.5 <= age_stop and age_stop < -10.5):
+                # Person used oral contraception currently.
+                value = 1
+            elif ((age - recent_range) <= age_stop and age_stop <= age):
+                # Person used therapy within recent range of current age.
+                value = 1
+            else:
+                # Person ceased use of therapy longer than recently.
+                value = 0
+        else:
+            # Person has not used therapy.
+            value = 0
+    else:
+        # null, "do not know", or "prefer not to answer"
+        if (null_false):
+            value = 0
+        else:
+            value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_recent_hormone_replacement_therapy(
+    age=None,
+    recent_range=None,
+    null_false=None,
+    field_2814=None,
+    field_3536=None,
+    field_3546=None,
+):
+    """
+    Inteprets recent use of hormone replacement therapy.
+
+    Recent use of hormone replacement therapy will be a covariate in analyses.
+    To preserve samples in analyses, do not perpetuate null values.
+    Interpret null values as false.
+    Hence the greatest confidence will be in true values, and these will drive
+    much of the signal in analyses.
+
+    Data-Field "2814": "ever used hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100349" for variable field "2814".
+    "yes": 1
+    "no": 0
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Data-Field "3536": "age started hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100291" for variable field "3536".
+    "age in years": 16 - person's age
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Data-Field "3546": "age last used hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100598" for variable field "3546".
+    "age in years": 20 - person's age
+    "do not know": -1
+    "prefer not to answer": -3
+    "still taking HRT": -11
+
+    Accommodate inexact float values.
+
+    arguments:
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
+        field_2814 (float): UK Biobank field 2814, ever taken hormone
+            replacement therapy (HRT)
+        field_3536 (float): UK Biobank field 3536, age started hormone
+            replacement therapy (HRT)
+        field_3546 (float): UK Biobank field 3546, age stopped hormone
+            replacement therapy (HRT)
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Designate variables.
+    ever = field_2814
+    age_stop = field_3546
+    # Interpret field code.
+    if (
+        (not pandas.isna(ever)) and
+        (-0.5 <= ever and ever < 1.5)
+    ):
+        # The relevant variables have valid values.
+        if (0.5 <= ever and ever < 1.5):
+            # Person has used therapy.
+            if (
+                (pandas.isna(age_stop)) or
+                (-3.5 <= age_stop and age_stop < -0.5)
+            ):
+                # null, "do not know", or "prefer not to answer"
+                if (null_false):
+                    value = 0
+                else:
+                    value = float("nan")
+            elif (-11.5 <= age_stop and age_stop < -10.5):
+                # Person used oral contraception currently.
+                value = 1
+            elif ((age - recent_range) <= age_stop and age_stop <= age):
+                # Person used therapy within recent range of current age.
+                value = 1
+            else:
+                # Person ceased use of therapy longer than recently.
+                value = 0
+        else:
+            # Person has not used therapy.
+            value = 0
+    else:
+        # null, "do not know", or "prefer not to answer"
+        if (null_false):
+            value = 0
+        else:
+            value = float("nan")
+    # Return.
+    return value
+
+
+
+
+
+def determine_female_menstruation_days(
+    sex_text=None,
+    field_3700=None,
+):
+    """
+    Determine count of days since previous menstruation (menstrual period).
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_3700 (float): UK Biobank field 3700, days since previous
+            menstruation (menstrual period)
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret days since previous menstruation.
+    menstruation_days = interpret_menstruation_days(
+        field_3700=field_3700,
+    )
+    # Comparison.
+    # Only define days since previous menstruation for female persons.
+    if (
+        (sex_text == "female")
+    ):
+        # Female.
+        value = menstruation_days
+    else:
+        # Male.
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_hysterectomy(
+    sex_text=None,
+    field_2724=None,
+    field_3591=None,
+):
+    """
+    Determine whether female persons experienced hysterectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+        field_3591 (float): UK Biobank field 3591, whether person has had a
+            hysterectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret menopause.
+    menopause_hysterectomy_boolean = interpret_menopause_hysterectomy(
+        field_2724=field_2724,
+    )
+    # Interpret hysterectomy.
+    hysterectomy_boolean = interpret_hysterectomy(
+        field_3591=field_3591,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            menopause_hysterectomy_boolean or
+            hysterectomy_boolean
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Hysterectomy is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# TODO: change this...
+# TODO: interpret missing as missing
+# TODO: maybe get rid of determine_female_oophorectomy() ???
+# TODO: OR follow pattern of determine_female_menstruation_days()
+# TODO: follow this pattern for all female variables... be consistent
+
+# TODO: do not assume that missing or null answers are "False"
+# TODO: carry over the missing value
+
+# Hence: --> exclude female persons with "missing" oophorectomy
+
+
+def determine_female_oophorectomy(
+    sex_text=None,
+    field_2834=None,
+):
+    """
+    Determine whether female persons experienced bilateral oophorectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex
+        field_2834 (float): UK Biobank field 2834, whether person has had an
+            oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oophorectomy.
+    oophorectomy_boolean = interpret_oophorectomy(
+        field_2834=field_2834,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            oophorectomy_boolean
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Oophorectomy is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_hysterectomy_or_oophorectomy(
+    sex_text=None,
+    hysterectomy=None,
+    oophorectomy=None,
+):
+    """
+    Determine whether female persons experienced hysterectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex
+        hysterectomy (float): binary logical representation of whether person
+            has had an hysterectomy
+        oophorectomy (float): binary logical representation of whether person
+            has had a bilateral oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (hysterectomy == 1) or
+            (oophorectomy == 1)
+        ):
+            value = 1
+        else:
+            value = 0
+    else:
+        # Hysterectomy and oophorectomy are undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+
+# TODO: do this both ways with regard to missing variables
+
+# TODO: 1... do a strict definition that excludes any person with missing values in any variable
+# IMPORTANTLY: do NOT exclude on the basis of a missing ("unsure") self-report
+
+# TODO: also do a more lenient definition that is more inclusive of missing values
+
+
+# TODO: then look at the hormone distributions
+
+
+# TODO: IMPORTANT!!! "perimenopause" females MIGHT be more likely to answer "unsure" to menopause variable
+# TODO: in which case we'd lose a lot of perimenopause females by excluding missing "self report"
+
+# TODO: data check
+# TODO: look at rough correlation (categorical) between menstruation_days and self-report "unsure"
+# TODO: basically a cross-tab ... stratify menstruation_days by person's self-report response
+
+
+
+def determine_female_menopause_binary(
+    sex_text=None,
+    age=None,
+    threshold_age=None,
+    menstruation_days=None,
+    threshold_menstruation_days=None,
+    field_2724=None,
+    hysterectomy=None,
+    oophorectomy=None,
+):
+    """
+    Determine whether female persons qualify for premenopause or postmenopause
+    categories.
+    This definition's encoding is binary.
+
+    Pay close attention to "and", "or" logic in comparisons.
+
+    priority:
+    1. (self report of menopause) or (oophorectomy)
+    2. (days since previous menstruation)
+    3. (age)
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        threshold_age (int): threshold age in years, above which to
+            consider all females postmenopausal
+        menstruation_days (int): count of days since previous menstruation
+            (menstrual period)
+        threshold_menstruation_days (int): threshold in days since last
+            menstrual period, above which to consider females postmenopausal
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+        hysterectomy (float): binary logical representation of whether person
+            has had an hysterectomy
+        oophorectomy (float): binary logical representation of whether person
+            has had a bilateral oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret menopause.
+    # Interpret whether person self-reported menopause that did not involve
+    # hysterectomy.
+    menopause_natural = interpret_menopause_natural(
+        field_2724=field_2724,
+    )
+    # Determine categories for menopause.
+    # Pay close attention to "and", "or" logic in comparisons.
+    if (sex_text == "female"):
+        # Determine postmenopause.
+        if (
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(oophorectomy)) and
+                (oophorectomy == 1)
+            ) or
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age >= threshold_age)
+            )
+        ):
+            # Person qualifies for postmenopause.
+            value = 1
+        # Determine premenopause.
+        elif (
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days < threshold_menstruation_days)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age < threshold_age)
+            )
+        ):
+            # Person qualifies for premenopause.
+            value = 0
+        else:
+            # Person does not qualify for any categories, probably due to
+            # missing or null values (including age).
+            #print("potential error in determine_female_menopause_binary()")
+            value = float("nan")
+    else:
+        # Menopause undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_menopause_ordinal(
+    sex_text=None,
+    age=None,
+    threshold_age_pre=None,
+    threshold_age_post=None,
+    menstruation_days=None,
+    threshold_menstruation_days_pre=None,
+    threshold_menstruation_days_post=None,
+    field_2724=None,
+    hysterectomy=None,
+    oophorectomy=None,
+):
+    """
+    Determine whether female persons qualify for premenopause, perimenopause,
+    or postmenopause categories.
+    This definition's encoding is ordinal.
+
+    Pay close attention to "and", "or" logic in comparisons.
+
+    priority:
+    1. (self report of menopause) or (oophorectomy)
+    2. (days since previous menstruation)
+    3. (age)
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        threshold_age_pre (int): threshold age in years, below which to consider
+            females premenopausal
+        threshold_age_post (int): threshold age in years, above which to
+            consider all females postmenopausal
+        menstruation_days (int): count of days since previous menstruation
+            (menstrual period)
+        threshold_menstruation_days_pre (int): threshold in days since last
+            menstrual period, below which to consider females premenopausal
+        threshold_menstruation_days_post (int): threshold in days since last
+            menstrual period, above which to consider all females postmenopausal
+        field_2724 (float): UK Biobank field 2724, whether person has
+            experienced menopause
+        hysterectomy (float): binary logical representation of whether person
+            has had an hysterectomy
+        oophorectomy (float): binary logical representation of whether person
+            has had a bilateral oophorectomy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret menopause.
+    # Interpret whether person self-reported menopause that did not involve
+    # hysterectomy.
+    menopause_natural = interpret_menopause_natural(
+        field_2724=field_2724,
+    )
+    # Determine categories for menopause.
+    # Pay close attention to "and", "or" logic in comparisons.
+    if (sex_text == "female"):
+        # Determine postmenopause.
+        if (
+            (
+                (not pandas.isna(menopause_natural)) and
+                (menopause_natural == 1)
+            ) or
+            (
+                (not pandas.isna(oophorectomy)) and
+                (oophorectomy == 1)
+            ) or
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days_post)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age >= threshold_age_post)
+            )
+        ):
+            # Person qualifies for postmenopause.
+            value = 2
+        # Determine perimenopause
+        elif (
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_menstruation_days_pre) and
+                (menstruation_days < threshold_menstruation_days_post)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age >= threshold_age_pre) and
+                (age < threshold_age_post)
+            )
+        ):
+            # Person qualitifies for perimenopause.
+            value = 1
+        # Determine premenopause.
+
+        # TODO: also require that non-missing and False for menopause and oophorectomy
+        elif (
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days < threshold_menstruation_days_pre)
+            ) or
+            (
+                (not pandas.isna(age)) and
+                (age < threshold_age_pre)
+            )
+        ):
+            # Person qualifies for premenopause.
+            value = 0
+        else:
+            # Person does not qualify for any categories, probably due to
+            # missing or null values (including age).
+
+            # TODO: we WILL lose persons who have missing values in self-report and oophorectomy
+
+
+            value = float("nan")
+    else:
+        # Menopause undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# TODO: also need to pay attention to these variables
+
+
+def determine_female_pregnancy_broad(
+    sex_text=None,
+    field_3140=None,
+):
+    """
+    Determine whether female persons were pregnant.
+
+    This function uses a broad definition of pregnancy that does not consider
+    menopause and also includes uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret pregnancy.
+    pregnancy_boolean = interpret_pregnancy_broad(
+        field_3140=field_3140,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        if (pregnancy_boolean):
+            pregnancy = 1
+        else:
+            pregnancy = 0
+    else:
+        # Pregnancy undefined for males.
+        pregnancy = float("nan")
+        # Set to false for males for convenience.
+        #pregnancy = 0
+    # Return information.
+    return pregnancy
+
+
+def determine_female_pregnancy(
+    sex_text=None,
+    menopause=None,
+    field_3140=None,
+):
+    """
+    Determine whether female persons were pregnant.
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause (float): whether person has experienced menopause,
+            hysterectomy, or oophorectomy
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret pregnancy.
+    pregnancy_boolean = interpret_pregnancy(
+        field_3140=field_3140,
+    )
+    # Comparison.
+    # Only define pregnancy for females who are pre-menopausal.
+    if (
+        (sex_text == "female")
+    ):
+        if ((menopause < 0.5) and (pregnancy_boolean)):
+            pregnancy = 1
+        else:
+            pregnancy = 0
+    else:
+        # Pregnancy undefined for males.
+        pregnancy = float("nan")
+        # Set to false for males for convenience.
+        #pregnancy = 0
+    # Return information.
+    return pregnancy
+
+
+def determine_female_oral_contraception(
+    sex_text=None,
+    age=None,
+    menopause=None,
+    pregnancy=None,
+    recent_range=None,
+    null_false=None,
+    field_2784=None,
+    field_2794=None,
+    field_2804=None,
+):
+    """
+    Determine whether person used oral contraception recently or currently.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        menopause (float): whether person has experienced menopause,
+            hysterectomy, or oophorectomy
+        pregnancy (float): whether person was pregnant
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
+        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
+        field_2794 (float): UK Biobank field 2794, age started oral
+            contraception
+        field_2804 (float): UK Biobank field 2804, age stopped oral
+            contraception
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oral contraception.
+    contraception = interpret_recent_oral_contraception(
+        age=age,
+        recent_range=recent_range, # recent range in years
+        null_false=null_false,
+        field_2784=field_2784,
+        field_2794=field_2794,
+        field_2804=field_2804,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        value = contraception
+    else:
+        # This specific variable is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_hormone_replacement_therapy(
+    sex_text=None,
+    age=None,
+    menopause=None,
+    pregnancy=None,
+    recent_range=None,
+    null_false=None,
+    field_2814=None,
+    field_3536=None,
+    field_3546=None,
+):
+    """
+    Determine count of days since previous menstruation (menstrual period).
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        menopause (float): whether person has experienced menopause,
+            hysterectomy, or oophorectomy
+        pregnancy (float): whether person was pregnant
+        recent_range (int): years within current age to consider recent
+        null_false (bool): whether to interpret null or missing values as false
+        field_2814 (float): UK Biobank field 2784, ever taken hormone
+            replacement therapy
+        field_3536 (float): UK Biobank field 2794, age started hormone
+            replacement therapy (HRT)
+        field_3546 (float): UK Biobank field 2804, age stopped hormone
+            replacement therapy (HRT)
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret hormone replacement therapy.
+    therapy = interpret_recent_hormone_replacement_therapy(
+        age=age,
+        recent_range=recent_range,
+        null_false=null_false,
+        field_2814=field_2814,
+        field_3536=field_3536,
+        field_3546=field_3546,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        value = therapy
+    else:
+        # This specific variable is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_any_hormone_alteration_medication(
+    sex_text=None,
+    oral_contraception=None,
+    hormone_therapy=None,
+):
+    """
+    Determine count of days since previous menstruation (menstrual period).
+
+    This function uses a specific definition of pregnancy that considers
+    menopause and does not include uncertain cases.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        oral_contraception (float): binary logical representation of whether
+            person used oral contraception recently
+        hormone_therapy (float): binary logical representation of whether
+            person used hormone replacement therapy recently
+
+    raises:
+
+    returns:
+        (float): binary logical representation of whether person used any
+            hormone-alteration medications recently
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (oral_contraception == 1) or
+            (hormone_therapy == 1)
+        ):
+            value = 1
+        elif (
+            (oral_contraception == 0) and
+            (hormone_therapy == 0)
+        ):
+            value = 0
+        else:
+            value = float("nan")
+    else:
+        # This specific variable is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_binary_categorical_product_of_two_binary_variables(
+    product=None,
+    first=None,
+    second=None,
+):
+    """
+    Determines any one of four binary categorical variables that represent the
+    product of two binary variables.
+
+    Here are the combinations in which each product variable has a binary true
+    value (1).
+
+    [prefix]_1: ("first" variable = 1) and ("second" variable = 1)
+    [prefix]_2: ("first" variable = 1) and ("second" variable = 0)
+    [prefix]_3: ("first" variable = 0) and ("second" variable = 1)
+    [prefix]_4: ("first" variable = 0) and ("second" variable = 0)
+
+    If either "first" or "second" variables have null, missing values then all
+    product variables also have null, missing values.
+
+    arguments:
+        product (int): count of product definition, 1 through 4
+        first (str): name of first column with binary logical representation of
+            a variable
+        second (str): name of second column with binary logical representation
+            of a variable
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Determine product value.
+    if (
+        (pandas.isna(first)) or
+        (pandas.isna(second))
+    ):
+        value = float("nan")
+    else:
+        # The relevant variables have valid values.
+        if (product == 1):
+            if (
+                (0.5 <= first and first < 1.5) and
+                (0.5 <= second and second < 1.5)
+            ):
+                # first = 1
+                # second = 1
+                value = 1
+            else:
+                value = 0
+        elif (product == 2):
+            if (
+                (0.5 <= first and first < 1.5) and
+                (-0.5 <= second and second < 0.5)
+            ):
+                # first = 1
+                # second = 0
+                value = 1
+            else:
+                value = 0
+        elif (product == 3):
+            if (
+                (-0.5 <= first and first < 0.5) and
+                (0.5 <= second and second < 1.5)
+            ):
+                # first = 0
+                # second = 1
+                value = 1
+            else:
+                value = 0
+        elif (product == 4):
+            if (
+                (-0.5 <= first and first < 0.5) and
+                (-0.5 <= second and second < 0.5)
+            ):
+                # first = 0
+                # second = 0
+                value = 1
+            else:
+                value = 0
+            pass
+        pass
+    # Return.
+    return value
+
+
+def determine_binary_categorical_products_of_two_binary_variables(
+    table=None,
+    first=None,
+    second=None,
+    prefix=None,
+    report=None,
+):
+    """
+    Determines four binary categorical variables that represent the product of
+    two binary variables.
+    Uses a prefix in the names of the four product variables.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        first (str): name of first column with binary logical representation of
+            a variable
+        second (str): name of second column with binary logical representation
+            of a variable
+        prefix (str): prefix for name of the four product columns
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Define product variables.
+    table[str(prefix + "_1")] = table.apply(
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=1,
+                first=row[first],
+                second=row[second],
+            ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_2")] = table.apply(
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=2,
+                first=row[first],
+                second=row[second],
+            ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_3")] = table.apply(
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=3,
+                first=row[first],
+                second=row[second],
+            ),
+        axis="columns", # apply across rows
+    )
+    table[str(prefix + "_4")] = table.apply(
+        lambda row:
+            determine_binary_categorical_product_of_two_binary_variables(
+                product=4,
+                first=row[first],
+                second=row[second],
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        str(prefix + "_1"),
+        str(prefix + "_2"),
+        str(prefix + "_3"),
+        str(prefix + "_4"),
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
+    table_report.dropna(
+        axis="index",
+        how="any",
+        subset=columns_report,
+        inplace=True,
+    )
+    table_1 = table_report.loc[
+        (table_report[str(prefix + "_1")] > 0.5), :
+    ]
+    table_2 = table_report.loc[
+        (table_report[str(prefix + "_2")] > 0.5), :
+    ]
+    table_3 = table_report.loc[
+        (table_report[str(prefix + "_3")] > 0.5), :
+    ]
+    table_4 = table_report.loc[
+        (table_report[str(prefix + "_4")] > 0.5), :
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "determine_binary_categorical_products_of_two_binary_variables()"
+        )
+        utility.print_terminal_partition(level=3)
+        print("Counts of records (rows) in each product category...")
+        print("Category 1: " + str(table_1.shape[0]))
+        print("Category 2: " + str(table_2.shape[0]))
+        print("Category 3: " + str(table_3.shape[0]))
+        print("Category 4: " + str(table_4.shape[0]))
+        pass
+    # Return information.
+    return table
+
+
+def organize_report_cohort_sex_hormones_by_table(
+    cohort=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        cohort (str): name of cohort
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Report.
+    utility.print_terminal_partition(level=5)
+    print("cohort: " + str(cohort))
+    print("count: " + str(table.shape[0]))
+    print("column...count...mean...median")
+    # Iterate on relevant variables.
+    columns = [
+        "age",
+        "oestradiol", "oestradiol_free",
+        "testosterone", "testosterone_free",
+        "steroid_globulin", "albumin",
+    ]
+    for column in columns:
+        array = table[column].dropna().to_numpy()
+        # Determine count, mean, and median of values in array.
+        count = int(array.size)
+        mean = round(numpy.nanmean(array), 2)
+        # standard_deviation = round(numpy.nanstd(array), 2)
+        median = round(numpy.nanmedian(array), 2)
+        print(column + ": " + str(count) + " " + str(mean) + " " + str(median))
+    pass
+
+
+# TODO: Instead of printing to terminal... export a table
+# TODO: collect counts, means, and medians within a dictionary
+
+def organize_report_female_cohorts_sex_hormones(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    table_female = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female",
+        table=table_female,
+    )
+
+    table_female_not_pregnant = table_female.loc[
+        (table_female["pregnancy"] == 0), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_not_pregnant",
+        table=table_female_not_pregnant,
+    )
+
+    table_female_premenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 0), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_premenopause",
+        table=table_female_premenopause,
+    )
+
+    table_female_perimenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 1), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_perimenopause",
+        table=table_female_perimenopause,
+    )
+
+    table_female_postmenopause = table_not_pregnant.loc[
+        (table_not_pregnant["menopause_ordinal"] == 2), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="female_postmenopause",
+        table=table_female_postmenopause,
+    )
+
+
+    table_male = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    organize_report_cohort_sex_hormones_by_table(
+        cohort="male",
+        table=table_male,
+    )
+
+    if False:
+        table_postmenopause = table_not_pregnant.loc[
+            (table_not_pregnant["menopause"] == 1), :
+        ]
+        table_premenopause_alteration_no = table_premenopause.loc[
+            (table_premenopause["hormone_alteration"] == 0), :
+        ]
+        table_premenopause_alteration_yes = table_premenopause.loc[
+            (table_premenopause["hormone_alteration"] == 1), :
+        ]
+        table_postmenopause_alteration_no = table_postmenopause.loc[
+            (table_postmenopause["hormone_alteration"] == 0), :
+        ]
+        table_postmenopause_alteration_yes = table_postmenopause.loc[
+            (table_postmenopause["hormone_alteration"] == 1), :
+        ]
+    pass
+
+
+def organize_female_menstruation_pregnancy_menopause_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about female persons' menopause, pregnancy,
+    menstruation, oral contraception, and hormone therapy.
+
+    These variables are specific to females and have null values for males.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Convert variable types.
+    columns_type = [
+        "2724-0.0", "3591-0.0", "2834-0.0",
+        "3140-0.0",
+        "3700-0.0",
+        "2784-0.0", "2794-0.0", "2804-0.0",
+        "2814-0.0", "3536-0.0", "3546-0.0",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+
+    # Determine count of days since person's last menstrual period.
+    table["menstruation_days"] = table.apply(
+        lambda row:
+            determine_female_menstruation_days(
+                sex_text=row["sex_text"],
+                field_3700=row["3700-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons experienced hysterectomy.
+    table["hysterectomy"] = table.apply(
+        lambda row:
+            determine_female_hysterectomy(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons experienced bilateral oophorectomy.
+    table["oophorectomy"] = table.apply(
+        lambda row:
+            determine_female_oophorectomy(
+                sex_text=row["sex_text"],
+                field_2834=row["2834-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons have experienced either hysterectomy or
+    # oophorectomy.
+    table["hysterectomy_or_oophorectomy"] = table.apply(
+        lambda row:
+            determine_female_hysterectomy_or_oophorectomy(
+                sex_text=row["sex_text"],
+                hysterectomy=row["hysterectomy"],
+                oophorectomy=row["oophorectomy"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons have experienced menopause.
+    # This definition is binary.
+    table["menopause_binary"] = table.apply(
+        lambda row:
+            determine_female_menopause_binary(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                threshold_age=51, # threshold age in years
+                menstruation_days=row["menstruation_days"],
+                threshold_menstruation_days=60, # threshold in days
+                field_2724=row["2724-0.0"],
+                hysterectomy=row["hysterectomy"],
+                oophorectomy=row["oophorectomy"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons have experienced menopause.
+    # This definition is ordinal.
+    table["menopause_ordinal"] = table.apply(
+        lambda row:
+            determine_female_menopause_ordinal(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                threshold_age_pre=47, # threshold age in years
+                threshold_age_post=55, # threshold age in years
+                menstruation_days=row["menstruation_days"],
+                threshold_menstruation_days_pre=60, # threshold in days
+                threshold_menstruation_days_post=365, # threshold in days
+                field_2724=row["2724-0.0"],
+                hysterectomy=row["hysterectomy"],
+                oophorectomy=row["oophorectomy"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons are pregnant by broad definition.
+    # 0: not pregnant
+    # 1: pregnant (yes or unsure)
+    table["pregnancy_broad"] = table.apply(
+        lambda row:
+            determine_female_pregnancy_broad(
+                sex_text=row["sex_text"],
+                field_3140=row["3140-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether female persons are pregnant by narrow definition.
+    # 0: not pregnant
+    # 1: pregnant (yes)
+    table["pregnancy"] = table.apply(
+        lambda row:
+            determine_female_pregnancy(
+                sex_text=row["sex_text"],
+                menopause=row["menopause_binary"],
+                field_3140=row["3140-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person was using oral contraception recently.
+    table["oral_contraception"] = table.apply(
+        lambda row:
+            determine_female_oral_contraception(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                menopause=row["menopause_binary"],
+                pregnancy=row["pregnancy"],
+                recent_range=1,
+                null_false=True, # whether to interpret nulls as False
+                field_2784=row["2784-0.0"],
+                field_2794=row["2794-0.0"],
+                field_2804=row["2804-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person was using hormone replacement therapy recently.
+    table["hormone_replacement"] = table.apply(
+        lambda row:
+            determine_female_hormone_replacement_therapy(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                menopause=row["menopause_binary"],
+                pregnancy=row["pregnancy"],
+                recent_range=1,
+                null_false=True, # whether to interpret nulls as False
+                field_2814=row["2814-0.0"],
+                field_3536=row["3536-0.0"],
+                field_3546=row["3546-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person was using any hormone-altering medications
+    # recently.
+    table["hormone_alteration"] = table.apply(
+        lambda row:
+            determine_female_any_hormone_alteration_medication(
+                sex_text=row["sex_text"],
+                oral_contraception=row["oral_contraception"],
+                hormone_therapy=row["hormone_replacement"],
+             ),
+        axis="columns", # apply across rows
+    )
+    # Determine combination categories by menopause and hormone-atering therapy.
+    table = determine_binary_categorical_products_of_two_binary_variables(
+        table=table,
+        first="menopause_binary",
+        second="hormone_alteration",
+        prefix="menopause_hormone_category",
+        report=report,
+    )
+
+    # Remove columns for variables that are not necessary anymore.
+    # Pandas drop throws error if column names do not exist.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=[
+            "2724-0.0", "3591-0.0", "2834-0.0",
+            "3140-0.0",
+            "3700-0.0",
+            "2784-0.0", "2794-0.0", "2804-0.0",
+            "2814-0.0", "3536-0.0", "3546-0.0",
+        ],
+        axis="columns",
+        inplace=True
+    )
+    # Organize information for report.
+    table_report = table.copy(deep=True)
+    columns_report = [
+        #"eid",
+        "IID",
+        "sex_text",
+        "age",
+        "menstruation_days",
+        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+        "menopause_binary", "menopause_ordinal",
+        "pregnancy_broad", "pregnancy",
+        "oral_contraception",
+        "hormone_replacement",
+        "hormone_alteration",
+        "menopause_hormone_category_1", "menopause_hormone_category_2",
+        "menopause_hormone_category_3", "menopause_hormone_category_4",
+    ]
+    table_report = table_report.loc[
+        :, table_report.columns.isin(columns_report)
+    ]
+    table_report = table_report[[*columns_report]]
+    table_report.sort_values(
+        by=["pregnancy", "menopause_binary"],
+        axis="index",
+        ascending=False,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_female_menstruation_pregnancy_menopause_variables()")
+        organize_report_female_cohorts_sex_hormones(
+            table=table_clean,
+        )
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
     # Return information.
     return pail
 
@@ -7059,6 +7178,7 @@ def write_product(
 
 def execute_genotype_sex_age_body(
     table=None,
+    selection=None,
     report=None,
 ):
     """
@@ -7068,6 +7188,7 @@ def execute_genotype_sex_age_body(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        selection (str): type of table to select and return
         report (bool): whether to print reports
 
     raises:
@@ -7094,9 +7215,9 @@ def execute_genotype_sex_age_body(
         utility.print_terminal_partition(level=2)
         print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
-        print(pail_sex_age_body["table_clean"])
+        print(pail_sex_age_body[selection])
     # Return information.
-    return pail_sex_age_body["table_clean"]
+    return pail_sex_age_body[selection]
 
 
 def execute_sex_hormones(
