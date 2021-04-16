@@ -635,7 +635,8 @@ def organize_sex_age_body_variables(
     columns_report = [
         #"eid",
         "IID",
-        "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+        "sex_consensus", "sex_text",
+        "age", "body_mass_index", "body_mass_index_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
