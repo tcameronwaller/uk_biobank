@@ -2610,7 +2610,7 @@ def organize_report_cohort_sex_hormones_record(
 
     # Collect information for cohort.
     record = dict()
-    record["cohort"] = cohort
+    record["cohort"] = str(cohort)
     record["cohort_count"] = int(table.shape[0])
     # Collect information for general columns.
     columns = [
@@ -3016,6 +3016,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
         print(table_report)
+        print(table_report_summary)
     # Collect information.
     pail = dict()
     pail["table"] = table
