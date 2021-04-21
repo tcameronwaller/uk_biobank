@@ -2702,8 +2702,8 @@ def organize_report_female_male_cohorts_variables(
     )
     records.append(record)
 
-    table_female_premenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 0), :
+    table_female_premenopause = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["menopause_ordinal"] == 0), :
     ]
     record = organize_report_cohort_variables_summaries_record(
         cohort="female_premenopause",
@@ -2712,8 +2712,8 @@ def organize_report_female_male_cohorts_variables(
     )
     records.append(record)
 
-    table_female_perimenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 1), :
+    table_female_perimenopause = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["menopause_ordinal"] == 1), :
     ]
     record = organize_report_cohort_variables_summaries_record(
         cohort="female_perimenopause",
@@ -2722,8 +2722,8 @@ def organize_report_female_male_cohorts_variables(
     )
     records.append(record)
 
-    table_female_postmenopause = table_not_pregnant.loc[
-        (table_not_pregnant["menopause_ordinal"] == 2), :
+    table_female_postmenopause = table_female_not_pregnant.loc[
+        (table_female_not_pregnant["menopause_ordinal"] == 2), :
     ]
     record = organize_report_cohort_variables_summaries_record(
         cohort="female_postmenopause",
