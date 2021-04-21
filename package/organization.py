@@ -2987,11 +2987,10 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "age",
         "menstruation_days",
         "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
-        "menopause_binary", "menopause_ordinal",
-        "pregnancy_broad", "pregnancy",
-        "oral_contraception",
-        "hormone_replacement",
-        "hormone_alteration",
+        "menopause_binary", "menopause_binary_strict",
+        "menopause_ordinal", "menopause_ordinal_strict",
+        "pregnancy",
+        "oral_contraception", "hormone_replacement", "hormone_alteration",
         "menopause_hormone_category_1", "menopause_hormone_category_2",
         "menopause_hormone_category_3", "menopause_hormone_category_4",
     ]
@@ -3005,6 +3004,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         ascending=False,
         inplace=True,
     )
+    table_report_summary = organize_report_female_male_cohorts_variables(
+        table=table,
+    )
     # Report.
     if report:
         # Column name translations.
@@ -3013,14 +3015,13 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "report: " +
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
-        organize_report_female_male_cohorts_variables(
-            table=table,
-        )
+        print(table_report)
     # Collect information.
     pail = dict()
     pail["table"] = table
     pail["table_clean"] = table_clean
     pail["table_report"] = table_report
+    pail["table_report_summary"] = table_report_summary
     # Return information.
     return pail
 
