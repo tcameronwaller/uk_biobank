@@ -2587,7 +2587,7 @@ def determine_female_any_hormone_alteration_medication(
     return value
 
 
-def organize_report_cohort_sex_hormones_record(
+def organize_report_cohort_variables_summaries_record(
     cohort=None,
     female=None,
     table=None,
@@ -2685,7 +2685,7 @@ def organize_report_female_male_cohorts_variables(
     table_female = table.loc[
         (table["sex_text"] == "female"), :
     ]
-    record = organize_report_cohort_sex_hormones_record(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="female",
         female=True,
         table=table_female,
@@ -2695,7 +2695,7 @@ def organize_report_female_male_cohorts_variables(
     table_female_not_pregnant = table_female.loc[
         (table_female["pregnancy"] == 0), :
     ]
-    record = organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="female_not_pregnant",
         female=True,
         table=table_female_not_pregnant,
@@ -2705,7 +2705,7 @@ def organize_report_female_male_cohorts_variables(
     table_female_premenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 0), :
     ]
-    record = organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="female_premenopause",
         female=True,
         table=table_female_premenopause,
@@ -2715,7 +2715,7 @@ def organize_report_female_male_cohorts_variables(
     table_female_perimenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 1), :
     ]
-    record = organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="female_perimenopause",
         female=True,
         table=table_female_perimenopause,
@@ -2725,7 +2725,7 @@ def organize_report_female_male_cohorts_variables(
     table_female_postmenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 2), :
     ]
-    record = organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="female_postmenopause",
         female=True,
         table=table_female_postmenopause,
@@ -2736,7 +2736,7 @@ def organize_report_female_male_cohorts_variables(
     table_male = table.loc[
         (table["sex_text"] == "male"), :
     ]
-    record = organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_variables_summaries_record(
         cohort="male",
         female=False,
         table=table_male,
