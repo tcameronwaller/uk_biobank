@@ -1594,7 +1594,7 @@ def interpret_recent_hormone_alteration_therapies(
     raises:
 
     returns:
-        (float): interpretation value
+        (float): interpretation value (1: true, 0: false, NAN: missing, null)
 
     """
 
@@ -2451,9 +2451,6 @@ def determine_female_pregnancy(
     return value
 
 
-# TODO: need to evaluate all below here...
-
-
 def determine_female_oral_contraception(
     sex_text=None,
     age=None,
@@ -2590,218 +2587,9 @@ def determine_female_any_hormone_alteration_medication(
     return value
 
 
-
-# TODO: need to consider possibility of missing values...
-# TODO: use exact values, 0 or 1
-# TODO: move to "utility" module
-def determine_binary_categorical_product_of_two_binary_variables(
-    product=None,
-    first=None,
-    second=None,
-):
-    """
-    Determines any one of four binary categorical variables that represent the
-    product of two binary variables.
-
-    Here are the combinations in which each product variable has a binary true
-    value (1).
-
-    [prefix]_1: ("first" variable = 1) and ("second" variable = 1)
-    [prefix]_2: ("first" variable = 1) and ("second" variable = 0)
-    [prefix]_3: ("first" variable = 0) and ("second" variable = 1)
-    [prefix]_4: ("first" variable = 0) and ("second" variable = 0)
-
-    If either "first" or "second" variables have null, missing values then all
-    product variables also have null, missing values.
-
-    arguments:
-        product (int): count of product definition, 1 through 4
-        first (str): name of first column with binary logical representation of
-            a variable
-        second (str): name of second column with binary logical representation
-            of a variable
-
-    raises:
-
-    returns:
-        (bool): interpretation value
-
-    """
-
-    # Determine product value.
-    if (
-        (pandas.isna(first)) or
-        (pandas.isna(second))
-    ):
-        value = float("nan")
-    else:
-        # The relevant variables have valid values.
-        if (product == 1):
-            if (
-                (0.5 <= first and first < 1.5) and
-                (0.5 <= second and second < 1.5)
-            ):
-                # first = 1
-                # second = 1
-                value = 1
-            else:
-                value = 0
-        elif (product == 2):
-            if (
-                (0.5 <= first and first < 1.5) and
-                (-0.5 <= second and second < 0.5)
-            ):
-                # first = 1
-                # second = 0
-                value = 1
-            else:
-                value = 0
-        elif (product == 3):
-            if (
-                (-0.5 <= first and first < 0.5) and
-                (0.5 <= second and second < 1.5)
-            ):
-                # first = 0
-                # second = 1
-                value = 1
-            else:
-                value = 0
-        elif (product == 4):
-            if (
-                (-0.5 <= first and first < 0.5) and
-                (-0.5 <= second and second < 0.5)
-            ):
-                # first = 0
-                # second = 0
-                value = 1
-            else:
-                value = 0
-            pass
-        pass
-    # Return.
-    return value
-
-
-def determine_binary_categorical_products_of_two_binary_variables(
-    table=None,
-    first=None,
-    second=None,
-    prefix=None,
-    report=None,
-):
-    """
-    Determines four binary categorical variables that represent the product of
-    two binary variables.
-    Uses a prefix in the names of the four product variables.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        first (str): name of first column with binary logical representation of
-            a variable
-        second (str): name of second column with binary logical representation
-            of a variable
-        prefix (str): prefix for name of the four product columns
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Define product variables.
-    table[str(prefix + "_1")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=1,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_2")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=2,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_3")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=3,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-    table[str(prefix + "_4")] = table.apply(
-        lambda row:
-            determine_binary_categorical_product_of_two_binary_variables(
-                product=4,
-                first=row[first],
-                second=row[second],
-            ),
-        axis="columns", # apply across rows
-    )
-
-    # Organize information for report.
-    table_report = table.copy(deep=True)
-    columns_report = [
-        str(prefix + "_1"),
-        str(prefix + "_2"),
-        str(prefix + "_3"),
-        str(prefix + "_4"),
-    ]
-    table_report = table_report.loc[
-        :, table_report.columns.isin(columns_report)
-    ]
-    table_report = table_report[[*columns_report]]
-    table_report.dropna(
-        axis="index",
-        how="any",
-        subset=columns_report,
-        inplace=True,
-    )
-    table_1 = table_report.loc[
-        (table_report[str(prefix + "_1")] > 0.5), :
-    ]
-    table_2 = table_report.loc[
-        (table_report[str(prefix + "_2")] > 0.5), :
-    ]
-    table_3 = table_report.loc[
-        (table_report[str(prefix + "_3")] > 0.5), :
-    ]
-    table_4 = table_report.loc[
-        (table_report[str(prefix + "_4")] > 0.5), :
-    ]
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(
-            "report: " +
-            "determine_binary_categorical_products_of_two_binary_variables()"
-        )
-        utility.print_terminal_partition(level=3)
-        print("Counts of records (rows) in each product category...")
-        print("Category 1: " + str(table_1.shape[0]))
-        print("Category 2: " + str(table_2.shape[0]))
-        print("Category 3: " + str(table_3.shape[0]))
-        print("Category 4: " + str(table_4.shape[0]))
-        pass
-    # Return information.
-    return table
-
-
-def organize_report_cohort_sex_hormones_by_table(
+def organize_report_cohort_sex_hormones_record(
     cohort=None,
+    female=None,
     table=None,
 ):
     """
@@ -2809,36 +2597,60 @@ def organize_report_cohort_sex_hormones_by_table(
 
     arguments:
         cohort (str): name of cohort
+        female (bool): whether to summarize female-specific variables for cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
     raises:
 
     returns:
+        (dict): information for summary table record on cohort
 
     """
 
-    # Report.
-    utility.print_terminal_partition(level=5)
-    print("cohort: " + str(cohort))
-    print("count: " + str(table.shape[0]))
-    print("column...count...mean...median")
-    # Iterate on relevant variables.
+    # Collect information for cohort.
+    record = dict()
+    record["cohort"] = cohort
+    record["cohort_count"] = int(table.shape[0])
+    # Collect information for general columns.
     columns = [
         "age",
-        "oestradiol", "oestradiol_free",
-        "testosterone", "testosterone_free",
-        "steroid_globulin", "albumin",
+        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+        "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
     ]
+    # Specify columns for female-specific variables.
+    if female:
+        columns.append("menstruation_days")
+    # Iterate on relevant columns.
+    # Collect information for record.
     for column in columns:
-        array = table[column].dropna().to_numpy()
-        # Determine count, mean, and median of values in array.
+        array = copy.deepcopy(table[column].dropna().to_numpy())
+        # Determine count of valid values.
         count = int(array.size)
-        mean = round(numpy.nanmean(array), 2)
-        # standard_deviation = round(numpy.nanstd(array), 2)
-        median = round(numpy.nanmedian(array), 2)
-        print(column + ": " + str(count) + " " + str(mean) + " " + str(median))
-    pass
+        if (count > 5):
+            # Determine mean, median, standard deviation, and standard error of
+            # values in array.
+            mean = numpy.nanmean(array)
+            median = numpy.nanmedian(array)
+            standard_deviation = numpy.nanstd(array)
+            standard_error = scipy.stats.sem(array)
+        else:
+            mean = float("nan")
+            median = float("nan")
+            standard_deviation = float("nan")
+            standard_error = float("nan")
+        # Collect information for record.
+        record[str(column + "_count")] = count
+        record[str(column + "_mean")] = round(mean, 2)
+        record[str(column + "_median")] = round(median, 2)
+        record[str(column + "_stdev")] = round(standard_deviation, 2)
+        record[str(column + "_stderr")] = round(standard_error, 2)
+        pass
+    # Return information.
+    return record
 
 
 # TODO: Instead of printing to terminal... export a table
@@ -2848,7 +2660,7 @@ def organize_report_cohort_sex_hormones_by_table(
 # TODO: - - describe "menstruation_days" within these special cohorts in addition to hormones
 # TODO: also consider Oral Contraception and Hormone Replacement Therapy
 # TODO: return a summary table from the main function...
-def organize_report_female_cohorts_sex_hormones(
+def organize_report_female_male_cohorts_variables(
     table=None,
 ):
     """
@@ -2866,55 +2678,70 @@ def organize_report_female_cohorts_sex_hormones(
 
     # Copy information.
     table = table.copy(deep=True)
+    # Collect records.
+    records = list()
+    # Stratify cohorts.
 
     table_female = table.loc[
         (table["sex_text"] == "female"), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_record(
         cohort="female",
+        female=True,
         table=table_female,
     )
+    records.append(record)
 
     table_female_not_pregnant = table_female.loc[
         (table_female["pregnancy"] == 0), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_by_table(
         cohort="female_not_pregnant",
+        female=True,
         table=table_female_not_pregnant,
     )
+    records.append(record)
 
     table_female_premenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 0), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_by_table(
         cohort="female_premenopause",
+        female=True,
         table=table_female_premenopause,
     )
+    records.append(record)
 
     table_female_perimenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 1), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_by_table(
         cohort="female_perimenopause",
+        female=True,
         table=table_female_perimenopause,
     )
+    records.append(record)
 
     table_female_postmenopause = table_not_pregnant.loc[
         (table_not_pregnant["menopause_ordinal"] == 2), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_by_table(
         cohort="female_postmenopause",
+        female=True,
         table=table_female_postmenopause,
     )
+    records.append(record)
 
 
     table_male = table.loc[
         (table["sex_text"] == "male"), :
     ]
-    organize_report_cohort_sex_hormones_by_table(
+    record = organize_report_cohort_sex_hormones_by_table(
         cohort="male",
+        female=False,
         table=table_male,
     )
+    records.append(record)
 
     if False:
         table_postmenopause = table_not_pregnant.loc[
@@ -2932,7 +2759,11 @@ def organize_report_female_cohorts_sex_hormones(
         table_postmenopause_alteration_yes = table_postmenopause.loc[
             (table_postmenopause["hormone_alteration"] == 1), :
         ]
-    pass
+
+    # Organize table.
+    table_summary = pandas.DataFrame(data=records)
+    # Return information
+    return table_summary
 
 
 def organize_female_menstruation_pregnancy_menopause_variables(
@@ -3124,13 +2955,14 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply across rows
     )
     # Determine combination categories by menopause and hormone-atering therapy.
-    table = determine_binary_categorical_products_of_two_binary_variables(
-        table=table,
-        first="menopause_binary",
-        second="hormone_alteration",
-        prefix="menopause_hormone_category",
-        report=report,
-    )
+    table = (
+        utility.determine_binary_categorical_products_of_two_binary_variables(
+            table=table,
+            first="menopause_binary",
+            second="hormone_alteration",
+            prefix="menopause_hormone_category",
+            report=report,
+    ))
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -3177,9 +3009,12 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("report: organize_female_menstruation_pregnancy_menopause_variables()")
-        organize_report_female_cohorts_sex_hormones(
-            table=table_clean,
+        print(
+            "report: " +
+            "organize_female_menstruation_pregnancy_menopause_variables()"
+        )
+        organize_report_female_male_cohorts_variables(
+            table=table,
         )
     # Collect information.
     pail = dict()
