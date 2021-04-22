@@ -7671,8 +7671,6 @@ def execute_sex_hormones(
     return pail_hormone[selection]
 
 
-# TODO: return a pail of multiple tables rather than a single table...
-
 def execute_female_menstruation(
     table=None,
     report=None,
@@ -7704,7 +7702,7 @@ def execute_female_menstruation(
         utility.print_terminal_partition(level=2)
         print("report: execute_female_menstruation()")
         utility.print_terminal_partition(level=3)
-        print(pail_female["report"])
+        print(pail_female["table_report"])
     # Return information.
     return pail_female
 
