@@ -3037,8 +3037,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
 
     """
 
@@ -6229,8 +6229,9 @@ def select_valid_records_all_specific_variables(
 
 
 def select_records_by_female_specific_valid_variables_values(
-    menopause=None,
     pregnancy=None,
+    menopause_binary=None,
+    menopause_ordinal=None,
     variables=None,
     prefixes=None,
     table=None,
@@ -6238,11 +6239,16 @@ def select_records_by_female_specific_valid_variables_values(
     """
     Selects records for females with sex-specific criteria.
 
+    When filtering either by "menopause_binary" or "menopause_ordinal", be sure
+    to require that these variables have valid, non-null values.
+
     arguments:
-        menopause (str): which menopausal categories to include for
-            females: "both", "pre", or "post"
-        pregnancy (bool): whether to include records for females who
-            were pregnant
+        pregnancy (list<int>): which values of pregnancy definition to include
+            for females
+        menopause_binary (list<int>): which values of binary menopause
+            definition to include for females
+        menopause_ordinal (list<int>): which values of ordinal menopause
+            definition to include for females
         variables (list<str>): names of columns for variables in which
             rows must have valid values to keep records
         prefixes (list<str>): prefixes of columns for variables in which
@@ -6276,24 +6282,35 @@ def select_records_by_female_specific_valid_variables_values(
     )
     # Select records for females.
     table = table.loc[
-        (table["sex"] < 0.5), :
+        (table["sex_text"] == "female"), :
     ]
-    # Determine whether to filter by menopause.
-    if (menopause == "pre"):
-        # Select records for pre-menopausal females.
-        table = table.loc[
-            (table["menopause"] < 0.5), :
-        ]
-    elif (menopause == "post"):
-        # Select records for post-menopausal females.
-        table = table.loc[
-            (table["menopause"] >= 0.5), :
-        ]
     # Determine whether to filter by pregnancy.
-    if (not pregnancy):
-        # Select records for females who were not pregnant.
+    if (
+        (0 not in pregnancy) or
+        (1 not in pregnancy)
+    ):
+        # Select records.
         table = table.loc[
-            (table["pregnancy"] < 0.5), :
+            (table["pregnancy"].isin(pregnancy)), :
+        ]
+    # Determine whether to filter by binary definition of menopause.
+    if (
+        (0 not in menopause_binary) or
+        (1 not in menopause_binary)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["menopause_binary"].isin(menopause_binary)), :
+        ]
+    # Determine whether to filter by ordinal definition of menopause.
+    if (
+        (0 not in menopause_ordinal) or
+        (1 not in menopause_ordinal) or
+        (2 not in menopause_ordinal)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["menopause_ordinal"].isin(menopause_ordinal)), :
         ]
     # Return information.
     return table
@@ -6341,7 +6358,7 @@ def select_records_by_male_specific_valid_variables_values(
     )
     # Select records for males.
     table = table.loc[
-        (table["sex"] >= 0.5), :
+        (table["sex_text"] == "male"), :
     ]
     # Return information.
     return table
@@ -6349,8 +6366,9 @@ def select_records_by_male_specific_valid_variables_values(
 
 def select_records_by_sex_specific_valid_variables_values(
     female=None,
-    female_menopause=None,
     female_pregnancy=None,
+    female_menopause_binary=None,
+    female_menopause_ordinal=None,
     female_variables=None,
     female_prefixes=None,
     male=None,
@@ -6363,10 +6381,13 @@ def select_records_by_sex_specific_valid_variables_values(
 
     arguments:
         female (bool): whether to include records for females
-        female_menopause (str): which menopausal categories to include for
-            females: "both", "pre", or "post"
-        female_pregnancy (bool): whether to include records for females who
-            were pregnant
+
+        female_pregnancy (list<int>): which values of pregnancy definition to
+            include for females
+        female_menopause_binary (list<int>): which values of binary menopause
+            definition to include for females
+        female_menopause_ordinal (list<int>): which values of ordinal menopause
+            definition to include for females
         female_variables (list<str>): names of columns for variables in which
             rows must have valid values to keep records for females
         female_prefixes (list<str>): prefixes of columns for variables in which
@@ -6391,8 +6412,9 @@ def select_records_by_sex_specific_valid_variables_values(
     # Select records for females.
     if female:
         table_female = select_records_by_female_specific_valid_variables_values(
-            menopause=female_menopause,
             pregnancy=female_pregnancy,
+            menopause_binary=female_menopause_binary,
+            menopause_ordinal=female_menopause_ordinal,
             variables=female_variables,
             prefixes=female_prefixes,
             table=table,
@@ -6677,11 +6699,14 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Select and organize variables across cohorts.
     # Translate variable encodings and table format for analysis in PLINK.
 
+    # Cohort: non-pregnant females and males together
+
     table_female_male = (
         select_records_by_sex_specific_valid_variables_values(
             female=True,
-            female_menopause="both",
-            female_pregnancy=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
@@ -6707,15 +6732,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table=table_female_male,
     ))
 
+    # Cohort: all non-pregnant females together
+
     table_female = (
         select_records_by_sex_specific_valid_variables_values(
             female=True,
-            female_menopause="both",
-            female_pregnancy=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
-                "pregnancy", "menopause",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
                 hormone,
             ],
@@ -6734,15 +6762,19 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table=table_female,
     ))
 
-    table_female_premenopause = (
+    # Cohort: premenopausal females by binary menopause definition
+
+    table_female_premenopause_binary = (
         select_records_by_sex_specific_valid_variables_values(
             female=True,
-            female_menopause="pre",
-            female_pregnancy=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0,],
+            female_menopause_ordinal=[0, 1, 2],
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
-                "pregnancy", "menopause", "menstruation_day",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "menstruation_day",
                 "hormone_alteration",
                 hormone,
             ],
@@ -6752,24 +6784,27 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             male_prefixes=[],
             table=table,
     ))
-    pail[str("table_female_premenopause_" + hormone)] = (
+    pail[str("table_female_premenopause_binary_" + hormone)] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
             remove_null_records=False,
-            table=table_female_premenopause,
+            table=table_female_premenopause_binary,
     ))
 
-    table_female_postmenopause = (
+    # Cohort: postmenopausal females by binary menopause definition
+
+    table_female_postmenopause_binary = (
         select_records_by_sex_specific_valid_variables_values(
             female=True,
-            female_menopause="post",
-            female_pregnancy=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[1,],
+            female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
-                "pregnancy", "menopause",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
                 hormone,
             ],
@@ -6779,20 +6814,113 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             male_prefixes=[],
             table=table,
     ))
-    pail[str("table_female_postmenopause_" + hormone)] = (
+    pail[str("table_female_postmenopause_binary_" + hormone)] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
             continuous_variables=[hormone],
             remove_null_records=False,
-            table=table_female_postmenopause,
+            table=table_female_postmenopause_binary,
     ))
+
+    # Cohort: premenopausal females by ordinal menopause definition
+
+    table_female_premenopause_ordinal = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0,],
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_premenopause_ordinal_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_female_premenopause_ordinal,
+    ))
+
+    # Cohort: perimenopausal females by ordinal menopause definition
+
+    table_female_perimenopause_ordinal = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[1,],
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_perimenopause_ordinal_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_female_perimenopause_ordinal,
+    ))
+
+    # Cohort: postmenopausal females by ordinal menopause definition
+
+    table_female_postmenopause_ordinal = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[2,],
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_postmenopause_ordinal_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_female_postmenopause_ordinal,
+    ))
+
+    # Cohort: males
 
     table_male = (
         select_records_by_sex_specific_valid_variables_values(
             female=False,
-            female_menopause="both",
-            female_pregnancy=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
             female_variables=[],
             female_prefixes=[],
             male=True,
@@ -6838,6 +6966,19 @@ def select_organize_plink_cohorts_by_sex_hormones(
     # Compile information.
     pail = dict()
     # Select and organize variables across cohorts.
+
+    pail_albumin = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="albumin_log",
+        table=table,
+    )
+    pail.update(pail_albumin)
+
+    pail_steroid_globulin = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="steroid_globulin_log",
+            table=table,
+    ))
+    pail.update(pail_steroid_globulin)
 
     pail_oestradiol = select_organize_plink_cohorts_variables_by_sex_hormone(
         hormone="oestradiol_log",
@@ -7534,7 +7675,6 @@ def execute_sex_hormones(
 
 def execute_female_menstruation(
     table=None,
-    selection=None,
     report=None,
 ):
     """
@@ -7543,13 +7683,13 @@ def execute_female_menstruation(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        selection (str): type of table to select and return
         report (bool): whether to print reports
 
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
 
     """
 
@@ -7564,9 +7704,9 @@ def execute_female_menstruation(
         utility.print_terminal_partition(level=2)
         print("report: execute_female_menstruation()")
         utility.print_terminal_partition(level=3)
-        print(pail_female[selection])
+        print(pail_female["report"])
     # Return information.
-    return pail_female[selection]
+    return pail_female
 
 
 def execute_plot_hormones(
