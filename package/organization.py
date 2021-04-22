@@ -2675,215 +2675,225 @@ def organize_report_female_male_cohorts_variables(
 
     # Copy information.
     table = table.copy(deep=True)
-    # Collect records.
-    records = list()
-    # Stratify cohorts.
+    # Stratify cohorts and collect tables.
+    cohorts = list()
 
     # Sex
 
-    table_female = table.loc[
+    cohort = dict()
+    cohort["category"] = "sex"
+    cohort["name"] = "female"
+    cohort["table"] = table.loc[
         (table["sex_text"] == "female"), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female",
-        category="sex",
-        female=True,
-        table=table_female,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_male = table.loc[
+    cohort = dict()
+    cohort["category"] = "sex"
+    cohort["name"] = "male"
+    cohort["table"] = table.loc[
         (table["sex_text"] == "male"), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="male",
-        category="sex",
-        female=False,
-        table=table_male,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
     # Pregnancy
 
-    table_female_pregnancy_yes = table_female.loc[
-        (table_female["pregnancy"] == 1), :
+    cohort = dict()
+    cohort["category"] = "pregnancy"
+    cohort["name"] = "female_pregnancy_yes"
+    cohort["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["pregnancy"] == 1)), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_pregnancy_yes",
-        category="pregnancy",
-        female=True,
-        table=table_female_pregnancy_yes,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_pregnancy_no = table_female.loc[
-        (table_female["pregnancy"] == 0), :
+    cohort = dict()
+    cohort["category"] = "pregnancy"
+    cohort["name"] = "female_pregnancy_no"
+    cohort["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["pregnancy"] == 0)), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_pregnancy_no",
-        category="pregnancy",
-        female=True,
-        table=table_female_pregnancy_no,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_pregnancy_unsure = table_female.loc[
-        (table_female["3140-0.0"] == 2), :
+    cohort = dict()
+    cohort["category"] = "pregnancy"
+    cohort["name"] = "female_pregnancy_unsure"
+    cohort["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_pregnancy_unsure",
-        category="pregnancy",
-        female=True,
-        table=table_female_pregnancy_unsure,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
     # Menopause
 
-    table_female_premenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause_ordinal"] == 0), :
+    cohort = dict()
+    cohort["category"] = "menopause"
+    cohort["name"] = "female_premenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_premenopause",
-        category="menopause",
-        female=True,
-        table=table_female_premenopause,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_perimenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause_ordinal"] == 1), :
+    cohort = dict()
+    cohort["category"] = "menopause"
+    cohort["name"] = "female_perimenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_perimenopause",
-        category="menopause",
-        female=True,
-        table=table_female_perimenopause,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_postmenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause_ordinal"] == 2), :
+    cohort = dict()
+    cohort["category"] = "menopause"
+    cohort["name"] = "female_postmenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_postmenopause",
-        category="menopause",
-        female=True,
-        table=table_female_postmenopause,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_menopause_unsure = table_female.loc[
-        (table_female["2724-0.0"] == 3), :
+    cohort = dict()
+    cohort["category"] = "menopause"
+    cohort["name"] = "female_menopause_unsure"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["2724-0.0"] == 3)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_menopause_unsure",
-        category="menopause",
-        female=True,
-        table=table_female_menopause_unsure,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_menopause_blank = table_female.loc[
-        (table_female["2724-0.0"] == -3), :
+    cohort = dict()
+    cohort["category"] = "menopause"
+    cohort["name"] = "female_menopause_blank"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["2724-0.0"] == -3)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_menopause_blank",
-        category="menopause",
-        female=True,
-        table=table_female_menopause_blank,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
     # Hormone-alteration therapies
 
-    table_female_contraception_yes = table_female.loc[
-        (table_female["oral_contraception"] == 1), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_oral_contraception_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["oral_contraception"] == 1)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_oral_contraception_yes",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_contraception_yes,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_contraception_no = table_female.loc[
-        (table_female["oral_contraception"] == 0), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_oral_contraception_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["oral_contraception"] == 0)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_oral_contraception_no",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_contraception_no,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_replacement_yes = table_female.loc[
-        (table_female["hormone_replacement"] == 1), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_hormone_replacement_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_replacement"] == 1)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_hormone_replacement_yes",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_replacement_yes,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_replacement_no = table_female.loc[
-        (table_female["hormone_replacement"] == 0), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_hormone_replacement_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_replacement"] == 0)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_hormone_replacement_no",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_replacement_no,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_alteration_yes = table_female.loc[
-        (table_female["hormone_alteration"] == 1), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_hormone_alteration_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_alteration"] == 1)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_hormone_alteration_yes",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_alteration_yes,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_alteration_no = table_female.loc[
-        (table_female["hormone_alteration"] == 0), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_hormone_alteration_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_hormone_alteration_no",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_alteration_no,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_premenopause_alteration_yes = table_female_premenopause.loc[
-        (table_female_premenopause["hormone_alteration"] == 1), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_premenopause_hormone_alteration_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 1)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_premenopause_hormone_alteration_yes",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_premenopause_alteration_yes,
-    )
-    records.append(record)
+    cohorts.append(cohort)
 
-    table_female_premenopause_alteration_no = table_female_premenopause.loc[
-        (table_female_premenopause["hormone_alteration"] == 0), :
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_premenopause_hormone_alteration_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
     ]
-    record = organize_report_cohort_variables_summaries_record(
-        cohort="female_premenopause_hormone_alteration_no",
-        category="hormone_alteration",
-        female=True,
-        table=table_female_premenopause_alteration_no,
-    )
-    records.append(record)
+    cohorts.append(cohort)
+
+    # Collect records for cohorts.
+    records = list()
+    for cohort in cohorts:
+        record = organize_report_cohort_variables_summaries_record(
+            cohort=cohort["name"],
+            category=cohort["category"],
+            female=True,
+            table=cohort["table"],
+        )
+        records.append(record)
 
     # Organize table.
     table_summary = pandas.DataFrame(data=records)
