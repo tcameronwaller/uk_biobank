@@ -2726,42 +2726,6 @@ def organize_report_female_male_cohorts_variables(
 
     cohort = dict()
     cohort["category"] = "menopause"
-    cohort["name"] = "female_premenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause"
-    cohort["name"] = "female_perimenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause"
-    cohort["name"] = "female_postmenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause"
     cohort["name"] = "female_menopause_unsure"
     cohort["table"] = table.loc[
         (
@@ -2780,6 +2744,134 @@ def organize_report_female_male_cohorts_variables(
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["2724-0.0"] == -3)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    # Menopause binary
+
+    cohort = dict()
+    cohort["category"] = "menopause_binary"
+    cohort["name"] = "female_premenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_binary"
+    cohort["name"] = "female_postmenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    # Menopause binary strict
+
+    cohort = dict()
+    cohort["category"] = "menopause_binary_strict"
+    cohort["name"] = "female_premenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary_strict"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_binary_strict"
+    cohort["name"] = "female_postmenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary_strict"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    # Menopause ordinal
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal"
+    cohort["name"] = "female_premenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal"
+    cohort["name"] = "female_perimenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal"
+    cohort["name"] = "female_postmenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    # Menopause ordinal strict
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal_strict"
+    cohort["name"] = "female_premenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal_strict"
+    cohort["name"] = "female_perimenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "menopause_ordinal_strict"
+    cohort["name"] = "female_postmenopause"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 2)
         ), :
     ]
     cohorts.append(cohort)
@@ -2879,6 +2971,32 @@ def organize_report_female_male_cohorts_variables(
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_postmenopause_hormone_alteration_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_postmenopause_hormone_alteration_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2) &
             (table["hormone_alteration"] == 0)
         ), :
     ]
