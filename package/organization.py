@@ -2025,12 +2025,24 @@ def determine_female_menopause_binary(
         # Determine premenopause.
         elif (
             (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days < threshold_menstruation_days)
-            ) or
+                (
+                    (pandas.isna(menopause_natural)) or
+                    (menopause_natural == 0)
+                ) and
+                (
+                    (pandas.isna(oophorectomy)) or
+                    (oophorectomy == 0)
+                )
+            ) and
             (
-                (not pandas.isna(age)) and
-                (age < threshold_age)
+                (
+                    (not pandas.isna(menstruation_days)) and
+                    (menstruation_days < threshold_menstruation_days)
+                ) or
+                (
+                    (not pandas.isna(age)) and
+                    (age < threshold_age)
+                )
             )
         ):
             # Person qualifies for premenopause.
@@ -2066,10 +2078,16 @@ def determine_female_menopause_binary_strict(
     categories.
     This definition's encoding is binary.
 
-    This definition is not permissive of missing values in any variables, with
-    the exception of self-reported menopause (data field 2724). Females who
-    qualify for perimenopause might be likely to reply "unsure" in response to
-    this variable, giving it a missing or uncertain value.
+    This definition is permissive of null or missing values in self-report
+    menopause ("menopause_natural" from field 2724) and in days since previous
+    menstruation ("menstruation_days" from field 3700). Females who qualify for
+    perimenopause might be more likely to reply "unsure" in response to the
+    self-report menopause variable, giving it a null or missing value. Also,
+    females who qualify for postmenopause might be more likely to have a null or
+    missing value in the variable for days since previous menstruation.
+
+    In contrast, this definition is not permissive of null or missing values in
+    variables for oophorectomy or age.
 
     Pay close attention to "and", "or" logic in comparisons.
 
@@ -2113,7 +2131,6 @@ def determine_female_menopause_binary_strict(
         # Determine whether any variables have missing values.
         if (
             (not pandas.isna(oophorectomy)) and
-            (not pandas.isna(menstruation_days)) and
             (not pandas.isna(age))
         ):
             # Determine postmenopause.
@@ -2123,15 +2140,33 @@ def determine_female_menopause_binary_strict(
                     (menopause_natural == 1)
                 ) or
                 (oophorectomy == 1) or
-                (menstruation_days >= threshold_menstruation_days) or
+                (
+                    (not pandas.isna(menstruation_days)) and
+                    (menstruation_days >= threshold_menstruation_days)
+                ) or
                 (age >= threshold_age)
             ):
                 # Person qualifies for postmenopause.
                 value = 1
             elif (
-                (oophorectomy == 0) and
-                (menstruation_days < threshold_menstruation_days) and
-                (age < threshold_age)
+                (
+                    (
+                        (pandas.isna(menopause_natural)) or
+                        (menopause_natural == 0)
+                    ) and
+                    (
+                        (oophorectomy == 0)
+                    )
+                ) and
+                (
+                    (
+                        (not pandas.isna(menstruation_days)) and
+                        (menstruation_days < threshold_menstruation_days)
+                    ) or
+                    (
+                        (age < threshold_age)
+                    )
+                )
             ):
                 # Person qualifies for premenopause.
                 # In order even to consider this premenopause definition,
@@ -2238,14 +2273,26 @@ def determine_female_menopause_ordinal(
         # Determine perimenopause
         elif (
             (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days >= threshold_menstruation_days_pre) and
-                (menstruation_days < threshold_menstruation_days_post)
-            ) or
+                (
+                    (pandas.isna(menopause_natural)) or
+                    (menopause_natural == 0)
+                ) and
+                (
+                    (pandas.isna(oophorectomy)) or
+                    (oophorectomy == 0)
+                )
+            ) and
             (
-                (not pandas.isna(age)) and
-                (age >= threshold_age_pre) and
-                (age < threshold_age_post)
+                (
+                    (not pandas.isna(menstruation_days)) and
+                    (menstruation_days >= threshold_menstruation_days_pre) and
+                    (menstruation_days < threshold_menstruation_days_post)
+                ) or
+                (
+                    (not pandas.isna(age)) and
+                    (age >= threshold_age_pre) and
+                    (age < threshold_age_post)
+                )
             )
         ):
             # Person qualitifies for perimenopause.
@@ -2258,20 +2305,27 @@ def determine_female_menopause_ordinal(
         # Determine premenopause.
         elif (
             (
-                (not pandas.isna(menstruation_days)) and
-                (menstruation_days < threshold_menstruation_days_pre)
-            ) or
+                (
+                    (pandas.isna(menopause_natural)) or
+                    (menopause_natural == 0)
+                ) and
+                (
+                    (pandas.isna(oophorectomy)) or
+                    (oophorectomy == 0)
+                )
+            ) and
             (
-                (not pandas.isna(age)) and
-                (age < threshold_age_pre)
+                (
+                    (not pandas.isna(menstruation_days)) and
+                    (menstruation_days < threshold_menstruation_days_pre)
+                ) or
+                (
+                    (not pandas.isna(age)) and
+                    (age < threshold_age_pre)
+                )
             )
         ):
             # Person qualifies for premenopause.
-            # In order even to consider this premenopause definition, both
-            # variables "menopause_natural" and "oophorectomy" must be either
-            # missing or false.
-            # Either valid "menstruation_days" or "age" that satisfy conditions
-            # are sufficient to justify the premenopause definition.
             value = 0
         else:
             # Person does not qualify for any categories, probably due to
@@ -2346,13 +2400,15 @@ def determine_female_menopause_ordinal_strict(
     menopause_natural = interpret_menopause_natural(
         field_2724=field_2724,
     )
+    # Assign aliases for variables with long names.
+    menstruation_days_pre = threshold_menstruation_days_pre
+    menstruation_days_post = threshold_menstruation_days_post
     # Determine categories for menopause.
     # Pay close attention to "and", "or" logic in comparisons.
     if (sex_text == "female"):
         # Determine whether any variables have missing values.
         if (
             (not pandas.isna(oophorectomy)) and
-            (not pandas.isna(menstruation_days)) and
             (not pandas.isna(age))
         ):
             # Determine postmenopause.
@@ -2362,7 +2418,10 @@ def determine_female_menopause_ordinal_strict(
                     (menopause_natural == 1)
                 ) or
                 (oophorectomy == 1) or
-                (menstruation_days >= threshold_menstruation_days_post) or
+                (
+                    (not pandas.isna(menstruation_days)) and
+                    (menstruation_days >= menstruation_days_post)
+                ) or
                 (age >= threshold_age_post)
             ):
                 # Person qualifies for postmenopause.
@@ -2370,20 +2429,46 @@ def determine_female_menopause_ordinal_strict(
             # Determine perimenopause
             elif (
                 (
-                    (menstruation_days >= threshold_menstruation_days_pre) and
-                    (menstruation_days < threshold_menstruation_days_post)
-                ) or
+                    (
+                        (pandas.isna(menopause_natural)) or
+                        (menopause_natural == 0)
+                    ) and
+                    (
+                        (oophorectomy == 0)
+                    )
+                ) and
                 (
-                    (age >= threshold_age_pre) and
-                    (age < threshold_age_post)
+                    (
+                        (not pandas.isna(menstruation_days)) and
+                        (menstruation_days >= menstruation_days_pre) and
+                        (menstruation_days < menstruation_days_post)
+                    ) or
+                    (
+                        (age >= threshold_age_pre) and
+                        (age < threshold_age_post)
+                    )
                 )
             ):
                 # Person qualitifies for perimenopause.
                 value = 1
             # Determine premenopause.
             elif (
-                (menstruation_days < threshold_menstruation_days_pre) and
-                (age < threshold_age_pre)
+                (
+                    (
+                        (pandas.isna(menopause_natural)) or
+                        (menopause_natural == 0)
+                    ) and
+                    (
+                        (oophorectomy == 0)
+                    )
+                ) and
+                (
+                    (
+                        (not pandas.isna(menstruation_days)) and
+                        (menstruation_days < menstruation_days_pre)
+                    ) or
+                    (age < threshold_age_pre)
+                )
             ):
                 # Person qualifies for premenopause.
                 value = 0
