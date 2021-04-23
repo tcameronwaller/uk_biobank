@@ -2046,15 +2046,9 @@ def determine_female_menopause_binary(
             )
         ):
             # Person qualifies for premenopause.
-            # In order even to consider this premenopause definition, both
-            # variables "menopause_natural" and "oophorectomy" must be either
-            # missing or false.
-            # Either valid "menstruation_days" or "age" that satisfy conditions
-            # are sufficient to justify the premenopause definition.
             value = 0
         else:
-            # Person does not qualify for any categories, probably due to
-            # missing or null values.
+            # Person does not qualify for any categories.
             value = float("nan")
     else:
         # Menopause undefined for males.
@@ -2296,11 +2290,6 @@ def determine_female_menopause_ordinal(
             )
         ):
             # Person qualitifies for perimenopause.
-            # In order even to consider this perimenopause definition, both
-            # variables "menopause_natural" and "oophorectomy" must be either
-            # missing or false.
-            # Either valid "menstruation_days" or "age" that satisfy conditions
-            # are sufficient to justify the perimenopause definition.
             value = 1
         # Determine premenopause.
         elif (
@@ -2328,8 +2317,7 @@ def determine_female_menopause_ordinal(
             # Person qualifies for premenopause.
             value = 0
         else:
-            # Person does not qualify for any categories, probably due to
-            # missing or null values.
+            # Person does not qualify for any categories.
             value = float("nan")
     else:
         # Menopause undefined for males.
