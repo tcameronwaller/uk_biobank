@@ -3178,7 +3178,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 age=row["age"],
                 threshold_age=51, # threshold age in years
                 menstruation_days=row["menstruation_days"],
-                threshold_menstruation_days=60, # threshold in days
+                threshold_menstruation_days=90, # threshold in days
                 field_2724=row["2724-0.0"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
@@ -3192,7 +3192,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 age=row["age"],
                 threshold_age=51, # threshold age in years
                 menstruation_days=row["menstruation_days"],
-                threshold_menstruation_days=60, # threshold in days
+                threshold_menstruation_days=90, # threshold in days
                 field_2724=row["2724-0.0"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
