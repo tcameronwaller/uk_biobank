@@ -2749,7 +2749,6 @@ def determine_female_any_hormone_alteration_medication(
 def organize_report_cohort_variables_summaries_record(
     cohort=None,
     category=None,
-    female=None,
     table=None,
 ):
     """
@@ -2759,7 +2758,6 @@ def organize_report_cohort_variables_summaries_record(
         cohort (str): name of cohort
         category (str): name of category for cohort, to facilitate table sorts
             and comparisons
-        female (bool): whether to summarize female-specific variables for cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -2779,15 +2777,13 @@ def organize_report_cohort_variables_summaries_record(
     # Collect information for general columns.
     columns = [
         "age",
+        "menstruation_days",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
         "oestradiol_free", "oestradiol_free_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
     ]
-    # Specify columns for female-specific variables.
-    if female:
-        columns.append("menstruation_days")
     # Iterate on relevant columns.
     # Collect information for record.
     for column in columns:
@@ -3280,7 +3276,6 @@ def organize_report_female_male_cohorts_variables(
         record = organize_report_cohort_variables_summaries_record(
             cohort=cohort["name"],
             category=cohort["category"],
-            female=True,
             table=cohort["table"],
         )
         records.append(record)
