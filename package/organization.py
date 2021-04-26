@@ -1515,6 +1515,8 @@ def interpret_pregnancy(
     """
     Intepret UK Biobank's coding for field 3140.
 
+    Interpret "unsure" pregnancy as potential pregnancy.
+
     Data-Field "3140": "Pregnant"
     UK Biobank data coding "100267" for variable field "3140".
     "no": 0
@@ -1547,7 +1549,8 @@ def interpret_pregnancy(
             value = 1
         elif (1.5 <= field_3140 and field_3140 < 2.5):
             # 2: "unsure"
-            value = float("nan")
+            # Interpret "unsure" pregnancy as potential pregnancy.
+            value = 1
         else:
             # uninterpretable
             value = float("nan")
@@ -2686,6 +2689,7 @@ def organize_report_cohort_variables_summaries_record(
 
     # Collect information for cohort.
     record = dict()
+    record["combination"] = str(category + "_" + cohort)
     record["category"] = str(category)
     record["cohort"] = str(cohort)
     record["cohort_count"] = int(table.shape[0])
@@ -2720,11 +2724,11 @@ def organize_report_cohort_variables_summaries_record(
             standard_deviation = float("nan")
             standard_error = float("nan")
         # Collect information for record.
-        record[str(column + "_count")] = count
-        record[str(column + "_mean")] = round(mean, 2)
-        record[str(column + "_median")] = round(median, 2)
-        record[str(column + "_stdev")] = round(standard_deviation, 2)
-        record[str(column + "_stderr")] = round(standard_error, 2)
+        record[str(column + "_count")] = str(count)
+        record[str(column + "_mean")] = str(round(mean, 2))
+        record[str(column + "_median")] = str(round(median, 2))
+        record[str(column + "_stdev")] = str(round(standard_deviation, 2))
+        record[str(column + "_stderr")] = str(round(standard_error, 2))
         pass
     # Return information.
     return record
@@ -2773,6 +2777,22 @@ def organize_report_female_male_cohorts_variables(
 
     cohort = dict()
     cohort["category"] = "pregnancy"
+    cohort["name"] = "female_pregnancy_definite"
+    cohort["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["3140-0.0"] == 1)), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "pregnancy"
+    cohort["name"] = "female_pregnancy_unsure"
+    cohort["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "pregnancy"
     cohort["name"] = "female_pregnancy_yes"
     cohort["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["pregnancy"] == 1)), :
@@ -2784,14 +2804,6 @@ def organize_report_female_male_cohorts_variables(
     cohort["name"] = "female_pregnancy_no"
     cohort["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["pregnancy"] == 0)), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "pregnancy"
-    cohort["name"] = "female_pregnancy_unsure"
-    cohort["table"] = table.loc[
-        ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
     ]
     cohorts.append(cohort)
 
@@ -2952,7 +2964,7 @@ def organize_report_female_male_cohorts_variables(
     # Hormone-alteration therapies
 
     cohort = dict()
-    cohort["category"] = "hormone_alteration"
+    cohort["category"] = "oral_contraception"
     cohort["name"] = "female_oral_contraception_yes"
     cohort["table"] = table.loc[
         (
@@ -2964,7 +2976,7 @@ def organize_report_female_male_cohorts_variables(
     cohorts.append(cohort)
 
     cohort = dict()
-    cohort["category"] = "hormone_alteration"
+    cohort["category"] = "oral_contraception"
     cohort["name"] = "female_oral_contraception_no"
     cohort["table"] = table.loc[
         (
@@ -2976,7 +2988,7 @@ def organize_report_female_male_cohorts_variables(
     cohorts.append(cohort)
 
     cohort = dict()
-    cohort["category"] = "hormone_alteration"
+    cohort["category"] = "hormone_replacement"
     cohort["name"] = "female_hormone_replacement_yes"
     cohort["table"] = table.loc[
         (
@@ -2988,7 +3000,7 @@ def organize_report_female_male_cohorts_variables(
     cohorts.append(cohort)
 
     cohort = dict()
-    cohort["category"] = "hormone_alteration"
+    cohort["category"] = "hormone_replacement"
     cohort["name"] = "female_hormone_replacement_no"
     cohort["table"] = table.loc[
         (
@@ -3044,6 +3056,32 @@ def organize_report_female_male_cohorts_variables(
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_perimenopause_hormone_alteration_yes"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "hormone_alteration"
+    cohort["name"] = "female_perimenopause_hormone_alteration_no"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
             (table["hormone_alteration"] == 0)
         ), :
     ]
