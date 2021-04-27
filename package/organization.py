@@ -7027,7 +7027,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "hormone_alteration",
                 hormone,
             ],
-            female_prefixes=["genotype_pc_", "menopause_hormone_category_"],
+            female_prefixes=["genotype_pc_",],
             male=False,
             male_variables=[],
             male_prefixes=[],
@@ -7040,6 +7040,34 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             continuous_variables=[hormone],
             remove_null_records=False,
             table=table_female,
+    ))
+
+    table_female_combination = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "body_mass_index_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_", "menopause_hormone_category_",],
+            male=False,
+            male_variables=[],
+            male_prefixes=[],
+            table=table,
+    ))
+    pail[str("table_female_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_female_combination,
     ))
 
     # Cohort: premenopausal females by binary menopause definition
@@ -7115,6 +7143,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
+                "menstruation_day",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7145,6 +7174,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
+                "menstruation_day",
                 "hormone_alteration",
                 hormone,
             ],

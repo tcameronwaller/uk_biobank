@@ -16,6 +16,7 @@ field	type	category	name	coverage	scale	ukb_description	ukb_category	instances_a
 2834	string	hormone	oophorectomy	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	oophorectomy mimics menopause
 3140	string	hormone	pregnancy	272558	nominal	Pregnant			0.0;	
 3700	string	hormone	menstruation	64174		Time since last menstrual period	Female-specific factors		0.0;	only for pre-menopausal females (field 2724)
+2714	string	hormone	menarche	310271		Age when periods started (menarche)	Female-specific factors		0.0;	
 2814	string	hormone		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
 3536	string	hormone		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
 3546	string	hormone		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
