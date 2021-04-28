@@ -595,7 +595,7 @@ def organize_sex_age_body_variables(
         inplace=True,
     )
     # Determine sex consensus between self-report and genotypic sex.
-    table["sex_consensus"] = table.apply(
+    table["sex"] = table.apply(
         lambda row:
             interpret_sex_consensus(
                 field_31=row["31-0.0"],
@@ -607,7 +607,7 @@ def organize_sex_age_body_variables(
     table["sex_text"] = table.apply(
         lambda row:
             determine_sex_text(
-                sex=row["sex_consensus"],
+                sex=row["sex"],
             ),
         axis="columns", # apply across rows
     )
@@ -635,7 +635,7 @@ def organize_sex_age_body_variables(
     columns_report = [
         #"eid",
         "IID",
-        "sex_consensus", "sex_text",
+        "sex", "sex_text",
         "age", "body_mass_index", "body_mass_index_log",
     ]
     table_report = table_report.loc[
