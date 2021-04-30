@@ -677,6 +677,10 @@ def organize_sex_age_body_variables(
 # 11 March 2021: TCW verified formulas for estimation of free testosterone
 # 11 March 2021: TCW verified UK Biobank fields and their codings.
 
+# TODO: implement bioavailable oestradiol and testosterone
+# TODO: also implement the natural log definition of bioavailable testosterone...
+# Chung, Pathology Informatics, 2017 (PubMed:28828199)
+
 def convert_hormone_concentration_units_moles_per_liter(
     table=None,
     factors_concentration=None,
@@ -740,7 +744,7 @@ def convert_hormone_concentration_units_moles_per_liter(
     # Return information.
     return table
 
-
+# TODO: check accuracy of formula implementation
 def calculate_estimation_free_testosterone(
     testosterone=None,
     albumin=None,
@@ -832,7 +836,85 @@ def calculate_estimation_free_testosterone(
     # Return information.
     return testosterone_free
 
+# TODO: check accuracy of formula implementation
+def calculate_estimation_bioavailable_testosterone(
+    testosterone_free=None,
+    albumin=None,
+    factors_concentration=None,
+    associations=None,
+):
+    """
+    Calculates an estimation of bioavailable testosterone (not bound to steroid
+    hormone binding globulin).
 
+    This function applies the formula of Sodergard, Journal of Steroid
+    Biochemistry, 1982 (PubMed:7202083).
+
+    The specific structure of this formula appears in the following articles:
+    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822)
+    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641)
+    de Ronde, Clinical Chemistry, 2006 (PubMed:16793931)
+
+    The structure of this formula is slightly different, though presumably
+    equivalent in the following articles:
+    Vermeulen, Clinical Endocrinology & Metabolism, 1999 (PubMed:10523012)
+    Emadi-Konjin, Clinical Biochemistry, 2003 (PubMed:14636872)
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    testosterone:
+    5.97E8 - 1.4E9 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for albumin to testosterone:
+    1.3E4 - 4.06E4 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    arguments:
+        testosterone_free (float): estimate concentration in moles per liter
+            (mol/L) of free testosterone, with concentration factor
+        albumin (float): concentration in moles per liter (mol/L) of albumin in
+            blood, with concentration factor
+        factors_concentration (dict<float>): factors by which to multiply
+            concentrations for the sake of float storage and analysis
+        associations (dict<float>): association constants in liters per mole for
+            steroid hormone binding globulin (SHBG) and ablumin
+
+    raises:
+
+    returns:
+        (float): estimate concentration in moles per liter of bioavailable
+            testosterone, with concentration factor
+
+    """
+
+    # Raw values are stored with a concentration factor.
+    # Convert concentrations to unit of moles per liter (mol/L).
+    testosterone_free_unit = float(
+        testosterone_free / factors_concentration["testosterone_free"]
+    )
+    albumin_unit = float(albumin / factors_concentration["albumin"])
+
+    # Calculate simplification variables: numerator and denominator.
+    numerator = (
+        associations["albumin_test"] *
+        albumin_unit *
+        testosterone_free_unit
+    ) # unit: mol/L
+    denominator = (
+        1 +
+        (associations["albumin_test"] * testosterone_free_unit)
+    ) # unit: 1
+    # Calculate bioavailable testosterone.
+    testosterone_bioavailable_unit = (
+        (numerator / denominator) + testosterone_free_unit
+    ) # unit: mol/L
+    # Convert units by factor.
+    testosterone_bioavailable = float(
+        testosterone_bioavailable_unit *
+        factors_concentration["testosterone_bioavailable"]
+    )
+    # Return information.
+    return testosterone_bioavailable
+
+# TODO: check accuracy of formula implementation
 def calculate_estimation_free_oestradiol(
     oestradiol=None,
     testosterone_free=None,
@@ -877,8 +959,10 @@ def calculate_estimation_free_oestradiol(
 
 
     arguments:
-        testosterone (float): concentration in moles per liter (mol/L) of total
-            testosterone in blood, with concentration factor
+        oestradiol (float): concentration in moles per liter (mol/L) of total
+            oestradiol in blood, with concentration factor
+        testosterone_free (float): estimate concentration in moles per liter
+            (mol/L) of free testosterone, with concentration factor
         albumin (float): concentration in moles per liter (mol/L) of albumin in
             blood, with concentration factor
         steroid_globulin (float): concentration in moles per liter (mol/L) of
@@ -891,7 +975,7 @@ def calculate_estimation_free_oestradiol(
     raises:
 
     returns:
-        (float): estimate concentration in moles per liter of free testosterone,
+        (float): estimate concentration in moles per liter of free oestradiol,
             with concentration factor
 
     """
@@ -936,6 +1020,110 @@ def calculate_estimation_free_oestradiol(
     )
     # Return information.
     return oestradiol_free
+
+# TODO: check accuracy of formula implementation
+def calculate_estimation_bioavailable_oestradiol(
+    oestradiol=None,
+    oestradiol_free=None,
+    testosterone_free=None,
+    steroid_globulin=None,
+    factors_concentration=None,
+    associations=None,
+):
+    """
+    Calculates an estimation of free oestradiol (neither bound to albumin nor
+    steroid hormone binding globulin).
+
+    This function applies the formula of Sodergard, Journal of Steroid
+    Biochemistry, 1982 (PubMed:7202083).
+
+    The specific structure of this formula appears in the following articles:
+    de Ronde, Clinical Endocrinology & Metabolism, 2005 (PubMed:15509641)
+
+    Notice that there is a discrepancy with the formula in the following
+    article:
+    van den Beld, Clinical Endocrinology & Metabolism, 2000 (PubMed:10999822)
+    This article seems to introduce an extra term for the concentration of SHBG
+    in both the "b" and "c" formulas.
+    This extra concentration term is likely erroneous as it would disrupt the
+    units of the "b" and "c" formulas.
+    It would also disrupt the final units (mol/L) of the total formula.
+    Compare to the formula for free testosterone.
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    testosterone:
+    5.97E8 - 1.4E9 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for albumin to testosterone:
+    1.3E4 - 4.06E4 L/mol (PubMed:7202083; PubMed:10523012; PubMed:14636872)
+
+    Association constant for steroid hormone binding globulin (SHBG) to
+    oestradiol:
+    3.14E8 - 6.8E8 L/mol (PubMed:7202083, PubMed:7195404)
+
+    Association constant for albumin to oestradiol:
+    4.21E4 L/mol (PubMed:7202083)
+
+
+    arguments:
+        oestradiol (float): concentration in moles per liter (mol/L) of total
+            oestradiol in blood, with concentration factor
+        oestradiol_free (float): estimate concentration in moles per liter
+            (mol/L) of free oestradiol, with concentration factor
+        testosterone_free (float): estimate concentration in moles per liter
+            (mol/L) of free testosterone, with concentration factor
+        steroid_globulin (float): concentration in moles per liter (mol/L) of
+            steroid hormone binding globulin in blood, with concentration factor
+        factors_concentration (dict<float>): factors by which to multiply
+            concentrations for the sake of float storage and analysis
+        associations (dict<float>): association constants in liters per mole for
+            steroid hormone binding globulin (SHBG) and ablumin
+
+    raises:
+
+    returns:
+        (float): estimate concentration in moles per liter of free oestradiol,
+            with concentration factor
+
+    """
+
+    # Raw values are stored with a concentration factor.
+    # Convert concentrations to unit of moles per liter (mol/L).
+    oestradiol_unit = float(
+        oestradiol / factors_concentration["oestradiol"]
+    )
+    oestradiol_free_unit = float(
+        oestradiol_free / factors_concentration["oestradiol_free"]
+    )
+    testosterone_free_unit = float(
+        testosterone_free / factors_concentration["testosterone_free"]
+    )
+    steroid_globulin_unit = float(
+        steroid_globulin / factors_concentration["steroid_globulin"]
+    )
+
+    # Calculate simplification variables: numerator and denominator.
+    numerator = (
+        associations["shbg_oest"] *
+        steroid_globulin_unit *
+        oestradiol_free_unit
+    ) # unit: mol/L
+    denominator = (
+        1 +
+        (associations["shbg_oest"] * oestradiol_free_unit) +
+        (associations["shbg_test"] * testosterone_free_unit)
+    ) # unit: 1
+    # Calculate bioavailable oestradiol.
+    oestradiol_bioavailable_unit = (
+        oestradiol_unit - (numerator / denominator)
+    ) # unit: mol/L
+    # Convert units by factor.
+    oestradiol_bioavailable = float(
+        oestradiol_bioavailable_unit *
+        factors_concentration["oestradiol_bioavailable"]
+    )
+    # Return information.
+    return oestradiol_bioavailable
 
 
 def organize_report_column_pair_correlations(
@@ -1015,8 +1203,10 @@ def organize_sex_hormone_variables(
     factors_concentration["steroid_globulin"] = 1E9 # 1 nmol / L
     factors_concentration["oestradiol"] = 1E12 # 1 pmol / L
     factors_concentration["oestradiol_free"] = 1E12 # 1 pmol / L
+    factors_concentration["oestradiol_bioavailable"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
+    factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
     table = convert_hormone_concentration_units_moles_per_liter(
         table=table,
         factors_concentration=factors_concentration,
@@ -1028,13 +1218,23 @@ def organize_sex_hormone_variables(
     associations["shbg_oest"] = 3.14E8 #
     associations["albumin_test"] = 4.06E4 #
     associations["albumin_oest"] = 4.21E4 #
-    # Calculate estimation of free, bioavailable testosterone.
+    # Calculate estimation of free and bioavailable testosterone.
     table["testosterone_free"] = table.apply(
         lambda row:
             calculate_estimation_free_testosterone(
                 testosterone=row["testosterone"],
                 albumin=row["albumin"],
                 steroid_globulin=row["steroid_globulin"],
+                factors_concentration=factors_concentration,
+                associations=associations,
+            ),
+        axis="columns", # apply across rows
+    )
+    table["testosterone_bioavailable"] = table.apply(
+        lambda row:
+            calculate_estimation_bioavailable_testosterone(
+                testosterone_free=row["testosterone_free"],
+                albumin=row["albumin"],
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
@@ -1053,11 +1253,23 @@ def organize_sex_hormone_variables(
             ),
         axis="columns", # apply across rows
     )
+    table["oestradiol_bioavailable"] = table.apply(
+        lambda row:
+            calculate_estimation_bioavailable_oestradiol(
+                oestradiol=row["oestradiol"],
+                oestradiol_free=row["oestradiol_free"],
+                testosterone_free=row["testosterone_free"],
+                steroid_globulin=row["steroid_globulin"],
+                factors_concentration=factors_concentration,
+                associations=associations,
+            ),
+        axis="columns", # apply across rows
+    )
     # Convert variable types.
     columns_hormones = [
         "albumin", "steroid_globulin",
-        "oestradiol", "oestradiol_free",
-        "testosterone", "testosterone_free",
+        "oestradiol", "oestradiol_free", "oestradiol_bioavailable",
+        "testosterone", "testosterone_free", "testosterone_bioavailable",
     ]
     table = convert_table_columns_variables_types_float(
         columns=columns_hormones,
@@ -1086,8 +1298,10 @@ def organize_sex_hormone_variables(
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
         "oestradiol_free", "oestradiol_free_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -3487,6 +3701,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply across rows
     )
     # Determine combination categories by menopause and hormone-atering therapy.
+    # Report on 28 April 2021.
+    # Category 1: 24158
+    # Category 2: 178007
+    # Category 3: 8438
+    # Category 4: 51786
     table = (
         utility.determine_binary_categorical_products_of_two_binary_variables(
             table=table,
