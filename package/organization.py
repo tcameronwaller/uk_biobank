@@ -7280,7 +7280,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             male_prefixes=[],
             table=table,
     ))
-    pail[str("table_female_" + hormone)] = (
+    pail[str("table_female_combination_" + hormone)] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -7301,7 +7301,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_day",
+                "menstruation_days",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7362,7 +7362,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_day",
+                "menstruation_days",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7393,7 +7393,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_day",
+                "menstruation_days",
                 "hormone_alteration",
                 hormone,
             ],
