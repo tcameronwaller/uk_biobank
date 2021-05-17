@@ -3873,11 +3873,11 @@ def organize_report_stratification_by_missingness_contingency_table(
     entry_1_1 = str(str(count_1_1) + " (" + str(percentage_1_1) + "%)")
     name_missing_false = str(column_missingness + " valid")
     name_missing_true = str(column_missingness + " missing")
-    table_report = pandas.DataFrame(data={
-        [column_stratification]: [stratifications],
-        [name_missing_false]: [entry_0_0, entry_0_1],
-        [name_missing_true]: [entry_1_0, entry_1_1],
-    })
+    entries = dict()
+    entries[column_stratification] = stratifications
+    entries[name_missing_false] = [entry_0_0, entry_0_1]
+    entries[name_missing_true] = [entry_1_0, entry_1_1]
+    table_report = pandas.DataFrame(data=entries)
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
