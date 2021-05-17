@@ -3871,8 +3871,8 @@ def organize_report_stratification_by_missingness_contingency_table(
     entry_0_1 = str(str(count_0_1) + " (" + str(percentage_0_1) + "%)")
     entry_1_0 = str(str(count_1_0) + " (" + str(percentage_1_0) + "%)")
     entry_1_1 = str(str(count_1_1) + " (" + str(percentage_1_1) + "%)")
-    name_missing_false = str(column_missingness + " valid")
-    name_missing_true = str(column_missingness + " missing")
+    name_missing_false = str(column_missingness + "-valid")
+    name_missing_true = str(column_missingness + "-missing")
     entries = dict()
     entries[column_stratification] = stratifications
     entries[name_missing_false] = [entry_0_0, entry_1_0]
@@ -3896,11 +3896,11 @@ def organize_report_stratification_by_missingness_contingency_table(
         ))
         print("versus")
         print(str(column_missingness + " missingness"))
-        utility.print_terminal_partition(level=3)
-        print(table_report)
-        print(table_contingency)
-        print(table_contingency.to_numpy())
         utility.print_terminal_partition(level=4)
+        print(table_report)
+        #print(table_contingency)
+        #print(table_contingency.to_numpy())
+        utility.print_terminal_partition(level=5)
         print("chi2: " + str(chi2))
         print("probability: " + str(probability))
     pass
@@ -8706,7 +8706,7 @@ def execute_analyze_sex_cohorts_hormones(
     # Copy information.
     table = table.copy(deep=True)
 
-    organize_report_stratification_by_missingness_contingency_table(
+    utility.organize_report_stratification_by_missingness_contingency_table(
         column_stratification="sex_text",
         stratifications=["female", "male"],
         column_missingness="testosterone",
