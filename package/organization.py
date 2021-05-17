@@ -3852,10 +3852,30 @@ def organize_report_stratification_by_missingness_contingency_table(
         rownames=[column_primary],
         colnames=[column_secondary],
     )
+    # Chi-square test.
     (chi2, probability, freedom, expectation) = scipy.stats.chi2_contingency(
         table_contingency.to_numpy(),
         correction=True,
     )
+    # Percentages.
+    count_total = table_contingency.shape[0]
+    count_0_0 = table_contingency.to_numpy()[0][0]
+    count_0_1 = table_contingency.to_numpy()[0][1]
+    count_1_0 = table_contingency.to_numpy()[1][0]
+    count_1_1 = table_contingency.to_numpy()[1][1]
+    percentage_0_0 = round(float((count_0_0 / count_total) * 100), 2)
+    percentage_0_1 = round(float((count_0_1 / count_total) * 100), 2)
+    percentage_1_0 = round(float((count_1_0 / count_total) * 100), 2)
+    percentage_1_1 = round(float((count_1_1 / count_total) * 100), 2)
+    entry_0_0 = str(str(count_0_0) + " (" + str(percentage_0_0) + "%)")
+    entry_0_1 = str(str(count_0_1) + " (" + str(percentage_0_1) + "%)")
+    entry_1_0 = str(str(count_1_0) + " (" + str(percentage_1_0) + "%)")
+    entry_1_1 = str(str(count_1_1) + " (" + str(percentage_1_1) + "%)")
+    table_report = pandas.DataFrame(data={
+        [column_stratification]: [stratifications],
+        [str(column_missingness + " valid")]: [entry_0_0, entry_0_1],
+        [str(column_missingness + " missing")]: [entry_1_0, entry_1_1],
+    })
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -3863,12 +3883,13 @@ def organize_report_stratification_by_missingness_contingency_table(
             "Contingency table and Chi2 test for independence."
         )
         print(str(
-            column_stratification + "values: " +
+            column_stratification + " values: " +
             stratifications[0] + ", " + stratifications[1]
         ))
         print("versus")
         print(str(column_missingness + " missingness"))
         utility.print_terminal_partition(level=3)
+        print(table_report)
         print(table_contingency)
         print(table_contingency.to_numpy())
         utility.print_terminal_partition(level=4)
@@ -8677,7 +8698,6 @@ def execute_analyze_sex_cohorts_hormones(
     # Copy information.
     table = table.copy(deep=True)
 
-    print("sex by missing testosterone")
     organize_report_stratification_by_missingness_contingency_table(
         column_stratification="sex_text",
         stratifications=["female", "male"],
