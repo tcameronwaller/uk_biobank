@@ -3877,6 +3877,7 @@ def organize_report_stratification_by_missingness_contingency_table(
     pass
 
 
+# TODO: the 3 functions below are from "bimodality" as examples of contingency...
 
 def organize_contingency_table_chi(
     persons_selection=None,
@@ -8583,7 +8584,6 @@ def execute_genotype_sex_age_body(
 
 def execute_sex_hormones(
     table=None,
-    selection=None,
     report=None,
 ):
     """
@@ -8592,7 +8592,6 @@ def execute_sex_hormones(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        selection (str): type of table to select and return
         report (bool): whether to print reports
 
     raises:
@@ -8613,9 +8612,9 @@ def execute_sex_hormones(
         utility.print_terminal_partition(level=2)
         print("report: execute_sex_hormones()")
         utility.print_terminal_partition(level=3)
-        print(pail_hormone[selection])
+        print(pail_hormone["table_report"])
     # Return information.
-    return pail_hormone[selection]
+    return pail_hormone
 
 
 def execute_female_menstruation(
