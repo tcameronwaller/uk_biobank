@@ -102,8 +102,6 @@ def initialize_directories(
 ##########
 # Read
 
-# TODO: new function to read in and organize the import table...
-
 
 def read_organize_uk_biobank_import_table(
     path_dock=None,
@@ -126,7 +124,8 @@ def read_organize_uk_biobank_import_table(
     raises:
 
     returns:
-        (object): source information
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
@@ -150,16 +149,9 @@ def read_organize_uk_biobank_import_table(
         :, table_import.columns.isin([
             "eid",
             "icd_bipolar", "bipolar.diag2", "SmithBipolar", "SmithMood",
-            "Total.Manifestations", "MHQ.bipolar.Definition", "bipolar",
-            "bipolar.cc",
+            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
         ])
     ]
-    table_import["eid"].astype("string")
-    table_import.set_index(
-        "eid",
-        drop=True,
-        inplace=True,
-    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -823,6 +815,7 @@ def merge_table_variables_identifiers(
     table_identifier_pairs=None,
     table_ukb_41826=None,
     table_ukb_43878=None,
+    table_import=None,
     report=None,
 ):
     """
@@ -835,6 +828,8 @@ def merge_table_variables_identifiers(
             phenotype accession 41826
         table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 43878
+        table_import (object): Pandas data frame of phenotype variables across
+            UK Biobank cohort for import
         report (bool): whether to print reports
 
     raises:
@@ -853,6 +848,8 @@ def merge_table_variables_identifiers(
         print(table_ukb_41826)
         utility.print_terminal_partition(level=2)
         print(table_ukb_43878)
+        utility.print_terminal_partition(level=2)
+        print(table_import)
     # Remove rows with null values of merge identifier.
     table_identifier_pairs.dropna(
         axis="index",
@@ -872,7 +869,12 @@ def merge_table_variables_identifiers(
         subset=["eid"],
         inplace=True,
     )
-
+    table_import.dropna(
+        axis="index",
+        how="any",
+        subset=["eid"],
+        inplace=True,
+    )
     # Organize data.
     table_identifier_pairs.astype("string")
     table_identifier_pairs.set_index(
@@ -888,6 +890,12 @@ def merge_table_variables_identifiers(
     )
     table_ukb_43878["eid"].astype("string")
     table_ukb_43878.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    table_import["eid"].astype("string")
+    table_import.set_index(
         "eid",
         drop=True,
         inplace=True,
@@ -908,6 +916,13 @@ def merge_table_variables_identifiers(
         left_on="eid",
         right_on="eid",
         suffixes=("_41826", "_43878"),
+    )
+    table_merge = table_merge.merge(
+        table_import,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_merge", "_import"),
     )
     # Remove excess columns.
 
@@ -1153,6 +1168,8 @@ def write_product(
 # Procedure
 
 
+# TODO: new parameter for whether to read in and merge the import table...
+
 def execute_procedure(
     path_dock=None,
 ):
@@ -1185,30 +1202,33 @@ def execute_procedure(
         report=True,
     )
 
+    # Remove data columns for irrelevant variable instances.
+    prune = remove_table_irrelevant_field_instance_columns(
+        table_ukbiobank_variables=source["table_ukbiobank_variables"],
+        columns_accession=source["columns_accession"],
+        table_ukb_41826=source["table_ukb_41826"],
+        table_ukb_43878=source["table_ukb_43878"],
+        report=True,
+    )
+    # Simplify UK Biobank fields with multiple instances.
+    # Reduce these multiple field instance columns to arrays.
+    table_ukb_41826_simple = simplify_field_instances_array_columns(
+        table_ukbiobank_variables=source["table_ukbiobank_variables"],
+        table_ukb_raw=prune["table_ukb_41826"],
+        delimiter=";",
+        report=True,
+    )
+
+    # Merge tables.
+    table_merge = merge_table_variables_identifiers(
+        table_identifier_pairs=source["table_identifier_pairs"],
+        table_ukb_41826=table_ukb_41826_simple,
+        table_ukb_43878=prune["table_ukb_43878"],
+        table_import=source["table_import"],
+        report=True,
+    )
+
     if False:
-        # Remove data columns for irrelevant variable instances.
-        prune = remove_table_irrelevant_field_instance_columns(
-            table_ukbiobank_variables=source["table_ukbiobank_variables"],
-            columns_accession=source["columns_accession"],
-            table_ukb_41826=source["table_ukb_41826"],
-            table_ukb_43878=source["table_ukb_43878"],
-            report=True,
-        )
-        # Simplify UK Biobank fields with multiple instances.
-        # Reduce these multiple field instance columns to arrays.
-        table_ukb_41826_simple = simplify_field_instances_array_columns(
-            table_ukbiobank_variables=source["table_ukbiobank_variables"],
-            table_ukb_raw=prune["table_ukb_41826"],
-            delimiter=";",
-            report=True,
-        )
-        # Merge tables.
-        table_merge = merge_table_variables_identifiers(
-            table_identifier_pairs=source["table_identifier_pairs"],
-            table_ukb_41826=table_ukb_41826_simple,
-            table_ukb_43878=prune["table_ukb_43878"],
-            report=True,
-        )
         # Exclude persons who withdrew consent from the UK Biobank.
         table_exclusion = exclude_persons_ukbiobank_consent(
             exclusion_identifiers=source["exclusion_identifiers"],
