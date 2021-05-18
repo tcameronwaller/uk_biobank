@@ -102,6 +102,74 @@ def initialize_directories(
 ##########
 # Read
 
+# TODO: new function to read in and organize the import table...
+
+
+def read_organize_uk_biobank_import_table(
+    path_dock=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Specify directories and files.
+    path_table_import = os.path.join(
+        path_dock, "access", "ukbiobank_import",
+        "waller_import_20210518.derived.csv.gz"
+    )
+    # Read information from file.
+    table_import = pandas.read_csv(
+        path_table_import,
+        sep=",", # "," or "\t"
+        header=0,
+        #dtype=variables_types,
+        na_values=["NA", "<NA>"],
+        keep_default_na=True,
+        compression="gzip",
+    )
+    # Organize table.
+    table_import = table_import.loc[
+        :, table_import.columns.isin([
+            "eid",
+            "icd_bipolar", "bipolar.diag2", "SmithBipolar", "SmithMood",
+            "Total.Manifestations", "MHQ.bipolar.Definition", "bipolar",
+            "bipolar.cc",
+        ])
+    ]
+    table_import["eid"].astype("string")
+    table_import.set_index(
+        "eid",
+        drop=True,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("read_organize_uk_biobank_import_table()")
+        print(table_import)
+        utility.print_terminal_partition(level=2)
+        pass
+    # Return information.
+    return table_import
+
 
 def read_ukbiobank_table_column_names(
     path_file=None,
@@ -265,6 +333,11 @@ def read_source(
 
     """
 
+    # Read and organize table of variables across UK Biobank persons for import.
+    table_import = read_organize_uk_biobank_import_table(
+        path_dock=path_dock,
+        report=report,
+    )
     # Specify directories and files.
     path_table_ukbiobank_variables = os.path.join(
         path_dock, "parameters", "uk_biobank",
@@ -347,6 +420,7 @@ def read_source(
     )
     # Compile and return information.
     return {
+        "table_import": table_import,
         "table_ukbiobank_variables": table_ukbiobank_variables,
         "columns_accession": columns_accession,
         "exclusion_identifiers": exclusion_identifiers,
@@ -354,7 +428,6 @@ def read_source(
         "table_ukb_41826": table_ukb_41826,
         "table_ukb_43878": table_ukb_43878,
     }
-
 
 
 ##########
@@ -1111,58 +1184,60 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    # Remove data columns for irrelevant variable instances.
-    prune = remove_table_irrelevant_field_instance_columns(
-        table_ukbiobank_variables=source["table_ukbiobank_variables"],
-        columns_accession=source["columns_accession"],
-        table_ukb_41826=source["table_ukb_41826"],
-        table_ukb_43878=source["table_ukb_43878"],
-        report=True,
-    )
-    # Simplify UK Biobank fields with multiple instances.
-    # Reduce these multiple field instance columns to arrays.
-    table_ukb_41826_simple = simplify_field_instances_array_columns(
-        table_ukbiobank_variables=source["table_ukbiobank_variables"],
-        table_ukb_raw=prune["table_ukb_41826"],
-        delimiter=";",
-        report=True,
-    )
-    # Merge tables.
-    table_merge = merge_table_variables_identifiers(
-        table_identifier_pairs=source["table_identifier_pairs"],
-        table_ukb_41826=table_ukb_41826_simple,
-        table_ukb_43878=prune["table_ukb_43878"],
-        report=True,
-    )
-    # Exclude persons who withdrew consent from the UK Biobank.
-    table_exclusion = exclude_persons_ukbiobank_consent(
-        exclusion_identifiers=source["exclusion_identifiers"],
-        table=table_merge,
-        report=True,
-    )
-    # Drop any records (persons) with null values across all variables.
-    table_valid = drop_null_records_all_variables(
-        table=table_exclusion,
-        columns_any=["IID"],
-        report=True,
-    )
 
-    # Write out raw tables for inspection.
-    # Collect information.
-    information = dict()
-    information["raw"] = dict()
-    information["inspection"] = dict()
-    information["assembly"] = dict()
-    information["raw"]["table_ukb_41826"] = (
-        source["table_ukb_41826"].iloc[0:10000, :]
-    )
-    information["inspection"]["table_phenotypes"] = (
-        table_valid.iloc[0:10000, :]
-    )
-    information["assembly"]["table_phenotypes"] = table_valid
-    # Write product information to file.
-    write_product(
-        paths=paths,
-        information=information
-    )
+    if False:
+        # Remove data columns for irrelevant variable instances.
+        prune = remove_table_irrelevant_field_instance_columns(
+            table_ukbiobank_variables=source["table_ukbiobank_variables"],
+            columns_accession=source["columns_accession"],
+            table_ukb_41826=source["table_ukb_41826"],
+            table_ukb_43878=source["table_ukb_43878"],
+            report=True,
+        )
+        # Simplify UK Biobank fields with multiple instances.
+        # Reduce these multiple field instance columns to arrays.
+        table_ukb_41826_simple = simplify_field_instances_array_columns(
+            table_ukbiobank_variables=source["table_ukbiobank_variables"],
+            table_ukb_raw=prune["table_ukb_41826"],
+            delimiter=";",
+            report=True,
+        )
+        # Merge tables.
+        table_merge = merge_table_variables_identifiers(
+            table_identifier_pairs=source["table_identifier_pairs"],
+            table_ukb_41826=table_ukb_41826_simple,
+            table_ukb_43878=prune["table_ukb_43878"],
+            report=True,
+        )
+        # Exclude persons who withdrew consent from the UK Biobank.
+        table_exclusion = exclude_persons_ukbiobank_consent(
+            exclusion_identifiers=source["exclusion_identifiers"],
+            table=table_merge,
+            report=True,
+        )
+        # Drop any records (persons) with null values across all variables.
+        table_valid = drop_null_records_all_variables(
+            table=table_exclusion,
+            columns_any=["IID"],
+            report=True,
+        )
+
+        # Write out raw tables for inspection.
+        # Collect information.
+        information = dict()
+        information["raw"] = dict()
+        information["inspection"] = dict()
+        information["assembly"] = dict()
+        information["raw"]["table_ukb_41826"] = (
+            source["table_ukb_41826"].iloc[0:10000, :]
+        )
+        information["inspection"]["table_phenotypes"] = (
+            table_valid.iloc[0:10000, :]
+        )
+        information["assembly"]["table_phenotypes"] = table_valid
+        # Write product information to file.
+        write_product(
+            paths=paths,
+            information=information
+        )
     pass
