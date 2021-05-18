@@ -139,7 +139,7 @@ def read_organize_uk_biobank_import_table(
         path_table_import,
         sep=",", # "," or "\t"
         header=0,
-        #dtype=variables_types,
+        dtype="string",
         na_values=["NA", "<NA>"],
         keep_default_na=True,
         compression="gzip",
