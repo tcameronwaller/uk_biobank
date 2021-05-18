@@ -33,10 +33,9 @@ path_destination=$2
 ###########################################################################
 # Organize paths.
 cd ~/paths
-path_ukb_phenotype_data=$(<"./ukbiobank_phenotype.txt")
-path_exclusion="$path_ukb_phenotype_data/exclude.csv"
-path_ukb_parameter=$(<"./ukbiobank_parameter.txt")
-path_identifier_pairs="$path_ukb_parameter/link.file.csv"
+path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
+path_exclusion="$path_ukb_phenotype/exclude.csv"
+path_identifier_pairs="${path_ukb_phenotype}/ukb41826/link.file.csv"
 path_ukb_tools=$(<"./ukbiobank_tools.txt")
 
 ###########################################################################
@@ -57,21 +56,21 @@ cp $path_exclusion "${path_destination}/list_exclusion_identifiers.txt"
 # https://biobank.ctsu.ox.ac.uk/crystal/exinfo.cgi?src=accessing_data_guide
 # https://biobank.ctsu.ox.ac.uk/~bbdatan/Accessing_UKB_data_v2.3.pdf
 cd $path_destination
-accessions=($(ls -d $path_ukb_phenotype_data/ukb*))
+accessions=($(ls -d $path_ukb_phenotype/ukb*))
 for i in "${accessions[@]}"; do
     echo $i
     dir=`basename $i`
     # Remove log file to avoid error.
-    rm $path_ukb_phenotype_data/$dir/$dir.log
+    rm $path_ukb_phenotype/$dir/$dir.log
     # Convert data to text file with comma ("csv") or tab ("txt") delimiters.
     # The option ("txt") for tab delimiters seems to be malfunctional.
     # The tab delimiter format has different counts of columns in header and
     # body rows.
-    $path_ukb_tools/ukbconv $path_ukb_phenotype_data/$dir/$dir.enc_ukb csv -i"./variables.txt" -o"./$dir.raw"
+    $path_ukb_tools/ukbconv $path_ukb_phenotype/$dir/$dir.enc_ukb csv -i"./variables.txt" -o"./$dir.raw"
     # Rename product file.
     #mv "./$dir.raw.csv" "./$dir.raw.tsv"
     # Remove log file to avoid error.
-    rm $path_ukb_phenotype_data/$dir/$dir.log
+    rm $path_ukb_phenotype/$dir/$dir.log
 done
 
 echo "----------------------------------------------------------------------"
