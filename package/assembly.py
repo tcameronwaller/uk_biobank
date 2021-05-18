@@ -1228,36 +1228,35 @@ def execute_procedure(
         report=True,
     )
 
-    if False:
-        # Exclude persons who withdrew consent from the UK Biobank.
-        table_exclusion = exclude_persons_ukbiobank_consent(
-            exclusion_identifiers=source["exclusion_identifiers"],
-            table=table_merge,
-            report=True,
-        )
-        # Drop any records (persons) with null values across all variables.
-        table_valid = drop_null_records_all_variables(
-            table=table_exclusion,
-            columns_any=["IID"],
-            report=True,
-        )
+    # Exclude persons who withdrew consent from the UK Biobank.
+    table_exclusion = exclude_persons_ukbiobank_consent(
+        exclusion_identifiers=source["exclusion_identifiers"],
+        table=table_merge,
+        report=True,
+    )
+    # Drop any records (persons) with null values across all variables.
+    table_valid = drop_null_records_all_variables(
+        table=table_exclusion,
+        columns_any=["IID"],
+        report=True,
+    )
 
-        # Write out raw tables for inspection.
-        # Collect information.
-        information = dict()
-        information["raw"] = dict()
-        information["inspection"] = dict()
-        information["assembly"] = dict()
-        information["raw"]["table_ukb_41826"] = (
-            source["table_ukb_41826"].iloc[0:10000, :]
-        )
-        information["inspection"]["table_phenotypes"] = (
-            table_valid.iloc[0:10000, :]
-        )
-        information["assembly"]["table_phenotypes"] = table_valid
-        # Write product information to file.
-        write_product(
-            paths=paths,
-            information=information
-        )
+    # Write out raw tables for inspection.
+    # Collect information.
+    information = dict()
+    information["raw"] = dict()
+    information["inspection"] = dict()
+    information["assembly"] = dict()
+    information["raw"]["table_ukb_41826"] = (
+        source["table_ukb_41826"].iloc[0:10000, :]
+    )
+    information["inspection"]["table_phenotypes"] = (
+        table_valid.iloc[0:10000, :]
+    )
+    information["assembly"]["table_phenotypes"] = table_valid
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
     pass
