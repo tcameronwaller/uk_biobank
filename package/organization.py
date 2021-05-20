@@ -1678,10 +1678,31 @@ def organize_sex_hormone_variables(
             table=table_report,
         )
         organize_report_column_pair_correlations(
+            column_one="testosterone",
+            column_two="testosterone_bioavailable",
+            table=table_report,
+        )
+        organize_report_column_pair_correlations(
+            column_one="testosterone_free",
+            column_two="testosterone_bioavailable",
+            table=table_report,
+        )
+        organize_report_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_free",
             table=table_report,
         )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol",
+            column_two="oestradiol_bioavailable",
+            table=table_report,
+        )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol_free",
+            column_two="oestradiol_bioavailable",
+            table=table_report,
+        )
+
     # Collect information.
     pail = dict()
     pail["table"] = table
