@@ -1628,26 +1628,6 @@ def organize_sex_hormone_variables(
         :, table_report.columns.isin(columns_report)
     ]
     table_report = table_report[[*columns_report]]
-    # Organize information for bioavailable testosterone.
-    # Select records with valid (non-null) values of relevant variables.
-    # Exclude missing values first to avoid interpretation of "None" as False.
-    table_bioavailability = select_valid_records_all_specific_variables(
-        names=[
-            "eid", "IID",
-            "sex", "sex_text",# "age", "body_mass_index",
-            "testosterone", "steroid_globulin", "albumin",
-        ],
-        prefixes=[],#["genotype_pc_",],
-        table=table_clean,
-        drop_columns=True,
-        report=False,
-    )
-    table_bioavailability_female = table_bioavailability.loc[
-        (table_bioavailability["sex_text"] == "female"), :
-    ]
-    table_bioavailability_male = table_bioavailability.loc[
-        (table_bioavailability["sex_text"] == "male"), :
-    ]
     # Report.
     if report:
         # Column name translations.
@@ -1662,46 +1642,82 @@ def organize_sex_hormone_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
-        # Valid information for bioavailable testosterone.
-        print("Valid information for bioavailable testosterone: ")
-        print("... requires testosterone, steroid globulin, and albumin...")
-        print(
-            "Count females: " + str(table_bioavailability_female.shape[0])
-        )
-        print(
-            "Count males: " + str(table_bioavailability_male.shape[0])
-        )
+
+        utility.print_terminal_partition(level=2)
+        print("correlations in MALES!")
+        table_male = table_clean.loc[
+            (table_clean["sex_text"] == "male"), :
+        ]
         utility.print_terminal_partition(level=3)
         organize_report_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_free",
-            table=table_report,
+            table=table_male,
         )
         organize_report_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_bioavailable",
-            table=table_report,
+            table=table_male,
         )
         organize_report_column_pair_correlations(
             column_one="testosterone_free",
             column_two="testosterone_bioavailable",
-            table=table_report,
+            table=table_male,
         )
         organize_report_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_free",
-            table=table_report,
+            table=table_male,
         )
         organize_report_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_bioavailable",
-            table=table_report,
+            table=table_male,
         )
         organize_report_column_pair_correlations(
             column_one="oestradiol_free",
             column_two="oestradiol_bioavailable",
-            table=table_report,
+            table=table_male,
         )
+
+        utility.print_terminal_partition(level=2)
+        print("correlations in FEMALES!")
+        table_female = table.loc[
+            (table["sex_text"] == "female"), :
+        ]
+        utility.print_terminal_partition(level=3)
+        organize_report_column_pair_correlations(
+            column_one="testosterone",
+            column_two="testosterone_free",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="testosterone",
+            column_two="testosterone_bioavailable",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="testosterone_free",
+            column_two="testosterone_bioavailable",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol",
+            column_two="oestradiol_free",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol",
+            column_two="oestradiol_bioavailable",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="oestradiol_free",
+            column_two="oestradiol_bioavailable",
+            table=table_female,
+        )
+
+
 
     # Collect information.
     pail = dict()
