@@ -3023,6 +3023,9 @@ def determine_female_menstruation_phase(
     """
     Determine a female person's categorical menstruation phase.
 
+    0: follicular phase of menstruation
+    1: luteal phase of menstruation
+
     arguments:
         sex_text (str): textual representation of sex selection
         menopause_ordinal (float): ordinal representation of whether female
@@ -8881,7 +8884,6 @@ def execute_female_menstruation(
 
 # TODO: new function to compare and report on sex hormones in sex-relevant cohorts
 
-
 def execute_analyze_sex_cohorts_hormones(
     table=None,
     report=None,
@@ -8944,8 +8946,6 @@ def execute_analyze_sex_cohorts_hormones(
         utility.print_terminal_partition(level=3)
     # Return information.
     pass
-
-
 
 
 def execute_plot_hormones(
