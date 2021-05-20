@@ -8818,7 +8818,6 @@ def write_product(
 
 def execute_genotype_sex_age_body(
     table=None,
-    selection=None,
     report=None,
 ):
     """
