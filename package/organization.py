@@ -8962,6 +8962,13 @@ def execute_analyze_sex_cohorts_hormones(
         table=table,
         report=True,
     )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="sex_text",
+        stratifications=["female", "male"],
+        column_missingness="oestradiol",
+        table=table,
+        report=True,
+    )
     # Filter to females who were not pregnant.
     table_female = table.loc[
         (table["sex_text"] == "female"), :
@@ -8971,14 +8978,28 @@ def execute_analyze_sex_cohorts_hormones(
     ]
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="menopause_ordinal",
-        stratifications=[0, 2],
+        stratifications=[0, 1], # premenopause versus perimenopause
         column_missingness="testosterone",
         table=table_female_not_pregnant,
         report=True,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="menopause_ordinal",
-        stratifications=[0, 2],
+        stratifications=[0, 1], # premenopause versus perimenopause
+        column_missingness="oestradiol",
+        table=table_female_not_pregnant,
+        report=True,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 2], # premenopause versus postmenopause
+        column_missingness="testosterone",
+        table=table_female_not_pregnant,
+        report=True,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 2], # premenopause versus postmenopause
         column_missingness="oestradiol",
         table=table_female_not_pregnant,
         report=True,
