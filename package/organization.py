@@ -994,11 +994,12 @@ def organize_sex_age_body_variables(
 ##########
 # Sex hormones
 # Review:
+# 20 May 2021: TCW verified formulas for estimation of free testosterone,
+# bioavailable testosterone, free oestradiol, and bioavailable oestradiol
 # 11 March 2021: TCW verified formulas for estimation of free oestradiol
 # 11 March 2021: TCW verified formulas for estimation of free testosterone
 # 11 March 2021: TCW verified UK Biobank fields and their codings.
 
-# TODO: implement bioavailable oestradiol and testosterone
 # TODO: also implement the natural log definition of bioavailable testosterone...
 # Chung, Pathology Informatics, 2017 (PubMed:28828199)
 
@@ -1020,6 +1021,9 @@ def convert_hormone_concentration_units_moles_per_liter(
 
     UK Biobank field 30850, concentration in nanomoles per liter (nmol/L) of
     total testosterone in blood
+
+    UK Biobank field 30890, concentration in nanomoles per liter (nmol/L) of
+    vitamin D in blood
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -1062,10 +1066,16 @@ def convert_hormone_concentration_units_moles_per_liter(
         ),
         axis="columns", # apply across rows
     ) # 1 mol = 1E9 nmol
+    table["vitamin_d"] = table.apply(
+        lambda row: float(
+            (row["30890-0.0"] / 1E9) * factors_concentration["vitamin_d"]
+        ),
+        axis="columns", # apply across rows
+    ) # 1 mol = 1E9 nmol
     # Return information.
     return table
 
-# TODO: check accuracy of formula implementation
+
 def calculate_estimation_free_testosterone(
     testosterone=None,
     albumin=None,
@@ -1157,7 +1167,7 @@ def calculate_estimation_free_testosterone(
     # Return information.
     return testosterone_free
 
-# TODO: check accuracy of formula implementation
+
 def calculate_estimation_bioavailable_testosterone(
     testosterone_free=None,
     albumin=None,
@@ -1235,7 +1245,7 @@ def calculate_estimation_bioavailable_testosterone(
     # Return information.
     return testosterone_bioavailable
 
-# TODO: check accuracy of formula implementation
+
 def calculate_estimation_free_oestradiol(
     oestradiol=None,
     testosterone_free=None,
@@ -1342,7 +1352,7 @@ def calculate_estimation_free_oestradiol(
     # Return information.
     return oestradiol_free
 
-# TODO: check accuracy of formula implementation
+
 def calculate_estimation_bioavailable_oestradiol(
     oestradiol=None,
     oestradiol_free=None,
@@ -1496,6 +1506,53 @@ def organize_report_column_pair_correlations(
     pass
 
 
+def organize_plot_cohort_sex_hormone_variable_distributions(
+    prefix=None,
+    bins=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        prefix (str): prefix for cohort and figure name
+        bins (int): count of bins for histogram
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about figures
+
+    """
+
+    # Collect information for plots.
+    pail = dict()
+    # Iterate on relevant variables.
+    columns = [
+        "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
+        "steroid_globulin", "steroid_globulin_log",
+        "albumin", "albumin_log",
+        "age",
+    ]
+    for column in columns:
+        if len(str(prefix)) > 0:
+            name = str(prefix + "_" + column)
+        else:
+            name = column
+        pail[name] = plot_variable_values_histogram(
+            name=name,
+            array=table[column].dropna().to_numpy(),
+            bins=bins,
+        )
+    # Return information.
+    return pail
+
+
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -1528,6 +1585,7 @@ def organize_sex_hormone_variables(
     factors_concentration["testosterone"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
+    factors_concentration["vitamin_d"] = 1E9 # 1 nmol / L
     table = convert_hormone_concentration_units_moles_per_liter(
         table=table,
         factors_concentration=factors_concentration,
@@ -1591,6 +1649,7 @@ def organize_sex_hormone_variables(
         "albumin", "steroid_globulin",
         "oestradiol", "oestradiol_free", "oestradiol_bioavailable",
         "testosterone", "testosterone_free", "testosterone_bioavailable",
+        "vitamin_d",
     ]
     table = convert_table_columns_variables_types_float(
         columns=columns_hormones,
@@ -1606,7 +1665,7 @@ def organize_sex_hormone_variables(
     table_clean = table.copy(deep=True)
     table_clean.drop(
         labels=[
-            "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0",
+            "30600-0.0", "30830-0.0", "30850-0.0", "30800-0.0", "30890-0.0",
         ],
         axis="columns",
         inplace=True
@@ -1623,6 +1682,7 @@ def organize_sex_hormone_variables(
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
         "testosterone_bioavailable", "testosterone_bioavailable_log",
+        "vitamin_d", "vitamin_d_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -1717,60 +1777,11 @@ def organize_sex_hormone_variables(
             table=table_female,
         )
 
-
-
     # Collect information.
     pail = dict()
     pail["table"] = table
     pail["table_clean"] = table_clean
     pail["table_report"] = table_report
-    # Return information.
-    return pail
-
-
-def organize_plot_cohort_sex_hormone_variable_distributions(
-    prefix=None,
-    bins=None,
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        prefix (str): prefix for cohort and figure name
-        bins (int): count of bins for histogram
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): collection of information about figures
-
-    """
-
-    # Collect information for plots.
-    pail = dict()
-    # Iterate on relevant variables.
-    columns = [
-        "oestradiol", "oestradiol_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "testosterone", "testosterone_log",
-        "testosterone_free", "testosterone_free_log",
-        "steroid_globulin", "steroid_globulin_log",
-        "albumin", "albumin_log",
-        "age",
-    ]
-    for column in columns:
-        if len(str(prefix)) > 0:
-            name = str(prefix + "_" + column)
-        else:
-            name = column
-        pail[name] = plot_variable_values_histogram(
-            name=name,
-            array=table[column].dropna().to_numpy(),
-            bins=bins,
-        )
     # Return information.
     return pail
 
@@ -8823,7 +8834,8 @@ def execute_genotype_sex_age_body(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
 
     """
 
@@ -8844,9 +8856,9 @@ def execute_genotype_sex_age_body(
         utility.print_terminal_partition(level=2)
         print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
-        print(pail_sex_age_body[selection])
+        print(pail_sex_age_body)
     # Return information.
-    return pail_sex_age_body[selection]
+    return pail_sex_age_body
 
 
 def execute_sex_hormones(
@@ -8864,7 +8876,8 @@ def execute_sex_hormones(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
 
     """
 
