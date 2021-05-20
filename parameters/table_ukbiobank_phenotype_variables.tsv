@@ -12,33 +12,33 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	ins
 1	30600	float32	hormone	albumin	432326	ratio	Albumin	Blood biochemistry		0.0;	greater coverage than albumin_urine
 1	30830	float32	hormone	steroid_globulin	428164	ratio	SHBG	Blood biochemistry		0.0;	
 1	30850	float32	hormone	testosterone	427051	ratio	Testosterone	Blood biochemistry		0.0;	
-	30855	string	hormone		69056		Testosterone missing reason	Blood biochemistry processing			
-	30856	string	hormone		467016		Testosterone reportability	Blood biochemistry processing			
+	30855	string	hormone		69056		Testosterone missing reason	Blood biochemistry processing		0.0;	
+	30856	string	hormone		467016		Testosterone reportability	Blood biochemistry processing		0.0;	
 1	30800	float32	hormone	oestradiol	77713	ratio	Oestradiol	Blood biochemistry		0.0;	
-	30805	string	hormone		417418		Oestradiol missing reason	Blood biochemistry processing			
-	30806	string	hormone		439780		Oestradiol reportability	Blood biochemistry processing			
+	30805	string	hormone		417418		Oestradiol missing reason	Blood biochemistry processing		0.0;	
+	30806	string	hormone		439780		Oestradiol reportability	Blood biochemistry processing		0.0;	
 1	30890	float32	hormone		449928		Vitamin D	Blood biochemistry		0.0;	
 1	30750	float32	metabolism		467885		Glycated haemoglobin (HbA1c)	Blood biochemistry		0.0;	
-1	30740	float32	metabolism		431819		Glucose	Blood biochemistry			
-1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry			
-1	30760	float32	metabolism		432110		HDL cholesterol	Blood biochemistry			
-1	30870	float32	metabolism		470449		Triglycerides	Blood biochemistry			
-1	30630	float32	metabolism		429766		Apolipoprotein A	Blood biochemistry			
-1	30640	float32	metabolism		468487		Apolipoprotein B	Blood biochemistry			
-1	30790	float32	metabolism		377642		Lipoprotein A	Blood biochemistry			
-1	30780	float32	metabolism		469981		LDL direct	Blood biochemistry			
-1	30660	float32	metabolism		401005		Direct bilirubin	Blood biochemistry			
-1	30840	float32	metabolism		468859		Total bilirubin	Blood biochemistry			
-1	30720	float32	metabolism		470790		Cystatin C	Blood biochemistry			
-1	30700	float32	metabolism		470596		Creatinine	Blood biochemistry			
-1	30670	float32	metabolism		470511		Urea	Blood biochemistry			
-1	30880	float32	metabolism		470270		Urate	Blood biochemistry			
-1	30680	float32	metabolism		432165		Calcium	Blood biochemistry			
-1	30810	float32	metabolism		431500		Phosphate	Blood biochemistry			
-1	30860	float32	metabolism		431846		Total protein	Blood biochemistry			
-1	30710	float32	metabolism		469830		C-reactive protein	Blood biochemistry			
-1	30770	float32	metabolism		468358		IGF-1	Blood biochemistry			
-1	30820	float32	metabolism		41986		Rheumatoid factor	Blood biochemistry			
+1	30740	float32	metabolism		431819		Glucose	Blood biochemistry		0.0;	
+1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry		0.0;	
+1	30760	float32	metabolism		432110		HDL cholesterol	Blood biochemistry		0.0;	
+1	30870	float32	metabolism		470449		Triglycerides	Blood biochemistry		0.0;	
+1	30630	float32	metabolism		429766		Apolipoprotein A	Blood biochemistry		0.0;	
+1	30640	float32	metabolism		468487		Apolipoprotein B	Blood biochemistry		0.0;	
+1	30790	float32	metabolism		377642		Lipoprotein A	Blood biochemistry		0.0;	
+1	30780	float32	metabolism		469981		LDL direct	Blood biochemistry		0.0;	
+1	30660	float32	metabolism		401005		Direct bilirubin	Blood biochemistry		0.0;	
+1	30840	float32	metabolism		468859		Total bilirubin	Blood biochemistry		0.0;	
+1	30720	float32	metabolism		470790		Cystatin C	Blood biochemistry		0.0;	
+1	30700	float32	metabolism		470596		Creatinine	Blood biochemistry		0.0;	
+1	30670	float32	metabolism		470511		Urea	Blood biochemistry		0.0;	
+1	30880	float32	metabolism		470270		Urate	Blood biochemistry		0.0;	
+1	30680	float32	metabolism		432165		Calcium	Blood biochemistry		0.0;	
+1	30810	float32	metabolism		431500		Phosphate	Blood biochemistry		0.0;	
+1	30860	float32	metabolism		431846		Total protein	Blood biochemistry		0.0;	
+1	30710	float32	metabolism		469830		C-reactive protein	Blood biochemistry		0.0;	
+1	30770	float32	metabolism		468358		IGF-1	Blood biochemistry		0.0;	
+1	30820	float32	metabolism		41986		Rheumatoid factor	Blood biochemistry		0.0;	
 1	2724	string	female	menopause	272914	nominal	Had menopause	Female-specific factors		0.0;	hysterectomy mimics menopause
 1	3581	string	female		173419		Age at menopause (last menstrual period)	Female-specific factors		0.0;	
 1	3591	string	female	hysterectomy	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0.0;	hysterectomy mimics menopause
