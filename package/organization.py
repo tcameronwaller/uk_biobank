@@ -1655,9 +1655,26 @@ def organize_sex_hormone_variables(
         columns=columns_hormones,
         table=table,
     )
-    # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_table_continuous_ratio_variables(
+    # Impute missing values for hormones.
+    table = utility.impute_continuous_variables_missing_values_half_minimum(
         columns=columns_hormones,
+        table=table,
+        report=True,
+    )
+
+    # Transform variables' values to normalize distributions.
+    columns_hormones_imputation = [
+        "albumin", "steroid_globulin",
+        "albumin_imputation", "steroid_globulin_imputation",
+        "oestradiol", "oestradiol_free", "oestradiol_bioavailable",
+        "oestradiol_imputation",
+        "testosterone", "testosterone_free", "testosterone_bioavailable",
+        "testosterone_imputation",
+        "vitamin_d",
+        "vitamin_d_imputation",
+    ]
+    table = utility.transform_normalize_table_continuous_ratio_variables(
+        columns=columns_hormones_imputation,
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
@@ -1675,14 +1692,20 @@ def organize_sex_hormone_variables(
     columns_report = [
         #"eid",
         "IID",
-        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+        "albumin", "albumin_log",
+        "albumin_imputation", "albumin_imputation_log",
+        "steroid_globulin", "steroid_globulin_log",
+        "steroid_globulin_imputation", "steroid_globulin_imputation_log",
         "oestradiol", "oestradiol_log",
         "oestradiol_free", "oestradiol_free_log",
         "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+        "oestradiol_imputation", "oestradiol_imputation_log",
         "testosterone", "testosterone_log",
         "testosterone_free", "testosterone_free_log",
         "testosterone_bioavailable", "testosterone_bioavailable_log",
+        "testosterone_imputation", "testosterone_imputation_log",
         "vitamin_d", "vitamin_d_log",
+        "vitamin_d_imputation", "vitamin_d_imputation_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -4153,327 +4176,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 
 ##########
 # Hormones in sex-relevant cohorts
-
-
-# TODO: the 3 functions below are from "bimodality" as examples of contingency...
-
-def organize_contingency_table_chi(
-    persons_selection=None,
-    variables_contingency=None,
-    data_persons_properties=None,
-    report=None,
-):
-    """
-    Extracts identifiers of persons with valid genotypes.
-
-    arguments:
-        persons_selection (list<str>): identifiers of persons from selection
-        variables_contingency (list<str>): names of variables for contingency
-        data_persons_properties (object): Pandas data frame of persons'
-            properties
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): information for charts about persons' properties
-
-    """
-
-    # TODO: use pandas.crosstab()
-
-    # Copy data.
-    data_persons_properties = data_persons_properties.copy(deep=True)
-    # Organize data.
-    # Select data for persons.
-    data_persons = data_persons_properties.loc[
-        data_persons_properties.index.isin(persons_selection), :
-    ]
-    data_properties = data_persons.loc[
-        :, data_persons.columns.isin(variables_contingency)
-    ]
-    # Replace missing values with zero.
-    data_properties.fillna(
-        value=False,
-        #axis="columns",
-        inplace=True,
-    )
-    # Contingency table.
-    data_contingency = pandas.crosstab(
-        data_properties[variables_contingency[0]],
-        data_properties[variables_contingency[1]],
-        rownames=[variables_contingency[0]],
-        colnames=[variables_contingency[1]],
-    )
-    (chi2, probability, freedom, expectation) = scipy.stats.chi2_contingency(
-        data_contingency.to_numpy(),
-        correction=True,
-    )
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(
-            "Contingency table and Chi2 test for independence."
-        )
-        print(
-            str(variables_contingency[0]) + " versus " +
-            str(variables_contingency[1])
-        )
-        utility.print_terminal_partition(level=3)
-        print(data_contingency)
-        print(data_contingency.to_numpy())
-        utility.print_terminal_partition(level=4)
-        print("chi2: " + str(chi2))
-        print("probability: " + str(probability))
-
-        if False:
-            # CMV and EBV.
-            persons_male = data_persons_properties.loc[
-                data_persons_properties["sex_text"] == "male", :
-            ].index.to_list()
-            print("persons male: " + str(len(persons_male)))
-            persons_female = data_persons_properties.loc[
-                data_persons_properties["sex_text"] == "female", :
-            ].index.to_list()
-            print("persons female: " + str(len(persons_female)))
-            persons_cmv_ebv = data_persons_properties.loc[
-                data_persons_properties["cmv_ebv"] == True, :
-            ].index.to_list()
-            print("persons cmv_ebv: " + str(len(persons_cmv_ebv)))
-
-    pass
-
-
-def report_persons_properties_correlation(
-    persons_selection=None,
-    variables=None,
-    data_persons_properties=None,
-    method=None,
-    report=None,
-):
-    """
-    Calculates and reports correlation coefficient between properties across
-    persons.
-
-    arguments:
-        persons_selection (list<str>): identifiers of persons from selection
-        variables (list<str>): names of variables for correlation
-        data_persons_properties (object): Pandas data frame of persons'
-            properties
-        method (str): method for correlation, pearson, spearman, or kendall
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): information for charts about persons' properties
-
-    """
-
-    # Copy data.
-    data_persons_properties = data_persons_properties.copy(deep=True)
-    # Organize data.
-    # Select data for persons.
-    data_persons = data_persons_properties.loc[
-        data_persons_properties.index.isin(persons_selection), :
-    ]
-    data_properties = data_persons.loc[
-        :, data_persons.columns.isin(variables)
-    ]
-    # Replace missing values with zero.
-    data_properties.fillna(
-        value=0.0,
-        #axis="columns",
-        inplace=True,
-    )
-    # Calculate correlation coefficient.
-    if method == "pearson":
-        correlation, probability = scipy.stats.pearsonr(
-            data_properties[variables[0]].to_numpy(),
-            data_properties[variables[1]].to_numpy(),
-        )
-    elif method == "spearman":
-        correlation, probability = scipy.stats.spearmanr(
-            data_properties[variables[0]].to_numpy(),
-            data_properties[variables[1]].to_numpy(),
-        )
-    elif method == "kendall":
-        correlation, probability = scipy.stats.kendalltau(
-            data_properties[variables[0]].to_numpy(),
-            data_properties[variables[1]].to_numpy(),
-        )
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print(
-            "Correlation."
-        )
-        print(str(variables[0]) + " versus " + str(variables[1]))
-        utility.print_terminal_partition(level=4)
-        print("correlation: " + str(correlation))
-        print("probability: " + str(probability))
-
-    pass
-
-
-def summarize_persons_properties_associations(
-    persons_sets=None,
-    data_persons_properties=None,
-):
-    """
-    Plots charts from the analysis process.
-
-    arguments:
-        persons (dict<list<str>>): collections of persons' identifiers
-        data_persons_properties (object): Pandas data frame of persons and
-            their properties
-
-    raises:
-
-    returns:
-
-    """
-
-    # Contingency tables and chi2.
-    # Test on persons_selection and on persons_ventilation.
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "sex_text"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "mononucleosis"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "leukocyte"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["leukocyte", "mononucleosis"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["ventilation"],
-        variables_contingency=["sex_text", "mononucleosis"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["ventilation"],
-        variables_contingency=["sex_text", "leukocyte"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "age_grade"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "respiration"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "inflammation"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "smoke"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["inflammation", "age_grade"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "infection"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["ventilation_duration", "hardiness"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["ventilation_duration", "delay"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["ventilation_duration", "age"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["ventilation_duration", "leukocyte_binary"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["ventilation_duration", "mononucleosis_binary"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-
-    report_persons_properties_correlation(
-        persons_selection=persons_sets["selection"],
-        variables=["race_white_scale", "genotype_1"],
-        data_persons_properties=data_persons_properties,
-        method="spearman",
-        report=True,
-    )
-
-
-    organize_contingency_table_chi(
-        persons_selection=persons_sets["selection"],
-        variables_contingency=["ventilation", "infection"],
-        data_persons_properties=data_persons_properties,
-        report=True,
-    )
-
-    # TODO: --> put all this Chi2 and Spearman stuff in its own analysis function
-    # Chi2:
-    # age ordinal versus ventilation ordinal
-    # smoke ordinal versus ventilation ordinal (3-way X 2???)
-    # Spearman correlation
-    # age versus ventilation_duration
-    # smoke versus ventilation_duration
-
-    pass
-
-
 
 
 ##########
@@ -8219,6 +7921,14 @@ def select_organize_plink_cohorts_by_sex_hormones(
     ))
     pail.update(pail_oestradiol_free)
 
+    pail_oestradiol_bioavailable = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="oestradiol_bioavailable_log",
+            table=table,
+    ))
+    pail.update(pail_oestradiol_bioavailable)
+
+
     pail_testosterone = select_organize_plink_cohorts_variables_by_sex_hormone(
         hormone="testosterone_log",
         table=table,
@@ -8231,6 +7941,29 @@ def select_organize_plink_cohorts_by_sex_hormones(
             table=table,
     ))
     pail.update(pail_testosterone_free)
+
+    pail_testosterone_bioavailable = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="testosterone_bioavailable_log",
+            table=table,
+    ))
+    pail.update(pail_testosterone_bioavailable)
+
+    pail_testosterone_imputation = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="testosterone_imputation_log",
+            table=table,
+    ))
+    pail.update(pail_testosterone_imputation)
+
+
+
+    pail_vitamin_d = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="vitamin_d_log",
+            table=table,
+    ))
+    pail.update(pail_vitamin_d)
 
     # Report.
     if report:
@@ -8964,7 +8697,21 @@ def execute_analyze_sex_cohorts_hormones(
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="sex_text",
         stratifications=["female", "male"],
+        column_missingness="testosterone_imputation",
+        table=table,
+        report=True,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="sex_text",
+        stratifications=["female", "male"],
         column_missingness="oestradiol",
+        table=table,
+        report=True,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="sex_text",
+        stratifications=["female", "male"],
+        column_missingness="oestradiol_imputation",
         table=table,
         report=True,
     )
