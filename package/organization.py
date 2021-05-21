@@ -8948,6 +8948,23 @@ def execute_analyze_sex_cohorts_hormones(
     )
 
     # TODO: also consider missingness in "younger" and "older" males
+    table_male = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="age_grade_male",
+        stratifications=[0, 2], # young versus old
+        column_missingness="testosterone",
+        table=table_male,
+        report=True,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="age_grade_male",
+        stratifications=[0, 2], # young versus old
+        column_missingness="oestradiol",
+        table=table_male,
+        report=True,
+    )
 
 
     # Report.
