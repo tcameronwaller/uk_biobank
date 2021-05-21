@@ -456,9 +456,8 @@ def organize_genotype_principal_component_variables(
 # Stratification
 # TODO: some of this functionality should go in the utility code...
 
-# I think I can do most of this using "pandas.cut" or "pandas.qcut"
-# discretize into tertiles, quantiles, pentiles  etc...
 
+# obsolete?
 def determine_stratification_bin_thresholds(
     bin=None,
     values_sort=None,
@@ -534,7 +533,7 @@ def determine_stratification_bin_thresholds(
     # Return information.
     return indices, thresholds
 
-
+# obsolete?
 def collect_stratification_bins_thresholds(
     values=None,
     bins=None,
@@ -574,7 +573,7 @@ def collect_stratification_bins_thresholds(
     # Return information.
     return thresholds
 
-
+# obsolete?
 def determine_stratification_bin(
     value=None,
     thresholds=None,
@@ -609,7 +608,7 @@ def determine_stratification_bin(
     else:
         return float("nan")
 
-
+# obsolete?
 def stratify_persons_continuous_variable_ordinal(
     variable=None,
     variable_grade=None,
@@ -703,42 +702,77 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
 
     # Copy information.
     table = table.copy(deep=True)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=1)
-        print("Stratification bin thresholds...")
-    # Both sexes together.
-    for variable in variables:
-        variable_2 = str(variable + "_bins_2")
-        variable_3 = str(variable + "_bins_3")
-        table[variable_2] = pandas.qcut(
-            table[variable],
-            q=2,
-            labels=[0, 1,],
-        )
-        table[variable_3] = pandas.qcut(
-            table[variable],
-            q=3,
-            labels=[0, 1, 2,],
-        )
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
     # Females.
-    table_female = table_female.copy(deep=True)
+    table_female = table.copy(deep=True)
     table_female = table_female.loc[
         (table_female[sex_text] == "female"), :
     ]
-
     # Males.
-    table_male = table_male.copy(deep=True)
+    table_male = table.copy(deep=True)
     table_male = table_male.loc[
         (table_male[sex_text] == "male"), :
     ]
-
+    # Collect records.
+    table_collection = pandas.DataFrame()
+    # Stratify separately by sex.
+    for variable in variables:
+        variable_female = str(variable + "_grade_female")
+        variable_male = str(variable + "_grade_male")
+        table_female[variable_female] = pandas.qcut(
+            table_female[variable],
+            q=3,
+            labels=[0, 1, 2,],
+        )
+        table_male[variable_male] = pandas.qcut(
+            table_male[variable],
+            q=3,
+            labels=[0, 1, 2,],
+        )
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=2)
+            print("define_ordinal_stratifications_by_sex_continuous_variables")
+            print("variable: " + str(variable))
+            print("female tertiles")
+            print(pandas.qcut(
+                table_female[variable],
+                q=3,
+                labels=[0, 1, 2,],
+            ).value_counts())
+            print("male tertiles")
+            print(pandas.qcut(
+                table_male[variable],
+                q=3,
+                labels=[0, 1, 2,],
+            ).value_counts())
+    # Combine records for female and male persons.
+    table_collection = table_collection.append(
+        table_female,
+        ignore_index=True,
+    )
+    table_collection = table_collection.append(
+        table_male,
+        ignore_index=True,
+    )
+    # Organize table.
+    table_collection.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_collection.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
     # Return information.
-    return table
-
-
-
-
+    return table_collection
 
 
 ##########
@@ -930,12 +964,13 @@ def organize_sex_age_body_variables(
     )
     # Introduce stratification variables by values of continuous variables, in
     # particular age within female and male persons.
-    #table = utility.define_ordinal_stratifications_by_sex_continuous_variables(
-    #    sex_text="sex_text",
-    #    variables=["age"],
-    #    table=table,
-    #    report=report,
-    #)
+    table = define_ordinal_stratifications_by_sex_continuous_variables(
+        index="eid",
+        sex_text="sex_text",
+        variables=["age"],
+        table=table,
+        report=True,
+    )
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -957,7 +992,8 @@ def organize_sex_age_body_variables(
         #"eid",
         "IID",
         "sex", "sex_text",
-        "age", "body_mass_index", "body_mass_index_log",
+        "age", "age_grade_female", "age_grade_male",
+        "body_mass_index", "body_mass_index_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -7653,6 +7689,8 @@ def organize_phenotype_covariate_table_plink_format(
 ##########
 # Cohort selection: sexes, hormones
 # For GWAS of hormones
+
+# TODO: introduce new cohorts for younger and older male persons...
 
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
