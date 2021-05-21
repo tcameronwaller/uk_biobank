@@ -705,7 +705,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     table.reset_index(
         level=None,
         inplace=True,
-        drop=True,
+        drop=False,
     )
     # Females.
     table_female = table.copy(deep=True)
@@ -7291,7 +7291,8 @@ def select_records_by_female_specific_valid_variables_values(
     # Organize table.
     table.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=False,
     )
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
@@ -7367,7 +7368,8 @@ def select_records_by_male_specific_valid_variables_values(
     # Organize table.
     table.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=False,
     )
     # Select records with valid (non-null) values of relevant variables.
     # Exclude missing values first to avoid interpretation of "None" as False.
