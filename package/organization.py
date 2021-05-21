@@ -8717,21 +8717,7 @@ def execute_analyze_sex_cohorts_hormones(
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="sex_text",
         stratifications=["female", "male"],
-        column_missingness="testosterone_imputation",
-        table=table,
-        report=True,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="sex_text",
-        stratifications=["female", "male"],
         column_missingness="oestradiol",
-        table=table,
-        report=True,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="sex_text",
-        stratifications=["female", "male"],
-        column_missingness="oestradiol_imputation",
         table=table,
         report=True,
     )
