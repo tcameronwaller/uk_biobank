@@ -771,6 +771,9 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
         drop=True,
         inplace=True
     )
+    # Report.
+    if report:
+        print(table_collection)
     # Return information.
     return table_collection
 
