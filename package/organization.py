@@ -7566,6 +7566,8 @@ def organize_phenotype_covariate_table_plink_format(
 # Cohort selection: sexes, hormones
 # For GWAS of hormones
 
+# TODO: I need to change the model variable selections...
+# TODO: switch to "menstruation_phase" for 1
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -7659,6 +7661,9 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             remove_null_records=False,
             table=table_female,
     ))
+
+
+    # TODO: I think I can drop this cohort/model...
 
     table_female_combination = (
         select_records_by_sex_specific_valid_variables_values(
@@ -7900,6 +7905,12 @@ def select_organize_plink_cohorts_by_sex_hormones(
         table=table,
     )
     pail.update(pail_albumin)
+    pail_albumin_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="albumin_imputation_log",
+        table=table,
+    )
+    pail.update(pail_albumin_imputation)
+
 
     pail_steroid_globulin = (
         select_organize_plink_cohorts_variables_by_sex_hormone(
@@ -7907,26 +7918,36 @@ def select_organize_plink_cohorts_by_sex_hormones(
             table=table,
     ))
     pail.update(pail_steroid_globulin)
+    pail_steroid_globulin_imputation = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="steroid_globulin_imputation_log",
+            table=table,
+    ))
+    pail.update(pail_steroid_globulin_imputation)
+
 
     pail_oestradiol = select_organize_plink_cohorts_variables_by_sex_hormone(
         hormone="oestradiol_log",
         table=table,
     )
     pail.update(pail_oestradiol)
-
     pail_oestradiol_free = (
         select_organize_plink_cohorts_variables_by_sex_hormone(
             hormone="oestradiol_free_log",
             table=table,
     ))
     pail.update(pail_oestradiol_free)
-
     pail_oestradiol_bioavailable = (
         select_organize_plink_cohorts_variables_by_sex_hormone(
             hormone="oestradiol_bioavailable_log",
             table=table,
     ))
     pail.update(pail_oestradiol_bioavailable)
+    pail_oestradiol_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="oestradiol_imputation_log",
+        table=table,
+    )
+    pail.update(pail_oestradiol_imputation)
 
 
     pail_testosterone = select_organize_plink_cohorts_variables_by_sex_hormone(
@@ -7934,28 +7955,23 @@ def select_organize_plink_cohorts_by_sex_hormones(
         table=table,
     )
     pail.update(pail_testosterone)
-
     pail_testosterone_free = (
         select_organize_plink_cohorts_variables_by_sex_hormone(
             hormone="testosterone_free_log",
             table=table,
     ))
     pail.update(pail_testosterone_free)
-
     pail_testosterone_bioavailable = (
         select_organize_plink_cohorts_variables_by_sex_hormone(
             hormone="testosterone_bioavailable_log",
             table=table,
     ))
     pail.update(pail_testosterone_bioavailable)
-
-    pail_testosterone_imputation = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="testosterone_imputation_log",
-            table=table,
-    ))
+    pail_testosterone_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
+        hormone="testosterone_imputation_log",
+        table=table,
+    )
     pail.update(pail_testosterone_imputation)
-
 
 
     pail_vitamin_d = (
@@ -7964,6 +7980,12 @@ def select_organize_plink_cohorts_by_sex_hormones(
             table=table,
     ))
     pail.update(pail_vitamin_d)
+    pail_vitamin_d_imputation = (
+        select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone="vitamin_d_imputation_log",
+            table=table,
+    ))
+    pail.update(pail_vitamin_d_imputation)
 
     # Report.
     if report:
@@ -7979,8 +8001,6 @@ def select_organize_plink_cohorts_by_sex_hormones(
             )
     # Return information.
     return pail
-
-
 
 
 ##########
