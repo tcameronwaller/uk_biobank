@@ -994,8 +994,11 @@ def organize_sex_age_body_variables(
 ##########
 # Sex hormones
 # Review:
+# 21 May 2021: TCW verified that the minimum values for imputation match the
+# minimum values on UK Biobank Data Showcase for albumin, steroid globulin,
+# oestradiol, testosterone, and vitamin D.
 # 20 May 2021: TCW verified formulas for estimation of free testosterone,
-# bioavailable testosterone, free oestradiol, and bioavailable oestradiol
+# bioavailable testosterone, free oestradiol, and bioavailable oestradiol.
 # 11 March 2021: TCW verified formulas for estimation of free oestradiol
 # 11 March 2021: TCW verified formulas for estimation of free testosterone
 # 11 March 2021: TCW verified UK Biobank fields and their codings.
@@ -1659,7 +1662,7 @@ def organize_sex_hormone_variables(
     table = utility.impute_continuous_variables_missing_values_half_minimum(
         columns=columns_hormones,
         table=table,
-        report=True,
+        report=report,
     )
 
     # Transform variables' values to normalize distributions.
