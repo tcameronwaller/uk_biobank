@@ -972,7 +972,7 @@ def organize_sex_age_body_variables(
         sex_text="sex_text",
         variables=["age"],
         table=table,
-        report=True,
+        report=report,
     )
 
     # Remove columns for variables that are not necessary anymore.
@@ -7343,6 +7343,7 @@ def select_records_by_female_specific_valid_variables_values(
 
 
 def select_records_by_male_specific_valid_variables_values(
+    age_grade_male=None,
     variables=None,
     prefixes=None,
     table=None,
@@ -7351,6 +7352,8 @@ def select_records_by_male_specific_valid_variables_values(
     Selects records for males with sex-specific criteria.
 
     arguments:
+        age_grade_male (list<int>): which values of ordinal age variable to
+            include for males
         variables (list<str>): names of columns for variables in which
             rows must have valid values to keep records
         prefixes (list<str>): prefixes of columns for variables in which
@@ -7387,6 +7390,16 @@ def select_records_by_male_specific_valid_variables_values(
     table = table.loc[
         (table["sex_text"] == "male"), :
     ]
+    # Determine whether to filter by ordinal definition of age.
+    if (
+        (0 not in age_grade_male) or
+        (1 not in age_grade_male) or
+        (2 not in age_grade_male)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["age_grade_male"].isin(age_grade_male)), :
+        ]
     # Return information.
     return table
 
@@ -7399,6 +7412,7 @@ def select_records_by_sex_specific_valid_variables_values(
     female_variables=None,
     female_prefixes=None,
     male=None,
+    age_grade_male=None,
     male_variables=None,
     male_prefixes=None,
     table=None,
@@ -7420,6 +7434,8 @@ def select_records_by_sex_specific_valid_variables_values(
         female_prefixes (list<str>): prefixes of columns for variables in which
             rows must have valid values to keep records for females
         male (bool): whether to include records for males
+        age_grade_male (list<int>): which values of ordinal age variable to
+            include for males
         male_variables (list<str>): names of columns for variables in which rows
             must have valid values to keep records for males
         male_prefixes (list<str>): prefixes of columns for variables in which
@@ -7454,6 +7470,7 @@ def select_records_by_sex_specific_valid_variables_values(
     # Select records for males.
     if male:
         table_male = select_records_by_male_specific_valid_variables_values(
+            age_grade_male=age_grade_male,
             variables=male_variables,
             prefixes=male_prefixes,
             table=table,
@@ -7744,9 +7761,11 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=True,
+            age_grade_male=[0, 1, 2,],
             male_variables=[
                 "eid", "IID",
-                "sex", "sex_text", "age", "body_mass_index_log",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body_mass_index_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -7778,6 +7797,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7810,6 +7830,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7840,6 +7861,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7871,6 +7893,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7902,6 +7925,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7932,6 +7956,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
+            age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
             table=table,
@@ -7956,9 +7981,11 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             female_variables=[],
             female_prefixes=[],
             male=True,
+            age_grade_male=[0, 1, 2,],
             male_variables=[
                 "eid", "IID",
-                "sex", "sex_text", "age", "body_mass_index_log",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body_mass_index_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -7972,6 +7999,70 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             remove_null_records=False,
             table=table_male,
     ))
+
+    # Cohort: young males
+    table_male_young = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            age_grade_male=[0,],
+            male_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body_mass_index_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_male_young_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_male_young,
+    ))
+
+    # Cohort: old males
+    table_male_old = (
+        select_records_by_sex_specific_valid_variables_values(
+            female=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            age_grade_male=[2,],
+            male_variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body_mass_index_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_male_old_" + hormone)] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=[hormone],
+            remove_null_records=False,
+            table=table_male_old,
+    ))
+
+
+
+
+
+
     # Return information.
     return pail
 
