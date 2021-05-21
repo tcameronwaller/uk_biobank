@@ -1875,6 +1875,64 @@ def interpret_menstruation_days(
     return value
 
 
+# TODO: "interpret_menstruation_period_current()"
+# TODO: after interpretation... call this where I "determine" menstruation days
+# TODO: if "menstruating today" assign a "median" value to menstruation days... such as 3 or something
+
+def interpret_menstruation_period_current(
+    field_3720=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3720.
+
+    Data-Field "3720": "Menstruating today"
+    UK Biobank data coding "100349" for variable field "3720".
+    "yes": 1
+    "no": 0
+    "do not know": -1
+    "prefer not to answer": -3
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3720 (float): UK Biobank field 3720, whether person was
+            experiencing menstruation period on day of assessment
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3720)) and
+        (-3.5 <= field_3720 and field_3720 < 1.5)
+    ):
+        # The variable has a valid value.
+        if (0.5 <= field_3720 and field_3720 < 1.5):
+            # 1: "yes"
+            value = 1
+        elif (-0.5 <= field_3720 and field_3720 < 0.5):
+            # 0: "no"
+            value = 0
+        elif (-1.5 <= field_3720 and field_3720 < -0.5):
+            # -1: "do not know"
+            value = float("nan")
+        elif (-3.5 <= field_3720 and field_3720 < -2.5):
+            # -3: "prefer not to answer"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def interpret_menopause_hysterectomy(
     field_2724=None,
 ):
@@ -2408,15 +2466,21 @@ def interpret_recent_hormone_replacement_therapy(
 
 def determine_female_menstruation_days(
     sex_text=None,
+    imputation_days=None,
     field_3700=None,
+    field_3720=None,
 ):
     """
     Determine count of days since previous menstruation (menstrual period).
 
     arguments:
         sex_text (str): textual representation of sex selection
+        imputation_days (float): count of days for imputation in persons who
+            were experiencing menstruation period currently
         field_3700 (float): UK Biobank field 3700, days since previous
             menstruation (menstrual period)
+        field_3720 (float): UK Biobank field 3720, whether person was
+            experiencing menstruation period on day of assessment
 
     raises:
 
@@ -2429,13 +2493,32 @@ def determine_female_menstruation_days(
     menstruation_days = interpret_menstruation_days(
         field_3700=field_3700,
     )
+    # Interpret whether person was experiencing menstruation period currently.
+    menstruation_current = interpret_menstruation_period_current(
+        field_3720=field_3720,
+    )
     # Comparison.
     # Only define days since previous menstruation for female persons.
     if (
         (sex_text == "female")
     ):
         # Female.
-        value = menstruation_days
+        # Evaluate validity of relevant variables.
+        if ((not pandas.isna(menstruation_days))):
+            # Person has valid value for days in menstruation cycle.
+            # Prioritize this variable.
+            value = menstruation_days
+        elif (
+            (not pandas.isna(menstruation_current) and
+            (menstruation_current == 1)
+        ):
+            # Person has missing value for days in menstruation cycle.
+            # Person was experiencing menstruation period currently.
+            # Impute value of days in menstruation cycle.
+            value = imputation_days
+        else:
+            # Person does not qualify for any categories.
+            value = float("nan")
     else:
         # Male.
         # Menstruation undefined for males.
@@ -3927,7 +4010,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     columns_type = [
         "2724-0.0", "3591-0.0", "2834-0.0",
         "3140-0.0",
-        "3700-0.0",
+        "3700-0.0", "3720-0.0",
         "2784-0.0", "2794-0.0", "2804-0.0",
         "2814-0.0", "3536-0.0", "3546-0.0",
     ]
@@ -3941,7 +4024,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_menstruation_days(
                 sex_text=row["sex_text"],
+                imputation_days=3, # imputation days to assign for current
                 field_3700=row["3700-0.0"],
+                field_3720=row["3720-0.0"],
             ),
         axis="columns", # apply across rows
     )
@@ -4046,7 +4131,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 menopause_ordinal=row["menopause_ordinal"],
                 menstruation_days=row["menstruation_days"],
-                threshold_premenopause=13, # threshold in days
+                threshold_premenopause=15, # threshold in days
                 threshold_perimenopause=15, # threshold in days
             ),
         axis="columns", # apply across rows
@@ -7569,8 +7654,6 @@ def organize_phenotype_covariate_table_plink_format(
 # Cohort selection: sexes, hormones
 # For GWAS of hormones
 
-# TODO: I need to change the model variable selections...
-# TODO: switch to "menstruation_phase" for 1
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -7666,36 +7749,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     ))
 
 
-    # TODO: I think I can drop this cohort/model...
-
-    table_female_combination = (
-        select_records_by_sex_specific_valid_variables_values(
-            female=True,
-            female_pregnancy=[0,],
-            female_menopause_binary=[0, 1,],
-            female_menopause_ordinal=[0, 1, 2,],
-            female_variables=[
-                "eid", "IID",
-                "sex", "sex_text", "age", "body_mass_index_log",
-                "pregnancy", "menopause_binary", "menopause_ordinal",
-                "hormone_alteration",
-                hormone,
-            ],
-            female_prefixes=["genotype_pc_", "menopause_hormone_category_",],
-            male=False,
-            male_variables=[],
-            male_prefixes=[],
-            table=table,
-    ))
-    pail[str("table_female_combination_" + hormone)] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_combination,
-    ))
-
     # Cohort: premenopausal females by binary menopause definition
 
     table_female_premenopause_binary = (
@@ -7708,7 +7761,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days",
+                "menstruation_days", "menstruation_phase",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7769,7 +7822,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days",
+                "menstruation_days", "menstruation_phase",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7800,7 +7853,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days",
+                "menstruation_days", "menstruation_phase",
                 "hormone_alteration",
                 hormone,
             ],
