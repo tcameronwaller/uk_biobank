@@ -7727,8 +7727,6 @@ def organize_phenotype_covariate_table_plink_format(
 # Cohort selection: sexes, hormones
 # For GWAS of hormones
 
-# TODO: introduce new cohorts for younger and older male persons...
-
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -8072,11 +8070,6 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             remove_null_records=False,
             table=table_male_old,
     ))
-
-
-
-
-
 
     # Return information.
     return pail
