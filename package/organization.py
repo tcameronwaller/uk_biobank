@@ -2540,12 +2540,12 @@ def determine_female_menstruation_days(
     ):
         # Female.
         # Evaluate validity of relevant variables.
-        if ((not pandas.isna(menstruation_days))):
+        if (not pandas.isna(menstruation_days)):
             # Person has valid value for days in menstruation cycle.
             # Prioritize this variable.
             value = menstruation_days
         elif (
-            (not pandas.isna(menstruation_current) and
+            (not pandas.isna(menstruation_current)) and
             (menstruation_current == 1)
         ):
             # Person has missing value for days in menstruation cycle.
