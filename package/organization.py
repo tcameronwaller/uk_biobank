@@ -1021,6 +1021,21 @@ def organize_sex_age_body_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+
+        table_male = table_report.loc[
+            (table_report["sex_text"] == "male"), :
+        ]
+        table_male_young = table_male.loc[
+            (table_male["age_grade_male"] == 0), :
+        ]
+        table_male_old = table_male.loc[
+            (table_male["age_grade_male"] == 2), :
+        ]
+        age_mean_male_young = numpy.nanmean(table_male_young["age"].to_numpy())
+        age_mean_male_old = numpy.nanmean(table_male_old["age"].to_numpy())
+        print("mean age in young males: " + str(age_mean_male_young))
+        print("mean age in old males: " + str(age_mean_male_old))
+
     # Collect information.
     pail = dict()
     pail["table"] = table
