@@ -8931,7 +8931,6 @@ def execute_female_menstruation(
     # Return information.
     return pail_female
 
-# TODO: new function to compare and report on sex hormones in sex-relevant cohorts
 
 def execute_analyze_sex_cohorts_hormones(
     table=None,
