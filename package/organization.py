@@ -383,6 +383,79 @@ def convert_table_prefix_columns_variables_types_float(
     return table_type
 
 
+def interpret_ancestry_white_british(
+    field_22006=None,
+):
+    """
+    Intepret UK Biobank's coding for field 22006.
+
+    Data-Field 22006 relates to self report of racial and ethnic identity in
+    Data-Field 21000.
+
+    Data-Field "22006": "Genetic ethnic grouping"
+    UK Biobank data coding "1002" for variable field "22006".
+    "Caucasian": 1
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_22006 (float): UK Biobank field 22006, whether person is in
+            categorical ancestral group, "white british"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_22006)) and
+        (0.5 <= field_22006 and field_22006 < 1.5)
+    ):
+        # 1: "Caucasian"
+        value = 1
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
+def determine_ancestry_white_british(
+    field_22006=None,
+):
+    """
+    Determine whether persons experienced bilateral oophorectomy.
+
+    arguments:
+        field_22006 (float): UK Biobank field 22006, whether person is in
+            categorical ancestral group, "white british"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oophorectomy.
+    white_british = interpret_ancestry_white_british(
+        field_22006=field_22006,
+    )
+    # Comparison.
+    if (
+        (not pandas.isna(white_british)) and
+        (white_british == 1)
+    ):
+        value = 1
+    else:
+        value = 0
+    # Return information.
+    return value
+
+
 def organize_genotype_principal_component_variables(
     table=None,
     report=None,
@@ -425,6 +498,16 @@ def organize_genotype_principal_component_variables(
         prefix="genotype_pc_",
         table=table,
     )
+    # Organize indicator variable for genetic ancestry in the category of
+    # "white british".
+    table["white_british"] = table.apply(
+        lambda row:
+            determine_ancestry_white_british(
+                field_22006=row["22006-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Report.
     if report:
         # Column name translations.
@@ -446,6 +529,14 @@ def organize_genotype_principal_component_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+        # Categorical ancestry and ethnicity.
+        utility.print_terminal_partition(level=2)
+        print("Categorical ancestry and ethnicity")
+        table_white_british = table.loc[
+            (table["white_british"] == 1), :
+        ]
+        print("total persons: " + str(table.shape[0]))
+        print("white british persons: " + str(table_white_british.shape[0]))
     # Return information.
     return table
 
@@ -455,7 +546,7 @@ def organize_genotype_principal_component_variables(
 
 # Stratification
 # TODO: some of this functionality should go in the utility code...
-
+# TODO: clean up the obsolete functions...
 
 # obsolete?
 def determine_stratification_bin_thresholds(
@@ -781,27 +872,6 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
 ##########
 # Sex, age, and body
 
-
-# TODO: new variables: "age_split", "age_grade", "age_gade_male", "age_grade_female"
-# - base "age_split" on simple median...
-
-# "young" = "age_grade": 0
-# "old" = "age_grade": 2
-# "younger" = "age_split": 0
-# "older" = "age_split": 1
-
-#table_young = table.loc[
-#    table["age_grade"] == 0, :
-#]
-#table_old = table.loc[
-#    table["age_grade"] == 2, :
-#]
-#table_younger = table.loc[
-#    table["age_split"] == 0, :
-#]
-#table_older = table.loc[
-#    table["age_split"] == 1, :
-#]
 
 def interpret_sex_consensus(
     field_31=None,
@@ -1929,10 +1999,6 @@ def interpret_menstruation_days(
     return value
 
 
-# TODO: "interpret_menstruation_period_current()"
-# TODO: after interpretation... call this where I "determine" menstruation days
-# TODO: if "menstruating today" assign a "median" value to menstruation days... such as 3 or something
-
 def interpret_menstruation_period_current(
     field_3720=None,
 ):
@@ -1995,8 +2061,8 @@ def interpret_menopause_hysterectomy(
 
     Only interpret whether the variable indicates that the person had a
     hysterectomy.
-    Do not propagate missing values since this variable primarily concerns a
-    different subject.
+
+    The only valid value is whether person indicated hysterectomy.
 
     Data-Field "2724": "Had menopause"
     UK Biobank data coding "100579" for variable field "2724".
@@ -2027,25 +2093,25 @@ def interpret_menopause_hysterectomy(
         # The variable has a valid value.
         if (-0.5 <= field_2724 and field_2724 < 0.5):
             # 0: "no"
-            value = 0
+            value = float("nan")
         elif (0.5 <= field_2724 and field_2724 < 1.5):
             # 1: "yes"
-            value = 0
+            value = float("nan")
         elif (1.5 <= field_2724 and field_2724 < 2.5):
             # 2: "not sure - had a hysterectomy"
             value = 1
         elif (2.5 <= field_2724 and field_2724 < 3.5):
             # 3: "not sure - other reason"
-            value = 0
+            value = float("nan")
         elif (-3.5 <= field_2724 and field_2724 < -2.5):
             # -3: "prefer not to answer"
-            value = 0
+            value = float("nan")
         else:
             # uninterpretable
-            value = 0
+            value = float("nan")
     else:
         # null
-        value = 0
+        value = float("nan")
     # Return.
     return value
 
@@ -3310,19 +3376,13 @@ def determine_female_menstruation_phase(
 
 def determine_female_pregnancy(
     sex_text=None,
-    menopause_binary=None,
     field_3140=None,
 ):
     """
     Determine whether female persons were pregnant.
 
-    This definition of pregnancy uses a definition of menopause
-    (pre, peri, post) to avoid missing information and increase confidence.
-
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_binary (float): binary logical representation of whether
-            person has experienced menopause
         field_3140 (float): UK Biobank field 3140, whether person was pregnant
 
     raises:
@@ -3337,21 +3397,8 @@ def determine_female_pregnancy(
         field_3140=field_3140,
     )
     # Comparison.
-    if (
-        (sex_text == "female")
-    ):
-        if (pandas.isna(pregnancy)):
-            # The variable has an uncertain value.
-            # Determine whether person has experienced menopause.
-            if (
-                (not pandas.isna(menopause_binary)) and
-                (menopause_binary == 1)
-            ):
-                value = 0
-            else:
-                value = float("nan")
-        else:
-            value = pregnancy
+    if (sex_text == "female"):
+        value = pregnancy
     else:
         # Pregnancy undefined for males.
         value = float("nan")
@@ -4195,7 +4242,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_pregnancy(
                 sex_text=row["sex_text"],
-                menopause_binary=row["menopause_binary"],
                 field_3140=row["3140-0.0"],
             ),
         axis="columns", # apply across rows
