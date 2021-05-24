@@ -498,6 +498,13 @@ def organize_genotype_principal_component_variables(
         prefix="genotype_pc_",
         table=table,
     )
+    columns_type = [
+        "22006-0.0",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
     # Organize indicator variable for genetic ancestry in the category of
     # "white british".
     table["white_british"] = table.apply(
