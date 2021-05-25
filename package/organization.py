@@ -4374,10 +4374,51 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 
 
 ##########
-# Neuroticism
+# Psychological variables
 
 
-def organize_neuroticism_variables(
+def interpret_import_bipolar_disorder(
+    import_bipolar_disorder=None,
+):
+    """
+    Intepret import variable for bipolar disorder cases and controls.
+
+    Accommodate inexact float values.
+
+    arguments:
+        import_bipolar_disorder (float): import variable "bipolar.cc" from
+            variable definitions by Brandon J. Coombes
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(import_bipolar_disorder)) and
+        (-0.5 <= import_bipolar_disorder and import_bipolar_disorder < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= import_bipolar_disorder and import_bipolar_disorder < 0.5):
+            # 0: "control"
+            value = 0
+        elif (0.5 <= import_bipolar_disorder and import_bipolar_disorder < 1.5):
+            # 1: "case"
+            value = 1
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
+def organize_psychology_variables(
     table=None,
     report=None,
 ):
@@ -4407,7 +4448,8 @@ def organize_neuroticism_variables(
     )
     # Convert variable types.
     columns_type = [
-        "neuroticism"
+        "neuroticism",
+        "bipolar.cc",
     ]
     table = convert_table_columns_variables_types_float(
         columns=columns_type,
@@ -4418,17 +4460,28 @@ def organize_neuroticism_variables(
         columns=["neuroticism"],
         table=table,
     )
+    # Determine whether persons qualify as cases or controls for bipolar
+    # disorder.
+    table["bipolar_disorder"] = table.apply(
+        lambda row:
+            interpret_import_bipolar_disorder(
+                import_bipolar_disorder=row["bipolar.cc"],
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
-    if False:
-        table_clean.drop(
-            labels=[
-                "20127-0.0",
-            ],
-            axis="columns",
-            inplace=True
-        )
+    table_clean.drop(
+        labels=[
+            #"20127-0.0",
+            "icd_bipolar", "bipolar.diag2", "SmithBipolar", "SmithMood",
+            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
+        ],
+        axis="columns",
+        inplace=True
+    )
     # Organize information for report.
     table_report = table.copy(deep=True)
     columns_report = [
@@ -4457,6 +4510,18 @@ def organize_neuroticism_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+        # Categorical ancestry and ethnicity.
+        utility.print_terminal_partition(level=2)
+        print("Bipolar Disorder cases and controls")
+        table_cases = table.loc[
+            (table["bipolar_disorder"] == 1), :
+        ]
+        table_controls = table.loc[
+            (table["bipolar_disorder"] == 0), :
+        ]
+        print("bipolar disorder cases: " + str(table_cases.shape[0]))
+        print("bipolar disorder controls: " + str(table_controls.shape[0]))
+
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -9300,7 +9365,7 @@ def execute_alcohol(
     return table_alcohol
 
 
-def execute_mental_health(
+def execute_psychology_psychiatry(
     table=None,
     report=None,
 ):
@@ -9315,24 +9380,22 @@ def execute_mental_health(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
 
     """
 
     # Organize information about neuroticism.
-    pail_neuroticism = organize_neuroticism_variables(
+    pail_psychology = organize_psychology_variables(
         table=table,
         report=report,
     )
-
-    # Copy information.
-    table_mental_health = pail_neuroticism["table_clean"].copy(deep=True)
     # Report.
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
-        print(table_mental_health)
+        print(pail_psychology["table_clean"])
     # Return information.
-    return table_mental_health
+    return pail_psychology
