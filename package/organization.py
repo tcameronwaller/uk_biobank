@@ -8320,6 +8320,208 @@ def select_organize_plink_cohorts_by_sex_hormones(
 
 
 ##########
+# Cohort selection: bipolar disorder cases and controls
+# For GWAS of body mass index (BMI)
+
+
+def select_records_by_ancestry_case_control_valid_variables_values(
+    white_british=None,
+    case_control=None,
+    case_control_values=None,
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for males with sex-specific criteria.
+
+    arguments:
+        white_british (list<int>): which values of white british categorical
+            ancestry variable to include
+        case_control (str): name of column for relevant case control definition
+        case_control_values (list<int>): which values of case control variable
+            to include
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Determine whether to filter by white british categorical ancestry.
+    if (
+        (0 not in white_british) or
+        (1 not in white_british)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["white_british"].isin(white_british)), :
+        ]
+    # Determine whether to filter by definition of cases and controls.
+    if (
+        (0 not in case_control_values) or
+        (1 not in case_control_values)
+    ):
+        # Select records.
+        table = table.loc[
+            (table[case_control].isin(case_control_values)), :
+        ]
+    # Return information.
+    return table
+
+
+def organize_plink_cohorts_variables_by_case_control(
+    table=None,
+):
+    """
+    Organizes tables for specific cohorts in format for GWAS in PLINK.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    pail = dict()
+    # Select and organize variables across cohorts.
+    # Translate variable encodings and table format for analysis in PLINK.
+
+    # Cohort: bipolar disorder controls
+
+    table_control = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            white_british=[0, 1,],
+            case_control="bipolar_disorder",
+            case_control_values=[0,],
+            variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age",
+                "body_mass_index", "body_mass_index_log",
+                "bipolar_disorder",
+            ],
+            prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_bipolar_disorder_control_body_log")] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=["body_mass_index_log"],
+            remove_null_records=False,
+            table=table_control,
+    ))
+
+    table_white_control = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            white_british=[1,],
+            case_control="bipolar_disorder",
+            case_control_values=[0,],
+            variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age",
+                "body_mass_index", "body_mass_index_log",
+                "bipolar_disorder",
+            ],
+            prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_white_bipolar_disorder_control_body_log")] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=["body_mass_index_log"],
+            remove_null_records=False,
+            table=table_white_control,
+    ))
+
+
+    # Cohort: bipolar disorder cases
+
+    table_case = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            white_british=[0, 1,],
+            case_control="bipolar_disorder",
+            case_control_values=[1,],
+            variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age",
+                "body_mass_index", "body_mass_index_log",
+                "bipolar_disorder",
+            ],
+            prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_bipolar_disorder_case_body_log")] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=["body_mass_index_log"],
+            remove_null_records=False,
+            table=table_case,
+    ))
+
+    table_white_case = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            white_british=[1,],
+            case_control="bipolar_disorder",
+            case_control_values=[1,],
+            variables=[
+                "eid", "IID",
+                "sex", "sex_text", "age",
+                "body_mass_index", "body_mass_index_log",
+                "bipolar_disorder",
+            ],
+            prefixes=["genotype_pc_",],
+            table=table,
+    ))
+    pail[str("table_white_bipolar_disorder_case_body_log")] = (
+        organize_phenotype_covariate_table_plink_format(
+            boolean_phenotypes=[],
+            binary_phenotypes=[],
+            continuous_variables=["body_mass_index_log"],
+            remove_null_records=False,
+            table=table_white_case,
+    ))
+
+    # Return information.
+    return pail
+
+
+
+
+
+##########
 # ... in progress...
 
 # Scrap now...
