@@ -8431,6 +8431,7 @@ def organize_plink_cohorts_variables_by_case_control(
             case_control_values=[0,],
             variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age",
                 "body_mass_index", "body_mass_index_log",
                 "bipolar_disorder",
@@ -8454,6 +8455,7 @@ def organize_plink_cohorts_variables_by_case_control(
             case_control_values=[0,],
             variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age",
                 "body_mass_index", "body_mass_index_log",
                 "bipolar_disorder",
@@ -8480,6 +8482,7 @@ def organize_plink_cohorts_variables_by_case_control(
             case_control_values=[1,],
             variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age",
                 "body_mass_index", "body_mass_index_log",
                 "bipolar_disorder",
@@ -8503,6 +8506,7 @@ def organize_plink_cohorts_variables_by_case_control(
             case_control_values=[1,],
             variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age",
                 "body_mass_index", "body_mass_index_log",
                 "bipolar_disorder",
