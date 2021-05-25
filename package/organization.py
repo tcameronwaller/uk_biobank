@@ -8397,6 +8397,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
 def organize_plink_cohorts_variables_by_case_control(
     table=None,
+    report=None,
 ):
     """
     Organizes tables for specific cohorts in format for GWAS in PLINK.
@@ -8404,6 +8405,7 @@ def organize_plink_cohorts_variables_by_case_control(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -8513,6 +8515,19 @@ def organize_plink_cohorts_variables_by_case_control(
             remove_null_records=False,
             table=table_white_case,
     ))
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: organize_plink_cohorts_variables_by_case_control()"
+        )
+        for table_name in pail.keys():
+            utility.print_terminal_partition(level=5)
+            print(table_name)
+            print(
+                "Count records: " + str(pail[table_name].shape[0])
+            )
 
     # Return information.
     return pail
