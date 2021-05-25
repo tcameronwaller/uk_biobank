@@ -8436,7 +8436,7 @@ def organize_plink_cohorts_variables_by_case_control(
             prefixes=["genotype_pc_",],
             table=table,
     ))
-    pail[str("table_bipolar_disorder_control_body_log")] = (
+    pail[str("table_bipolar_disorder_control_body_mass_index_log")] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8460,7 +8460,7 @@ def organize_plink_cohorts_variables_by_case_control(
             prefixes=["genotype_pc_",],
             table=table,
     ))
-    pail[str("table_white_bipolar_disorder_control_body_log")] = (
+    pail[str("table_white_bipolar_disorder_control_body_mass_index_log")] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8487,7 +8487,7 @@ def organize_plink_cohorts_variables_by_case_control(
             prefixes=["genotype_pc_",],
             table=table,
     ))
-    pail[str("table_bipolar_disorder_case_body_log")] = (
+    pail[str("table_bipolar_disorder_case_body_mass_index_log")] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8511,7 +8511,7 @@ def organize_plink_cohorts_variables_by_case_control(
             prefixes=["genotype_pc_",],
             table=table,
     ))
-    pail[str("table_white_bipolar_disorder_case_body_log")] = (
+    pail[str("table_white_bipolar_disorder_case_body_mass_index_log")] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
