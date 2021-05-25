@@ -8374,9 +8374,6 @@ def select_records_by_ancestry_case_control_valid_variables_values(
         report=False,
     )
     # Determine whether to filter by white british categorical ancestry.
-    utility.print_terminal_partition(level=2)
-    print("white_british: ")
-    print(white_british)
     if (
         (0 not in white_british) or
         (1 not in white_british)
