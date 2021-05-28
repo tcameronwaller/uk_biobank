@@ -36,6 +36,9 @@ import promiscuity.plot as plot
 ###############################################################################
 # Functionality
 
+# TODO: read in "table_kinship_pairs"
+
+
 
 ##########
 # Initialization

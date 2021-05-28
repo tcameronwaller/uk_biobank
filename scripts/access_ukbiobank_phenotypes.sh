@@ -36,6 +36,7 @@ cd ~/paths
 path_ukb_phenotype=$(<"./ukbiobank_phenotype.txt")
 path_exclusion="$path_ukb_phenotype/exclude.csv"
 path_identifier_pairs="${path_ukb_phenotype}/ukb41826/link.file.csv"
+path_ukb_kinship=$(<"./ukbiobank_kinship.txt")
 path_ukb_tools=$(<"./ukbiobank_tools.txt")
 
 ###########################################################################
@@ -48,6 +49,8 @@ cp $path_variables "$path_destination/variables.txt"
 cp $path_identifier_pairs "$path_destination/table_identifier_pairs.csv"
 # Copy table of exclusion identifiers to destination directory.
 cp $path_exclusion "${path_destination}/list_exclusion_identifiers.txt"
+# Copy table of relatedness kinship coefficients between pairs of persons.
+cp $path_ukb_kinship "$path_destination/table_kinship_pairs.dat"
 
 ###########################################################################
 # Access variables from each phenotype data release of UK Biobank.

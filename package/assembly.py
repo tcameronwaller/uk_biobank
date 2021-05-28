@@ -47,6 +47,7 @@ import promiscuity.plot as plot
 ###############################################################################
 # Functionality
 
+# TODO: read in "table_kinship_pairs"
 
 ##########
 # Initialization
@@ -343,6 +344,10 @@ def read_source(
         path_dock, "access", "ukbiobank_phenotypes",
         "table_identifier_pairs.csv"
     )
+    path_table_kinship_pairs = os.path.join(
+        path_dock, "access", "ukbiobank_phenotypes",
+        "table_kinship_pairs.dat"
+    )
     path_table_ukb_41826 = os.path.join(
         path_dock, "access", "ukbiobank_phenotypes",
         "ukb41826.raw.csv"
@@ -394,6 +399,18 @@ def read_source(
         header=0,
         dtype="string",
     )
+    table_kinship_pairs = pandas.read_csv(
+        path_table_kinship_pairs,
+        sep="\s+",
+        header=0,
+        dtype={
+            "ID1": "string",
+            "ID2": "string",
+            "HetHet": "float32",
+            "IBS0": "float32",
+            "Kinship": "float32",
+        },
+    )
     table_ukb_41826 = pandas.read_csv(
         path_table_ukb_41826,
         sep=",", # "," or "\t"
@@ -417,6 +434,7 @@ def read_source(
         "columns_accession": columns_accession,
         "exclusion_identifiers": exclusion_identifiers,
         "table_identifier_pairs": table_identifier_pairs,
+        "table_kinship_pairs": table_kinship_pairs,
         "table_ukb_41826": table_ukb_41826,
         "table_ukb_43878": table_ukb_43878,
     }
@@ -1119,12 +1137,27 @@ def write_product_assembly(
     path_table_phenotypes_text = os.path.join(
         path_parent, "table_phenotypes.tsv"
     )
+    path_table_kinship_pairs = os.path.join(
+        path_parent, "table_kinship_pairs.pickle"
+    )
+    path_table_kinship_pairs_text = os.path.join(
+        path_parent, "table_kinship_pairs.tsv"
+    )
     # Write information to file.
     information["table_phenotypes"].to_pickle(
         path_table_phenotypes
     )
     information["table_phenotypes"].to_csv(
         path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    information["table_kinship_pairs"].to_pickle(
+        path_table_kinship_pairs
+    )
+    information["table_kinship_pairs"].to_csv(
+        path_or_buf=path_table_kinship_pairs_text,
         sep="\t",
         header=True,
         index=True,
@@ -1241,6 +1274,10 @@ def execute_procedure(
         report=True,
     )
 
+    utility.print_terminal_partition(level=2)
+    print("table_kinship_pairs")
+    print(source["table_kinship_pairs"])
+
     # Write out raw tables for inspection.
     # Collect information.
     information = dict()
@@ -1254,6 +1291,9 @@ def execute_procedure(
         table_valid.iloc[0:10000, :]
     )
     information["assembly"]["table_phenotypes"] = table_valid
+    information["assembly"]["table_kinship_pairs"] = (
+        source["table_kinship_pairs"]
+    )
     # Write product information to file.
     write_product(
         paths=paths,

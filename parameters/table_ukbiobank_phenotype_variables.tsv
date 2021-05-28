@@ -2,6 +2,7 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	ins
 1	54	string	center		502478		UK Biobank assessment centre	Reception		0.0;	
 1	22009	float32	genotype	genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
 1	22006	string	genotype		409594		Genetic ethnic grouping, “White British” and similar ancestry	Genotyping process and sample QC		0.0;	
+1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
 1	31	float32		sex	502492	nominal	Sex	Baseline characteristics		0.0;	
 1	22001	float32		sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
 1	21022	float32		age	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
