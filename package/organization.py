@@ -138,6 +138,41 @@ def initialize_directories(
 # Read
 
 
+def read_source_table_kinship_pairs(
+    path_dock=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of kinship coefficients across pairs of
+            persons in UK Biobank cohort
+
+    """
+
+    # Specify directories and files.
+    path_table_kinship_pairs = os.path.join(
+        path_dock, "assembly", "table_kinship_pairs.pickle"
+    )
+    # Read information from file.
+    table_kinship_pairs = pandas.read_pickle(
+        path_table_kinship_pairs
+    )
+    # Return information.
+    return table_kinship_pairs
+
+
 def read_source(
     path_dock=None,
     report=None,
@@ -474,7 +509,9 @@ def organize_genotype_principal_component_variables(
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
 
     """
 
@@ -4373,10 +4410,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 
 
 ##########
-# Hormones in sex-relevant cohorts
-
-
-##########
 # Psychological variables
 
 
@@ -7317,7 +7350,10 @@ def organize_alcoholism_cases_controls_variables(
 
 
 ##########
-# Cohort selection: general
+# Cohort, model selection: general
+
+
+# TODO: implement additional selections on basis of relatedness/kinship...
 
 
 def select_valid_records_all_specific_variables(
@@ -7844,13 +7880,87 @@ def organize_phenotype_covariate_table_plink_format(
     return table_sequence
 
 
+def select_records_by_ancestry_case_control_valid_variables_values(
+    white_british=None,
+    case_control=None,
+    case_control_values=None,
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for males with sex-specific criteria.
+
+    arguments:
+        white_british (list<int>): which values of white british categorical
+            ancestry variable to include
+        case_control (str): name of column for relevant case control definition
+        case_control_values (list<int>): which values of case control variable
+            to include
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Determine whether to filter by white british categorical ancestry.
+    if (
+        (0 not in white_british) or
+        (1 not in white_british)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["white_british"].isin(white_british)), :
+        ]
+    # Determine whether to filter by definition of cases and controls.
+    if (
+        (0 not in case_control_values) or
+        (1 not in case_control_values)
+    ):
+        # Select records.
+        table = table.loc[
+            (table[case_control].isin(case_control_values)), :
+        ]
+    # Return information.
+    return table
+
+
 ##########
-# Cohort selection: sexes, hormones
-# For GWAS of hormones
+# Cohort, model selection: sets
+
+# TODO: progress 28 May 2021 (TCW)
+# TODO: I still need to introduce "table_kinship_pairs"...
 
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
+    table_kinship_pairs=None,
     table=None,
 ):
     """
@@ -8196,8 +8306,9 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     return pail
 
 
-def select_organize_plink_cohorts_by_sex_hormones(
+def select_organize_cohorts_models_set_sex_hormones(
     table=None,
+    table_kinship_pairs=None,
     report=None,
 ):
     """
@@ -8206,6 +8317,8 @@ def select_organize_plink_cohorts_by_sex_hormones(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
         report (bool): whether to print reports
 
     raises:
@@ -8218,94 +8331,22 @@ def select_organize_plink_cohorts_by_sex_hormones(
     # Compile information.
     pail = dict()
     # Select and organize variables across cohorts.
-
-    pail_albumin = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="albumin_log",
-        table=table,
-    )
-    pail.update(pail_albumin)
-    pail_albumin_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="albumin_imputation_log",
-        table=table,
-    )
-    pail.update(pail_albumin_imputation)
-
-
-    pail_steroid_globulin = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="steroid_globulin_log",
+    hormones = [
+        "albumin_log", "albumin_imputation_log",
+        "steroid_globulin_log", "steroid_globulin_imputation_log",
+        "oestradiol_log", "oestradiol_imputation_log",
+        "oestradiol_free_log", "oestradiol_bioavailable_log",
+        "testosterone_log", "testosterone_imputation_log",
+        "testosterone_free_log", "testosterone_bioavailable_log",
+        "vitamin_d_log", "vitamin_d_imputation_log",
+    ]
+    for hormone in hormones:
+        pail_hormone = select_organize_plink_cohorts_variables_by_sex_hormone(
+            hormone=hormone,
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
-    ))
-    pail.update(pail_steroid_globulin)
-    pail_steroid_globulin_imputation = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="steroid_globulin_imputation_log",
-            table=table,
-    ))
-    pail.update(pail_steroid_globulin_imputation)
-
-
-    pail_oestradiol = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="oestradiol_log",
-        table=table,
-    )
-    pail.update(pail_oestradiol)
-    pail_oestradiol_free = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="oestradiol_free_log",
-            table=table,
-    ))
-    pail.update(pail_oestradiol_free)
-    pail_oestradiol_bioavailable = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="oestradiol_bioavailable_log",
-            table=table,
-    ))
-    pail.update(pail_oestradiol_bioavailable)
-    pail_oestradiol_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="oestradiol_imputation_log",
-        table=table,
-    )
-    pail.update(pail_oestradiol_imputation)
-
-
-    pail_testosterone = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="testosterone_log",
-        table=table,
-    )
-    pail.update(pail_testosterone)
-    pail_testosterone_free = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="testosterone_free_log",
-            table=table,
-    ))
-    pail.update(pail_testosterone_free)
-    pail_testosterone_bioavailable = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="testosterone_bioavailable_log",
-            table=table,
-    ))
-    pail.update(pail_testosterone_bioavailable)
-    pail_testosterone_imputation = select_organize_plink_cohorts_variables_by_sex_hormone(
-        hormone="testosterone_imputation_log",
-        table=table,
-    )
-    pail.update(pail_testosterone_imputation)
-
-
-    pail_vitamin_d = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="vitamin_d_log",
-            table=table,
-    ))
-    pail.update(pail_vitamin_d)
-    pail_vitamin_d_imputation = (
-        select_organize_plink_cohorts_variables_by_sex_hormone(
-            hormone="vitamin_d_imputation_log",
-            table=table,
-    ))
-    pail.update(pail_vitamin_d_imputation)
-
+        )
+        pail.update(pail_hormone)
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -8322,83 +8363,7 @@ def select_organize_plink_cohorts_by_sex_hormones(
     return pail
 
 
-##########
-# Cohort selection: bipolar disorder cases and controls
-# For GWAS of body mass index (BMI)
-
-
-def select_records_by_ancestry_case_control_valid_variables_values(
-    white_british=None,
-    case_control=None,
-    case_control_values=None,
-    variables=None,
-    prefixes=None,
-    table=None,
-):
-    """
-    Selects records for males with sex-specific criteria.
-
-    arguments:
-        white_british (list<int>): which values of white british categorical
-            ancestry variable to include
-        case_control (str): name of column for relevant case control definition
-        case_control_values (list<int>): which values of case control variable
-            to include
-        variables (list<str>): names of columns for variables in which
-            rows must have valid values to keep records
-        prefixes (list<str>): prefixes of columns for variables in which
-            rows must have valid values to keep records
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    # Select records with valid (non-null) values of relevant variables.
-    # Exclude missing values first to avoid interpretation of "None" as False.
-    table = select_valid_records_all_specific_variables(
-        names=variables,
-        prefixes=prefixes,
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-    # Determine whether to filter by white british categorical ancestry.
-    if (
-        (0 not in white_british) or
-        (1 not in white_british)
-    ):
-        # Select records.
-        table = table.loc[
-            (table["white_british"].isin(white_british)), :
-        ]
-    # Determine whether to filter by definition of cases and controls.
-    if (
-        (0 not in case_control_values) or
-        (1 not in case_control_values)
-    ):
-        # Select records.
-        table = table.loc[
-            (table[case_control].isin(case_control_values)), :
-        ]
-    # Return information.
-    return table
-
-
-def organize_plink_cohorts_variables_by_case_control(
+def select_organize_cohorts_models_set_bipolar_disorder_body(
     table=None,
     report=None,
 ):
@@ -8543,6 +8508,11 @@ def organize_plink_cohorts_variables_by_case_control(
 
 
 
+
+##########
+##########
+##########
+##########
 ##########
 # ... in progress...
 
@@ -9587,6 +9557,77 @@ def execute_alcohol(
         print(table_alcohol)
     # Return information.
     return table_alcohol
+
+
+# TODO: introduce table_kinship_pairs!!!
+
+def execute_cohorts_models_genetic_analysis(
+    table=None,
+    set=None,
+    path_dock=None,
+    report=None,
+):
+    """
+    Organizes information about cohorts and models for genetic analysis.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        set (str): name of set of cohorts and models to select and organize
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # TODO: include ancestry category in both sets of cohorts-models...
+    # TODO: include relatedness in both sets of cohorts-models...
+
+    # Read source information from file.
+    if False:
+        table_kinship_pairs = read_source_table_kinship_pairs(
+            path_dock=path_dock,
+            report=False,
+        )
+    # Determine which set of cohorts and models to select and organize.
+    if (set == "sex_hormones"):
+        pail = select_organize_cohorts_models_set_sex_hormones(
+            table=table,
+            table_kinship_pairs=dict(),
+            report=report,
+        )
+    elif (set == "bipolar_disorder_body"):
+        pail = select_organize_cohorts_models_set_bipolar_disorder_body(
+            table=table,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+        )
+    else:
+        print("set of cohorts and models unrecognizable...")
+        pail = dict()
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "execute_cohorts_models_genetic_analysis()"
+        )
+        print("report: " + function_name)
+        utility.print_terminal_partition(level=3)
+        for name in pail.keys():
+            print(name)
+    # Return information.
+    return pail
+
+
+
 
 
 def execute_psychology_psychiatry(
