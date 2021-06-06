@@ -589,227 +589,108 @@ def organize_genotype_principal_component_variables(
 
 
 ##########
-# Stratification...
+# Sex, age, and body
 
-# Stratification
-# TODO: some of this functionality should go in the utility code...
-# TODO: clean up the obsolete functions...
 
-# obsolete?
-def determine_stratification_bin_thresholds(
-    bin=None,
-    values_sort=None,
-    indices=None,
-    thresholds=None,
-    report=None,
+def interpret_sex_consensus(
+    field_31=None,
+    field_22001=None,
 ):
     """
-    Determine values of thresholds for three stratification bins.
-    Lower and upper thresholds for a bin cannot be identical.
+    Determine consensus sex (biological sex, not social gender).
+    Prioritize interpretation of the genetic sex variable.
+
+    Data-Field "31": "sex"
+    UK Biobank data coding "9" for variable field "31".
+    "female": 0
+    "male": 1
+
+    Data-Field "22001": "genetic sex"
+    UK Biobank data coding "9" for variable field "22001".
+    "female": 0
+    "male": 1
 
     arguments:
-        bin (list<float>): proportions for one stratification bin
-        values_sort (list<float>): values of continuous variable in ascending
-            sort order
-        indices (list<list<int>>): indices for each low and high threshold
-        thresholds (list<list<float>>): thresholds for bins
-        report (bool): whether to print reports
+        field_31 (float): UK Biobank field 31, person's self-reported sex
+        field_22001 (float): UK Biobank field 22001, ...
 
     raises:
 
     returns:
-        (list<list<int>>, list<list<float>>): indices, thresholds
+        (float): interpretation value
 
     """
 
-    # Count total values.
-    count_total = len(values_sort)
-
-    # Low threshold.
-    count_low = round(bin[0] * count_total)
-    if (count_low == 0):
-        index_low = 0
-    else:
-        index_low = (count_low - 1)
-    value_low = values_sort[index_low]
-    # Ensure that low threshold is at least as great as the previous bin's high
-    # threshold.
-    if len(thresholds) > 0:
-        if (value_low < thresholds[-1][1]):
-            value_low = thresholds[-1][1]
-
-    # High threshold.
-    count_high = round(bin[1] * count_total)
-    index_high = (count_high - 1)
-    value_high = values_sort[index_high]
-    # Ensure that high threshold is greater than low threshold.
-    if value_low == value_high:
-        # Iterate on values until finding the next greater value.
-        while values_sort[index_high] == value_low:
-            index_high += 1
-        value_high = values_sort[index_high]
-
-    # Collect indices.
-    indices_bin = list()
-    indices_bin.append(index_low)
-    indices_bin.append(index_high)
-    indices.append(indices_bin)
-    # Collect thresholds.
-    thresholds_bin = list()
-    thresholds_bin.append(value_low)
-    thresholds_bin.append(value_high)
-    thresholds.append(thresholds_bin)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=4)
-        print("count_low: " + str(count_low))
-        print("index_low: " + str(index_low))
-        print("value_low: " + str(value_low))
-        print("count_high: " + str(count_high))
-        print("index_high: " + str(index_high))
-        print("value_high: " + str(value_high))
-    # Return information.
-    return indices, thresholds
-
-# obsolete?
-def collect_stratification_bins_thresholds(
-    values=None,
-    bins=None,
-    report=None,
-):
-    """
-    Determine values of thresholds for three stratification bins.
-    Lower and upper thresholds for a bin cannot be identical.
-
-    arguments:
-        values (list<float>): values of continuous variable
-        bins (list<list<float>>): proportions for three stratification bins
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (list<list<int>>): values of thresholds for each stratification bin
-
-    """
-
-    # Organize values.
-    values = copy.deepcopy(values)
-    values_sort = sorted(values, reverse=False)
-    # Collect thresholds.
-    indices = list()
-    thresholds = list()
-    for bin in bins:
-        # Determine low and high thresholds for bin.
-        indices, thresholds = determine_stratification_bin_thresholds(
-            bin=bin,
-            values_sort=values_sort,
-            indices=indices,
-            thresholds=thresholds,
-            report=report,
+    if (
+        (
+            (not pandas.isna(field_22001)) and
+            (-0.5 <= field_22001 and field_22001 < 1.5)
         )
+    ):
+        # Genetic sex variable has a valid value.
+        # Prioritize interpretation of the genetic sex variable.
+        if (-0.5 <= field_22001 and field_22001 < 0.5):
+            # "female": 0
+            value = 0
+        elif (0.5 <= field_22001 and field_22001 < 1.5):
+            # "male": 1
+            value = 1
+    elif (
+        (
+            (not pandas.isna(field_31)) and
+            (-0.5 <= field_31 and field_31 < 1.5)
+        )
+    ):
+        # Self-reported sex variable has a valid value.
+        if (-0.5 <= field_31 and field_31 < 0.5):
+            # "female": 0
+            value = 0
+        elif (0.5 <= field_31 and field_31 < 1.5):
+            # "male": 1
+            value = 1
+    else:
+        # Sex is missing in both variables.
+        value = float("nan")
     # Return information.
-    return thresholds
+    return value
 
-# obsolete?
-def determine_stratification_bin(
-    value=None,
-    thresholds=None,
+
+def determine_sex_text(
+    sex=None,
 ):
     """
-    Stratify persons to ordinal bins by their values of continuous variables.
+    Translate binary representation of sex to textual representation.
 
     arguments:
-        value (float): value of continuous variable
-        thresholds (list<list<int>>): values of thresholds for each
-            stratification bin
+        sex (float): binary representation of person's sex
 
     raises:
 
     returns:
-        (int): integer bin
+        (str): text representation of person's sex
 
     """
 
-    if not math.isnan(value):
-        if (thresholds[0][0] <= value and value < thresholds[0][1]):
-            return 0
-        elif (thresholds[1][0] <= value and value < thresholds[1][1]):
-            return 1
-        elif len(thresholds) > 2:
-            if (thresholds[2][0] <= value and value <= thresholds[2][1]):
-                return 2
-            else:
-                return float("nan")
-        else:
-            return float("nan")
-    else:
-        return float("nan")
-
-# obsolete?
-def stratify_persons_continuous_variable_ordinal(
-    variable=None,
-    variable_grade=None,
-    bins=None,
-    data_persons_properties=None,
-    report=None,
-):
-    """
-    Stratify persons to ordinal bins by their values of continuous variables.
-
-    arguments:
-        variable (str): name of continuous variable for stratification
-        variable_grade (str): name for new ordinal variable
-        bins (list<list<float>>): proportions for three stratification bins
-        data_persons_properties (object): Pandas data frame of persons'
-            properties
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of information about persons
-
-    """
-
-    # Copy data.
-    data = data_persons_properties.copy(deep=True)
-    # Determine whether variable qualifies for stratification.
-    series, values_unique = pandas.factorize(
-        data[variable],
-        sort=True
-    )
-    if len(values_unique) < 2:
-        data[variable_grade] = float("nan")
-    else:
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=2)
-            print("variable: " + str(variable))
-            utility.print_terminal_partition(level=2)
-        # Determine thresholds for stratification bins.
-        thresholds = collect_stratification_bins_thresholds(
-            values=data[variable].to_list(),
-            bins=bins,
-            report=report,
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(sex)) and
+        (
+            (sex == 0) or
+            (sex == 1)
         )
-        # Determine bins.
-        data[variable_grade] = data[variable].apply(
-            lambda value:
-                determine_stratification_bin(
-                    value=value,
-                    thresholds=thresholds,
-                )
-        )
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=2)
-            for threshold in thresholds:
-                print("low threshold: " + str(threshold[0]))
-                print("high threshold: " + str(threshold[1]))
-                utility.print_terminal_partition(level=3)
+    ):
+        # The variable has a valid value.
+        if (sex == 0):
+            # "female"
+            sex_text = "female"
+        elif (sex == 1):
+            # "male"
+            sex_text = "male"
+    else:
+        # null
+        sex_text = "nan"
     # Return information.
-    return data
+    return sex_text
 
 
 def define_ordinal_stratifications_by_sex_continuous_variables(
@@ -914,111 +795,6 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
         print(table_collection)
     # Return information.
     return table_collection
-
-
-##########
-# Sex, age, and body
-
-
-def interpret_sex_consensus(
-    field_31=None,
-    field_22001=None,
-):
-    """
-    Determine consensus sex (biological sex, not social gender).
-    Prioritize interpretation of the genetic sex variable.
-
-    Data-Field "31": "sex"
-    UK Biobank data coding "9" for variable field "31".
-    "female": 0
-    "male": 1
-
-    Data-Field "22001": "genetic sex"
-    UK Biobank data coding "9" for variable field "22001".
-    "female": 0
-    "male": 1
-
-    arguments:
-        field_31 (float): UK Biobank field 31, person's self-reported sex
-        field_22001 (float): UK Biobank field 22001, ...
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    if (
-        (
-            (not pandas.isna(field_22001)) and
-            (-0.5 <= field_22001 and field_22001 < 1.5)
-        )
-    ):
-        # Genetic sex variable has a valid value.
-        # Prioritize interpretation of the genetic sex variable.
-        if (-0.5 <= field_22001 and field_22001 < 0.5):
-            # "female": 0
-            value = 0
-        elif (0.5 <= field_22001 and field_22001 < 1.5):
-            # "male": 1
-            value = 1
-    elif (
-        (
-            (not pandas.isna(field_31)) and
-            (-0.5 <= field_31 and field_31 < 1.5)
-        )
-    ):
-        # Self-reported sex variable has a valid value.
-        if (-0.5 <= field_31 and field_31 < 0.5):
-            # "female": 0
-            value = 0
-        elif (0.5 <= field_31 and field_31 < 1.5):
-            # "male": 1
-            value = 1
-    else:
-        # Sex is missing in both variables.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_sex_text(
-    sex=None,
-):
-    """
-    Translate binary representation of sex to textual representation.
-
-    arguments:
-        sex (float): binary representation of person's sex
-
-    raises:
-
-    returns:
-        (str): text representation of person's sex
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (
-        (not pandas.isna(sex)) and
-        (
-            (sex == 0) or
-            (sex == 1)
-        )
-    ):
-        # The variable has a valid value.
-        if (sex == 0):
-            # "female"
-            sex_text = "female"
-        elif (sex == 1):
-            # "male"
-            sex_text = "male"
-    else:
-        # null
-        sex_text = "nan"
-    # Return information.
-    return sex_text
 
 
 def organize_sex_age_body_variables(
@@ -1138,6 +914,22 @@ def organize_sex_age_body_variables(
         print("After type conversion")
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
+
+        table_female = table_report.loc[
+            (table_report["sex_text"] == "female"), :
+        ]
+        table_female_young = table_female.loc[
+            (table_female["age_grade_female"] == 0), :
+        ]
+        table_female_old = table_female.loc[
+            (table_female["age_grade_female"] == 2), :
+        ]
+        age_mean_female_young = numpy.nanmean(
+            table_female_young["age"].to_numpy()
+        )
+        age_mean_female_old = numpy.nanmean(table_female_old["age"].to_numpy())
+        print("mean age in young females: " + str(age_mean_female_young))
+        print("mean age in old females: " + str(age_mean_female_old))
 
         table_male = table_report.loc[
             (table_report["sex_text"] == "male"), :
@@ -3623,9 +3415,12 @@ def organize_report_cohort_variables_summaries_record(
         "menstruation_days",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
         "oestradiol_free", "oestradiol_free_log",
         "testosterone", "testosterone_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
         "testosterone_free", "testosterone_free_log",
+        "vitamin_d", "vitamin_d_log",
     ]
     # Iterate on relevant columns.
     # Collect information for record.
@@ -3633,24 +3428,32 @@ def organize_report_cohort_variables_summaries_record(
         array = copy.deepcopy(table[column].dropna().to_numpy())
         # Determine count of valid values.
         count = int(array.size)
-        if (count > 5):
+        if (count > 10):
             # Determine mean, median, standard deviation, and standard error of
             # values in array.
             mean = numpy.nanmean(array)
+            standard_error = scipy.stats.sem(array)
+            confidence_95_low = (mean - (1.96 * standard_error))
+            confidence_95_high = (mean + (1.96 * standard_error))
             median = numpy.nanmedian(array)
             standard_deviation = numpy.nanstd(array)
-            standard_error = scipy.stats.sem(array)
         else:
             mean = float("nan")
+            standard_error = float("nan")
+            confidence_95_low = float("nan")
+            confidence_95_high = float("nan")
             median = float("nan")
             standard_deviation = float("nan")
-            standard_error = float("nan")
         # Collect information for record.
         record[str(column + "_count")] = str(count)
         record[str(column + "_mean")] = str(round(mean, 2))
+        record[str(column + "_stderr")] = str(round(standard_error, 2))
+        record[str(column + "_95_ci")] = str(
+            str(round(confidence_95_low, 2)) + " - " +
+            str(round(confidence_95_high, 2))
+        )
         record[str(column + "_median")] = str(round(median, 2))
         record[str(column + "_stdev")] = str(round(standard_deviation, 2))
-        record[str(column + "_stderr")] = str(round(standard_error, 2))
         pass
     # Return information.
     return record
@@ -4113,6 +3916,54 @@ def organize_report_female_male_cohorts_variables(
     ]
     cohorts.append(cohort)
 
+    # Age
+
+    cohort = dict()
+    cohort["category"] = "age"
+    cohort["name"] = "female_young"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "age"
+    cohort["name"] = "female_old"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 2)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "age"
+    cohort["name"] = "male_young"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 0)
+        ), :
+    ]
+    cohorts.append(cohort)
+
+    cohort = dict()
+    cohort["category"] = "age"
+    cohort["name"] = "male_old"
+    cohort["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 2)
+        ), :
+    ]
+    cohorts.append(cohort)
+
     # Collect records for cohorts.
     records = list()
     for cohort in cohorts:
@@ -4386,9 +4237,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         ascending=False,
         inplace=True,
     )
-    table_report_summary = organize_report_female_male_cohorts_variables(
-        table=table,
-    )
     # Report.
     if report:
         # Column name translations.
@@ -4398,13 +4246,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
         print(table_report)
-        print(table_report_summary)
     # Collect information.
     pail = dict()
     pail["table"] = table
     pail["table_clean"] = table_clean
     pail["table_report"] = table_report
-    pail["table_report_summary"] = table_report_summary
     # Return information.
     return pail
 
@@ -7956,7 +7802,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
 # TODO: progress 28 May 2021 (TCW)
 # TODO: I still need to introduce "table_kinship_pairs"...
-
+# TODO: I also still need to introduce the categorical "White British" ancestry
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -9195,6 +9041,10 @@ def execute_female_menstruation(
     return pail_female
 
 
+# TODO: 2021-06-05
+# TODO: move the summary report table from the "female" function above to "execute_analyze_sex_cohorts_hormones()"
+# TODO: return the table in a pail dict()
+
 def execute_analyze_sex_cohorts_hormones(
     table=None,
     report=None,
@@ -9210,7 +9060,8 @@ def execute_analyze_sex_cohorts_hormones(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
+        (dict): collection of information about phenotype variables across
+            UK Biobank cohort
 
     """
 
@@ -9286,15 +9137,21 @@ def execute_analyze_sex_cohorts_hormones(
         report=True,
     )
 
-
+    # Prepare table to summarize hormone variables across sex cohorts.
+    table_summary = organize_report_female_male_cohorts_variables(
+        table=table,
+    )
     # Report.
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: execute_analyze_sex_cohorts_hormones()")
         utility.print_terminal_partition(level=3)
+    # Collect information.
+    pail = dict()
+    pail["table_summary_cohorts_variables"] = table_summary
     # Return information.
-    pass
+    return pail
 
 
 def execute_plot_hormones(
@@ -9560,6 +9417,7 @@ def execute_alcohol(
 
 
 # TODO: introduce table_kinship_pairs!!!
+# TODO: make sure that filter to "White_British" is a part of both sets, too
 
 def execute_cohorts_models_genetic_analysis(
     table=None,
