@@ -9041,10 +9041,6 @@ def execute_female_menstruation(
     return pail_female
 
 
-# TODO: 2021-06-05
-# TODO: move the summary report table from the "female" function above to "execute_analyze_sex_cohorts_hormones()"
-# TODO: return the table in a pail dict()
-
 def execute_analyze_sex_cohorts_hormones(
     table=None,
     report=None,
