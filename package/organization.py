@@ -7422,7 +7422,8 @@ def select_records_by_male_specific_valid_variables_values(
     return table
 
 
-def select_records_by_sex_specific_valid_variables_values(
+def select_records_by_ancestry_sex_specific_valid_variables_values(
+    white_british=None,
     female=None,
     female_pregnancy=None,
     female_menopause_binary=None,
@@ -7439,8 +7440,9 @@ def select_records_by_sex_specific_valid_variables_values(
     Selects records by sex and by sex-specific criteria and variables.
 
     arguments:
+        white_british (list<int>): which values of white british categorical
+            ancestry variable to include
         female (bool): whether to include records for females
-
         female_pregnancy (list<int>): which values of pregnancy definition to
             include for females
         female_menopause_binary (list<int>): which values of binary menopause
@@ -7468,6 +7470,18 @@ def select_records_by_sex_specific_valid_variables_values(
 
     """
 
+    # Copy information.
+    table = table.copy(deep=True)
+    #
+    # Determine whether to filter by white british categorical ancestry.
+    if (
+        (0 not in white_british) or
+        (1 not in white_british)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["white_british"].isin(white_british)), :
+        ]
     # Collect records.
     table_collection = pandas.DataFrame()
     # Select records for females.
@@ -7800,9 +7814,11 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 ##########
 # Cohort, model selection: sets
 
-# TODO: progress 28 May 2021 (TCW)
+# TODO: progress 6 June 2021 (TCW)
 # TODO: I still need to introduce "table_kinship_pairs"...
-# TODO: I also still need to introduce the categorical "White British" ancestry
+# TODO: pass "table_kinship_pairs" to the selection function...
+# TODO: call separate kinship function after selection of variables for females and males
+
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -7820,6 +7836,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     arguments:
         hormone (str): name of column for hormone variable
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -7838,7 +7856,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: non-pregnant females and males together
 
     table_female_male = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -7873,7 +7892,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: all non-pregnant females together
 
     table_female = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -7905,7 +7925,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: premenopausal females by binary menopause definition
 
     table_female_premenopause_binary = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0,],
@@ -7937,7 +7958,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: postmenopausal females by binary menopause definition
 
     table_female_postmenopause_binary = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[1,],
@@ -7968,7 +7990,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: premenopausal females by ordinal menopause definition
 
     table_female_premenopause_ordinal = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -8000,7 +8023,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: perimenopausal females by ordinal menopause definition
 
     table_female_perimenopause_ordinal = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -8032,7 +8056,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: postmenopausal females by ordinal menopause definition
 
     table_female_postmenopause_ordinal = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=True,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -8063,7 +8088,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     # Cohort: males
 
     table_male = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=False,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -8092,7 +8118,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: young males
     table_male_young = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=False,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -8121,7 +8148,8 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: old males
     table_male_old = (
-        select_records_by_sex_specific_valid_variables_values(
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            white_british=[1,],
             female=False,
             female_pregnancy=[0,],
             female_menopause_binary=[0, 1,],
@@ -9040,7 +9068,7 @@ def execute_female_menstruation(
     # Return information.
     return pail_female
 
-
+# TODO: store the contingency table reports in a text file?
 def execute_analyze_sex_cohorts_hormones(
     table=None,
     report=None,
@@ -9444,16 +9472,15 @@ def execute_cohorts_models_genetic_analysis(
     # TODO: include relatedness in both sets of cohorts-models...
 
     # Read source information from file.
-    if False:
-        table_kinship_pairs = read_source_table_kinship_pairs(
-            path_dock=path_dock,
-            report=False,
-        )
+    table_kinship_pairs = read_source_table_kinship_pairs(
+        path_dock=path_dock,
+        report=False,
+    )
     # Determine which set of cohorts and models to select and organize.
     if (set == "sex_hormones"):
         pail = select_organize_cohorts_models_set_sex_hormones(
             table=table,
-            table_kinship_pairs=dict(),
+            table_kinship_pairs=table_kinship_pairs,
             report=report,
         )
     elif (set == "bipolar_disorder_body"):
