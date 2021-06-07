@@ -7627,6 +7627,10 @@ def filter_persons_ukbiobank_by_kinship(
         print("kinship network graph")
         print("network order: " + str(network.order()))
         print("network size: " + str(network.size()))
+        print(
+            "count connected components: " +
+            str(networkx.number_connected_components(network))
+        )
     # TODO: temporary place-holder...
     return table
 
