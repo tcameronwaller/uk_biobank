@@ -7502,6 +7502,21 @@ def filter_kinship_pairs_by_threshold_relevance(
         inplace=True,
         drop=False,
     )
+    # Determine count of persons relevant to the analysis-specific cohort who
+    # belong to kinship pairs beyond threshold.
+    genotypes_kinship = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
+    genotypes_kinship_second = copy.deepcopy(
+        table_kinship_pairs["ID2"].to_list()
+    )
+    genotypes_kinship.extend(genotypes_kinship_second)
+    genotypes_kinship_unique = utility.collect_unique_elements(
+        elements=genotypes_kinship
+    )
+    genotypes_common = utility.filter_common_elements(
+        list_minor=genotypes_kinship_unique,
+        list_major=genotypes_relevant,
+    )
+    count_genotypes_kinship_relevant = len(genotypes_common)
     # Report.
     if report:
         # Column name translations.
@@ -7515,6 +7530,11 @@ def filter_kinship_pairs_by_threshold_relevance(
         print("original: " + str(count_pairs_original))
         print("kinship threshold: " + str(count_pairs_kinship))
         print("relevant to analysis cohort: " + str(count_pairs_relevant))
+        print("... genotypes (persons) ...")
+        print(
+            "relevant genotypes with kinship beyond threshold: " +
+            str(count_genotypes_kinship_relevant)
+        )
         utility.print_terminal_partition(level=5)
     # Return information.
     return table_kinship_pairs
