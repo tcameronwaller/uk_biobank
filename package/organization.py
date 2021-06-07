@@ -7422,6 +7422,105 @@ def select_records_by_male_specific_valid_variables_values(
     return table
 
 
+# TODO: progress 6 June 2021 (TCW)
+# TODO: I still need to introduce "table_kinship_pairs"...
+# TODO: pass "table_kinship_pairs" to the selection function...
+# TODO: call separate kinship function after selection of variables for females and males
+# TODO: remember first to filter the kinship table by 0.01 (?) to consider only strong relatedness pairs
+# TODO: also remember to report connected components in network and how many "relevant" people are involved...
+
+
+def filter_persons_ukbiobank_by_kinship(
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+    table=None,
+    report=None,
+):
+    """
+    Selects records by sex and by sex-specific criteria and variables.
+
+    arguments:
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        table (object): Pandas data frame of values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    table = table.copy(deep=True)
+    # Filter kinship pairs to exclude persons with kinship below threshold.
+    count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
+    table_kinship_pairs = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < threshold_kinship), :
+    ]
+    count_pairs_kinship = copy.deepcopy(table_kinship_pairs.shape[0])
+    # Filter kinship pairs to exclude persons who are not in the
+    # analysis-specific cohort table.
+    # Consider both persons from each kinship pair.
+    genotypes_relevant = copy.deepcopy(table["IID"].to_list())
+    table_kinship_pairs.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs.set_index(
+        "ID1",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs = table_kinship_pairs.loc[
+        table_kinship_pairs.index.isin(records_relevant), :
+    ]
+    table_kinship_pairs.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs.set_index(
+        "ID2",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs = table_kinship_pairs.loc[
+        table_kinship_pairs.index.isin(records_relevant), :
+    ]
+    count_pairs_relevant = copy.deepcopy(table_kinship_pairs.shape[0])
+    table_kinship_pairs.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "filter_persons_ukbiobank_by_kinship()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... kinship pairs ...")
+        print("original: " + str(count_pairs_original))
+        print("kinship threshold: " + str(count_pairs_kinship))
+        print("relevant to analysis cohort: " + str(count_pairs_relevant))
+        utility.print_terminal_partition(level=5)
+
+    # TODO: temporary place-holder...
+    return table
+
+
+
 def select_records_by_ancestry_sex_specific_valid_variables_values(
     white_british=None,
     female=None,
@@ -7434,6 +7533,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     age_grade_male=None,
     male_variables=None,
     male_prefixes=None,
+    table_kinship_pairs=None,
     table=None,
 ):
     """
@@ -7460,6 +7560,8 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
             must have valid values to keep records for males
         male_prefixes (list<str>): prefixes of columns for variables in which
             rows must have valid values to keep records for males
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
         table (object): Pandas data frame of values
 
     raises:
@@ -7512,20 +7614,28 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
             ignore_index=True,
         )
         pass
+
+    # Filter by kinship relatedness.
+    table_unrelated = filter_persons_ukbiobank_by_kinship(
+        threshold_kinship=0.1,
+        table_kinship_pairs=table_kinship_pairs,
+        table=table_collection,
+        report=True,
+    )
     # Organize table.
-    table_collection.reset_index(
+    table_unrelated.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
-    table_collection.set_index(
+    table_unrelated.set_index(
         "eid",
         append=False,
         drop=True,
         inplace=True
     )
     # Return information.
-    return table_collection
+    return table_unrelated
 
 
 def translate_boolean_phenotype_plink(
@@ -7813,11 +7923,6 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
 ##########
 # Cohort, model selection: sets
-
-# TODO: progress 6 June 2021 (TCW)
-# TODO: I still need to introduce "table_kinship_pairs"...
-# TODO: pass "table_kinship_pairs" to the selection function...
-# TODO: call separate kinship function after selection of variables for females and males
 
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
