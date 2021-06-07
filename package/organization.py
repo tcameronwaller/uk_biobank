@@ -28,6 +28,7 @@ import numpy
 import scipy.stats
 import pandas
 pandas.options.mode.chained_assignment = None # default = "warn"
+import networkx
 
 # Custom
 import promiscuity.utility as utility
@@ -7460,6 +7461,12 @@ def filter_kinship_pairs_by_threshold_relevance(
     # Copy information.
     table_kinship_pairs = table_kinship_pairs.copy(deep=True)
     table = table.copy(deep=True)
+    # Filter kinship pairs to exclude any redundant pairs.
+    table_kinship_pairs.drop_duplicates(
+        subset=["ID1", "ID2",],
+        keep="first",
+        inplace=True,
+    )
     # Filter kinship pairs to exclude persons with kinship below threshold.
     count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
     table_kinship_pairs = table_kinship_pairs.loc[
@@ -7589,8 +7596,23 @@ def filter_persons_ukbiobank_by_kinship(
         threshold_kinship=threshold_kinship,
         table_kinship_pairs=table_kinship_pairs,
         table=table,
-        report=True,
+        report=False, # report procedure is quite slow
     )
+    # Define an unweighted, undirected network graph between pairs of related
+    # persons.
+    columns_pairs = ["ID1", "ID2"]
+    table_kinship_pairs = table_kinship_pairs.loc[
+        :, table_kinship_pairs.columns.isin(columns_pairs)
+    ]
+    table_kinship_pairs = table_kinship_pairs[[*columns_pairs]]
+    network = networkx.from_pandas_edgelist(
+        table_kinship_pairs,
+        "ID1",
+        "ID2",
+        edge_attr=None,
+        create_using=networkx.Graph(),
+    )
+
     # Report.
     if report:
         # Column name translations.
@@ -7599,6 +7621,12 @@ def filter_persons_ukbiobank_by_kinship(
             "report: " +
             "filter_persons_ukbiobank_by_kinship()"
         )
+        utility.print_terminal_partition(level=5)
+        print("cohort: " + str(name))
+        utility.print_terminal_partition(level=5)
+        print("kinship network graph")
+        print("network order: " + str(network.order()))
+        print("network size: " + str(network.size()))
     # TODO: temporary place-holder...
     return table
 
