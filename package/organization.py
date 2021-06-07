@@ -7520,9 +7520,7 @@ def filter_kinship_pairs_by_threshold_relevance(
             table_kinship_pairs["ID2"].to_list()
         )
         genotypes_kinship.extend(genotypes_kinship_second)
-        genotypes_kinship_unique = utility.collect_unique_elements(
-            elements=genotypes_kinship
-        )
+        genotypes_kinship_unique = list(set(genotypes_kinship))
         genotypes_common = utility.filter_common_elements(
             list_minor=genotypes_kinship_unique,
             list_major=genotypes_relevant,
@@ -7596,7 +7594,7 @@ def filter_persons_ukbiobank_by_kinship(
         threshold_kinship=threshold_kinship,
         table_kinship_pairs=table_kinship_pairs,
         table=table,
-        report=False, # report procedure is quite slow
+        report=report, # report procedure is quite slow
     )
     # Define an unweighted, undirected network graph between pairs of related
     # persons.
