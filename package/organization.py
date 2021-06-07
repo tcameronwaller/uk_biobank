@@ -7983,6 +7983,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_male_" + hormone)] = (
@@ -8015,6 +8016,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_" + hormone)] = (
@@ -8049,6 +8051,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_premenopause_binary_" + hormone)] = (
@@ -8081,6 +8084,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_postmenopause_binary_" + hormone)] = (
@@ -8114,6 +8118,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_premenopause_ordinal_" + hormone)] = (
@@ -8147,6 +8152,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_perimenopause_ordinal_" + hormone)] = (
@@ -8179,6 +8185,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[],
             male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_female_postmenopause_ordinal_" + hormone)] = (
@@ -8210,6 +8217,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_male_" + hormone)] = (
@@ -8240,6 +8248,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_male_young_" + hormone)] = (
@@ -8270,6 +8279,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
     pail[str("table_male_old_" + hormone)] = (
@@ -9579,7 +9589,7 @@ def execute_cohorts_models_genetic_analysis(
     # Read source information from file.
     table_kinship_pairs = read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=False,
+        report=True,
     )
     # Determine which set of cohorts and models to select and organize.
     if (set == "sex_hormones"):
