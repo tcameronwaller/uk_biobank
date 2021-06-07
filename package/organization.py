@@ -7432,6 +7432,7 @@ def select_records_by_male_specific_valid_variables_values(
 
 
 def filter_kinship_pairs_by_threshold_relevance(
+    name=None,
     threshold_kinship=None,
     table_kinship_pairs=None,
     table=None,
@@ -7441,6 +7442,7 @@ def filter_kinship_pairs_by_threshold_relevance(
     Selects records by sex and by sex-specific criteria and variables.
 
     arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
         threshold_kinship (float): maximal value of kinship coefficient
         table_kinship_pairs (object): Pandas data frame of kinship coefficients
             across pairs of persons
@@ -7516,7 +7518,11 @@ def filter_kinship_pairs_by_threshold_relevance(
         list_minor=genotypes_kinship_unique,
         list_major=genotypes_relevant,
     )
+    count_genotypes_relevant = len(genotypes_relevant)
     count_genotypes_kinship_relevant = len(genotypes_common)
+    percentage = round(
+        ((count_genotypes_kinship_relevant / count_genotypes_relevant) * 100), 2
+    )
     # Report.
     if report:
         # Column name translations.
@@ -7526,14 +7532,22 @@ def filter_kinship_pairs_by_threshold_relevance(
             "filter_kinship_pairs_by_threshold_relevance()"
         )
         utility.print_terminal_partition(level=5)
+        print("cohort: " + str(name))
+        utility.print_terminal_partition(level=5)
         print("... kinship pairs ...")
         print("original: " + str(count_pairs_original))
         print("kinship threshold: " + str(count_pairs_kinship))
         print("relevant to analysis cohort: " + str(count_pairs_relevant))
+        print("..........")
         print("... genotypes (persons) ...")
         print(
+            "total relevant genotypes in cohort: " +
+            str(count_genotypes_relevant)
+        )
+        print(
             "relevant genotypes with kinship beyond threshold: " +
-            str(count_genotypes_kinship_relevant)
+            str(count_genotypes_kinship_relevant) + " (" +
+            str(percentage) + "%)"
         )
         utility.print_terminal_partition(level=5)
     # Return information.
@@ -7541,6 +7555,7 @@ def filter_kinship_pairs_by_threshold_relevance(
 
 
 def filter_persons_ukbiobank_by_kinship(
+    name=None,
     threshold_kinship=None,
     table_kinship_pairs=None,
     table=None,
@@ -7550,6 +7565,7 @@ def filter_persons_ukbiobank_by_kinship(
     Selects records by sex and by sex-specific criteria and variables.
 
     arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
         threshold_kinship (float): maximal value of kinship coefficient
         table_kinship_pairs (object): Pandas data frame of kinship coefficients
             across pairs of persons
@@ -7570,6 +7586,7 @@ def filter_persons_ukbiobank_by_kinship(
     # Filter kinship pairs to exclude persons with kinship below threshold and
     # those who are not in the analysis-specific cohort table.
     table_kinship_pairs = filter_kinship_pairs_by_threshold_relevance(
+        name=name,
         threshold_kinship=threshold_kinship,
         table_kinship_pairs=table_kinship_pairs,
         table=table,
@@ -7588,6 +7605,7 @@ def filter_persons_ukbiobank_by_kinship(
 
 
 def select_records_by_ancestry_sex_specific_valid_variables_values(
+    name=None,
     white_british=None,
     female=None,
     female_pregnancy=None,
@@ -7606,6 +7624,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     Selects records by sex and by sex-specific criteria and variables.
 
     arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
         white_british (list<int>): which values of white british categorical
             ancestry variable to include
         female (bool): whether to include records for females
@@ -7683,6 +7702,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
 
     # Filter by kinship relatedness.
     table_unrelated = filter_persons_ukbiobank_by_kinship(
+        name=name,
         threshold_kinship=0.1,
         table_kinship_pairs=table_kinship_pairs,
         table=table_collection,
@@ -8026,8 +8046,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: non-pregnant females and males together
 
+    name = str("table_female_male_" + hormone)
     table_female_male = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8052,7 +8074,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_male_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8063,8 +8085,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: all non-pregnant females together
 
+    name = str("table_female_" + hormone)
     table_female = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8085,7 +8109,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8097,8 +8121,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: premenopausal females by binary menopause definition
 
+    name = str("table_female_premenopause_binary_" + hormone)
     table_female_premenopause_binary = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8120,7 +8146,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_premenopause_binary_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8131,8 +8157,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: postmenopausal females by binary menopause definition
 
+    name = str("table_female_postmenopause_binary_" + hormone)
     table_female_postmenopause_binary = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8153,7 +8181,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_postmenopause_binary_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8164,8 +8192,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: premenopausal females by ordinal menopause definition
 
+    name = str("table_female_premenopause_ordinal_" + hormone)
     table_female_premenopause_ordinal = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8187,7 +8217,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_premenopause_ordinal_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8198,8 +8228,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: perimenopausal females by ordinal menopause definition
 
+    name = str("table_female_perimenopause_ordinal_" + hormone)
     table_female_perimenopause_ordinal = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8221,7 +8253,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_perimenopause_ordinal_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8232,8 +8264,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: postmenopausal females by ordinal menopause definition
 
+    name = str("table_female_postmenopause_ordinal_" + hormone)
     table_female_postmenopause_ordinal = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8254,7 +8288,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_female_postmenopause_ordinal_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8265,8 +8299,10 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     # Cohort: males
 
+    name = str("table_male_" + hormone)
     table_male = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8286,7 +8322,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_male_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8296,8 +8332,11 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     ))
 
     # Cohort: young males
+
+    name = str("table_male_young_" + hormone)
     table_male_young = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8317,7 +8356,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_male_young_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
@@ -8327,8 +8366,11 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     ))
 
     # Cohort: old males
+
+    name = str("table_male_old_" + hormone)
     table_male_old = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=name,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8348,7 +8390,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[str("table_male_old_" + hormone)] = (
+    pail[name] = (
         organize_phenotype_covariate_table_plink_format(
             boolean_phenotypes=[],
             binary_phenotypes=[],
