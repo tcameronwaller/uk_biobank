@@ -7430,7 +7430,8 @@ def select_records_by_male_specific_valid_variables_values(
 # TODO: also remember to report connected components in network and how many "relevant" people are involved...
 
 
-def filter_persons_ukbiobank_by_kinship(
+
+def filter_kinship_pairs_by_threshold_relevance(
     threshold_kinship=None,
     table_kinship_pairs=None,
     table=None,
@@ -7449,8 +7450,8 @@ def filter_persons_ukbiobank_by_kinship(
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+        (object): Pandas data frame of kinship coefficients
+            across pairs of persons
 
     """
 
@@ -7479,7 +7480,7 @@ def filter_persons_ukbiobank_by_kinship(
         inplace=True
     )
     table_kinship_pairs = table_kinship_pairs.loc[
-        table_kinship_pairs.index.isin(records_relevant), :
+        table_kinship_pairs.index.isin(genotypes_relevant), :
     ]
     table_kinship_pairs.reset_index(
         level=None,
@@ -7493,7 +7494,7 @@ def filter_persons_ukbiobank_by_kinship(
         inplace=True
     )
     table_kinship_pairs = table_kinship_pairs.loc[
-        table_kinship_pairs.index.isin(records_relevant), :
+        table_kinship_pairs.index.isin(genotypes_relevant), :
     ]
     count_pairs_relevant = copy.deepcopy(table_kinship_pairs.shape[0])
     table_kinship_pairs.reset_index(
@@ -7507,7 +7508,7 @@ def filter_persons_ukbiobank_by_kinship(
         utility.print_terminal_partition(level=2)
         print(
             "report: " +
-            "filter_persons_ukbiobank_by_kinship()"
+            "filter_kinship_pairs_by_threshold_relevance()"
         )
         utility.print_terminal_partition(level=5)
         print("... kinship pairs ...")
@@ -7515,10 +7516,55 @@ def filter_persons_ukbiobank_by_kinship(
         print("kinship threshold: " + str(count_pairs_kinship))
         print("relevant to analysis cohort: " + str(count_pairs_relevant))
         utility.print_terminal_partition(level=5)
+    # Return information.
+    return table_kinship_pairs
 
+
+def filter_persons_ukbiobank_by_kinship(
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+    table=None,
+    report=None,
+):
+    """
+    Selects records by sex and by sex-specific criteria and variables.
+
+    arguments:
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        table (object): Pandas data frame of values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    table = table.copy(deep=True)
+    # Filter kinship pairs to exclude persons with kinship below threshold and
+    # those who are not in the analysis-specific cohort table.
+    table_kinship_pairs = filter_kinship_pairs_by_threshold_relevance(
+        threshold_kinship=threshold_kinship,
+        table_kinship_pairs=table_kinship_pairs,
+        table=table,
+        report=report,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "filter_persons_ukbiobank_by_kinship()"
+        )
     # TODO: temporary place-holder...
     return table
-
 
 
 def select_records_by_ancestry_sex_specific_valid_variables_values(
