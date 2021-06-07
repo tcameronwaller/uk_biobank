@@ -9422,14 +9422,14 @@ def execute_analyze_sex_cohorts_hormones(
         stratifications=["female", "male"],
         column_missingness="testosterone",
         table=table,
-        report=True,
+        report=report,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="sex_text",
         stratifications=["female", "male"],
         column_missingness="oestradiol",
         table=table,
-        report=True,
+        report=report,
     )
     # Filter to females who were not pregnant.
     table_female = table.loc[
@@ -9443,28 +9443,28 @@ def execute_analyze_sex_cohorts_hormones(
         stratifications=[0, 1], # premenopause versus perimenopause
         column_missingness="testosterone",
         table=table_female_not_pregnant,
-        report=True,
+        report=report,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="menopause_ordinal",
         stratifications=[0, 1], # premenopause versus perimenopause
         column_missingness="oestradiol",
         table=table_female_not_pregnant,
-        report=True,
+        report=report,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="menopause_ordinal",
         stratifications=[0, 2], # premenopause versus postmenopause
         column_missingness="testosterone",
         table=table_female_not_pregnant,
-        report=True,
+        report=report,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="menopause_ordinal",
         stratifications=[0, 2], # premenopause versus postmenopause
         column_missingness="oestradiol",
         table=table_female_not_pregnant,
-        report=True,
+        report=report,
     )
 
     # TODO: also consider missingness in "younger" and "older" males
@@ -9476,14 +9476,14 @@ def execute_analyze_sex_cohorts_hormones(
         stratifications=[0, 2], # young versus old
         column_missingness="testosterone",
         table=table_male,
-        report=True,
+        report=report,
     )
     utility.report_contingency_table_stratification_by_missingness(
         column_stratification="age_grade_male",
         stratifications=[0, 2], # young versus old
         column_missingness="oestradiol",
         table=table_male,
-        report=True,
+        report=report,
     )
 
     # Prepare table to summarize hormone variables across sex cohorts.
@@ -9799,7 +9799,7 @@ def execute_cohorts_models_genetic_analysis(
     # Read source information from file.
     table_kinship_pairs = read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=True,
+        report=report,
     )
     # Determine which set of cohorts and models to select and organize.
     if (set == "sex_hormones"):
