@@ -7589,7 +7589,6 @@ def filter_persons_ukbiobank_by_kinship(
     # Copy information.
     table_kinship_pairs = table_kinship_pairs.copy(deep=True)
     table = table.copy(deep=True)
-    count_persons_original = copy.deepcopy(table.shape[0])
     # Filter kinship pairs to exclude persons with kinship below threshold and
     # those who are not in the analysis-specific cohort table.
     table_kinship_pairs = filter_kinship_pairs_by_threshold_relevance(
@@ -7619,34 +7618,64 @@ def filter_persons_ukbiobank_by_kinship(
     representative_nodes = list()
     for component in networkx.connected_components(network):
         network_component = network.subgraph(component).copy()
-        representative = random.choice(network_component.nodes())
+        print(network_component.nodes())
+        print(list(network_component.nodes))
+        representative = random.choice(list(network_component.nodes))
         representative_nodes.append(representative)
-
-    # TODO: next... exclude all the kinship persons EXCEPT for those representatives...
-
+    # Convert genotype identifiers to strings.
+    representative_nodes = map(str, representative_nodes)
+    count_kinship_representatives = len(representative_nodes)
+    # Exclude all related persons from the cohort, with the exception of a
+    # single representative from each family (connected component of the kinship
+    # pair network).
     genotypes_kinship = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
     genotypes_kinship_second = copy.deepcopy(
         table_kinship_pairs["ID2"].to_list()
     )
     genotypes_kinship.extend(genotypes_kinship_second)
-    genotypes_kinship_unique = utility.collect_unique_elements(
-        elements=genotypes_kinship
+    genotypes_kinship_unique = list(set(genotypes_kinship))
+    genotypes_kinship_unique = map(str, genotypes_kinship_unique)
+    count_kinship_unique = len(genotypes_kinship_unique)
+    genotypes_kinship_exclusion = list(filter(
+        lambda value: (value not in representative_nodes),
+        genotypes_kinship_unique
+    ))
+    count_persons_original = copy.deepcopy(table.shape[0])
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
     )
-    genotypes_common = utility.filter_common_elements(
-        list_minor=genotypes_kinship_unique,
-        list_major=genotypes_relevant,
+    table.set_index(
+        "IID",
+        append=False,
+        drop=True,
+        inplace=True
     )
-
+    table = table.loc[
+        ~table.index.isin(genotypes_kinship_exclusion), :
+    ]
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    count_persons_novel = copy.deepcopy(table.shape[0])
 
     # Report.
     if report:
         # Calculate percentage of persons lost to kinship threshold.
-        count_kinship_representatives = len(representative_nodes)
-        count_kinship_loss = (
-            count_persons_original - count_kinship_representatives
+        count_loss_kinship = (
+            count_kinship_unique - count_kinship_representatives
         )
-        percentage_loss = round(
+        percentage_loss_kinship = round(
             ((count_kinship_loss / count_persons_original) * 100), 2
+        )
+        count_check_loss = (
+            count_persons_original - count_persons_novel
+        )
+        percentage_loss_check = round(
+            ((count_check_loss / count_persons_original) * 100), 2
         )
         # Report.
         utility.print_terminal_partition(level=2)
