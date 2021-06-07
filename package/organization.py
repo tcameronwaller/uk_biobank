@@ -7589,6 +7589,7 @@ def filter_persons_ukbiobank_by_kinship(
     # Copy information.
     table_kinship_pairs = table_kinship_pairs.copy(deep=True)
     table = table.copy(deep=True)
+    count_persons_original = copy.deepcopy(table.shape[0])
     # Filter kinship pairs to exclude persons with kinship below threshold and
     # those who are not in the analysis-specific cohort table.
     table_kinship_pairs = filter_kinship_pairs_by_threshold_relevance(
@@ -7612,6 +7613,24 @@ def filter_persons_ukbiobank_by_kinship(
         edge_attr=None,
         create_using=networkx.Graph(),
     )
+    # Extract a single node (genotype) at random from each connected component
+    # from the network graph of kinship pairs.
+    # representative = random.choice(component.nodes())
+    representative_nodes = list()
+    for component in networkx.connected_components(network):
+        network_component = network.subraph(component).copy()
+        representative = random.choice(network_component.nodes())
+        representative_nodes.append(representative)
+
+    # TODO: next... exclude all the kinship persons EXCEPT for those representatives...
+    count_kinship_representatives = len(representative_nodes)
+    count_kinship_loss = (
+        count_persons_original - count_kinship_representatives
+    )
+    percentage_loss = round(
+        ((count_kinship_loss / count_persons_original) * 100), 2
+    )
+
 
     # Report.
     if report:
@@ -7630,6 +7649,14 @@ def filter_persons_ukbiobank_by_kinship(
         print(
             "count connected components: " +
             str(networkx.number_connected_components(network))
+        )
+        print(
+            "count representative nodes: " + str(count_kinship_representatives)
+        )
+        print(
+            "cohort loss to kinship: " + str(count_kinship_loss) + " of " +
+            str(count_persons_original) + " (" + str(percentage_loss) +
+            "%)"
         )
     # TODO: temporary place-holder...
     return table
