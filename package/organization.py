@@ -7618,12 +7618,10 @@ def filter_persons_ukbiobank_by_kinship(
     representative_nodes = list()
     for component in networkx.connected_components(network):
         network_component = network.subgraph(component).copy()
-        print(network_component.nodes())
-        print(list(network_component.nodes))
-        representative = random.choice(list(network_component.nodes))
+        representative = random.choice(list(network_component.nodes()))
         representative_nodes.append(representative)
     # Convert genotype identifiers to strings.
-    representative_nodes = map(str, representative_nodes)
+    representative_nodes = list(map(str, representative_nodes))
     count_kinship_representatives = len(representative_nodes)
     # Exclude all related persons from the cohort, with the exception of a
     # single representative from each family (connected component of the kinship
@@ -7634,7 +7632,7 @@ def filter_persons_ukbiobank_by_kinship(
     )
     genotypes_kinship.extend(genotypes_kinship_second)
     genotypes_kinship_unique = list(set(genotypes_kinship))
-    genotypes_kinship_unique = map(str, genotypes_kinship_unique)
+    genotypes_kinship_unique = list(map(str, genotypes_kinship_unique))
     count_kinship_unique = len(genotypes_kinship_unique)
     genotypes_kinship_exclusion = list(filter(
         lambda value: (value not in representative_nodes),
@@ -7669,13 +7667,13 @@ def filter_persons_ukbiobank_by_kinship(
             count_kinship_unique - count_kinship_representatives
         )
         percentage_loss_kinship = round(
-            ((count_kinship_loss / count_persons_original) * 100), 2
+            ((count_loss_kinship / count_persons_original) * 100), 2
         )
-        count_check_loss = (
+        count_loss_check = (
             count_persons_original - count_persons_novel
         )
         percentage_loss_check = round(
-            ((count_check_loss / count_persons_original) * 100), 2
+            ((count_loss_check / count_persons_original) * 100), 2
         )
         # Report.
         utility.print_terminal_partition(level=2)
@@ -7697,11 +7695,16 @@ def filter_persons_ukbiobank_by_kinship(
             "count representative nodes: " + str(count_kinship_representatives)
         )
         print(
-            "cohort loss to kinship: " + str(count_kinship_loss) + " of " +
-            str(count_persons_original) + " (" + str(percentage_loss) +
+            "cohort loss to kinship: " + str(count_loss_kinship) + " of " +
+            str(count_persons_original) + " (" + str(percentage_loss_kinship) +
             "%)"
         )
-    # TODO: temporary place-holder...
+        print(
+            "check cohort loss to kinship: " + str(count_loss_check) + " of " +
+            str(count_persons_original) + " (" + str(percentage_loss_check) +
+            "%)"
+        )
+    # Return information.
     return table
 
 
