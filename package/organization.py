@@ -7618,23 +7618,37 @@ def filter_persons_ukbiobank_by_kinship(
     # representative = random.choice(component.nodes())
     representative_nodes = list()
     for component in networkx.connected_components(network):
-        network_component = network.subraph(component).copy()
+        network_component = network.subgraph(component).copy()
         representative = random.choice(network_component.nodes())
         representative_nodes.append(representative)
 
     # TODO: next... exclude all the kinship persons EXCEPT for those representatives...
-    count_kinship_representatives = len(representative_nodes)
-    count_kinship_loss = (
-        count_persons_original - count_kinship_representatives
+
+    genotypes_kinship = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
+    genotypes_kinship_second = copy.deepcopy(
+        table_kinship_pairs["ID2"].to_list()
     )
-    percentage_loss = round(
-        ((count_kinship_loss / count_persons_original) * 100), 2
+    genotypes_kinship.extend(genotypes_kinship_second)
+    genotypes_kinship_unique = utility.collect_unique_elements(
+        elements=genotypes_kinship
+    )
+    genotypes_common = utility.filter_common_elements(
+        list_minor=genotypes_kinship_unique,
+        list_major=genotypes_relevant,
     )
 
 
     # Report.
     if report:
-        # Column name translations.
+        # Calculate percentage of persons lost to kinship threshold.
+        count_kinship_representatives = len(representative_nodes)
+        count_kinship_loss = (
+            count_persons_original - count_kinship_representatives
+        )
+        percentage_loss = round(
+            ((count_kinship_loss / count_persons_original) * 100), 2
+        )
+        # Report.
         utility.print_terminal_partition(level=2)
         print(
             "report: " +
