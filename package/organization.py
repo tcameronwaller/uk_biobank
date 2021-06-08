@@ -7197,239 +7197,7 @@ def organize_alcoholism_cases_controls_variables(
 
 
 ##########
-# Cohort, model selection: general
-
-
-# TODO: implement additional selections on basis of relatedness/kinship...
-
-
-def select_valid_records_all_specific_variables(
-    names=None,
-    prefixes=None,
-    table=None,
-    drop_columns=None,
-    report=None,
-):
-    """
-    Selects variable columns and record rows with valid values across all
-    variables.
-
-    arguments:
-        names (list<str>): explicit names of columns to keep
-        prefixes (list<str>): prefixes of names of columns to keep
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        drop_columns (bool): whether to drop other columns
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Extract table columns.
-    columns_all = copy.deepcopy(table.columns.to_list())
-    # Collect columns to keep.
-    columns_keep = list()
-    columns_names = list(filter(
-        lambda column: (str(column) in names),
-        columns_all
-    ))
-    columns_keep.extend(columns_names)
-    for prefix in prefixes:
-        columns_prefix = list(filter(
-            lambda column: (str(prefix) in str(column)),
-            columns_all
-        ))
-        columns_keep.extend(columns_prefix)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("Columns to keep: ")
-        print(columns_keep)
-    # Select columns.
-    if drop_columns:
-        table = table.loc[
-            :, table.columns.isin(columns_keep)
-        ]
-    # Remove any record rows with null values.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=columns_keep,
-        inplace=True,
-    )
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("After dropping rows with null values in specific columns.")
-        print("Selection of table columns and rows: ")
-        print(table)
-    # Return information.
-    return table
-
-
-def select_records_by_female_specific_valid_variables_values(
-    pregnancy=None,
-    menopause_binary=None,
-    menopause_ordinal=None,
-    variables=None,
-    prefixes=None,
-    table=None,
-):
-    """
-    Selects records for females with sex-specific criteria.
-
-    When filtering either by "menopause_binary" or "menopause_ordinal", be sure
-    to require that these variables have valid, non-null values.
-
-    arguments:
-        pregnancy (list<int>): which values of pregnancy definition to include
-            for females
-        menopause_binary (list<int>): which values of binary menopause
-            definition to include for females
-        menopause_ordinal (list<int>): which values of ordinal menopause
-            definition to include for females
-        variables (list<str>): names of columns for variables in which
-            rows must have valid values to keep records
-        prefixes (list<str>): prefixes of columns for variables in which
-            rows must have valid values to keep records
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    # Select records with valid (non-null) values of relevant variables.
-    # Exclude missing values first to avoid interpretation of "None" as False.
-    table = select_valid_records_all_specific_variables(
-        names=variables,
-        prefixes=prefixes,
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-    # Select records for females.
-    table = table.loc[
-        (table["sex_text"] == "female"), :
-    ]
-    # Determine whether to filter by pregnancy.
-    if (
-        (0 not in pregnancy) or
-        (1 not in pregnancy)
-    ):
-        # Select records.
-        table = table.loc[
-            (table["pregnancy"].isin(pregnancy)), :
-        ]
-    # Determine whether to filter by binary definition of menopause.
-    if (
-        (0 not in menopause_binary) or
-        (1 not in menopause_binary)
-    ):
-        # Select records.
-        table = table.loc[
-            (table["menopause_binary"].isin(menopause_binary)), :
-        ]
-    # Determine whether to filter by ordinal definition of menopause.
-    if (
-        (0 not in menopause_ordinal) or
-        (1 not in menopause_ordinal) or
-        (2 not in menopause_ordinal)
-    ):
-        # Select records.
-        table = table.loc[
-            (table["menopause_ordinal"].isin(menopause_ordinal)), :
-        ]
-    # Return information.
-    return table
-
-
-def select_records_by_male_specific_valid_variables_values(
-    age_grade_male=None,
-    variables=None,
-    prefixes=None,
-    table=None,
-):
-    """
-    Selects records for males with sex-specific criteria.
-
-    arguments:
-        age_grade_male (list<int>): which values of ordinal age variable to
-            include for males
-        variables (list<str>): names of columns for variables in which
-            rows must have valid values to keep records
-        prefixes (list<str>): prefixes of columns for variables in which
-            rows must have valid values to keep records
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Organize table.
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    # Select records with valid (non-null) values of relevant variables.
-    # Exclude missing values first to avoid interpretation of "None" as False.
-    table = select_valid_records_all_specific_variables(
-        names=variables,
-        prefixes=prefixes,
-        table=table,
-        drop_columns=True,
-        report=False,
-    )
-    # Select records for males.
-    table = table.loc[
-        (table["sex_text"] == "male"), :
-    ]
-    # Determine whether to filter by ordinal definition of age.
-    if (
-        (0 not in age_grade_male) or
-        (1 not in age_grade_male) or
-        (2 not in age_grade_male)
-    ):
-        # Select records.
-        table = table.loc[
-            (table["age_grade_male"].isin(age_grade_male)), :
-        ]
-    # Return information.
-    return table
-
-
-# TODO: progress 6 June 2021 (TCW)
-# TODO: I still need to introduce "table_kinship_pairs"...
-# TODO: pass "table_kinship_pairs" to the selection function...
-# TODO: call separate kinship function after selection of variables for females and males
-# TODO: remember first to filter the kinship table by 0.01 (?) to consider only strong relatedness pairs
-# TODO: also remember to report connected components in network and how many "relevant" people are involved...
-
+# Cohort, model selection: kinship
 
 
 def filter_kinship_pairs_by_threshold_relevance(
@@ -7702,6 +7470,233 @@ def filter_persons_ukbiobank_by_kinship(
             str(count_persons_original) + " (" + str(percentage_loss_check) +
             "%)"
         )
+    # Return information.
+    return table
+
+
+##########
+# Cohort, model selection: general
+
+
+# TODO: implement additional selections on basis of relatedness/kinship...
+
+
+def select_valid_records_all_specific_variables(
+    names=None,
+    prefixes=None,
+    table=None,
+    drop_columns=None,
+    report=None,
+):
+    """
+    Selects variable columns and record rows with valid values across all
+    variables.
+
+    arguments:
+        names (list<str>): explicit names of columns to keep
+        prefixes (list<str>): prefixes of names of columns to keep
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        drop_columns (bool): whether to drop other columns
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+    # Collect columns to keep.
+    columns_keep = list()
+    columns_names = list(filter(
+        lambda column: (str(column) in names),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+    for prefix in prefixes:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_keep.extend(columns_prefix)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Columns to keep: ")
+        print(columns_keep)
+    # Select columns.
+    if drop_columns:
+        table = table.loc[
+            :, table.columns.isin(columns_keep)
+        ]
+    # Remove any record rows with null values.
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=columns_keep,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("After dropping rows with null values in specific columns.")
+        print("Selection of table columns and rows: ")
+        print(table)
+    # Return information.
+    return table
+
+
+def select_records_by_female_specific_valid_variables_values(
+    pregnancy=None,
+    menopause_binary=None,
+    menopause_ordinal=None,
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for females with sex-specific criteria.
+
+    When filtering either by "menopause_binary" or "menopause_ordinal", be sure
+    to require that these variables have valid, non-null values.
+
+    arguments:
+        pregnancy (list<int>): which values of pregnancy definition to include
+            for females
+        menopause_binary (list<int>): which values of binary menopause
+            definition to include for females
+        menopause_ordinal (list<int>): which values of ordinal menopause
+            definition to include for females
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Select records for females.
+    table = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    # Determine whether to filter by pregnancy.
+    if (
+        (0 not in pregnancy) or
+        (1 not in pregnancy)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["pregnancy"].isin(pregnancy)), :
+        ]
+    # Determine whether to filter by binary definition of menopause.
+    if (
+        (0 not in menopause_binary) or
+        (1 not in menopause_binary)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["menopause_binary"].isin(menopause_binary)), :
+        ]
+    # Determine whether to filter by ordinal definition of menopause.
+    if (
+        (0 not in menopause_ordinal) or
+        (1 not in menopause_ordinal) or
+        (2 not in menopause_ordinal)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["menopause_ordinal"].isin(menopause_ordinal)), :
+        ]
+    # Return information.
+    return table
+
+
+def select_records_by_male_specific_valid_variables_values(
+    age_grade_male=None,
+    variables=None,
+    prefixes=None,
+    table=None,
+):
+    """
+    Selects records for males with sex-specific criteria.
+
+    arguments:
+        age_grade_male (list<int>): which values of ordinal age variable to
+            include for males
+        variables (list<str>): names of columns for variables in which
+            rows must have valid values to keep records
+        prefixes (list<str>): prefixes of columns for variables in which
+            rows must have valid values to keep records
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Select records with valid (non-null) values of relevant variables.
+    # Exclude missing values first to avoid interpretation of "None" as False.
+    table = select_valid_records_all_specific_variables(
+        names=variables,
+        prefixes=prefixes,
+        table=table,
+        drop_columns=True,
+        report=False,
+    )
+    # Select records for males.
+    table = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    # Determine whether to filter by ordinal definition of age.
+    if (
+        (0 not in age_grade_male) or
+        (1 not in age_grade_male) or
+        (2 not in age_grade_male)
+    ):
+        # Select records.
+        table = table.loc[
+            (table["age_grade_male"].isin(age_grade_male)), :
+        ]
     # Return information.
     return table
 
