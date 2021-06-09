@@ -1,4 +1,4 @@
-
+record
 """
 ...
 
@@ -3382,605 +3382,6 @@ def determine_female_any_hormone_alteration_medication(
     return value
 
 
-def organize_report_cohort_variables_summaries_record(
-    cohort=None,
-    category=None,
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        cohort (str): name of cohort
-        category (str): name of category for cohort, to facilitate table sorts
-            and comparisons
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): information for summary table record on cohort
-
-    """
-
-    # Collect information for cohort.
-    record = dict()
-    record["combination"] = str(category + "_" + cohort)
-    record["category"] = str(category)
-    record["cohort"] = str(cohort)
-    record["cohort_count"] = int(table.shape[0])
-    # Collect information for general columns.
-    columns = [
-        "age",
-        "menstruation_days",
-        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "testosterone", "testosterone_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
-        "testosterone_free", "testosterone_free_log",
-        "vitamin_d", "vitamin_d_log",
-    ]
-    # Iterate on relevant columns.
-    # Collect information for record.
-    for column in columns:
-        array = copy.deepcopy(table[column].dropna().to_numpy())
-        # Determine count of valid values.
-        count = int(array.size)
-        if (count > 10):
-            # Determine mean, median, standard deviation, and standard error of
-            # values in array.
-            mean = numpy.nanmean(array)
-            standard_error = scipy.stats.sem(array)
-            confidence_95_low = (mean - (1.96 * standard_error))
-            confidence_95_high = (mean + (1.96 * standard_error))
-            median = numpy.nanmedian(array)
-            standard_deviation = numpy.nanstd(array)
-        else:
-            mean = float("nan")
-            standard_error = float("nan")
-            confidence_95_low = float("nan")
-            confidence_95_high = float("nan")
-            median = float("nan")
-            standard_deviation = float("nan")
-        # Collect information for record.
-        record[str(column + "_count")] = str(count)
-        record[str(column + "_mean")] = str(round(mean, 2))
-        record[str(column + "_stderr")] = str(round(standard_error, 2))
-        record[str(column + "_95_ci")] = str(
-            str(round(confidence_95_low, 2)) + " - " +
-            str(round(confidence_95_high, 2))
-        )
-        record[str(column + "_median")] = str(round(median, 2))
-        record[str(column + "_stdev")] = str(round(standard_deviation, 2))
-        pass
-    # Return information.
-    return record
-
-
-def organize_report_female_male_cohorts_variables(
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Stratify cohorts and collect tables.
-    cohorts = list()
-
-    # Sex
-
-    cohort = dict()
-    cohort["category"] = "sex"
-    cohort["name"] = "female"
-    cohort["table"] = table.loc[
-        (table["sex_text"] == "female"), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "sex"
-    cohort["name"] = "male"
-    cohort["table"] = table.loc[
-        (table["sex_text"] == "male"), :
-    ]
-    cohorts.append(cohort)
-
-    # Pregnancy
-
-    cohort = dict()
-    cohort["category"] = "pregnancy"
-    cohort["name"] = "female_pregnancy_definite"
-    cohort["table"] = table.loc[
-        ((table["sex_text"] == "female") & (table["3140-0.0"] == 1)), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "pregnancy"
-    cohort["name"] = "female_pregnancy_unsure"
-    cohort["table"] = table.loc[
-        ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "pregnancy"
-    cohort["name"] = "female_pregnancy_yes"
-    cohort["table"] = table.loc[
-        ((table["sex_text"] == "female") & (table["pregnancy"] == 1)), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "pregnancy"
-    cohort["name"] = "female_pregnancy_no"
-    cohort["table"] = table.loc[
-        ((table["sex_text"] == "female") & (table["pregnancy"] == 0)), :
-    ]
-    cohorts.append(cohort)
-
-    # Menopause
-
-    cohort = dict()
-    cohort["category"] = "menopause"
-    cohort["name"] = "female_menopause_unsure"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["2724-0.0"] == 3)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause"
-    cohort["name"] = "female_menopause_blank"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["2724-0.0"] == -3)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Menopause binary
-
-    cohort = dict()
-    cohort["category"] = "menopause_binary"
-    cohort["name"] = "female_premenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_binary"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_binary"
-    cohort["name"] = "female_postmenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_binary"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Menopause binary strict
-
-    cohort = dict()
-    cohort["category"] = "menopause_binary_strict"
-    cohort["name"] = "female_premenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_binary_strict"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_binary_strict"
-    cohort["name"] = "female_postmenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_binary_strict"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Menopause ordinal
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal"
-    cohort["name"] = "female_premenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal"
-    cohort["name"] = "female_perimenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal"
-    cohort["name"] = "female_postmenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Menopause ordinal strict
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal_strict"
-    cohort["name"] = "female_premenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal_strict"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal_strict"
-    cohort["name"] = "female_perimenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal_strict"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menopause_ordinal_strict"
-    cohort["name"] = "female_postmenopause"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal_strict"] == 2)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Menstruation phase
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_menstruation_follicular"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_phase"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_menstruation_luteal"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_phase"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_premenopause_menstruation_follicular"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0) &
-            (table["menstruation_phase"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_premenopause_menstruation_luteal"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0) &
-            (table["menstruation_phase"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_perimenopause_menstruation_follicular"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1) &
-            (table["menstruation_phase"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "menstruation_phase"
-    cohort["name"] = "female_perimenopause_menstruation_luteal"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1) &
-            (table["menstruation_phase"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Hormone-alteration therapies
-
-    cohort = dict()
-    cohort["category"] = "oral_contraception"
-    cohort["name"] = "female_oral_contraception_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["oral_contraception"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "oral_contraception"
-    cohort["name"] = "female_oral_contraception_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["oral_contraception"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_replacement"
-    cohort["name"] = "female_hormone_replacement_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["hormone_replacement"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_replacement"
-    cohort["name"] = "female_hormone_replacement_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["hormone_replacement"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_hormone_alteration_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["hormone_alteration"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_hormone_alteration_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["hormone_alteration"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_premenopause_hormone_alteration_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0) &
-            (table["hormone_alteration"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_premenopause_hormone_alteration_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0) &
-            (table["hormone_alteration"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_perimenopause_hormone_alteration_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1) &
-            (table["hormone_alteration"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_perimenopause_hormone_alteration_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1) &
-            (table["hormone_alteration"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_postmenopause_hormone_alteration_yes"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2) &
-            (table["hormone_alteration"] == 1)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "hormone_alteration"
-    cohort["name"] = "female_postmenopause_hormone_alteration_no"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2) &
-            (table["hormone_alteration"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Age
-
-    cohort = dict()
-    cohort["category"] = "age"
-    cohort["name"] = "female_young"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "age"
-    cohort["name"] = "female_old"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 2)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "age"
-    cohort["name"] = "male_young"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 0)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    cohort = dict()
-    cohort["category"] = "age"
-    cohort["name"] = "male_old"
-    cohort["table"] = table.loc[
-        (
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 2)
-        ), :
-    ]
-    cohorts.append(cohort)
-
-    # Collect records for cohorts.
-    records = list()
-    for cohort in cohorts:
-        record = organize_report_cohort_variables_summaries_record(
-            cohort=cohort["name"],
-            category=cohort["category"],
-            table=cohort["table"],
-        )
-        records.append(record)
-
-    # Organize table.
-    table_summary = pandas.DataFrame(data=records)
-    # Return information
-    return table_summary
-
-
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -7236,6 +6637,7 @@ def filter_kinship_pairs_by_threshold_relevance(
         inplace=True,
     )
     # Filter kinship pairs to exclude persons with kinship below threshold.
+    # These pairs do not have strong enough relation for further consideration.
     count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
     table_kinship_pairs = table_kinship_pairs.loc[
         (table_kinship_pairs["Kinship"] < threshold_kinship), :
@@ -7701,6 +7103,9 @@ def select_records_by_male_specific_valid_variables_values(
     return table
 
 
+# TODO: ... separate the cohort selection (valid variables, etc) from the PLINK formatting...
+
+
 def select_records_by_ancestry_sex_specific_valid_variables_values(
     name=None,
     white_british=None,
@@ -7800,7 +7205,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     # Filter by kinship relatedness.
     table_unrelated = filter_persons_ukbiobank_by_kinship(
         name=name,
-        threshold_kinship=0.1,
+        threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table_collection,
         report=True,
@@ -8105,7 +7510,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
 
 ##########
-# Cohort, model selection: sets
+# Cohort, model selection: sets for genetic analyses on phenotypes and genotypes
 
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
@@ -8136,17 +7541,20 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
 
     """
 
-    # Compile information.
-    pail = dict()
+    # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
-    # Translate variable encodings and table format for analysis in PLINK.
+    records = list()
 
     # Cohort: non-pregnant females and males together
 
-    name = str("table_female_male_" + hormone)
-    table_female_male = (
+    record = dict()
+    record["name"] = str("table_female_male_" + hormone)
+    record["cohort_model"] = "female_male"
+    record["category"] = "female_male"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8171,21 +7579,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_male,
-    ))
+    records.append(record)
 
     # Cohort: all non-pregnant females together
 
-    name = str("table_female_" + hormone)
-    table_female = (
+    record = dict()
+    record["name"] = str("table_female_" + hormone)
+    record["cohort_model"] = "female"
+    record["category"] = "female"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8206,22 +7611,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female,
-    ))
-
+    records.append(record)
 
     # Cohort: premenopausal females by binary menopause definition
 
-    name = str("table_female_premenopause_binary_" + hormone)
-    table_female_premenopause_binary = (
+    record = dict()
+    record["name"] = str("table_female_premenopause_binary_" + hormone)
+    record["cohort_model"] = "female_premenopause_binary"
+    record["category"] = "female_menopause_binary"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8243,21 +7644,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_premenopause_binary,
-    ))
+    records.append(record)
 
     # Cohort: postmenopausal females by binary menopause definition
 
-    name = str("table_female_postmenopause_binary_" + hormone)
-    table_female_postmenopause_binary = (
+    record = dict()
+    record["name"] = str("table_female_postmenopause_binary_" + hormone)
+    record["cohort_model"] = "female_postmenopause_binary"
+    record["category"] = "female_menopause_binary"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8278,21 +7676,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_postmenopause_binary,
-    ))
+    records.append(record)
 
     # Cohort: premenopausal females by ordinal menopause definition
 
-    name = str("table_female_premenopause_ordinal_" + hormone)
-    table_female_premenopause_ordinal = (
+    record = dict()
+    record["name"] = str("table_female_premenopause_ordinal_" + hormone)
+    record["cohort_model"] = "female_premenopause_ordinal"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8314,21 +7709,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_premenopause_ordinal,
-    ))
+    records.append(record)
 
     # Cohort: perimenopausal females by ordinal menopause definition
 
-    name = str("table_female_perimenopause_ordinal_" + hormone)
-    table_female_perimenopause_ordinal = (
+    record = dict()
+    record["name"] = str("table_female_perimenopause_ordinal_" + hormone)
+    record["cohort_model"] = "female_perimenopause_ordinal"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8350,21 +7742,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_perimenopause_ordinal,
-    ))
+    records.append(record)
 
     # Cohort: postmenopausal females by ordinal menopause definition
 
-    name = str("table_female_postmenopause_ordinal_" + hormone)
-    table_female_postmenopause_ordinal = (
+    record = dict()
+    record["name"] = str("table_female_postmenopause_ordinal_" + hormone)
+    record["cohort_model"] = "female_postmenopause_ordinal"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -8385,21 +7774,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_female_postmenopause_ordinal,
-    ))
+    records.append(record)
 
     # Cohort: males
 
-    name = str("table_male_" + hormone)
-    table_male = (
+    record = dict()
+    record["name"] = str("table_male_" + hormone)
+    record["cohort_model"] = "male"
+    record["category"] = "male"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8419,21 +7805,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_male,
-    ))
+    records.append(record)
 
     # Cohort: young males
 
-    name = str("table_male_young_" + hormone)
-    table_male_young = (
+    record = dict()
+    record["name"] = str("table_male_young_" + hormone)
+    record["cohort_model"] = "male_young"
+    record["category"] = "male"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8453,21 +7836,18 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_male_young,
-    ))
+    records.append(record)
 
     # Cohort: old males
 
-    name = str("table_male_old_" + hormone)
-    table_male_old = (
+    record = dict()
+    record["name"] = str("table_male_old_" + hormone)
+    record["cohort_model"] = "male_old"
+    record["category"] = "male"
+    record["phenotype"] = hormone
+    record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=name,
+            name=record["name"],
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -8487,20 +7867,13 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
-    pail[name] = (
-        organize_phenotype_covariate_table_plink_format(
-            boolean_phenotypes=[],
-            binary_phenotypes=[],
-            continuous_variables=[hormone],
-            remove_null_records=False,
-            table=table_male_old,
-    ))
+    records.append(record)
 
     # Return information.
     return pail
 
 
-def select_organize_cohorts_models_set_sex_hormones(
+def select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
     table=None,
     table_kinship_pairs=None,
     report=None,
@@ -8523,7 +7896,7 @@ def select_organize_cohorts_models_set_sex_hormones(
     """
 
     # Compile information.
-    pail = dict()
+    records = list()
     # Select and organize variables across cohorts.
     hormones = [
         "albumin_log", "albumin_imputation_log",
@@ -8535,29 +7908,29 @@ def select_organize_cohorts_models_set_sex_hormones(
         "vitamin_d_log", "vitamin_d_imputation_log",
     ]
     for hormone in hormones:
-        pail_hormone = select_organize_plink_cohorts_variables_by_sex_hormone(
+        records_hormone = select_organize_plink_cohorts_variables_by_sex_hormone(
             hormone=hormone,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
         )
-        pail.update(pail_hormone)
+        records.extend(records_hormone)
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print(
             "report: select_organize_plink_cohorts_by_sex_hormones()"
         )
-        for table_name in pail.keys():
+        for record in records:
             utility.print_terminal_partition(level=5)
-            print(table_name)
+            print(record["name"])
             print(
-                "Count records: " + str(pail[table_name].shape[0])
+                "Count records: " + str(record["table"].shape[0])
             )
     # Return information.
-    return pail
+    return records
 
 
-def select_organize_cohorts_models_set_bipolar_disorder_body(
+def select_organize_cohorts_models_genotypes_analyses_set_bipolar_disorder(
     table=None,
     report=None,
 ):
@@ -8697,6 +8070,742 @@ def select_organize_cohorts_models_set_bipolar_disorder_body(
 
     # Return information.
     return pail
+
+
+##########
+# Cohort, model, phenotype description
+
+
+def organize_report_contingency_table_stratification_by_missingness(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about persons' sex hormones across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Organize contingency table descriptions of missingness.
+
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="sex_text",
+        stratifications=["female", "male"],
+        column_missingness="testosterone",
+        table=table,
+        report=report,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="sex_text",
+        stratifications=["female", "male"],
+        column_missingness="oestradiol",
+        table=table,
+        report=report,
+    )
+    # Filter to females who were not pregnant.
+    table_female = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    table_female_not_pregnant = table_female.loc[
+        (table_female["pregnancy"] == 0), :
+    ]
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 1], # premenopause versus perimenopause
+        column_missingness="testosterone",
+        table=table_female_not_pregnant,
+        report=report,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 1], # premenopause versus perimenopause
+        column_missingness="oestradiol",
+        table=table_female_not_pregnant,
+        report=report,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 2], # premenopause versus postmenopause
+        column_missingness="testosterone",
+        table=table_female_not_pregnant,
+        report=report,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="menopause_ordinal",
+        stratifications=[0, 2], # premenopause versus postmenopause
+        column_missingness="oestradiol",
+        table=table_female_not_pregnant,
+        report=report,
+    )
+
+    # TODO: also consider missingness in "younger" and "older" males
+    table_male = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="age_grade_male",
+        stratifications=[0, 2], # young versus old
+        column_missingness="testosterone",
+        table=table_male,
+        report=report,
+    )
+    utility.report_contingency_table_stratification_by_missingness(
+        column_stratification="age_grade_male",
+        stratifications=[0, 2], # young versus old
+        column_missingness="oestradiol",
+        table=table_male,
+        report=report,
+    )
+
+    pass
+
+
+def organize_report_cohort_model_variables_summaries_record(
+    name=None,
+    cohort_model=None,
+    category=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        name (str): name for cohort, model, and phenotype
+        cohort_model (str): name for cohort and model
+        category (str): name of category for cohort and model to facilitate
+            table sorts and comparisons
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for cohort.
+    record = dict()
+    record["name"] = str(name)
+    record["cohort_model"] = str(cohort_model)
+    record["category"] = str(category)
+    record["cohort_count"] = int(table.shape[0])
+    # Collect information for general columns.
+    columns = [
+        "age",
+        "menstruation_days",
+        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+        "oestradiol", "oestradiol_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "testosterone", "testosterone_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
+        "testosterone_free", "testosterone_free_log",
+        "vitamin_d", "vitamin_d_log",
+    ]
+    # Iterate on relevant columns.
+    # Collect information for record.
+    for column in columns:
+        # Initialize missing values.
+        count = float("nan")
+        mean = float("nan")
+        standard_error = float("nan")
+        confidence_95_low = float("nan")
+        confidence_95_high = float("nan")
+        median = float("nan")
+        standard_deviation = float("nan")
+        # Determine whether table has the column.
+        if (column in table.columns.to_list()):
+            array = copy.deepcopy(table[column].dropna().to_numpy())
+            # Determine count of valid values.
+            count = int(array.size)
+            if (count > 10):
+                # Determine mean, median, standard deviation, and standard error of
+                # values in array.
+                mean = numpy.nanmean(array)
+                standard_error = scipy.stats.sem(array)
+                confidence_95_low = (mean - (1.96 * standard_error))
+                confidence_95_high = (mean + (1.96 * standard_error))
+                median = numpy.nanmedian(array)
+                standard_deviation = numpy.nanstd(array)
+                pass
+            pass
+        # Collect information for record.
+        record[str(column + "_count")] = str(count)
+        record[str(column + "_mean")] = str(round(mean, 2))
+        record[str(column + "_stderr")] = str(round(standard_error, 2))
+        record[str(column + "_95_ci")] = str(
+            str(round(confidence_95_low, 2)) + " - " +
+            str(round(confidence_95_high, 2))
+        )
+        record[str(column + "_median")] = str(round(median, 2))
+        record[str(column + "_stdev")] = str(round(standard_deviation, 2))
+        pass
+    # Return information.
+    return record
+
+
+def select_organize_cohorts_models_phenotypes_set_summary(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    # Sex
+
+    record = dict()
+    record["name"] = "female"
+    record["cohort_model"] = "female"
+    record["category"] = "sex"
+    record["phenotype"] = "null"
+    record["table"] = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male"
+    record["cohort_model"] = "male"
+    record["category"] = "sex"
+    record["table"] = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    records.append(record)
+
+    # Pregnancy
+
+    record = dict()
+    record["name"] = "female_pregnancy_definite"
+    record["cohort_model"] = "female_pregnancy_definite"
+    record["category"] = "pregnancy"
+    record["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["3140-0.0"] == 1)), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_pregnancy_unsure"
+    record["cohort_model"] = "female_pregnancy_unsure"
+    record["category"] = "pregnancy"
+    record["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_pregnancy_yes"
+    record["cohort_model"] = "female_pregnancy_yes"
+    record["category"] = "pregnancy"
+    record["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["pregnancy"] == 1)), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_pregnancy_no"
+    record["cohort_model"] = "female_pregnancy_no"
+    record["category"] = "pregnancy"
+    record["table"] = table.loc[
+        ((table["sex_text"] == "female") & (table["pregnancy"] == 0)), :
+    ]
+    records.append(record)
+
+    # Menopause
+
+    record = dict()
+    record["name"] = "female_menopause_unsure"
+    record["cohort_model"] = "female_menopause_unsure"
+    record["category"] = "menopause"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["2724-0.0"] == 3)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_menopause_blank"
+    record["cohort_model"] = "female_menopause_blank"
+    record["category"] = "menopause"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["2724-0.0"] == -3)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause binary
+
+    record = dict()
+    record["name"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_binary"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause"
+    record["cohort_model"] = "female_postmenopause"
+    record["category"] = "menopause_binary"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause binary strict
+
+    record = dict()
+    record["name"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_binary_strict"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary_strict"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause"
+    record["cohort_model"] = "female_postmenopause"
+    record["category"] = "menopause_binary_strict"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_binary_strict"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause ordinal
+
+    record = dict()
+    record["name"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_ordinal"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause"
+    record["cohort_model"] = "female_perimenopause"
+    record["category"] = "menopause_ordinal"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause"
+    record["cohort_model"] = "female_postmenopause"
+    record["category"] = "menopause_ordinal"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause ordinal strict
+
+    record = dict()
+    record["name"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_ordinal_strict"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause"
+    record["cohort_model"] = "female_perimenopause"
+    record["category"] = "menopause_ordinal_strict"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause"
+    record["cohort_model"] = "female_postmenopause"
+    record["category"] = "menopause_ordinal_strict"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal_strict"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Menstruation phase
+
+    record = dict()
+    record["name"] = "female_menstruation_follicular"
+    record["cohort_model"] = "female_menstruation_follicular"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_phase"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_menstruation_luteal"
+    record["cohort_model"] = "female_menstruation_luteal"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_phase"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_menstruation_follicular"
+    record["cohort_model"] = "female_premenopause_menstruation_follicular"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["menstruation_phase"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_menstruation_luteal"
+    record["cohort_model"] = "female_premenopause_menstruation_luteal"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["menstruation_phase"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_menstruation_follicular"
+    record["cohort_model"] = "female_perimenopause_menstruation_follicular"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["menstruation_phase"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_menstruation_luteal"
+    record["cohort_model"] = "female_perimenopause_menstruation_luteal"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["menstruation_phase"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Hormone-alteration therapies
+
+    record = dict()
+    record["name"] = "female_oral_contraception_yes"
+    record["cohort_model"] = "female_oral_contraception_yes"
+    record["category"] = "oral_contraception"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["oral_contraception"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_oral_contraception_no"
+    record["cohort_model"] = "female_oral_contraception_no"
+    record["category"] = "oral_contraception"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["oral_contraception"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_hormone_replacement_yes"
+    record["cohort_model"] = "female_hormone_replacement_yes"
+    record["category"] = "hormone_replacement"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_replacement"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_hormone_replacement_no"
+    record["cohort_model"] = "female_hormone_replacement_no"
+    record["category"] = "hormone_replacement"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_replacement"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_hormone_alteration_yes"
+    record["cohort_model"] = "female_hormone_alteration_yes"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_hormone_alteration_no"
+    record["cohort_model"] = "female_hormone_alteration_no"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_hormone_alteration_yes"
+    record["cohort_model"] = "female_premenopause_hormone_alteration_yes"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_hormone_alteration_no"
+    record["cohort_model"] = "female_premenopause_hormone_alteration_no"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_hormone_alteration_yes"
+    record["cohort_model"] = "female_perimenopause_hormone_alteration_yes"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_hormone_alteration_no"
+    record["cohort_model"] = "female_perimenopause_hormone_alteration_no"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause_hormone_alteration_yes"
+    record["cohort_model"] = "female_postmenopause_hormone_alteration_yes"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2) &
+            (table["hormone_alteration"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause_hormone_alteration_no"
+    record["cohort_model"] = "female_postmenopause_hormone_alteration_no"
+    record["category"] = "hormone_alteration"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2) &
+            (table["hormone_alteration"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    # Age
+
+    record = dict()
+    record["name"] = "female_young"
+    record["cohort_model"] = "female_young"
+    record["category"] = "age"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_old"
+    record["cohort_model"] = "female_old"
+    record["category"] = "age"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_young"
+    record["cohort_model"] = "male_young"
+    record["category"] = "age"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_old"
+    record["cohort_model"] = "male_old"
+    record["category"] = "age"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Return information
+    return records
 
 
 
@@ -9388,9 +9497,11 @@ def execute_female_menstruation(
     # Return information.
     return pail_female
 
-# TODO: store the contingency table reports in a text file?
-def execute_analyze_sex_cohorts_hormones(
+
+def execute_describe_cohorts_models_phenotypes(
     table=None,
+    set=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -9399,7 +9510,11 @@ def execute_analyze_sex_cohorts_hormones(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        set (str): name of set of cohorts and models to select and organize
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
+
 
     raises:
 
@@ -9409,82 +9524,65 @@ def execute_analyze_sex_cohorts_hormones(
 
     """
 
-    # Copy information.
-    table = table.copy(deep=True)
+    # TODO: store the contingency table reports in a text file?
 
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="sex_text",
-        stratifications=["female", "male"],
-        column_missingness="testosterone",
+    # Organize reports on contingency tables by missingness.
+    organize_report_contingency_table_stratification_by_missingness(
         table=table,
         report=report,
     )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="sex_text",
-        stratifications=["female", "male"],
-        column_missingness="oestradiol",
-        table=table,
-        report=report,
-    )
-    # Filter to females who were not pregnant.
-    table_female = table.loc[
-        (table["sex_text"] == "female"), :
-    ]
-    table_female_not_pregnant = table_female.loc[
-        (table_female["pregnancy"] == 0), :
-    ]
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="menopause_ordinal",
-        stratifications=[0, 1], # premenopause versus perimenopause
-        column_missingness="testosterone",
-        table=table_female_not_pregnant,
-        report=report,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="menopause_ordinal",
-        stratifications=[0, 1], # premenopause versus perimenopause
-        column_missingness="oestradiol",
-        table=table_female_not_pregnant,
-        report=report,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="menopause_ordinal",
-        stratifications=[0, 2], # premenopause versus postmenopause
-        column_missingness="testosterone",
-        table=table_female_not_pregnant,
-        report=report,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="menopause_ordinal",
-        stratifications=[0, 2], # premenopause versus postmenopause
-        column_missingness="oestradiol",
-        table=table_female_not_pregnant,
-        report=report,
-    )
 
-    # TODO: also consider missingness in "younger" and "older" males
-    table_male = table.loc[
-        (table["sex_text"] == "male"), :
-    ]
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="age_grade_male",
-        stratifications=[0, 2], # young versus old
-        column_missingness="testosterone",
-        table=table_male,
-        report=report,
-    )
-    utility.report_contingency_table_stratification_by_missingness(
-        column_stratification="age_grade_male",
-        stratifications=[0, 2], # young versus old
-        column_missingness="oestradiol",
-        table=table_male,
-        report=report,
-    )
-
-    # Prepare table to summarize hormone variables across sex cohorts.
-    table_summary = organize_report_female_male_cohorts_variables(
+    # Prepare table to summarize phenotype variables across cohorts and models.
+    # These cohorts and models are simple and do not include multiple covariates
+    # for genetic analyses.
+    pail_phenotypes = select_organize_cohorts_models_phenotypes_set_summary(
         table=table,
     )
+    # Collect summary records and construct table.
+    records = list()
+    for collection in pail_phenotypes:
+        record = organize_report_cohort_model_variables_summaries_record(
+            name=collection["name"],
+            cohort_model=collection["cohort_model"],
+            category=collection["category"],
+            table=collection["table"],
+        )
+        records.append(record)
+    # Organize table.
+    table_phenotypes = pandas.DataFrame(data=records)
+
+    # Read source information from file.
+    table_kinship_pairs = read_source_table_kinship_pairs(
+        path_dock=path_dock,
+        report=report,
+    )
+    # Prepare table to summarize phenotype variables across cohorts and models
+    # for genetic analyses.
+    if (set == "sex_hormones"):
+        pail_genotypes = (
+            select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=False,
+        ))
+    elif (set == "bipolar_disorder_body"):
+        pail_genotypes = list()
+    else:
+        print("set of cohorts and models unrecognizable...")
+        pail_genotypes = list()
+    # Collect summary records and construct table.
+    records = list()
+    for collection in pail_genotypes:
+        record = organize_report_cohort_model_variables_summaries_record(
+            name=collection["name"],
+            cohort_model=collection["cohort_model"],
+            category=collection["category"],
+            table=collection["table"],
+        )
+        records.append(record)
+    # Organize table.
+    table_genotypes = pandas.DataFrame(data=records)
+
     # Report.
     if report:
         # Column name translations.
@@ -9493,7 +9591,8 @@ def execute_analyze_sex_cohorts_hormones(
         utility.print_terminal_partition(level=3)
     # Collect information.
     pail = dict()
-    pail["table_summary_cohorts_variables"] = table_summary
+    pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
+    pail["table_summary_cohorts_models_genotypes"] = table_genotypes
     # Return information.
     return pail
 
@@ -9760,8 +9859,10 @@ def execute_alcohol(
     return table_alcohol
 
 
-# TODO: introduce table_kinship_pairs!!!
-# TODO: make sure that filter to "White_British" is a part of both sets, too
+# TODO: introduce table_kinship_pairs to "bipolar_disorder_body" set
+# TODO: 1. define the cohort_model tables
+# TODO: 2. convert those cohort_model tables to PLINK format
+# TODO: 3. organize those PLINK format tables within a dict() as before... easier for write_product...() function
 
 def execute_cohorts_models_genetic_analysis(
     table=None,
@@ -9798,17 +9899,33 @@ def execute_cohorts_models_genetic_analysis(
     )
     # Determine which set of cohorts and models to select and organize.
     if (set == "sex_hormones"):
-        pail = select_organize_cohorts_models_set_sex_hormones(
-            table=table,
-            table_kinship_pairs=table_kinship_pairs,
-            report=report,
-        )
+        # Collect summary records and construct table.
+        pail_records = (
+            select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
+
+        pail = dict()
+        for collection in pail_records:
+            # Translate variable encodings and table format for analysis in
+            # PLINK2.
+            pail[collection["name"]] = (
+                organize_phenotype_covariate_table_plink_format(
+                    boolean_phenotypes=[],
+                    binary_phenotypes=[],
+                    continuous_variables=[collection["phenotype"]],
+                    remove_null_records=False,
+                    table=collection["table"],
+            ))
     elif (set == "bipolar_disorder_body"):
-        pail = select_organize_cohorts_models_set_bipolar_disorder_body(
-            table=table,
-            table_kinship_pairs=table_kinship_pairs,
-            report=report,
-        )
+        pail = (
+            select_organize_cohorts_models_genotypes_analyses_set_bipolar_body(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
     else:
         print("set of cohorts and models unrecognizable...")
         pail = dict()
