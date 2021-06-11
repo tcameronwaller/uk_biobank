@@ -759,6 +759,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
                 table_female[variable],
                 q=3,
                 labels=[0, 1, 2,],
+                retbins=True,
             ))
             print(pandas.qcut(
                 table_female[variable],
@@ -770,6 +771,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
                 table_male[variable],
                 q=3,
                 labels=[0, 1, 2,],
+                retbins=True,
             ))
             print(pandas.qcut(
                 table_male[variable],
