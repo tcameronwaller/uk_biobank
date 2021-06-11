@@ -759,8 +759,18 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
                 table_female[variable],
                 q=3,
                 labels=[0, 1, 2,],
+            ))
+            print(pandas.qcut(
+                table_female[variable],
+                q=3,
+                labels=[0, 1, 2,],
             ).value_counts())
             print("male tertiles")
+            print(pandas.qcut(
+                table_male[variable],
+                q=3,
+                labels=[0, 1, 2,],
+            ))
             print(pandas.qcut(
                 table_male[variable],
                 q=3,
@@ -7204,7 +7214,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
         threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table_collection,
-        report=True,
+        report=False,
     )
     # Organize table.
     table_unrelated.reset_index(
@@ -7508,6 +7518,8 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 ##########
 # Cohort, model selection: sets for genetic analyses on phenotypes and genotypes
 
+
+# TODO: update this function name to represent that it does NOT format for PLINK
 
 def select_organize_plink_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -9558,7 +9570,7 @@ def execute_describe_cohorts_models_phenotypes(
     # Read source information from file.
     table_kinship_pairs = read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=report,
+        report=False,
     )
     # Prepare table to summarize phenotype variables across cohorts and models
     # for genetic analyses.
