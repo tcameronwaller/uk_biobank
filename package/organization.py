@@ -8258,14 +8258,14 @@ def organize_report_cohort_model_variables_summaries_record(
             pass
         # Collect information for record.
         record[str(column + "_count")] = str(count)
-        record[str(column + "_mean")] = str(round(mean, 2))
-        record[str(column + "_stderr")] = str(round(standard_error, 2))
+        record[str(column + "_mean")] = str(round(mean, 3))
+        record[str(column + "_stderr")] = str(round(standard_error, 3))
         record[str(column + "_95_ci")] = str(
-            str(round(confidence_95_low, 2)) + " - " +
-            str(round(confidence_95_high, 2))
+            str(round(confidence_95_low, 3)) + " - " +
+            str(round(confidence_95_high, 3))
         )
-        record[str(column + "_median")] = str(round(median, 2))
-        record[str(column + "_stdev")] = str(round(standard_deviation, 2))
+        record[str(column + "_median")] = str(round(median, 3))
+        record[str(column + "_stdev")] = str(round(standard_deviation, 3))
         pass
     # Return information.
     return record
