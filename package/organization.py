@@ -7909,13 +7909,16 @@ def select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
     records = list()
     # Select and organize variables across cohorts.
     hormones = [
-        "albumin_log", "albumin_imputation_log",
-        "steroid_globulin_log", "steroid_globulin_imputation_log",
-        "oestradiol_log", "oestradiol_imputation_log",
-        "oestradiol_free_log", "oestradiol_bioavailable_log",
-        "testosterone_log", "testosterone_imputation_log",
-        "testosterone_free_log", "testosterone_bioavailable_log",
-        "vitamin_d_log", "vitamin_d_imputation_log",
+        "albumin", "albumin_log", "albumin_imputation_log",
+        "steroid_globulin", "steroid_globulin_log",
+        "steroid_globulin_imputation_log",
+        "oestradiol", "oestradiol_log", "oestradiol_imputation_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+        "testosterone", "testosterone_log", "testosterone_imputation_log",
+        "testosterone_free", "testosterone_free_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
+        "vitamin_d", "vitamin_d_log", "vitamin_d_imputation_log",
     ]
     for hormone in hormones:
         records_hormone = select_organize_plink_cohorts_variables_by_sex_hormone(
