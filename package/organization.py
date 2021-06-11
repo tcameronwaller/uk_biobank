@@ -7878,7 +7878,7 @@ def select_organize_plink_cohorts_variables_by_sex_hormone(
     records.append(record)
 
     # Return information.
-    return pail
+    return records
 
 
 def select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
