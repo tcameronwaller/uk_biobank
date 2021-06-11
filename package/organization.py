@@ -1,4 +1,3 @@
-record
 """
 ...
 
@@ -36,9 +35,6 @@ import promiscuity.plot as plot
 
 ###############################################################################
 # Functionality
-
-# TODO: read in "table_kinship_pairs"
-
 
 
 ##########
@@ -9498,6 +9494,8 @@ def execute_female_menstruation(
     return pail_female
 
 
+# TODO: need to test this... with the separate tables for "_phenotypes" and "_genotypes"
+
 def execute_describe_cohorts_models_phenotypes(
     table=None,
     set=None,
@@ -9524,6 +9522,8 @@ def execute_describe_cohorts_models_phenotypes(
 
     """
 
+    ##########
+
     # TODO: store the contingency table reports in a text file?
 
     # Organize reports on contingency tables by missingness.
@@ -9531,6 +9531,8 @@ def execute_describe_cohorts_models_phenotypes(
         table=table,
         report=report,
     )
+
+    ##########
 
     # Prepare table to summarize phenotype variables across cohorts and models.
     # These cohorts and models are simple and do not include multiple covariates
@@ -9550,6 +9552,8 @@ def execute_describe_cohorts_models_phenotypes(
         records.append(record)
     # Organize table.
     table_phenotypes = pandas.DataFrame(data=records)
+
+    ##########
 
     # Read source information from file.
     table_kinship_pairs = read_source_table_kinship_pairs(
@@ -9582,6 +9586,8 @@ def execute_describe_cohorts_models_phenotypes(
         records.append(record)
     # Organize table.
     table_genotypes = pandas.DataFrame(data=records)
+
+    ##########
 
     # Report.
     if report:
