@@ -8240,6 +8240,8 @@ def organize_report_cohort_model_variables_summaries_record(
         confidence_95_high = float("nan")
         median = float("nan")
         standard_deviation = float("nan")
+        minimum = float("nan")
+        maximum = float("nan")
         # Determine whether table has the column.
         if (column in table.columns.to_list()):
             array = copy.deepcopy(table[column].dropna().to_numpy())
@@ -8254,6 +8256,8 @@ def organize_report_cohort_model_variables_summaries_record(
                 confidence_95_high = (mean + (1.96 * standard_error))
                 median = numpy.nanmedian(array)
                 standard_deviation = numpy.nanstd(array)
+                minimum = numpy.nanmin(array)
+                maximum = numpy.nanmax(array)
                 pass
             pass
         # Collect information for record.
@@ -8266,6 +8270,8 @@ def organize_report_cohort_model_variables_summaries_record(
         )
         record[str(column + "_median")] = str(round(median, 3))
         record[str(column + "_stdev")] = str(round(standard_deviation, 3))
+        record[str(column + "_min")] = str(round(minimum, 3))
+        record[str(column + "_max")] = str(round(maximum, 3))
         pass
     # Return information.
     return record
