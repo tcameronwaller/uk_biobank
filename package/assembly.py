@@ -42,7 +42,7 @@ import scipy.stats
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.plot as plot
+#import promiscuity.plot as plot
 
 ###############################################################################
 # Functionality
@@ -134,7 +134,7 @@ def read_organize_uk_biobank_import_table(
     # Specify directories and files.
     path_table_import = os.path.join(
         path_dock, "access", "ukbiobank_import",
-        "waller_import_20210606.derived.csv.gz"
+        "waller_import_20210625.derived.csv.gz"
     )
     # Read information from file.
     table_import = pandas.read_csv(
