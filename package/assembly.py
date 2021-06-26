@@ -150,7 +150,7 @@ def read_organize_uk_biobank_import_table(
     table_import = table_import.loc[
         :, table_import.columns.isin([
             "eid",
-            "icd_bipolar", "bipolar.diag2", "SmithBipolar", "SmithMood",
+            "icd_bipolar", "bipolar.diag2", "Smithbipolar", "SmithMood",
             "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
         ])
     ]
