@@ -8131,7 +8131,7 @@ def select_organize_cohorts_models_genotypes_analyses_set_bipolar_body(
     phenotypes = [
         "body_mass_index", "body_mass_index_log",
     ]
-    for phenotype in phenotype:
+    for phenotype in phenotypes:
         records_phenotype = select_organize_cohorts_variables_by_body(
             phenotype=phenotype,
             table_kinship_pairs=table_kinship_pairs,
