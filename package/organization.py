@@ -3768,7 +3768,7 @@ def organize_psychology_variables(
     table_clean.drop(
         labels=[
             #"20127-0.0",
-            "icd_bipolar", "bipolar.diag2", "SmithBipolar", "SmithMood",
+            "icd_bipolar", "bipolar.diag2", "Smithbipolar", "SmithMood",
             "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
         ],
         axis="columns",
