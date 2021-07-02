@@ -8291,6 +8291,7 @@ def organize_report_cohort_model_variables_summaries_record(
     # Collect information for general columns.
     columns = [
         "age",
+        "body_mass_index", "body_mass_index_log",
         "menstruation_days",
         "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
@@ -9626,6 +9627,7 @@ def execute_psychology_psychiatry(
 
 
 # TODO: need to test this... with the separate tables for "_phenotypes" and "_genotypes"
+# TODO: I need to implement for set="bipolar_disorder_body"
 
 def execute_describe_cohorts_models_phenotypes(
     table=None,
@@ -9701,7 +9703,12 @@ def execute_describe_cohorts_models_phenotypes(
                 report=False,
         ))
     elif (set == "bipolar_disorder_body"):
-        pail_genotypes = list()
+        pail_genotypes = (
+            select_organize_cohorts_models_genotypes_analyses_set_bipolar_body(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
     else:
         print("set of cohorts and models unrecognizable...")
         pail_genotypes = list()
