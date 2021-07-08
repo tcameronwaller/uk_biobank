@@ -9626,9 +9626,6 @@ def execute_psychology_psychiatry(
     return pail_psychology
 
 
-# TODO: need to test this... with the separate tables for "_phenotypes" and "_genotypes"
-# TODO: I need to implement for set="bipolar_disorder_body"
-
 def execute_describe_cohorts_models_phenotypes(
     table=None,
     set=None,
