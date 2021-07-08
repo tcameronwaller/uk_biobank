@@ -7588,6 +7588,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy",
                 hormone,
@@ -7597,6 +7598,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body_mass_index_log",
                 hormone,
@@ -7624,6 +7626,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
@@ -7656,6 +7659,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[0, 1, 2],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "menstruation_days", "menstruation_phase",
@@ -7689,6 +7693,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
@@ -7721,6 +7726,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[0,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "menstruation_days", "menstruation_phase",
@@ -7754,6 +7760,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[1,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "menstruation_days", "menstruation_phase",
@@ -7787,6 +7794,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             female_menopause_ordinal=[2,],
             female_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
@@ -7823,6 +7831,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             age_grade_male=[0, 1, 2,],
             male_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body_mass_index_log",
                 hormone,
@@ -7854,6 +7863,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             age_grade_male=[0,],
             male_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body_mass_index_log",
                 hormone,
@@ -7885,6 +7895,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
             age_grade_male=[2,],
             male_variables=[
                 "eid", "IID",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body_mass_index_log",
                 hormone,
