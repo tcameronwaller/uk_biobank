@@ -1481,53 +1481,6 @@ def organize_report_column_pair_correlations(
     pass
 
 
-def organize_plot_cohort_sex_hormone_variable_distributions(
-    prefix=None,
-    bins=None,
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        prefix (str): prefix for cohort and figure name
-        bins (int): count of bins for histogram
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): collection of information about figures
-
-    """
-
-    # Collect information for plots.
-    pail = dict()
-    # Iterate on relevant variables.
-    columns = [
-        "oestradiol", "oestradiol_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "testosterone", "testosterone_log",
-        "testosterone_free", "testosterone_free_log",
-        "steroid_globulin", "steroid_globulin_log",
-        "albumin", "albumin_log",
-        "age",
-    ]
-    for column in columns:
-        if len(str(prefix)) > 0:
-            name = str(prefix + "_" + column)
-        else:
-            name = column
-        pail[name] = plot_variable_values_histogram(
-            name=name,
-            array=table[column].dropna().to_numpy(),
-            bins=bins,
-        )
-    # Return information.
-    return pail
-
-
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -3138,6 +3091,191 @@ def determine_female_menopause_ordinal_strict(
     return value
 
 
+# TCW 9 July 2021
+
+# TODO: define a function for
+    # TODO: I'll need to update the variable name "menstruation_phase"
+    # TODO: I'll also want to introduce...
+    # menstruation_follicular_early
+    # menstruation_follicular_late
+    # menstruation_luteal_early
+    # menstruation_luteal_late
+    # menstruation_luteal_late_follicular_early
+    # menstruation_follicular_late_luteal_early
+
+# TODO: now I need a new function to combine late luteal and early follicular
+
+
+def determine_female_menstruation_phase_early_late(
+    sex_text=None,
+    menopause_ordinal=None,
+    menstruation_days=None,
+    threshold_middle_follicular=None,
+    threshold_ovulation=None,
+    threshold_middle_luteal=None,
+):
+    """
+    Determine a female person's categorical menstruation phase.
+
+    0: early follicular phase of menstruation
+    - - (day 0 to day threshold_middle_follicular)
+    1: late follicular phase of menstruation
+    - - (day threshold_middle_follicular to day threshold_ovulation)
+    2: early luteal phase of menstruation
+    - - (day threshold_ovulation to day threshold_middle_luteal)
+    3: late luteal phase of menstruation
+    - - (day threshold_middle_luteal to maximum day menstruation_days)
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_ordinal (float): ordinal representation of whether female
+            person has experienced menopause
+        menstruation_days (int): count of days since previous menstruation
+            (menstrual period)
+        threshold_middle_follicular (int): threshold in days for middle of
+            follicular phase of menstruation cycle
+        threshold_ovulation (int): threshold in days for the approximate
+            "middle" of menstruation cycle at ovulation
+        threshold_middle_luteal (int): threshold in days for middle of luteal
+            phase of menstruation cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine categorical phase of menstruation cycle.
+    if (sex_text == "female"):
+        # Determine whether any variables have missing values.
+        if (
+            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_days))
+        ):
+            # Determine categorical phase of menstruation cycle for premenopause
+            # and perimenopause females.
+            if ((menopause_ordinal == 0) or (menopause_ordinal == 1)):
+                if (
+                    (menstruation_days < threshold_middle_follicular)
+                ):
+                    # Person qualifies for early follicular phase.
+                    value = 0
+                elif (
+                    (menstruation_days >= threshold_middle_follicular) and
+                    (menstruation_days < threshold_ovulation)
+                ):
+                    # Person qualitifies for late follicular phase.
+                    value = 1
+                elif (
+                    (menstruation_days >= threshold_ovulation) and
+                    (menstruation_days < threshold_middle_luteal)
+                ):
+                    # Person qualitifies for early luteal phase.
+                    value = 2
+                elif (
+                    (menstruation_days >= threshold_middle_luteal)
+                ):
+                    # Person qualitifies for late luteal phase.
+                    value = 3
+                else:
+                    # Persons does not qualify for any categories.
+                    value = float("nan")
+            # Determine categorical phase of menstruation cycle for
+            # postmenopause females.
+            elif (menopause_ordinal == 2):
+                # Menstruation undefined for postmenopause females.
+                value = float("nan")
+            else:
+                # Person does not qualify for any categories.
+                value = float("nan")
+        else:
+            # Variables have missing values.
+            value = float("nan")
+    else:
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_menstruation_phase_cycle(
+    sex_text=None,
+    menopause_ordinal=None,
+    menstruation_phase_early_late=None,
+):
+    """
+    Determine a female person's menstruation phase from a cyclical perspective.
+
+    0: late luteal or early follicular phase of menstruation cycle
+    1: late follicular phase of menstruation cycle
+    2: early luteal phase of menstruation cycle
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_ordinal (float): ordinal representation of whether female
+            person has experienced menopause
+        menstruation_phase_early_late (int): ordinal representation of phases of
+            the menstruation cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine categorical phase of menstruation cycle.
+    if (sex_text == "female"):
+        # Determine whether any variables have missing values.
+        if (
+            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_phase_early_late))
+        ):
+            # Determine categorical phase of menstruation cycle for premenopause
+            # and perimenopause females.
+            if ((menopause_ordinal == 0) or (menopause_ordinal == 1)):
+                if (
+                    (menstruation_phase_early_late == 0) or
+                    (menstruation_phase_early_late == 3)
+                ):
+                    # Person qualifies for early follicular phase or late luteal
+                    # phase.
+                    value = 0
+                elif (
+                    (menstruation_phase_early_late == 1)
+                ):
+                    # Person qualitifies for late follicular phase.
+                    value = 1
+                elif (
+                    (menstruation_phase_early_late == 2)
+                ):
+                    # Person qualitifies for early luteal phase.
+                    value = 2
+                else:
+                    # Persons does not qualify for any categories.
+                    value = float("nan")
+            # Determine categorical phase of menstruation cycle for
+            # postmenopause females.
+            elif (menopause_ordinal == 2):
+                # Menstruation undefined for postmenopause females.
+                value = float("nan")
+            else:
+                # Person does not qualify for any categories.
+                value = float("nan")
+        else:
+            # Variables have missing values.
+            value = float("nan")
+    else:
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+
+
+
 def determine_female_menstruation_phase(
     sex_text=None,
     menopause_ordinal=None,
@@ -3533,6 +3671,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
     # Determine female persons' categorical menstruation phase.
     table["menstruation_phase"] = table.apply(
         lambda row:
@@ -3545,6 +3684,35 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    # Determine female persons' ordinal menstruation phase.
+    table["menstruation_phase_early_late"] = table.apply(
+        lambda row:
+            determine_female_menstruation_phase_early_late(
+                sex_text=row["sex_text"],
+                menopause_ordinal=row["menopause_ordinal"],
+                menstruation_days=row["menstruation_days"],
+                threshold_middle_follicular=8, # threshold in days
+                threshold_ovulation=15,
+                threshold_middle_luteal=25, # threshold in days
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # Determine female persons' ordinal menstruation phase from cyclical
+    # perspective.
+    table["menstruation_phase_cycle"] = table.apply(
+        lambda row:
+            determine_female_menstruation_phase_cycle(
+                sex_text=row["sex_text"],
+                menopause_ordinal=row["menopause_ordinal"],
+                menstruation_phase_early_late=(
+                    row["menstruation_phase_early_late"]
+                ),
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine whether female persons were pregnant.
     table["pregnancy"] = table.apply(
         lambda row:
@@ -3632,6 +3800,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "menopause_binary", "menopause_binary_strict",
         "menopause_ordinal", "menopause_ordinal_strict",
         "menstruation_phase",
+        "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
         "oral_contraception", "hormone_replacement", "hormone_alteration",
         "menopause_hormone_category_1", "menopause_hormone_category_2",
@@ -8361,6 +8530,11 @@ def organize_report_cohort_model_variables_summaries_record(
     return record
 
 
+# TCW 8 July 2021
+# TODO: introduce changes for menstruation phase!!!
+
+# "menstruation_phase", "menstruation_phase_early_late", "menstruation_phase_cycle",
+
 def select_organize_cohorts_models_phenotypes_set_summary(
     table=None,
 ):
@@ -8609,31 +8783,13 @@ def select_organize_cohorts_models_phenotypes_set_summary(
 
     # Menstruation phase
 
-    record = dict()
-    record["name"] = "female_menstruation_follicular"
-    record["cohort_model"] = "female_menstruation_follicular"
-    record["category"] = "menstruation_phase"
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_phase"] == 0)
-        ), :
-    ]
-    records.append(record)
+    # TODO: Consider introducing...
+    # menstruation_follicular_early
+    # menstruation_follicular_late
+    # menstruation_luteal_early
+    # menstruation_luteal_late
 
-    record = dict()
-    record["name"] = "female_menstruation_luteal"
-    record["cohort_model"] = "female_menstruation_luteal"
-    record["category"] = "menstruation_phase"
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_phase"] == 1)
-        ), :
-    ]
-    records.append(record)
+    # "menstruation_phase", "menstruation_phase_early_late", "menstruation_phase_cycle",
 
     record = dict()
     record["name"] = "female_premenopause_menstruation_follicular"
@@ -8664,6 +8820,48 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
+    record["name"] = "female_premenopause_menstruation_cycle_0"
+    record["cohort_model"] = "female_premenopause_menstruation_cycle_0"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["menstruation_phase_cycle"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_menstruation_cycle_1"
+    record["cohort_model"] = "female_premenopause_menstruation_cycle_1"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["menstruation_phase_cycle"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_menstruation_cycle_2"
+    record["cohort_model"] = "female_premenopause_menstruation_cycle_2"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["menstruation_phase_cycle"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
     record["name"] = "female_perimenopause_menstruation_follicular"
     record["cohort_model"] = "female_perimenopause_menstruation_follicular"
     record["category"] = "menstruation_phase"
@@ -8687,6 +8885,48 @@ def select_organize_cohorts_models_phenotypes_set_summary(
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 1) &
             (table["menstruation_phase"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_menstruation_cycle_0"
+    record["cohort_model"] = "female_perimenopause_menstruation_cycle_0"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["menstruation_phase_cycle"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_menstruation_cycle_1"
+    record["cohort_model"] = "female_perimenopause_menstruation_cycle_1"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["menstruation_phase_cycle"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_menstruation_cycle_2"
+    record["cohort_model"] = "female_perimenopause_menstruation_cycle_2"
+    record["category"] = "menstruation_phase"
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["menstruation_phase_cycle"] == 2)
         ), :
     ]
     records.append(record)
@@ -9749,6 +9989,59 @@ def execute_describe_cohorts_models_phenotypes(
     return pail
 
 
+# Plots
+
+# TODO: organize histograms for hormones
+# TODO: organize scatter plots for hormones versus menstruation days (only in premenopause and perimenopause cohorts...)
+
+
+def organize_plot_cohort_sex_hormone_variable_distributions(
+    prefix=None,
+    bins=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        prefix (str): prefix for cohort and figure name
+        bins (int): count of bins for histogram
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about figures
+
+    """
+
+    # Collect information for plots.
+    pail = dict()
+    # Iterate on relevant variables.
+    columns = [
+        "oestradiol", "oestradiol_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "testosterone", "testosterone_log",
+        "testosterone_free", "testosterone_free_log",
+        "steroid_globulin", "steroid_globulin_log",
+        "albumin", "albumin_log",
+        "age",
+    ]
+    for column in columns:
+        if len(str(prefix)) > 0:
+            name = str(prefix + "_" + column)
+        else:
+            name = column
+        pail[name] = plot_variable_values_histogram(
+            name=name,
+            array=table[column].dropna().to_numpy(),
+            bins=bins,
+        )
+    # Return information.
+    return pail
+
+# TODO: use a similar structure as in "execute_describe_cohorts_models_phenotypes()"
 def execute_plot_hormones(
     table=None,
     report=None,
