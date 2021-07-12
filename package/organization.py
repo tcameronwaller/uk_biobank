@@ -8535,6 +8535,10 @@ def organize_report_cohort_model_variables_summaries_record(
 
 # "menstruation_phase", "menstruation_phase_early_late", "menstruation_phase_cycle",
 
+
+# TODO: for the sake of plots... introduce new variable "menstruation" and only set to "True"
+# for premenopause and perimenopause females...
+
 def select_organize_cohorts_models_phenotypes_set_summary(
     table=None,
 ):
@@ -8563,6 +8567,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["cohort_model"] = "female"
     record["category"] = "sex"
     record["phenotype"] = "null"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (table["sex_text"] == "female"), :
     ]
@@ -8572,6 +8577,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "male"
     record["cohort_model"] = "male"
     record["category"] = "sex"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (table["sex_text"] == "male"), :
     ]
@@ -8583,6 +8589,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_pregnancy_definite"
     record["cohort_model"] = "female_pregnancy_definite"
     record["category"] = "pregnancy"
+    record["menstruation"] = False
     record["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["3140-0.0"] == 1)), :
     ]
@@ -8592,6 +8599,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_pregnancy_unsure"
     record["cohort_model"] = "female_pregnancy_unsure"
     record["category"] = "pregnancy"
+    record["menstruation"] = False
     record["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["3140-0.0"] == 2)), :
     ]
@@ -8601,6 +8609,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_pregnancy_yes"
     record["cohort_model"] = "female_pregnancy_yes"
     record["category"] = "pregnancy"
+    record["menstruation"] = False
     record["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["pregnancy"] == 1)), :
     ]
@@ -8610,6 +8619,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_pregnancy_no"
     record["cohort_model"] = "female_pregnancy_no"
     record["category"] = "pregnancy"
+    record["menstruation"] = False
     record["table"] = table.loc[
         ((table["sex_text"] == "female") & (table["pregnancy"] == 0)), :
     ]
@@ -8621,6 +8631,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_menopause_unsure"
     record["cohort_model"] = "female_menopause_unsure"
     record["category"] = "menopause"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8634,6 +8645,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_menopause_blank"
     record["cohort_model"] = "female_menopause_blank"
     record["category"] = "menopause"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8646,9 +8658,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     # Menopause binary
 
     record = dict()
-    record["name"] = "female_premenopause"
+    record["name"] = "female_premenopause_binary"
     record["cohort_model"] = "female_premenopause"
     record["category"] = "menopause_binary"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8659,9 +8672,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause"
+    record["name"] = "female_postmenopause_binary"
     record["cohort_model"] = "female_postmenopause"
     record["category"] = "menopause_binary"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8674,9 +8688,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     # Menopause binary strict
 
     record = dict()
-    record["name"] = "female_premenopause"
+    record["name"] = "female_premenopause_binary_strict"
     record["cohort_model"] = "female_premenopause"
     record["category"] = "menopause_binary_strict"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8687,9 +8702,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause"
+    record["name"] = "female_postmenopause_binary_strict"
     record["cohort_model"] = "female_postmenopause"
     record["category"] = "menopause_binary_strict"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8702,9 +8718,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     # Menopause ordinal
 
     record = dict()
-    record["name"] = "female_premenopause"
+    record["name"] = "female_premenopause_ordinal"
     record["cohort_model"] = "female_premenopause"
     record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8715,9 +8732,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_perimenopause"
+    record["name"] = "female_perimenopause_ordinal"
     record["cohort_model"] = "female_perimenopause"
     record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8728,9 +8746,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause"
+    record["name"] = "female_postmenopause_ordinal"
     record["cohort_model"] = "female_postmenopause"
     record["category"] = "menopause_ordinal"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8743,9 +8762,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     # Menopause ordinal strict
 
     record = dict()
-    record["name"] = "female_premenopause"
+    record["name"] = "female_premenopause_ordinal_strict"
     record["cohort_model"] = "female_premenopause"
     record["category"] = "menopause_ordinal_strict"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8756,9 +8776,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_perimenopause"
+    record["name"] = "female_perimenopause_ordinal_strict"
     record["cohort_model"] = "female_perimenopause"
     record["category"] = "menopause_ordinal_strict"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8769,9 +8790,10 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause"
+    record["name"] = "female_postmenopause_ordinal_strict"
     record["cohort_model"] = "female_postmenopause"
     record["category"] = "menopause_ordinal_strict"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8795,6 +8817,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_menstruation_follicular"
     record["cohort_model"] = "female_premenopause_menstruation_follicular"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8809,6 +8832,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_menstruation_luteal"
     record["cohort_model"] = "female_premenopause_menstruation_luteal"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8823,6 +8847,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_menstruation_cycle_0"
     record["cohort_model"] = "female_premenopause_menstruation_cycle_0"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8837,6 +8862,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_menstruation_cycle_1"
     record["cohort_model"] = "female_premenopause_menstruation_cycle_1"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8851,6 +8877,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_menstruation_cycle_2"
     record["cohort_model"] = "female_premenopause_menstruation_cycle_2"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8865,6 +8892,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_menstruation_follicular"
     record["cohort_model"] = "female_perimenopause_menstruation_follicular"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8879,6 +8907,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_menstruation_luteal"
     record["cohort_model"] = "female_perimenopause_menstruation_luteal"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8893,6 +8922,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_menstruation_cycle_0"
     record["cohort_model"] = "female_perimenopause_menstruation_cycle_0"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8907,6 +8937,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_menstruation_cycle_1"
     record["cohort_model"] = "female_perimenopause_menstruation_cycle_1"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8921,6 +8952,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_menstruation_cycle_2"
     record["cohort_model"] = "female_perimenopause_menstruation_cycle_2"
     record["category"] = "menstruation_phase"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8937,6 +8969,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_oral_contraception_yes"
     record["cohort_model"] = "female_oral_contraception_yes"
     record["category"] = "oral_contraception"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8950,6 +8983,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_oral_contraception_no"
     record["cohort_model"] = "female_oral_contraception_no"
     record["category"] = "oral_contraception"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8963,6 +8997,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_hormone_replacement_yes"
     record["cohort_model"] = "female_hormone_replacement_yes"
     record["category"] = "hormone_replacement"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8976,6 +9011,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_hormone_replacement_no"
     record["cohort_model"] = "female_hormone_replacement_no"
     record["category"] = "hormone_replacement"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -8989,6 +9025,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_hormone_alteration_yes"
     record["cohort_model"] = "female_hormone_alteration_yes"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9002,6 +9039,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_hormone_alteration_no"
     record["cohort_model"] = "female_hormone_alteration_no"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9015,6 +9053,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_hormone_alteration_yes"
     record["cohort_model"] = "female_premenopause_hormone_alteration_yes"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9029,6 +9068,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_premenopause_hormone_alteration_no"
     record["cohort_model"] = "female_premenopause_hormone_alteration_no"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9043,6 +9083,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_hormone_alteration_yes"
     record["cohort_model"] = "female_perimenopause_hormone_alteration_yes"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9057,6 +9098,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_perimenopause_hormone_alteration_no"
     record["cohort_model"] = "female_perimenopause_hormone_alteration_no"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = True
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9071,6 +9113,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_postmenopause_hormone_alteration_yes"
     record["cohort_model"] = "female_postmenopause_hormone_alteration_yes"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9085,6 +9128,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_postmenopause_hormone_alteration_no"
     record["cohort_model"] = "female_postmenopause_hormone_alteration_no"
     record["category"] = "hormone_alteration"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9101,6 +9145,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_young"
     record["cohort_model"] = "female_young"
     record["category"] = "age"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9114,6 +9159,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "female_old"
     record["cohort_model"] = "female_old"
     record["category"] = "age"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -9127,6 +9173,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "male_young"
     record["cohort_model"] = "male_young"
     record["category"] = "age"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "male") &
@@ -9139,6 +9186,7 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     record["name"] = "male_old"
     record["cohort_model"] = "male_old"
     record["category"] = "age"
+    record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "male") &
@@ -9476,7 +9524,7 @@ def organize_plot_variable_histogram_summary_charts(
 
 
 def plot_variable_values_histogram(
-    name=None,
+    label=None,
     array=None,
     bins=None,
 ):
@@ -9484,19 +9532,17 @@ def plot_variable_values_histogram(
     Plots charts from the analysis process.
 
     arguments:
-        name (str): name for plot
+        label (str): label name for plot
         array (object): NumPy array of values to bin and plot in histogram
         bins (int): count of bins for histogram
 
     raises:
 
     returns:
+        (object): figure object from MatPlotLib
 
     """
 
-    # Collect information about plot.
-    pail = dict()
-    pail["name"] = name
     # Define fonts.
     fonts = plot.define_font_properties()
     # Define colors.
@@ -9507,7 +9553,7 @@ def plot_variable_values_histogram(
     else:
         bin_method = "count"
     # Create figure.
-    pail["figure"] = plot.plot_distribution_histogram(
+    figure = plot.plot_distribution_histogram(
         array=array,
         title="",
         bin_method=bin_method, # "auto" or "count"
@@ -9522,7 +9568,7 @@ def plot_variable_values_histogram(
         label_report=True,
     )
     # Return.
-    return pail
+    return figure
 
 
 ##########
@@ -9991,58 +10037,74 @@ def execute_describe_cohorts_models_phenotypes(
 
 # Plots
 
-# TODO: organize histograms for hormones
-# TODO: organize scatter plots for hormones versus menstruation days (only in premenopause and perimenopause cohorts...)
 
-
-def organize_plot_cohort_sex_hormone_variable_distributions(
-    prefix=None,
-    bins=None,
+def organize_plot_cohort_model_phenotypes(
+    name=None,
+    menstruation=None,
     table=None,
 ):
     """
-    Organizes information and plots for sex hormones.
+    Organizes information about persons' sex hormones across UK Biobank.
 
     arguments:
-        prefix (str): prefix for cohort and figure name
-        bins (int): count of bins for histogram
+        name (str): name for cohort, model, and phenotype
+        menstruation (bool): whether cohort is relevant to menstruation
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
     raises:
 
     returns:
-        (dict): collection of information about figures
+        (dict): information for a plot
 
     """
-
-    # Collect information for plots.
+    # Collect plots for current cohort and model.
     pail = dict()
-    # Iterate on relevant variables.
-    columns = [
+
+    # Define phenotypes for all cohorts.
+    phenotypes = [
+        "age",
+        "body_mass_index", "body_mass_index_log",
+        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
         "oestradiol", "oestradiol_log",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
         "oestradiol_free", "oestradiol_free_log",
         "testosterone", "testosterone_log",
+        "testosterone_bioavailable", "testosterone_bioavailable_log",
         "testosterone_free", "testosterone_free_log",
-        "steroid_globulin", "steroid_globulin_log",
-        "albumin", "albumin_log",
-        "age",
+        "vitamin_d", "vitamin_d_log",
     ]
-    for column in columns:
-        if len(str(prefix)) > 0:
-            name = str(prefix + "_" + column)
-        else:
-            name = column
-        pail[name] = plot_variable_values_histogram(
-            name=name,
-            array=table[column].dropna().to_numpy(),
-            bins=bins,
+    # Create plots for phenotypes.
+    for phenotype in phenotypes:
+        # Histogram.
+        name_label = str(name + "_" + phenotype)
+        name_plot = str("histogram_" + name_label)
+        pail[name_plot] = plot_variable_values_histogram(
+            label=name_label,
+            array=table[phenotype].dropna().to_numpy(),
+            bins=50,
         )
-    # Return information.
+        # Bars.
+        # Variable means for each day of menstruation cycle.
+        if False:
+        #if (menstruation):
+
+            # TODO: histogram for "menstruation_days",
+        
+            name_label = str(name + "_" + phenotype)
+            name_plot = str("bars_" + name_label)
+            pail[name_plot] = plot_variable_means_bars_by_day(
+                label=name_label,
+                column=phenotype,
+                table=table,
+            )
+
+            pass
+        pass
     return pail
 
-# TODO: use a similar structure as in "execute_describe_cohorts_models_phenotypes()"
-def execute_plot_hormones(
+
+def execute_plot_cohorts_models_phenotypes(
     table=None,
     report=None,
 ):
@@ -10061,177 +10123,30 @@ def execute_plot_hormones(
 
     """
 
-    # Copy information.
-    table = table.copy(deep=True)
+    # Prepare table to summarize phenotype variables across cohorts and models.
+    # These cohorts and models are simple and do not include multiple covariates
+    # for genetic analyses.
+    pail_phenotypes = select_organize_cohorts_models_phenotypes_set_summary(
+        table=table,
+    )
+
     # Collect information for plots.
     pail = dict()
-    # All persons in UK Biobank.
-    table_not_pregnant = table.loc[
-        (table["pregnancy"] < 0.5), :
-    ]
-    pail = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="",
-        bins=50,
-        table=table_not_pregnant,
-    )
-    # Filter to females.
-    table_female = table.loc[
-        (table["sex_text"] == "female"), :
-    ]
-    table_female_not_pregnant = table_female.loc[
-        (table_female["pregnancy"] == 0), :
-    ]
-    pail_female = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="female",
-        bins=50,
-        table=table_female_not_pregnant,
-    )
-    pail.update(pail_female)
-    # Stratify not pregnant females by recent use of oral contraception.
-    table_contraception_no = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["oral_contraception"] == 0), :
-    ]
-    pail_contraception_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="contraception_no",
-            bins=50,
-            table=table_contraception_no,
-    ))
-    pail.update(pail_contraception_no)
-    table_contraception_yes = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["oral_contraception"] == 1), :
-    ]
-    pail_contraception_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="contraception_yes",
-            bins=50,
-            table=table_contraception_yes,
-    ))
-    pail.update(pail_contraception_yes)
-    # Stratify by pre-menopausal, not pregnant females by recent use of
-    # hormone replacement therapy.
-    table_replacement_no = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_replacement"] == 0), :
-    ]
-    pail_replacement_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="replacement_no",
-            bins=50,
-            table=table_replacement_no,
-    ))
-    pail.update(pail_replacement_no)
-    table_replacement_yes = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["hormone_replacement"] == 1), :
-    ]
-    pail_replacement_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="replacement_yes",
-            bins=50,
-            table=table_replacement_yes,
-    ))
-    pail.update(pail_replacement_yes)
-
-    # Filter to pre-menopausal, not pregnant females.
-    table_premenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause"] == 0), :
-    ]
-    pail_premenopause = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="pre-menopause",
-        bins=50,
-        table=table_premenopause,
-    )
-    pail.update(pail_premenopause)
-    # Plot days since previous menstrual period for pre-menopausal females.
-    pail_menstruation = dict()
-    pail_menstruation["pre-menopause_menstruation_day"] = (
-        plot_variable_values_histogram(
-            name="pre-menopause_menstruation_day",
-            array=table_premenopause["menstruation_day"].dropna().to_numpy(),
-            bins=50,
-    ))
-    pail.update(pail_menstruation)
-    # Filter to post-menopausal, not pregnant females.
-    table_postmenopause = table_female_not_pregnant.loc[
-        (table_female_not_pregnant["menopause"] == 1), :
-    ]
-    pail_postmenopause = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="post-menopause",
-        bins=50,
-        table=table_postmenopause,
-    )
-    pail.update(pail_postmenopause)
-
-    # Any hormone alteration (oral contraception or hormone-replacement).
-    table_premenopause_alteration_yes = table_premenopause.loc[
-        (table_premenopause["hormone_alteration"] == 1), :
-    ]
-    pail_premenopause_alteration_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="premenopause_hormone_alteration_yes",
-            bins=50,
-            table=table_premenopause_alteration_yes,
-    ))
-    pail.update(pail_premenopause_alteration_yes)
-    table_premenopause_alteration_no = table_premenopause.loc[
-        (table_premenopause["hormone_alteration"] == 0), :
-    ]
-    pail_premenopause_alteration_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="premenopause_hormone_alteration_no",
-            bins=50,
-            table=table_premenopause_alteration_no,
-    ))
-    pail.update(pail_premenopause_alteration_no)
-
-    table_postmenopause_alteration_yes = table_postmenopause.loc[
-        (table_postmenopause["hormone_alteration"] == 1), :
-    ]
-    pail_postmenopause_alteration_yes = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="postmenopause_hormone_alteration_yes",
-            bins=50,
-            table=table_postmenopause_alteration_yes,
-    ))
-    pail.update(pail_postmenopause_alteration_yes)
-    table_postmenopause_alteration_no = table_postmenopause.loc[
-        (table_postmenopause["hormone_alteration"] == 0), :
-    ]
-    pail_postmenopause_alteration_no = (
-        organize_plot_cohort_sex_hormone_variable_distributions(
-            prefix="postmenopause_hormone_alteration_no",
-            bins=50,
-            table=table_postmenopause_alteration_no,
-    ))
-    pail.update(pail_postmenopause_alteration_no)
-
-    # Filter to pregnant females.
-    table_pregnancy = table_female.loc[
-        (table_female["pregnancy"] == 1), :
-    ]
-    pail_pregnancy = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="pregnancy",
-        bins=10,
-        table=table_pregnancy,
-    )
-    pail.update(pail_pregnancy)
-
-    # Filter to males.
-    table_male = table.loc[
-        (table["sex_text"] == "male"), :
-    ]
-    pail_male = organize_plot_cohort_sex_hormone_variable_distributions(
-        prefix="male",
-        bins=50,
-        table=table_male,
-    )
-    pail.update(pail_male)
+    for collection in pail_phenotypes:
+        pail_collection = organize_plot_cohort_model_phenotypes(
+            name=collection["name"],
+            menstruation=collection["menstruation"],
+            table=collection["table"],
+        )
+        pail.update(pail_collection)
+        pass
 
     # Report.
     if report:
-        # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("report: execute_plot_hormones()")
+        print("report: execute_plot_cohorts_models_phenotypes()")
         utility.print_terminal_partition(level=3)
+
     # Return information.
     return pail
 
