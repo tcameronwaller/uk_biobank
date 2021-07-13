@@ -3091,19 +3091,88 @@ def determine_female_menopause_ordinal_strict(
     return value
 
 
-# TCW 9 July 2021
+def determine_female_menstruation_phase(
+    sex_text=None,
+    menopause_ordinal=None,
+    menstruation_days=None,
+    threshold_premenopause=None,
+    threshold_perimenopause=None,
+):
+    """
+    Determine a female person's categorical menstruation phase.
 
-# TODO: define a function for
-    # TODO: I'll need to update the variable name "menstruation_phase"
-    # TODO: I'll also want to introduce...
-    # menstruation_follicular_early
-    # menstruation_follicular_late
-    # menstruation_luteal_early
-    # menstruation_luteal_late
-    # menstruation_luteal_late_follicular_early
-    # menstruation_follicular_late_luteal_early
+    0: follicular phase of menstruation
+    1: luteal phase of menstruation
 
-# TODO: now I need a new function to combine late luteal and early follicular
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_ordinal (float): ordinal representation of whether female
+            person has experienced menopause
+        menstruation_days (int): count of days since previous menstruation
+            (menstrual period)
+        threshold_premenopause (int): threshold in days for premenopause female
+            persons, below which to consider follicular phase of menstruation
+            cycle
+        threshold_perimenopause (int): threshold in days for perimenopause
+            female persons, below which to consider follicular phase of
+            menstruation cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine categorical phase of menstruation cycle.
+    if (sex_text == "female"):
+        # Determine whether any variables have missing values.
+        if (
+            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_days))
+        ):
+            # Determine categorical phase of menstruation cycle for premenopause
+            # females.
+            if (menopause_ordinal == 0):
+                if (menstruation_days < threshold_premenopause):
+                    # Person qualifies for follicular phase of menstruation
+                    # cycle.
+                    value = 0
+                elif (menstruation_days >= threshold_premenopause):
+                    # Person qualitifies for luteal phase of menstruation cycle.
+                    value = 1
+                else:
+                    # Persons does not qualify for any categories.
+                    value = float("nan")
+            # Determine categorical phase of menstruation cycle for
+            # perimenopause females.
+            elif (menopause_ordinal == 1):
+                if (menstruation_days < threshold_perimenopause):
+                    # Person qualifies for follicular phase of menstruation
+                    # cycle.
+                    value = 0
+                elif (menstruation_days >= threshold_perimenopause):
+                    # Person qualitifies for luteal phase of menstruation cycle.
+                    value = 1
+                else:
+                    # Persons does not qualify for any categories.
+                    value = float("nan")
+            # Determine categorical phase of menstruation cycle for
+            # postmenopause females.
+            elif (menopause_ordinal == 2):
+                # Menstruation undefined for postmenopause females.
+                value = float("nan")
+            else:
+                # Person does not qualify for any categories.
+                value = float("nan")
+        else:
+            # Variables have missing values.
+            value = float("nan")
+    else:
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 def determine_female_menstruation_phase_early_late(
@@ -3272,92 +3341,6 @@ def determine_female_menstruation_phase_cycle(
     # Return information.
     return value
 
-
-
-
-
-def determine_female_menstruation_phase(
-    sex_text=None,
-    menopause_ordinal=None,
-    menstruation_days=None,
-    threshold_premenopause=None,
-    threshold_perimenopause=None,
-):
-    """
-    Determine a female person's categorical menstruation phase.
-
-    0: follicular phase of menstruation
-    1: luteal phase of menstruation
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of whether female
-            person has experienced menopause
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
-        threshold_premenopause (int): threshold in days for premenopause female
-            persons, below which to consider follicular phase of menstruation
-            cycle
-        threshold_perimenopause (int): threshold in days for perimenopause
-            female persons, below which to consider follicular phase of
-            menstruation cycle
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Determine categorical phase of menstruation cycle.
-    if (sex_text == "female"):
-        # Determine whether any variables have missing values.
-        if (
-            (not pandas.isna(menopause_ordinal)) and
-            (not pandas.isna(menstruation_days))
-        ):
-            # Determine categorical phase of menstruation cycle for premenopause
-            # females.
-            if (menopause_ordinal == 0):
-                if (menstruation_days < threshold_premenopause):
-                    # Person qualifies for follicular phase of menstruation
-                    # cycle.
-                    value = 0
-                elif (menstruation_days >= threshold_premenopause):
-                    # Person qualitifies for luteal phase of menstruation cycle.
-                    value = 1
-                else:
-                    # Persons does not qualify for any categories.
-                    value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # perimenopause females.
-            elif (menopause_ordinal == 1):
-                if (menstruation_days < threshold_perimenopause):
-                    # Person qualifies for follicular phase of menstruation
-                    # cycle.
-                    value = 0
-                elif (menstruation_days >= threshold_perimenopause):
-                    # Person qualitifies for luteal phase of menstruation cycle.
-                    value = 1
-                else:
-                    # Persons does not qualify for any categories.
-                    value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # postmenopause females.
-            elif (menopause_ordinal == 2):
-                # Menstruation undefined for postmenopause females.
-                value = float("nan")
-            else:
-                # Person does not qualify for any categories.
-                value = float("nan")
-        else:
-            # Variables have missing values.
-            value = float("nan")
-    else:
-        # Menstruation undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
 
 
 def determine_female_pregnancy(
@@ -9571,6 +9554,100 @@ def plot_variable_values_histogram(
     return figure
 
 
+# TODO: this function is not yet functional...
+# TODO: still need to organize information and create bar chart...
+
+def plot_variable_means_bars_by_day(
+    label=None,
+    column_phenotype=None,
+    column_day=None,
+    threshold_days=None,
+    table=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        label (str): label name for plot
+        column_phenotype (str): name of column in table for continuous phenotype
+        column_day (str): name of column in table for days for stratification
+        threshold_day (int): maximal count of days to include
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): figure object from MatPlotLib
+
+    """
+
+    # Organize information for plot.
+    # Copy information.
+    table = table.copy(deep=True)
+    # Select relevant information.
+    columns = [
+        #"eid",
+        "IID",
+        column_day, column_phenotype
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table.loc[
+        (table[column_day] < threshold_days), :
+    ]
+    # Aggregate phenotype values by day.
+    groups = table.groupby(level=[column_day])
+    #groups.aggregate(
+    #    mean=(column_phenotype, numpy.nanmean),
+    #    deviation=(column_phenotype, numpy.nanstd)
+    #)
+    records = list()
+    for name, group in groups:
+        table_group = group.reset_index(
+            level=None,
+            inplace=False
+        )
+        days = table_group[column_day].dropna().to_list()[0]
+        array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
+        count = int(array.size)
+        mean = numpy.nanmean(array)
+        standard_error = scipy.stats.sem(array)
+        # Collect information.
+        record = dict()
+        record["days"] = days
+        record["count"] = count
+        record["mean"] = round(mean, 3)
+        record["error"] = round(standard_error, 3)
+        records.append(record)
+        pass
+    table_aggregate = pandas.DataFrame(data=records)
+
+    # TODO: 1. to stratify the table by each value of "column_day"
+    # - - maybe use Pandas groupby()
+    # TODO: 2. aggregate by mean... keep standard error... hmmmmm...
+    # - - I'm not sure whether Pandas aggregate can handle keeping both mean AND standard error
+    # - - alternative: iterate on the groups and calculate mean and standard error manually
+    # TODO: 3. format data table for bar chart...
+
+    print("plot_variable_means_bars_by_day")
+    print(table_aggregate)
+
+
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+
+
+    # Create figure.
+    #figure = plot.some_function()
+    # Return.
+    return dict()
+
+
+
 ##########
 # Write
 
@@ -10061,7 +10138,7 @@ def organize_plot_cohort_model_phenotypes(
     # Collect plots for current cohort and model.
     pail = dict()
 
-    # Define phenotypes for all cohorts.
+    # Create plots for phenotypes relevant to all cohorts.
     phenotypes = [
         "age",
         "body_mass_index", "body_mass_index_log",
@@ -10074,33 +10151,52 @@ def organize_plot_cohort_model_phenotypes(
         "testosterone_free", "testosterone_free_log",
         "vitamin_d", "vitamin_d_log",
     ]
-    # Create plots for phenotypes.
     for phenotype in phenotypes:
         # Histogram.
         name_label = str(name + "_" + phenotype)
-        name_plot = str("histogram_" + name_label)
+        name_plot = str(name_label + "_histogram")
         pail[name_plot] = plot_variable_values_histogram(
             label=name_label,
             array=table[phenotype].dropna().to_numpy(),
             bins=50,
         )
-        # Bars.
-        # Variable means for each day of menstruation cycle.
-        if False:
-        #if (menstruation):
+        pass
 
-            # TODO: histogram for "menstruation_days",
-        
+    # Create plots for phenotypes relevant only to menstruation cohorts.
+    if (menstruation):
+        # Histogram.
+        name_label = str(name + "_" + "menstruation_days")
+        name_plot = str(name_label + "_histogram")
+        pail[name_plot] = plot_variable_values_histogram(
+            label=name_label,
+            array=table["menstruation_days"].dropna().to_numpy(),
+            bins=50,
+        )
+        # Phenotypes.
+        phenotypes = [
+            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+            "oestradiol", "oestradiol_log",
+            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+            "oestradiol_free", "oestradiol_free_log",
+            "testosterone", "testosterone_log",
+            "testosterone_bioavailable", "testosterone_bioavailable_log",
+            "testosterone_free", "testosterone_free_log",
+            "vitamin_d", "vitamin_d_log",
+        ]
+        for phenotype in phenotypes:
+            # Bar chart.
             name_label = str(name + "_" + phenotype)
-            name_plot = str("bars_" + name_label)
+            name_plot = str(name_label + "_bar")
             pail[name_plot] = plot_variable_means_bars_by_day(
                 label=name_label,
-                column=phenotype,
+                column_phenotype=phenotype,
+                column_day="menstruation_days",
+                threshold_days=35,
                 table=table,
             )
-
             pass
         pass
+    # Return information.
     return pail
 
 
