@@ -9601,7 +9601,17 @@ def plot_variable_means_bars_by_day(
     print("table after filter")
     print(table)
     # Aggregate phenotype values by day.
-    groups = table.groupby(level=[column_day])
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    table.set_index(
+        [column_day],
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    groups = table.groupby(level=[column_day], axis="index",)
     #groups.aggregate(
     #    mean=(column_phenotype, numpy.nanmean),
     #    deviation=(column_phenotype, numpy.nanstd)
@@ -9612,6 +9622,7 @@ def plot_variable_means_bars_by_day(
             level=None,
             inplace=False
         )
+        print(table_group)
         days = table_group[column_day].dropna().to_list()[0]
         array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
         count = int(array.size)
