@@ -3342,7 +3342,6 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
-
 def determine_female_pregnancy(
     sex_text=None,
     field_3140=None,
