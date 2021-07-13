@@ -9547,7 +9547,7 @@ def plot_variable_values_histogram(
         colors=colors,
         line=True,
         line_position=numpy.nanmean(array),
-        label_text=name, # ""
+        label_text=label, # ""
         label_report=True,
     )
     # Return.
