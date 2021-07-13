@@ -9556,6 +9556,7 @@ def plot_variable_values_histogram(
 
 # TODO: this function is not yet functional...
 # TODO: still need to organize information and create bar chart...
+# TODO: actually... try a dot plot...
 
 def plot_variable_means_bars_by_day(
     label=None,
@@ -9602,9 +9603,6 @@ def plot_variable_means_bars_by_day(
     table = table.loc[
         (table[column_day] < threshold_days), :
     ]
-
-    print("table after filter")
-    print(table)
     # Aggregate phenotype values by day.
     table.set_index(
         [column_day],
@@ -9624,7 +9622,6 @@ def plot_variable_means_bars_by_day(
             inplace=False,
             drop=False,
         )
-        print(table_group)
         days = table_group[column_day].dropna().to_list()[0]
         array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
         count = int(array.size)
@@ -10188,28 +10185,30 @@ def organize_plot_cohort_model_phenotypes(
             array=table["menstruation_days"].dropna().to_numpy(),
             bins=50,
         )
-        # Phenotypes.
-        phenotypes = [
-            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-            "oestradiol", "oestradiol_log",
-            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-            "oestradiol_free", "oestradiol_free_log",
-            "testosterone", "testosterone_log",
-            "testosterone_bioavailable", "testosterone_bioavailable_log",
-            "testosterone_free", "testosterone_free_log",
-            "vitamin_d", "vitamin_d_log",
-        ]
-        for phenotype in phenotypes:
-            # Bar chart.
-            name_label = str(name + "_" + phenotype)
-            name_plot = str(name_label + "_bar")
-            pail[name_plot] = plot_variable_means_bars_by_day(
-                label=name_label,
-                column_phenotype=phenotype,
-                column_day="menstruation_days",
-                threshold_days=35,
-                table=table,
-            )
+        if False:
+            # Phenotypes.
+            phenotypes = [
+                "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+                "oestradiol", "oestradiol_log",
+                "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+                "oestradiol_free", "oestradiol_free_log",
+                "testosterone", "testosterone_log",
+                "testosterone_bioavailable", "testosterone_bioavailable_log",
+                "testosterone_free", "testosterone_free_log",
+                "vitamin_d", "vitamin_d_log",
+            ]
+            for phenotype in phenotypes:
+                # Bar chart.
+                name_label = str(name + "_" + phenotype)
+                name_plot = str(name_label + "_bar")
+                pail[name_plot] = plot_variable_means_bars_by_day(
+                    label=name_label,
+                    column_phenotype=phenotype,
+                    column_day="menstruation_days",
+                    threshold_days=35,
+                    table=table,
+                )
+                pass
             pass
         pass
     # Return information.
