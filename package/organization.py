@@ -9597,6 +9597,9 @@ def plot_variable_means_bars_by_day(
     table = table.loc[
         (table[column_day] < threshold_days), :
     ]
+
+    print("table after filter")
+    print(table)
     # Aggregate phenotype values by day.
     groups = table.groupby(level=[column_day])
     #groups.aggregate(
