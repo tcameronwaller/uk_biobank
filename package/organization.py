@@ -9643,8 +9643,8 @@ def plot_variable_means_dots_by_day(
     # - - alternative: iterate on the groups and calculate mean and standard error manually
     # TODO: 3. format data table for bar chart...
 
-    print("plot_variable_means_bars_by_day")
-    print(table_aggregate)
+    #print("plot_variable_means_dots_by_day")
+    #print(table_aggregate)
 
 
     # Define fonts.
@@ -9655,11 +9655,19 @@ def plot_variable_means_dots_by_day(
 
     # TODO: start with a simple scatter...
 
-
     # Create figure.
-    #figure = plot.some_function()
+    figure = plot.plot_scatter(
+        data=table_aggregate,
+        abscissa="days",
+        ordinate="mean",
+        title_abscissa="days",
+        title_ordinate="mean",
+        fonts=fonts,
+        colors=colors,
+        size=10,
+    )
     # Return.
-    return dict()
+    return figure
 
 
 
