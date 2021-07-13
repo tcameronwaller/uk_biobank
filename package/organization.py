@@ -9586,6 +9586,11 @@ def plot_variable_means_bars_by_day(
     # Copy information.
     table = table.copy(deep=True)
     # Select relevant information.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
     columns = [
         #"eid",
         "IID",
@@ -9601,10 +9606,6 @@ def plot_variable_means_bars_by_day(
     print("table after filter")
     print(table)
     # Aggregate phenotype values by day.
-    table.reset_index(
-        level=None,
-        inplace=True
-    )
     table.set_index(
         [column_day],
         append=False,
@@ -9620,7 +9621,8 @@ def plot_variable_means_bars_by_day(
     for name, group in groups:
         table_group = group.reset_index(
             level=None,
-            inplace=False
+            inplace=False,
+            drop=False,
         )
         print(table_group)
         days = table_group[column_day].dropna().to_list()[0]
