@@ -9553,10 +9553,6 @@ def plot_variable_values_histogram(
     return figure
 
 
-# TODO: this function is not yet functional...
-# TODO: still need to organize information and create bar chart...
-# TODO: actually... try a dot plot...
-
 def plot_variable_means_dots_by_day(
     label=None,
     column_phenotype=None,
@@ -9616,6 +9612,14 @@ def plot_variable_means_dots_by_day(
     #)
     records = list()
     for name, group in groups:
+        # Initialize missing values.
+        days = float("nan")
+        count = float("nan")
+        mean = float("nan")
+        standard_error = float("nan")
+        confidence_95_low = float("nan")
+        confidence_95_high = float("nan")
+
         table_group = group.reset_index(
             level=None,
             inplace=False,
@@ -9623,48 +9627,44 @@ def plot_variable_means_dots_by_day(
         )
         days = table_group[column_day].dropna().to_list()[0]
         array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
+        # Determine count of valid values.
         count = int(array.size)
-        mean = numpy.nanmean(array)
-        standard_error = scipy.stats.sem(array)
+        if (count > 5):
+            # Determine summary statistics for values in array.
+            mean = round(numpy.nanmean(array), 3)
+            standard_error = round(scipy.stats.sem(array), 3)
+            confidence_95_low = round((mean - (1.96 * standard_error)), 3)
+            confidence_95_high = round((mean + (1.96 * standard_error)), 3)
+            pass
         # Collect information.
         record = dict()
         record["days"] = days
         record["count"] = count
-        record["mean"] = round(mean, 3)
-        record["error"] = round(standard_error, 3)
+        record["mean"] = mean
+        record["error"] = standard_error
+        record["confidence_95_low"] = confidence_95_low
+        record["confidence_95_high"] = confidence_95_high
         records.append(record)
         pass
     table_aggregate = pandas.DataFrame(data=records)
-
-    # TODO: 1. to stratify the table by each value of "column_day"
-    # - - maybe use Pandas groupby()
-    # TODO: 2. aggregate by mean... keep standard error... hmmmmm...
-    # - - I'm not sure whether Pandas aggregate can handle keeping both mean AND standard error
-    # - - alternative: iterate on the groups and calculate mean and standard error manually
-    # TODO: 3. format data table for bar chart...
-
-    #print("plot_variable_means_dots_by_day")
-    #print(table_aggregate)
-
 
     # Define fonts.
     fonts = plot.define_font_properties()
     # Define colors.
     colors = plot.define_color_properties()
 
-
-    # TODO: start with a simple scatter...
-
     # Create figure.
-    figure = plot.plot_scatter(
-        data=table_aggregate,
+    figure = plot.plot_scatter_points_ordinate_error_bars(
+        table=table_aggregate,
         abscissa="days",
         ordinate="mean",
-        title_abscissa="days",
-        title_ordinate="mean",
+        ordinate_error_low="confidence_95_low",
+        ordinate_error_high="confidence_95_high",
+        title_abscissa="days of menstrual cycle",
+        title_ordinate="mean concentration",
         fonts=fonts,
         colors=colors,
-        size=10,
+        size=15,
     )
     # Return.
     return figure
@@ -10193,7 +10193,7 @@ def organize_plot_cohort_model_phenotypes(
         pail[name_plot] = plot_variable_values_histogram(
             label=name_label,
             array=table["menstruation_days"].dropna().to_numpy(),
-            bins=50,
+            bins=None,
         )
         # Phenotypes.
         phenotypes = [
