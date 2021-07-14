@@ -9506,7 +9506,7 @@ def organize_plot_variable_histogram_summary_charts(
 
 
 def plot_variable_values_histogram(
-    label=None,
+    label_title=None,
     array=None,
     bins=None,
 ):
@@ -9514,7 +9514,7 @@ def plot_variable_values_histogram(
     Plots charts from the analysis process.
 
     arguments:
-        label (str): label name for plot
+        label_title (str): label title for plot
         array (object): NumPy array of values to bin and plot in histogram
         bins (int): count of bins for histogram
 
@@ -9546,7 +9546,7 @@ def plot_variable_values_histogram(
         colors=colors,
         line=True,
         line_position=numpy.nanmean(array),
-        label_text=label, # ""
+        label_title=label_title, # ""
         label_report=True,
     )
     # Return.
@@ -9554,7 +9554,7 @@ def plot_variable_values_histogram(
 
 
 def plot_variable_means_dots_by_day(
-    label=None,
+    label_title=None,
     column_phenotype=None,
     column_day=None,
     threshold_days=None,
@@ -9564,7 +9564,7 @@ def plot_variable_means_dots_by_day(
     Plots charts from the analysis process.
 
     arguments:
-        label (str): label name for plot
+        label_title (str): label title for plot
         column_phenotype (str): name of column in table for continuous phenotype
         column_day (str): name of column in table for days for stratification
         threshold_day (int): maximal count of days to include
@@ -9669,6 +9669,7 @@ def plot_variable_means_dots_by_day(
         fonts=fonts,
         colors=colors,
         size=15,
+        label_title=label_title,
     )
     # Return.
     return figure
@@ -10183,7 +10184,7 @@ def organize_plot_cohort_model_phenotypes(
         name_label = str(name + "_" + phenotype)
         name_plot = str(name_label + "_histogram")
         pail[name_plot] = plot_variable_values_histogram(
-            label=name_label,
+            label_title=name_label,
             array=table[phenotype].dropna().to_numpy(),
             bins=50,
         )
@@ -10195,7 +10196,7 @@ def organize_plot_cohort_model_phenotypes(
         name_label = str(name + "_" + "menstruation_days")
         name_plot = str(name_label + "_histogram")
         pail[name_plot] = plot_variable_values_histogram(
-            label=name_label,
+            label_title=name_label,
             array=table["menstruation_days"].dropna().to_numpy(),
             bins=None,
         )
@@ -10215,10 +10216,10 @@ def organize_plot_cohort_model_phenotypes(
             name_label = str(name + "_" + phenotype)
             name_plot = str(name_label + "_dot")
             pail[name_plot] = plot_variable_means_dots_by_day(
-                label=name_label,
+                label_title=name_label,
                 column_phenotype=phenotype,
                 column_day="menstruation_days",
-                threshold_days=33,
+                threshold_days=36,
                 table=table,
             )
             pass
