@@ -38,100 +38,6 @@ import promiscuity.plot as plot
 
 
 ##########
-# Initialization
-
-
-def initialize_directories_cohorts(
-    path_parent=None,
-):
-    """
-    Initialize directories for procedure's product files.
-
-    arguments:
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-        (dict<str>): collection of paths to directories for procedure's files
-
-    """
-
-    # Collect information.
-    paths = dict()
-    sexes = ["female", "male",]
-    alcoholisms = [
-        "alcoholism_1", "alcoholism_2", "alcoholism_3", "alcoholism_4",
-    ]
-    groups = ["all", "case", "control"]
-    for sex in sexes:
-        paths[sex] = dict()
-        for alcoholism in alcoholisms:
-            paths[sex][alcoholism] = dict()
-            for group in groups:
-                paths[sex][alcoholism][group] = os.path.join(
-                    path_parent, "cohorts", sex, alcoholism, group
-                )
-                # Initialize directories.
-                utility.create_directories(
-                    path=paths[sex][alcoholism][group]
-                )
-                pass
-            pass
-        pass
-    # Return information.
-    return paths
-
-
-def initialize_directories(
-    restore=None,
-    path_dock=None,
-):
-    """
-    Initialize directories for procedure's product files.
-
-    arguments:
-        restore (bool): whether to remove previous versions of data
-        path_dock (str): path to dock directory for source and product
-            directories and files
-
-    raises:
-
-    returns:
-        (dict<str>): collection of paths to directories for procedure's files
-
-    """
-
-    # Collect paths.
-    paths = dict()
-    # Define paths to directories.
-    paths["dock"] = path_dock
-    paths["organization"] = os.path.join(path_dock, "organization")
-    paths["quality"] = os.path.join(
-        path_dock, "organization", "quality"
-    )
-    paths["cohorts"] = os.path.join(
-        path_dock, "organization", "cohorts"
-    )
-
-    # Remove previous files to avoid version or batch confusion.
-    if restore:
-        utility.remove_directory(path=paths["organization"])
-    # Initialize directories.
-    utility.create_directories(
-        path=paths["organization"]
-    )
-    utility.create_directories(
-        path=paths["quality"]
-    )
-    utility.create_directories(
-        path=paths["cohorts"]
-    )
-    # Return information.
-    return paths
-
-
-##########
 # Read
 
 
@@ -9625,6 +9531,8 @@ def organize_plot_variable_histogram_summary_charts(
 # Procedure
 
 
+# Definitions
+
 def execute_genotype_sex_age_body(
     table=None,
     report=None,
@@ -9775,6 +9683,78 @@ def execute_psychology_psychiatry(
         print(pail_psychology["table_clean"])
     # Return information.
     return pail_psychology
+
+
+
+def execute_alcohol(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about persons' alcohol consumption and dependence
+    across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    # Organize information about alcohol consumption.
+    pail_alcohol_consumption = organize_alcohol_consumption_variables(
+        table=table,
+        report=False,
+    )
+    #print(pail_alcohol_consumption["quantity"]["table_clean"])
+
+    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
+    pail_audit = organize_alcohol_audit_questionnaire_variables(
+        table=pail_alcohol_consumption["quantity"]["table_clean"],
+        report=False,
+    )
+    #print(pail_audit["audit"]["table_clean"])
+
+    if False:
+        # Organize International Classification of Disease (ICD) ICD9 and ICD10
+        # codes for diagnoses relevant to alcoholism.
+        # Organize codes for self diagnoses relevant to alcoholism.
+        pail_diagnosis = organize_alcoholism_diagnosis_variables(
+            table=pail_audit["audit"]["table_clean"],
+            report=False,
+        )
+        #print(pail_diagnosis["table_clean"])
+
+        # Organize alcoholism cases and controls.
+        # Report females and males who consume alcohol and are candidates for
+        # either controls or cases of alcoholism.
+        pail_alcoholism = organize_alcoholism_cases_controls_variables(
+            table=pail_diagnosis["table_clean"],
+            report=True,
+        )
+        #print(pail_alcoholism["table_clean"])
+
+    # Copy information.
+    table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("Report from organize_alcohol_consumption()")
+        utility.print_terminal_partition(level=3)
+        print(table_alcohol)
+    # Return information.
+    return table_alcohol
+
+
+# Descriptions
 
 
 def execute_describe_cohorts_models_phenotypes(
@@ -10026,72 +10006,7 @@ def execute_plot_cohorts_models_phenotypes(
     return pail
 
 
-def execute_alcohol(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about persons' alcohol consumption and dependence
-    across UK Biobank.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-
-    """
-
-    # Organize information about alcohol consumption.
-    pail_alcohol_consumption = organize_alcohol_consumption_variables(
-        table=table,
-        report=False,
-    )
-    #print(pail_alcohol_consumption["quantity"]["table_clean"])
-
-    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
-    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
-    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
-    pail_audit = organize_alcohol_audit_questionnaire_variables(
-        table=pail_alcohol_consumption["quantity"]["table_clean"],
-        report=False,
-    )
-    #print(pail_audit["audit"]["table_clean"])
-
-    if False:
-        # Organize International Classification of Disease (ICD) ICD9 and ICD10
-        # codes for diagnoses relevant to alcoholism.
-        # Organize codes for self diagnoses relevant to alcoholism.
-        pail_diagnosis = organize_alcoholism_diagnosis_variables(
-            table=pail_audit["audit"]["table_clean"],
-            report=False,
-        )
-        #print(pail_diagnosis["table_clean"])
-
-        # Organize alcoholism cases and controls.
-        # Report females and males who consume alcohol and are candidates for
-        # either controls or cases of alcoholism.
-        pail_alcoholism = organize_alcoholism_cases_controls_variables(
-            table=pail_diagnosis["table_clean"],
-            report=True,
-        )
-        #print(pail_alcoholism["table_clean"])
-
-    # Copy information.
-    table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("Report from organize_alcohol_consumption()")
-        utility.print_terminal_partition(level=3)
-        print(table_alcohol)
-    # Return information.
-    return table_alcohol
+# Stratification and formatting for genetic analyses
 
 
 def execute_cohorts_models_genetic_analysis(
@@ -10183,3 +10098,6 @@ def execute_cohorts_models_genetic_analysis(
             print(name)
     # Return information.
     return pail
+
+
+##########
