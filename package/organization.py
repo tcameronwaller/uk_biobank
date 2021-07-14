@@ -7715,7 +7715,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days", "menstruation_phase",
+                "menstruation_days",
+                "menstruation_phase", "menstruation_phase_cycle",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7782,7 +7783,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days", "menstruation_phase",
+                "menstruation_days",
+                "menstruation_phase", "menstruation_phase_cycle",
                 "hormone_alteration",
                 hormone,
             ],
@@ -7816,7 +7818,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 "white_british",
                 "sex", "sex_text", "age", "body_mass_index_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
-                "menstruation_days", "menstruation_phase",
+                "menstruation_days",
+                "menstruation_phase", "menstruation_phase_cycle",
                 "hormone_alteration",
                 hormone,
             ],
@@ -9683,7 +9686,6 @@ def execute_psychology_psychiatry(
         print(pail_psychology["table_clean"])
     # Return information.
     return pail_psychology
-
 
 
 def execute_alcohol(
