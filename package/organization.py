@@ -9631,10 +9631,12 @@ def plot_variable_means_dots_by_day(
         count = int(array.size)
         if (count > 5):
             # Determine summary statistics for values in array.
-            mean = round(numpy.nanmean(array), 3)
-            standard_error = round(scipy.stats.sem(array), 3)
-            confidence_95_low = round((mean - (1.96 * standard_error)), 3)
-            confidence_95_high = round((mean + (1.96 * standard_error)), 3)
+            #mean = round(numpy.nanmean(array), 3)
+            mean = numpy.nanmean(array)
+            standard_error = scipy.stats.sem(array)
+            confidence_95 = (1.96 * standard_error)
+            confidence_95_low = (mean - confidence_95)
+            confidence_95_high = (mean + confidence_95)
             pass
         # Collect information.
         record = dict()
@@ -9642,6 +9644,7 @@ def plot_variable_means_dots_by_day(
         record["count"] = count
         record["mean"] = mean
         record["error"] = standard_error
+        record["confidence_95"] = confidence_95
         record["confidence_95_low"] = confidence_95_low
         record["confidence_95_high"] = confidence_95_high
         records.append(record)
@@ -9658,8 +9661,8 @@ def plot_variable_means_dots_by_day(
         table=table_aggregate,
         abscissa="days",
         ordinate="mean",
-        ordinate_error_low="confidence_95_low",
-        ordinate_error_high="confidence_95_high",
+        ordinate_error_low="confidence_95",
+        ordinate_error_high="confidence_95",
         title_abscissa="days of menstrual cycle",
         title_ordinate="mean concentration",
         fonts=fonts,
