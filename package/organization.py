@@ -3183,7 +3183,9 @@ def determine_female_menstruation_phase_cycle(
     Determine a female person's menstruation phase from a cyclical perspective.
 
     0: late luteal or early follicular phase of menstruation cycle
+    - "shoulder"
     1: late follicular or early luteal phase of menstruation cycle
+    - "ovulation"
 
     arguments:
         sex_text (str): textual representation of sex selection
