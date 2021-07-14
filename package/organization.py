@@ -9131,6 +9131,182 @@ def select_organize_cohorts_models_phenotypes_set_summary(
 
 
 ##########
+# Plot
+
+
+def plot_variable_values_histogram(
+    label_title=None,
+    array=None,
+    bins=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        label_title (str): label title for plot
+        array (object): NumPy array of values to bin and plot in histogram
+        bins (int): count of bins for histogram
+
+    raises:
+
+    returns:
+        (object): figure object from MatPlotLib
+
+    """
+
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+    # Determine bin method.
+    if bins is None:
+        bin_method = "auto"
+    else:
+        bin_method = "count"
+    # Create figure.
+    figure = plot.plot_distribution_histogram(
+        array=array,
+        title="",
+        bin_method=bin_method, # "auto" or "count"
+        bin_count=bins,
+        label_bins="values",
+        label_counts="counts per bin",
+        fonts=fonts,
+        colors=colors,
+        line=True,
+        line_position=numpy.nanmean(array),
+        label_title=label_title, # ""
+        label_report=True,
+    )
+    # Return.
+    return figure
+
+
+def plot_variable_means_dots_by_day(
+    label_title=None,
+    column_phenotype=None,
+    column_day=None,
+    threshold_days=None,
+    table=None,
+):
+    """
+    Plots charts from the analysis process.
+
+    arguments:
+        label_title (str): label title for plot
+        column_phenotype (str): name of column in table for continuous phenotype
+        column_day (str): name of column in table for days for stratification
+        threshold_day (int): maximal count of days to include
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): figure object from MatPlotLib
+
+    """
+
+    # Organize information for plot.
+    # Copy information.
+    table = table.copy(deep=True)
+    # Select relevant information.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    columns = [
+        #"eid",
+        "IID",
+        column_day, column_phenotype
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table.loc[
+        (table[column_day] < threshold_days), :
+    ]
+    # Aggregate phenotype values by day.
+    table.set_index(
+        [column_day],
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    groups = table.groupby(level=[column_day], axis="index",)
+    #groups.aggregate(
+    #    mean=(column_phenotype, numpy.nanmean),
+    #    deviation=(column_phenotype, numpy.nanstd)
+    #)
+    records = list()
+    for name, group in groups:
+        # Initialize missing values.
+        days = float("nan")
+        count = float("nan")
+        mean = float("nan")
+        standard_error = float("nan")
+        confidence_95 = float("nan")
+        confidence_95_low = float("nan")
+        confidence_95_high = float("nan")
+
+        table_group = group.reset_index(
+            level=None,
+            inplace=False,
+            drop=False,
+        )
+        days = table_group[column_day].dropna().to_list()[0]
+        array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
+        # Determine count of valid values.
+        count = int(array.size)
+        if (count > 5):
+            # Determine summary statistics for values in array.
+            #mean = round(numpy.nanmean(array), 3)
+            mean = numpy.nanmean(array)
+            standard_error = scipy.stats.sem(array)
+            confidence_95 = (1.96 * standard_error)
+            confidence_95_low = (mean - confidence_95)
+            confidence_95_high = (mean + confidence_95)
+            pass
+        # Collect information.
+        record = dict()
+        record["days"] = days
+        record["count"] = count
+        record["mean"] = mean
+        record["error"] = standard_error
+        record["confidence_95"] = confidence_95
+        record["confidence_95_low"] = confidence_95_low
+        record["confidence_95_high"] = confidence_95_high
+        records.append(record)
+        pass
+    table_aggregate = pandas.DataFrame(data=records)
+
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+
+    # Create figure.
+    figure = plot.plot_scatter_points_ordinate_error_bars(
+        table=table_aggregate,
+        abscissa="days",
+        ordinate="mean",
+        ordinate_error_low="confidence_95",
+        ordinate_error_high="confidence_95",
+        title_abscissa="days of menstrual cycle",
+        title_ordinate="mean concentration",
+        fonts=fonts,
+        colors=colors,
+        size=15,
+        label_title=label_title,
+    )
+    # Return.
+    return figure
+
+
+
+
+##########
 ##########
 ##########
 ##########
@@ -9443,378 +9619,6 @@ def organize_plot_variable_histogram_summary_charts(
 
     pass
 
-
-
-
-##########
-# Plot
-
-
-def plot_variable_values_histogram(
-    label_title=None,
-    array=None,
-    bins=None,
-):
-    """
-    Plots charts from the analysis process.
-
-    arguments:
-        label_title (str): label title for plot
-        array (object): NumPy array of values to bin and plot in histogram
-        bins (int): count of bins for histogram
-
-    raises:
-
-    returns:
-        (object): figure object from MatPlotLib
-
-    """
-
-    # Define fonts.
-    fonts = plot.define_font_properties()
-    # Define colors.
-    colors = plot.define_color_properties()
-    # Determine bin method.
-    if bins is None:
-        bin_method = "auto"
-    else:
-        bin_method = "count"
-    # Create figure.
-    figure = plot.plot_distribution_histogram(
-        array=array,
-        title="",
-        bin_method=bin_method, # "auto" or "count"
-        bin_count=bins,
-        label_bins="values",
-        label_counts="counts per bin",
-        fonts=fonts,
-        colors=colors,
-        line=True,
-        line_position=numpy.nanmean(array),
-        label_title=label_title, # ""
-        label_report=True,
-    )
-    # Return.
-    return figure
-
-
-def plot_variable_means_dots_by_day(
-    label_title=None,
-    column_phenotype=None,
-    column_day=None,
-    threshold_days=None,
-    table=None,
-):
-    """
-    Plots charts from the analysis process.
-
-    arguments:
-        label_title (str): label title for plot
-        column_phenotype (str): name of column in table for continuous phenotype
-        column_day (str): name of column in table for days for stratification
-        threshold_day (int): maximal count of days to include
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): figure object from MatPlotLib
-
-    """
-
-    # Organize information for plot.
-    # Copy information.
-    table = table.copy(deep=True)
-    # Select relevant information.
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    columns = [
-        #"eid",
-        "IID",
-        column_day, column_phenotype
-    ]
-    table = table.loc[
-        :, table.columns.isin(columns)
-    ]
-    table = table.loc[
-        (table[column_day] < threshold_days), :
-    ]
-    # Aggregate phenotype values by day.
-    table.set_index(
-        [column_day],
-        append=False,
-        drop=True,
-        inplace=True
-    )
-    groups = table.groupby(level=[column_day], axis="index",)
-    #groups.aggregate(
-    #    mean=(column_phenotype, numpy.nanmean),
-    #    deviation=(column_phenotype, numpy.nanstd)
-    #)
-    records = list()
-    for name, group in groups:
-        # Initialize missing values.
-        days = float("nan")
-        count = float("nan")
-        mean = float("nan")
-        standard_error = float("nan")
-        confidence_95 = float("nan")
-        confidence_95_low = float("nan")
-        confidence_95_high = float("nan")
-
-        table_group = group.reset_index(
-            level=None,
-            inplace=False,
-            drop=False,
-        )
-        days = table_group[column_day].dropna().to_list()[0]
-        array = copy.deepcopy(table_group[column_phenotype].dropna().to_numpy())
-        # Determine count of valid values.
-        count = int(array.size)
-        if (count > 5):
-            # Determine summary statistics for values in array.
-            #mean = round(numpy.nanmean(array), 3)
-            mean = numpy.nanmean(array)
-            standard_error = scipy.stats.sem(array)
-            confidence_95 = (1.96 * standard_error)
-            confidence_95_low = (mean - confidence_95)
-            confidence_95_high = (mean + confidence_95)
-            pass
-        # Collect information.
-        record = dict()
-        record["days"] = days
-        record["count"] = count
-        record["mean"] = mean
-        record["error"] = standard_error
-        record["confidence_95"] = confidence_95
-        record["confidence_95_low"] = confidence_95_low
-        record["confidence_95_high"] = confidence_95_high
-        records.append(record)
-        pass
-    table_aggregate = pandas.DataFrame(data=records)
-
-    # Define fonts.
-    fonts = plot.define_font_properties()
-    # Define colors.
-    colors = plot.define_color_properties()
-
-    # Create figure.
-    figure = plot.plot_scatter_points_ordinate_error_bars(
-        table=table_aggregate,
-        abscissa="days",
-        ordinate="mean",
-        ordinate_error_low="confidence_95",
-        ordinate_error_high="confidence_95",
-        title_abscissa="days of menstrual cycle",
-        title_ordinate="mean concentration",
-        fonts=fonts,
-        colors=colors,
-        size=15,
-        label_title=label_title,
-    )
-    # Return.
-    return figure
-
-
-
-##########
-# Write
-
-
-def write_product_quality(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_auditc = os.path.join(
-        path_parent, "table_auditc.tsv"
-    )
-    path_table_audit = os.path.join(
-        path_parent, "table_audit.tsv"
-    )
-    path_table_diagnosis = os.path.join(
-        path_parent, "table_diagnosis.tsv"
-    )
-    path_table_alcoholism = os.path.join(
-        path_parent, "table_alcoholism.tsv"
-    )
-    # Write information to file.
-    information["table_auditc"].to_csv(
-        path_or_buf=path_table_auditc,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_audit"].to_csv(
-        path_or_buf=path_table_audit,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_diagnosis"].to_csv(
-        path_or_buf=path_table_diagnosis,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    information["table_alcoholism"].to_csv(
-        path_or_buf=path_table_alcoholism,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
-def write_product_cohort_table(
-    name=None,
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table = os.path.join(
-        path_parent, str(name + ".tsv")
-    )
-    # Write information to file.
-    information.to_csv(
-        path_or_buf=path_table,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
-def write_product_cohorts(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    for name in information.keys():
-        write_product_cohort_table(
-            name=name,
-            information=information[name],
-            path_parent=path_parent,
-        )
-    pass
-
-
-def write_product_trial(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        path_parent, "table_phenotypes_covariates.pickle"
-    )
-    path_table_phenotypes_text = os.path.join(
-        path_parent, "table_phenotypes_covariates.tsv"
-    )
-    # Write information to file.
-    information["table_phenotypes_covariates"].to_pickle(
-        path_table_phenotypes
-    )
-    information["table_phenotypes_covariates"].to_csv(
-        path_or_buf=path_table_phenotypes_text,
-        sep="\t",
-        header=True,
-        index=False,
-    )
-    pass
-
-
-def write_product(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-    # Quality control reports.
-    write_product_quality(
-        information=information["quality"],
-        path_parent=paths["quality"],
-    )
-    # Cohort tables in PLINK format.
-    write_product_cohorts(
-        information=information["cohorts"],
-        path_parent=paths["cohorts"],
-    )
-
-    # Trial organization.
-    if False:
-        write_product_trial(
-            information=information["trial"],
-            path_parent=paths["trial"],
-        )
-    pass
 
 
 ###############################################################################
