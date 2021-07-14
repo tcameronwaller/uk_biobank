@@ -3277,8 +3277,7 @@ def determine_female_menstruation_phase_cycle(
     Determine a female person's menstruation phase from a cyclical perspective.
 
     0: late luteal or early follicular phase of menstruation cycle
-    1: late follicular phase of menstruation cycle
-    2: early luteal phase of menstruation cycle
+    1: late follicular or early luteal phase of menstruation cycle
 
     arguments:
         sex_text (str): textual representation of sex selection
@@ -3312,15 +3311,12 @@ def determine_female_menstruation_phase_cycle(
                     # phase.
                     value = 0
                 elif (
-                    (menstruation_phase_early_late == 1)
-                ):
-                    # Person qualitifies for late follicular phase.
-                    value = 1
-                elif (
+                    (menstruation_phase_early_late == 1) or
                     (menstruation_phase_early_late == 2)
                 ):
-                    # Person qualitifies for early luteal phase.
-                    value = 2
+                    # Person qualitifies for late follicular or early luteal
+                    # phase.
+                    value = 1
                 else:
                     # Persons does not qualify for any categories.
                     value = float("nan")
@@ -3674,9 +3670,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 menopause_ordinal=row["menopause_ordinal"],
                 menstruation_days=row["menstruation_days"],
-                threshold_middle_follicular=8, # threshold in days
+                threshold_middle_follicular=5, # threshold in days
                 threshold_ovulation=15,
-                threshold_middle_luteal=25, # threshold in days
+                threshold_middle_luteal=20, # threshold in days
             ),
         axis="columns", # apply across rows
     )
@@ -8512,15 +8508,6 @@ def organize_report_cohort_model_variables_summaries_record(
     return record
 
 
-# TCW 8 July 2021
-# TODO: introduce changes for menstruation phase!!!
-
-# "menstruation_phase", "menstruation_phase_early_late", "menstruation_phase_cycle",
-
-
-# TODO: for the sake of plots... introduce new variable "menstruation" and only set to "True"
-# for premenopause and perimenopause females...
-
 def select_organize_cohorts_models_phenotypes_set_summary(
     table=None,
 ):
@@ -8787,14 +8774,6 @@ def select_organize_cohorts_models_phenotypes_set_summary(
 
     # Menstruation phase
 
-    # TODO: Consider introducing...
-    # menstruation_follicular_early
-    # menstruation_follicular_late
-    # menstruation_luteal_early
-    # menstruation_luteal_late
-
-    # "menstruation_phase", "menstruation_phase_early_late", "menstruation_phase_cycle",
-
     record = dict()
     record["name"] = "female_premenopause_menstruation_follicular"
     record["cohort_model"] = "female_premenopause_menstruation_follicular"
@@ -8826,8 +8805,8 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_premenopause_menstruation_cycle_0"
-    record["cohort_model"] = "female_premenopause_menstruation_cycle_0"
+    record["name"] = "female_premenopause_menstruation_cycle_shoulder"
+    record["cohort_model"] = "female_premenopause_menstruation_cycle_shoulder"
     record["category"] = "menstruation_phase"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -8841,8 +8820,8 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_premenopause_menstruation_cycle_1"
-    record["cohort_model"] = "female_premenopause_menstruation_cycle_1"
+    record["name"] = "female_premenopause_menstruation_cycle_ovulation"
+    record["cohort_model"] = "female_premenopause_menstruation_cycle_ovulation"
     record["category"] = "menstruation_phase"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -8851,21 +8830,6 @@ def select_organize_cohorts_models_phenotypes_set_summary(
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 0) &
             (table["menstruation_phase_cycle"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = "female_premenopause_menstruation_cycle_2"
-    record["cohort_model"] = "female_premenopause_menstruation_cycle_2"
-    record["category"] = "menstruation_phase"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0) &
-            (table["menstruation_phase_cycle"] == 2)
         ), :
     ]
     records.append(record)
@@ -8901,8 +8865,8 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_perimenopause_menstruation_cycle_0"
-    record["cohort_model"] = "female_perimenopause_menstruation_cycle_0"
+    record["name"] = "female_perimenopause_menstruation_cycle_shoulder"
+    record["cohort_model"] = "female_perimenopause_menstruation_cycle_shoulder"
     record["category"] = "menstruation_phase"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -8916,8 +8880,8 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_perimenopause_menstruation_cycle_1"
-    record["cohort_model"] = "female_perimenopause_menstruation_cycle_1"
+    record["name"] = "female_perimenopause_menstruation_cycle_ovulation"
+    record["cohort_model"] = "female_perimenopause_menstruation_cycle_ovulation"
     record["category"] = "menstruation_phase"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -8926,21 +8890,6 @@ def select_organize_cohorts_models_phenotypes_set_summary(
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 1) &
             (table["menstruation_phase_cycle"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = "female_perimenopause_menstruation_cycle_2"
-    record["cohort_model"] = "female_perimenopause_menstruation_cycle_2"
-    record["category"] = "menstruation_phase"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1) &
-            (table["menstruation_phase_cycle"] == 2)
         ), :
     ]
     records.append(record)
@@ -9179,10 +9128,6 @@ def select_organize_cohorts_models_phenotypes_set_summary(
 
     # Return information
     return records
-
-
-
-
 
 
 ##########
@@ -10169,15 +10114,16 @@ def organize_plot_cohort_model_phenotypes(
     # Create plots for phenotypes relevant to all cohorts.
     phenotypes = [
         "age",
-        "body_mass_index", "body_mass_index_log",
-        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "testosterone", "testosterone_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
-        "testosterone_free", "testosterone_free_log",
-        "vitamin_d", "vitamin_d_log",
+        "body_mass_index",# "body_mass_index_log",
+        "albumin",# "albumin_log",
+        "steroid_globulin",# "steroid_globulin_log",
+        "oestradiol",# "oestradiol_log",
+        "oestradiol_bioavailable",# "oestradiol_bioavailable_log",
+        "oestradiol_free",# "oestradiol_free_log",
+        "testosterone",# "testosterone_log",
+        "testosterone_bioavailable",# "testosterone_bioavailable_log",
+        "testosterone_free",# "testosterone_free_log",
+        "vitamin_d",# "vitamin_d_log",
     ]
     for phenotype in phenotypes:
         # Histogram.
@@ -10202,14 +10148,15 @@ def organize_plot_cohort_model_phenotypes(
         )
         # Phenotypes.
         phenotypes = [
-            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-            "oestradiol", "oestradiol_log",
-            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-            "oestradiol_free", "oestradiol_free_log",
-            "testosterone", "testosterone_log",
-            "testosterone_bioavailable", "testosterone_bioavailable_log",
-            "testosterone_free", "testosterone_free_log",
-            "vitamin_d", "vitamin_d_log",
+            "albumin",# "albumin_log",
+            "steroid_globulin",# "steroid_globulin_log",
+            "oestradiol",# "oestradiol_log",
+            "oestradiol_bioavailable",# "oestradiol_bioavailable_log",
+            "oestradiol_free",# "oestradiol_free_log",
+            "testosterone",# "testosterone_log",
+            "testosterone_bioavailable",# "testosterone_bioavailable_log",
+            "testosterone_free",# "testosterone_free_log",
+            "vitamin_d",# "vitamin_d_log",
         ]
         for phenotype in phenotypes:
             # Bar chart.
