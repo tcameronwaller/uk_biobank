@@ -9617,6 +9617,7 @@ def plot_variable_means_dots_by_day(
         count = float("nan")
         mean = float("nan")
         standard_error = float("nan")
+        confidence_95 = float("nan")
         confidence_95_low = float("nan")
         confidence_95_high = float("nan")
 
