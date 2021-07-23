@@ -1057,7 +1057,10 @@ def calculate_estimation_bioavailable_testosterone(
 ):
     """
     Calculates an estimation of bioavailable testosterone (not bound to steroid
-    hormone binding globulin).
+    hormone binding globulin). Testosterone binds to SHBG more tightly
+    (association constant) than it does to albumin. Testosterone bound to
+    albumin is more "bioavailable". Hence the formula includes this testosterone
+    bound to albumin in addition to the "free" testosterone.
 
     This function applies the formula of Sodergard, Journal of Steroid
     Biochemistry, 1982 (PubMed:7202083).
@@ -1654,17 +1657,18 @@ def organize_sex_hormone_variables(
 
 # TODO: review all "interpretation" functions below...
 
+
 def interpret_menstruation_days(
     field_3700=None,
 ):
     """
     Intepret UK Biobank's coding for field 3700.
 
-    Data-Field "3700": "time since last menstrual period"
+    Data-Field "3700": "Time since last menstrual period"
     UK Biobank data coding "100291" for variable field "3700".
-    "days": 0 - 365
-    "do not know": -1
-    "prefer not to answer": -3
+    0 - 365: "days"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
 
     Note: "Please count from the first day of your last menstrual period."
 
@@ -1706,6 +1710,123 @@ def interpret_menstruation_days(
     return value
 
 
+def interpret_menstruation_cycle_duration(
+    field_3710=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3710.
+
+    Data-Field "3710": "Length of menstrual cycle"
+    UK Biobank data coding "100582" for variable field "3710".
+    7 - 365: "days"
+    -6: "Irregular cycle"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Note: "How many days is your usual menstrual cycle? (The number of days
+    between each menstrual period)"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3710 (float): UK Biobank field 3710, count of days in usual
+            menstrual cycle
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3710)) and
+        (-6.5 <= field_3710 and field_3710 < 400)
+    ):
+        # The variable has a valid value.
+        if (0 <= field_3710 and field_3710 < 400):
+            # The variable has a valid value for days.
+            value = float(field_3710)
+        elif (-1.5 <= field_3710 and field_3710 < -0.5):
+            # -1: "Do not know"
+            value = float("nan")
+        elif (-3.5 <= field_3710 and field_3710 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        elif (-6.5 <= field_3710 and field_3710 < -5.5):
+            # -6: "Irregular cycle"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_menstruation_cycle_irregularity(
+    field_3710=None,
+):
+    """
+    Intepret UK Biobank's coding for field 3710.
+
+    Only interpret whether the variable indicates that the person had an
+    irregular menstrual cycle.
+
+    Data-Field "3710": "Length of menstrual cycle"
+    UK Biobank data coding "100582" for variable field "3710".
+    7 - 365: "days"
+    -6: "Irregular cycle"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Note: "How many days is your usual menstrual cycle? (The number of days
+    between each menstrual period)"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3710 (float): UK Biobank field 3710, count of days in usual
+            menstrual cycle
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3710)) and
+        (-6.5 <= field_3710 and field_3710 < 400)
+    ):
+        # The variable has a valid value.
+        if (0 <= field_3710 and field_3710 < 400):
+            # The variable has a valid value for days.
+            value = float("nan")
+        elif (-1.5 <= field_3710 and field_3710 < -0.5):
+            # -1: "Do not know"
+            value = float("nan")
+        elif (-3.5 <= field_3710 and field_3710 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        elif (-6.5 <= field_3710 and field_3710 < -5.5):
+            # -6: "Irregular cycle"
+            value = 1
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def interpret_menstruation_period_current(
     field_3720=None,
 ):
@@ -1714,10 +1835,10 @@ def interpret_menstruation_period_current(
 
     Data-Field "3720": "Menstruating today"
     UK Biobank data coding "100349" for variable field "3720".
-    "yes": 1
-    "no": 0
-    "do not know": -1
-    "prefer not to answer": -3
+    1: "Yes"
+    0: "No"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
 
@@ -1739,16 +1860,16 @@ def interpret_menstruation_period_current(
     ):
         # The variable has a valid value.
         if (0.5 <= field_3720 and field_3720 < 1.5):
-            # 1: "yes"
+            # 1: "Yes"
             value = 1
         elif (-0.5 <= field_3720 and field_3720 < 0.5):
-            # 0: "no"
+            # 0: "No"
             value = 0
         elif (-1.5 <= field_3720 and field_3720 < -0.5):
-            # -1: "do not know"
+            # -1: "Do not know"
             value = float("nan")
         elif (-3.5 <= field_3720 and field_3720 < -2.5):
-            # -3: "prefer not to answer"
+            # -3: "Prefer not to answer"
             value = float("nan")
         else:
             # uninterpretable
@@ -1773,17 +1894,17 @@ def interpret_menopause_hysterectomy(
 
     Data-Field "2724": "Had menopause"
     UK Biobank data coding "100579" for variable field "2724".
-    "no": 0
-    "yes": 1
-    "not sure - had a hysterectomy": 2
-    "not sure - other reason": 3
-    "prefer not to answer": -3
+    0: "No"
+    1: "Yes"
+    2: "Not sure - had a hysterectomy"
+    3: "Not sure - other reason"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
 
     arguments:
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
+        field_2724 (float): UK Biobank field 2724, whether person self reported
+            menopause
 
     raises:
 
@@ -1823,36 +1944,28 @@ def interpret_menopause_hysterectomy(
     return value
 
 
-def interpret_menopause_natural(
+def interpret_menopause_natural_self_report(
     field_2724=None,
 ):
     """
     Intepret UK Biobank's coding for field 2724.
 
-    Only interpret whether the variable indicates that the person had a
+    Only interpret whether the variable indicates that the person self reported
     natural menopause, not involving hysterectomy.
 
     Data-Field "2724": "Had menopause"
     UK Biobank data coding "100579" for variable field "2724".
-    "no": 0
-    "yes": 1
-    "not sure - had a hysterectomy": 2
-    "not sure - other reason": 3
-    "prefer not to answer": -3
+    0: "No"
+    1: "Yes"
+    2: "Not sure - had a hysterectomy"
+    3: "Not sure - other reason"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
 
-    Interpret missing or null values as False.
-    The main justification is to avoid loss of persons from cohorts.
-    This interpretation simplifies the definitions of "menopause_binary" and
-    "menopause_ordinal".
-    Only a "True" value of "menopause_natural" asserts postmenopause definition.
-    A "False" (or null) value of "menopause_natural" relies on other variables
-    for definition, including "oophorectomy", "menstruation_days", and "age".
-
     arguments:
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
+        field_2724 (float): UK Biobank field 2724, whether person self reported
+            menopause
 
     raises:
 
@@ -1868,19 +1981,19 @@ def interpret_menopause_natural(
     ):
         # The variable has a valid value.
         if (-0.5 <= field_2724 and field_2724 < 0.5):
-            # 0: "no"
+            # 0: "No"
             value = 0
         elif (0.5 <= field_2724 and field_2724 < 1.5):
-            # 1: "yes"
+            # 1: "Yes"
             value = 1
         elif (1.5 <= field_2724 and field_2724 < 2.5):
-            # 2: "not sure - had a hysterectomy"
+            # 2: "Not sure - had a hysterectomy"
             value = float("nan")
         elif (2.5 <= field_2724 and field_2724 < 3.5):
-            # 3: "not sure - other reason"
+            # 3: "Not sure - other reason"
             value = float("nan")
         elif (-3.5 <= field_2724 and field_2724 < -2.5):
-            # -3: "prefer not to answer"
+            # -3: "Prefer not to answer"
             value = float("nan")
         else:
             # uninterpretable
@@ -2354,6 +2467,82 @@ def determine_female_menstruation_days(
     return value
 
 
+def determine_female_menstruation_cycle_duration(
+    sex_text=None,
+    field_3710=None,
+):
+    """
+    Determine count of days in female person's usual menstrual cycle.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_3710 (float): UK Biobank field 3710, count of days in usual
+            menstrual cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret days since previous menstruation.
+    menstruation_cycle_duration = interpret_menstruation_cycle_duration(
+        field_3710=field_3710,
+    )
+    # Comparison.
+    # Only define days since previous menstruation for female persons.
+    if (
+        (sex_text == "female")
+    ):
+        # Female.
+        value = menstruation_cycle_duration
+    else:
+        # Male.
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_menstruation_cycle_irregularity(
+    sex_text=None,
+    field_3710=None,
+):
+    """
+    Determine count of days in female person's usual menstrual cycle.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_3710 (float): UK Biobank field 3710, count of days in usual
+            menstrual cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret days since previous menstruation.
+    menstruation_cycle_irregularity = interpret_menstruation_cycle_irregularity(
+        field_3710=field_3710,
+    )
+    # Comparison.
+    # Only define days since previous menstruation for female persons.
+    if (
+        (sex_text == "female")
+    ):
+        # Female.
+        value = menstruation_cycle_irregularity
+    else:
+        # Male.
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def determine_female_hysterectomy(
     sex_text=None,
     field_2724=None,
@@ -2467,6 +2656,45 @@ def determine_female_hysterectomy_or_oophorectomy(
     return value
 
 
+def determine_female_menopause_natural_self_report(
+    sex_text=None,
+    field_2724=None,
+):
+    """
+    Determine whether female person self reported natural menopause.
+    Natural menopause does not include hysterectomy or oophorectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_2724 (float): UK Biobank field 2724, whether person self reported
+            menopause
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret self report of natural menopause.
+    menopause_natural_self_report = interpret_menopause_natural_self_report(
+        field_2724=field_2724,
+    )
+    # Comparison.
+    # Only define days since previous menstruation for female persons.
+    if (
+        (sex_text == "female")
+    ):
+        # Female.
+        value = menopause_natural_self_report
+    else:
+        # Male.
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def determine_female_menopause_binary(
     sex_text=None,
     age=None,
@@ -2517,7 +2745,7 @@ def determine_female_menopause_binary(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
+    menopause_natural = interpret_menopause_natural_self_report(
         field_2724=field_2724,
     )
     # Determine categories for menopause.
@@ -2640,7 +2868,7 @@ def determine_female_menopause_binary_strict(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
+    menopause_natural = interpret_menopause_natural_self_report(
         field_2724=field_2724,
     )
     # Determine categories for menopause.
@@ -2708,10 +2936,12 @@ def determine_female_menopause_ordinal(
     age=None,
     threshold_age_pre=None,
     threshold_age_post=None,
+    menstruation_duration=None,
+    menstruation_irregularity=None,
     menstruation_days=None,
-    threshold_menstruation_days_pre=None,
-    threshold_menstruation_days_post=None,
-    field_2724=None,
+    threshold_menstruation_pre=None,
+    threshold_menstruation_post=None,
+    menopause_natural_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
 ):
@@ -2725,9 +2955,10 @@ def determine_female_menopause_ordinal(
     Pay close attention to "and", "or" logic in comparisons.
 
     priority:
-    1. (self report of menopause) or (oophorectomy)
-    2. (days since previous menstruation)
-    3. (age)
+    1. self report of natural menopause; oophorectomy
+    2. menstruation cycle irregularity; menstruation cycle duration; days since
+    previous menstruation
+    3. age
 
     arguments:
         sex_text (str): textual representation of sex selection
@@ -2736,14 +2967,18 @@ def determine_female_menopause_ordinal(
             females premenopausal
         threshold_age_post (int): threshold age in years, above which to
             consider all females postmenopausal
+        menstruation_duration (int): count of days in person's usual
+            menstrual cycle
+        menstruation_irregularity (int): binary representation of whether
+            person reported irregularity in menstrual cycle
         menstruation_days (int): count of days since previous menstruation
             (menstrual period)
-        threshold_menstruation_days_pre (int): threshold in days since last
+        threshold_menstruation_pre (int): threshold in days since last
             menstrual period, below which to consider females premenopausal
-        threshold_menstruation_days_post (int): threshold in days since last
+        threshold_menstruation_post (int): threshold in days since last
             menstrual period, above which to consider all females postmenopausal
-        field_2724 (float): UK Biobank field 2724, whether person has
-            experienced menopause
+        menopause_natural_self_report (float): binary representation of whether
+            person self reported natural menopause
         hysterectomy (float): binary logical representation of whether person
             has had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
@@ -2756,28 +2991,26 @@ def determine_female_menopause_ordinal(
 
     """
 
-    # Interpret menopause.
-    # Interpret whether person self-reported menopause that did not involve
-    # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
-        field_2724=field_2724,
-    )
     # Determine categories for menopause.
     # Pay close attention to "and", "or" logic in comparisons.
     if (sex_text == "female"):
         # Determine postmenopause.
         if (
             (
-                (not pandas.isna(menopause_natural)) and
-                (menopause_natural == 1)
+                (not pandas.isna(menopause_natural_self_report)) and
+                (menopause_natural_self_report == 1)
             ) or
             (
                 (not pandas.isna(oophorectomy)) and
                 (oophorectomy == 1)
             ) or
             (
+                (not pandas.isna(menstruation_duration)) and
+                (menstruation_duration >= threshold_menstruation_post)
+            ) or
+            (
                 (not pandas.isna(menstruation_days)) and
-                (menstruation_days >= threshold_menstruation_days_post)
+                (menstruation_days >= threshold_menstruation_post)
             ) or
             (
                 (not pandas.isna(age)) and
@@ -2788,12 +3021,15 @@ def determine_female_menopause_ordinal(
             # Any valid variable that satisfies conditions can justify the
             # postmenopause definition.
             value = 2
-        # Determine perimenopause
+        # Determine perimenopause.
+        # Notice that "menstruation_days" suffices to qualify for perimenopause
+        # category if value is greater than threshold for premenopause category.
+        # Notice that "menstruation_irregularity" is either "1" or missing.
         elif (
             (
                 (
-                    (pandas.isna(menopause_natural)) or
-                    (menopause_natural == 0)
+                    (pandas.isna(menopause_natural_self_report)) or
+                    (menopause_natural_self_report == 0)
                 ) and
                 (
                     (pandas.isna(oophorectomy)) or
@@ -2802,9 +3038,18 @@ def determine_female_menopause_ordinal(
             ) and
             (
                 (
+                    (not pandas.isna(menstruation_irregularity)) and
+                    (menstruation_irregularity == 1)
+                ) or
+                (
+                    (not pandas.isna(menstruation_duration)) and
+                    (menstruation_duration >= threshold_menstruation_pre) and
+                    (menstruation_duration < threshold_menstruation_post)
+                ) or
+                (
                     (not pandas.isna(menstruation_days)) and
-                    (menstruation_days >= threshold_menstruation_days_pre) and
-                    (menstruation_days < threshold_menstruation_days_post)
+                    (menstruation_days >= threshold_menstruation_pre) and
+                    (menstruation_days < threshold_menstruation_post)
                 ) or
                 (
                     (not pandas.isna(age)) and
@@ -2816,11 +3061,14 @@ def determine_female_menopause_ordinal(
             # Person qualitifies for perimenopause.
             value = 1
         # Determine premenopause.
+        # Notice that "menstruation_days" does not suffice to qualify for
+        # premenopause category because even persons with longer cycles can have
+        # values less than threshold.
         elif (
             (
                 (
-                    (pandas.isna(menopause_natural)) or
-                    (menopause_natural == 0)
+                    (pandas.isna(menopause_natural_self_report)) or
+                    (menopause_natural_self_report == 0)
                 ) and
                 (
                     (pandas.isna(oophorectomy)) or
@@ -2829,8 +3077,8 @@ def determine_female_menopause_ordinal(
             ) and
             (
                 (
-                    (not pandas.isna(menstruation_days)) and
-                    (menstruation_days < threshold_menstruation_days_pre)
+                    (not pandas.isna(menstruation_duration)) and
+                    (menstruation_duration < threshold_menstruation_pre)
                 ) or
                 (
                     (not pandas.isna(age)) and
@@ -2909,7 +3157,7 @@ def determine_female_menopause_ordinal_strict(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural(
+    menopause_natural = interpret_menopause_natural_self_report(
         field_2724=field_2724,
     )
     # Assign aliases for variables with long names.
@@ -3443,7 +3691,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     columns_type = [
         "2724-0.0", "3591-0.0", "2834-0.0",
         "3140-0.0",
-        "3700-0.0", "3720-0.0",
+        "3700-0.0", "3710-0.0", "3720-0.0",
         "2784-0.0", "2794-0.0", "2804-0.0",
         "2814-0.0", "3536-0.0", "3546-0.0",
     ]
@@ -3463,6 +3711,26 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    # Determine count of days in person's usual menstrual cycle.
+    table["menstruation_cycle_duration"] = table.apply(
+        lambda row:
+            determine_female_menstruation_cycle_duration(
+                sex_text=row["sex_text"],
+                field_3710=row["3710-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine whether person reports irregularity in menstrual cycle.
+    table["menstruation_cycle_irregularity"] = table.apply(
+        lambda row:
+            determine_female_menstruation_cycle_irregularity(
+                sex_text=row["sex_text"],
+                field_3710=row["3710-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine whether female persons experienced hysterectomy.
     table["hysterectomy"] = table.apply(
         lambda row:
@@ -3493,6 +3761,18 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    # Determine whether female persons self reported natural menopause, which
+    # neither involves hysterectomy nor oophorectomy.
+    table["menopause_natural_self_report"] = table.apply(
+        lambda row:
+            determine_female_menopause_natural_self_report(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine whether female persons have experienced menopause.
     # This definition is binary.
     table["menopause_binary"] = table.apply(
@@ -3523,6 +3803,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
     # Determine whether female persons have experienced menopause.
     # This definition is ordinal.
     table["menopause_ordinal"] = table.apply(
@@ -3532,10 +3813,16 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 age=row["age"],
                 threshold_age_pre=47, # threshold age in years
                 threshold_age_post=55, # threshold age in years
+                menstruation_duration=row["menstruation_cycle_duration"],
+                menstruation_irregularity=(
+                    row["menstruation_cycle_irregularity"]
+                ),
                 menstruation_days=row["menstruation_days"],
-                threshold_menstruation_days_pre=60, # threshold in days
-                threshold_menstruation_days_post=365, # threshold in days
-                field_2724=row["2724-0.0"],
+                threshold_menstruation_pre=60, # threshold in days
+                threshold_menstruation_post=365, # threshold in days
+                menopause_natural_self_report=(
+                    row["menopause_natural_self_report"]
+                ),
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
@@ -3667,7 +3954,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         labels=[
             "2724-0.0", "3591-0.0", "2834-0.0",
             "3140-0.0",
-            "3700-0.0",
+            "3700-0.0", "3710-0.0", "3720-0.0",
             "2784-0.0", "2794-0.0", "2804-0.0",
             "2814-0.0", "3536-0.0", "3546-0.0",
         ],
