@@ -302,6 +302,9 @@ def extract_organize_variables_types(
     return variables_types
 
 
+# TODO: need to read in the latest UKB accession table
+
+
 def read_source(
     path_dock=None,
     report=None,

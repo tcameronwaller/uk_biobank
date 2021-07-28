@@ -1,11 +1,11 @@
 include	field	type	category	name	coverage	scale	ukb_description	ukb_category	instances_array	instances_keep	note
 1	54	string	center		502478		UK Biobank assessment centre	Reception		0.0;	
-1	55	float32	season		502464		Month of attending assessment centre	Reception		0.0;	
-1	22000	float32	genotype		488237		Genotype measurement batch	Genotyping process and sample QC		0.0;	
+1	55	string	season		502464		Month of attending assessment centre	Reception		0.0;	
+1	22000	string	genotype		488237		Genotype measurement batch	Genotyping process and sample QC		0.0;	
 1	22009	float32	genotype	genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
 1	22006	string	genotype		409594		Genetic ethnic grouping, “White British” and similar ancestry	Genotyping process and sample QC		0.0;	
-1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
-1	31	float32	basis	sex	502492	nominal	Sex	Baseline characteristics		0.0;	
+1	22021	string	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
+1	31	string	basis	sex	502492	nominal	Sex	Baseline characteristics		0.0;	
 1	22001	float32	basis	sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
 1	21022	float32	basis	age	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
 1	21002	float32	basis	weight	499809	ratio	Weight	Body size measures		0.0;	
@@ -13,19 +13,20 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	ins
 1	21001	float32	basis	body_mass_index	499494	ratio	Body mass index (BMI)	Body size measures		0.0;	
 1	23104	float32	basis	body_mass_index_impedance	493075	ratio	Body mass index (BMI)	Impedance measures		0.0;	
 1	30600	float32	hormone	albumin	432326	ratio	Albumin	Blood biochemistry		0.0;	greater coverage than albumin_urine
-	30605	float32	hormone		65186		Albumin missing reason	Blood biochemistry processing			
-	30606	float32	hormone		432316		Albumin reportability	Blood biochemistry processing			
+1	30605	float32	hormone		65185		Albumin missing reason	Blood biochemistry processing		0.0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
+1	30606	float32	hormone		432314		Albumin reportability	Blood biochemistry processing		0.0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
 1	30830	float32	hormone	steroid_globulin	428164	ratio	SHBG	Blood biochemistry		0.0;	
-	30835	float32	hormone				SHBG missing reason				
-	30836		hormone				SHBG reportability				
+1	30835	float32	hormone		69580		SHBG missing reason	Blood biochemistry processing		0.0;	
+1	30836	float32	hormone		428865		SHBG reportability	Blood biochemistry processing		0.0;	
 1	30850	float32	hormone	testosterone	427051	ratio	Testosterone	Blood biochemistry		0.0;	
-1	30855	string	hormone		69056		Testosterone missing reason	Blood biochemistry processing		0.0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
-1	30856	string	hormone		467016		Testosterone reportability	Blood biochemistry processing		0.0;	
+1	30855	float32	hormone		69054		Testosterone missing reason	Blood biochemistry processing		0.0;	
+1	30856	float32	hormone		467001		Testosterone reportability	Blood biochemistry processing		0.0;	
 1	30800	float32	hormone	oestradiol	77713	ratio	Oestradiol	Blood biochemistry		0.0;	
-1	30805	string	hormone		417418		Oestradiol missing reason	Blood biochemistry processing		0.0;	
-1	30806	string	hormone		439780		Oestradiol reportability	Blood biochemistry processing		0.0;	
+1	30805	float32	hormone		417410		Oestradiol missing reason	Blood biochemistry processing		0.0;	
+1	30806	float32	hormone		439765		Oestradiol reportability	Blood biochemistry processing		0.0;	
 1	30890	float32	hormone		449928		Vitamin D	Blood biochemistry		0.0;	
-											
+1	30895	float32	hormone		45587		Vitamin D missing reason	Blood biochemistry processing		0.0;	
+1	30896	float32	hormone		452477		Vitamin D reportability	Blood biochemistry processing		0.0;	
 1	30750	float32	metabolism		467885		Glycated haemoglobin (HbA1c)	Blood biochemistry		0.0;	
 1	30740	float32	metabolism		431819		Glucose	Blood biochemistry		0.0;	
 1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry		0.0;	

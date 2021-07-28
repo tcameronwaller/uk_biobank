@@ -1390,6 +1390,98 @@ def organize_report_column_pair_correlations(
     pass
 
 
+# TODO: imputation method needs to be more sophisticated...
+# TODO: interpret "reportability" and "missingness" data fields...
+# reportability
+# albumin, SHBG, testosterone, oestradiol,  (4917)
+
+# function
+# interpret_biochemical_reportability_too_low()
+# data-coding 4917 values "2" and "4" both indicate that the value was "too low"
+
+
+# TODO: introduce a driver function to iterate on hormones...
+# determine whether each hormone is missing due to limit of detection
+
+# 1. interpret reportability for all hormones
+
+def interpret_biochemistry_reportability_less_than_detection_limit(
+    field_code_4917=None,
+):
+    """
+    Intepret UK Biobank's coding 4917 for multiple data fields.
+
+    Only interpret whether the variable indicates that the variable was not
+    reportable (hence missing) due to a measurement that was less than the
+    limit of detection.
+
+    0: variable either not missing or missing and unreportable because greater
+    than detection limit
+    1: variable missing and unreportable because less than detection limit
+
+    Data-Field "30606": "Albumin reportability"
+    Data-Field "30806": "Oestradiol reportability"
+    Data-Field "30836": "SHBG reportability"
+    Data-Field "30856": "Testosterone reportability"
+    Data-Field "30896": "Vitamin D reportability"
+    UK Biobank data coding "4917" for variable fields.
+    1: "Reportable at assay and after aliquot correction, if attempted"
+    2: "Reportable at assay but not reportable after any corrections (too low)"
+    3: "Reportable at assay but not reportable after any corrections (too high)"
+    4: "Not reportable at assay (too low)"
+    5: "Not reportable at assay (too high)"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_code_4917 (float): UK Biobank fields in coding 4917, representing
+            biochemistry reportability
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_code_4917)) and
+        (0.5 <= field_code_4917 and field_code_4917 < 5.5)
+    ):
+        # The variable has a valid value.
+        if (0.5 <= field_code_4917 and field_code_4917 < 1.5):
+            # 1: "Reportable at assay and after aliquot correction, if
+            # attempted"
+            value = 0
+        elif (1.5 <= field_code_4917 and field_code_4917 < 2.5):
+            # 2: "Reportable at assay but not reportable after any corrections
+            # (too low)"
+            value = 1
+        elif (2.5 <= field_code_4917 and field_code_4917 < 3.5):
+            # 3: "Reportable at assay but not reportable after any corrections
+            # (too high)"
+            value = 0
+        elif (3.5 <= field_code_4917 and field_code_4917 < 4.5):
+            # 4: "Not reportable at assay (too low)"
+            value = 1
+        elif (4.5 <= field_code_4917 and field_code_4917 < 5.5):
+            # 5: "Not reportable at assay (too high)"
+            value = 0
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
+
+
+
+
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -3660,6 +3752,11 @@ def determine_female_any_hormone_alteration_medication(
         value = float("nan")
     # Return information.
     return value
+
+
+# TODO: a lot to be done here...
+# TODO: apply thresholds to menstruation_days
+# TODO: maybe a new variable named "menstruation_days_threshold"
 
 
 def organize_female_menstruation_pregnancy_menopause_variables(
@@ -8693,8 +8790,8 @@ def organize_report_cohort_model_variables_summaries_record(
         record[str(column + "_count")] = str(count)
         record[str(column + "_mean")] = str(round(mean, 3))
         record[str(column + "_stderr")] = str(round(standard_error, 3))
-        record[str(column + "_95_ci")] = str(
-            str(round(confidence_95_low, 3)) + " - " +
+        record[str(column + "_confidence_95")] = str(
+            str(round(confidence_95_low, 3)) + " ... " +
             str(round(confidence_95_high, 3))
         )
         record[str(column + "_median")] = str(round(median, 3))
