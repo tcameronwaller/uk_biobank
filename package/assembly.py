@@ -134,7 +134,7 @@ def read_organize_uk_biobank_import_table(
     # Specify directories and files.
     path_table_import = os.path.join(
         path_dock, "access", "ukbiobank_import",
-        "waller_import_20210625.derived.csv.gz"
+        "waller_import_20210728.derived.csv.gz"
     )
     # Read information from file.
     table_import = pandas.read_csv(
@@ -360,6 +360,11 @@ def read_source(
         path_dock, "access", "ukbiobank_phenotypes",
         "ukb43878.raw.csv"
     )
+    path_table_ukb_47488 = os.path.join(
+        path_dock, "access", "ukbiobank_phenotypes",
+        "ukb47488.raw.csv"
+    )
+
     # Read all column names from UK Biobank tables.
     columns_accession = read_collect_ukbiobank_accession_column_names(
         path_table_ukb_41826=path_table_ukb_41826,
