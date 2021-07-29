@@ -47,6 +47,7 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
+# TODO: read in "table_kinship_pairs"
 
 ##########
 # Initialization
@@ -102,6 +103,67 @@ def initialize_directories(
 ##########
 # Read
 
+# TODO: Currently need to update the name of import table file every accession date
+
+def read_organize_uk_biobank_import_table(
+    path_dock=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Specify directories and files.
+    path_table_import = os.path.join(
+        path_dock, "access", "ukbiobank_import",
+        "waller_import_20210728.derived.csv.gz"
+    )
+    # Read information from file.
+    table_import = pandas.read_csv(
+        path_table_import,
+        sep=",", # "," or "\t"
+        header=0,
+        dtype="string",
+        na_values=["NA", "<NA>"],
+        keep_default_na=True,
+        compression="gzip",
+    )
+    # Organize table.
+    table_import = table_import.loc[
+        :, table_import.columns.isin([
+            "eid",
+            "icd_bipolar", "bipolar.diag2", "Smithbipolar", "SmithMood",
+            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("read_organize_uk_biobank_import_table()")
+        print(table_import)
+        utility.print_terminal_partition(level=2)
+        pass
+    # Return information.
+    return table_import
+
 
 def read_ukbiobank_table_column_names(
     path_file=None,
@@ -152,7 +214,6 @@ def read_ukbiobank_table_column_names(
 def read_collect_ukbiobank_accession_column_names(
     path_table_ukb_41826=None,
     path_table_ukb_43878=None,
-    path_table_ukb_47488=None,
 ):
     """
     Reads and extracts column names from UK Biobank data.
@@ -165,8 +226,6 @@ def read_collect_ukbiobank_accession_column_names(
         path_table_ukb_41826 (str): path to file of data export from UK Biobank
             ukbconv tool
         path_table_ukb_43878 (str): path to file of data export from UK Biobank
-            ukbconv tool
-        path_table_ukb_47488 (str): path to file of data export from UK Biobank
             ukbconv tool
 
     raises:
@@ -182,20 +241,13 @@ def read_collect_ukbiobank_accession_column_names(
         start=0,
         stop=1,
     )
-    columns_second = read_ukbiobank_table_column_names(
+    columns_new = read_ukbiobank_table_column_names(
         path_file=path_table_ukb_43878,
         delimiter=",", # "," or "\t"
         start=0,
         stop=1,
     )
-    columns_third = read_ukbiobank_table_column_names(
-        path_file=path_table_ukb_47488,
-        delimiter=",", # "," or "\t"
-        start=0,
-        stop=1,
-    )
-    columns_accession.extend(columns_second)
-    columns_accession.extend(columns_third)
+    columns_accession.extend(columns_new)
     columns_accession_unique = utility.collect_unique_elements(
         elements=columns_accession,
     )
@@ -250,6 +302,9 @@ def extract_organize_variables_types(
     return variables_types
 
 
+# TODO: need to read in the latest UKB accession table
+
+
 def read_source(
     path_dock=None,
     report=None,
@@ -275,6 +330,11 @@ def read_source(
 
     """
 
+    # Read and organize table of variables across UK Biobank persons for import.
+    table_import = read_organize_uk_biobank_import_table(
+        path_dock=path_dock,
+        report=report,
+    )
     # Specify directories and files.
     path_table_ukbiobank_variables = os.path.join(
         path_dock, "parameters", "uk_biobank",
@@ -309,7 +369,6 @@ def read_source(
     columns_accession = read_collect_ukbiobank_accession_column_names(
         path_table_ukb_41826=path_table_ukb_41826,
         path_table_ukb_43878=path_table_ukb_43878,
-        path_table_ukb_47488=path_table_ukb_47488,
     )
     # Report.
     if report:
@@ -377,17 +436,9 @@ def read_source(
         na_values=["<NA>"],
         keep_default_na=True,
     )
-    table_ukb_47488 = pandas.read_csv(
-        path_table_ukb_47488,
-        sep=",", # "," or "\t"
-        header=0,
-        dtype=variables_types,
-        na_values=["<NA>"],
-        keep_default_na=True,
-    )
-
     # Compile and return information.
     return {
+        "table_import": table_import,
         "table_ukbiobank_variables": table_ukbiobank_variables,
         "columns_accession": columns_accession,
         "exclusion_identifiers": exclusion_identifiers,
@@ -395,7 +446,6 @@ def read_source(
         "table_kinship_pairs": table_kinship_pairs,
         "table_ukb_41826": table_ukb_41826,
         "table_ukb_43878": table_ukb_43878,
-        "table_ukb_47488": table_ukb_47488,
     }
 
 
@@ -566,7 +616,6 @@ def remove_table_irrelevant_field_instance_columns(
     columns_accession=None,
     table_ukb_41826=None,
     table_ukb_43878=None,
-    table_ukb_47488=None,
     report=None,
 ):
     """
@@ -580,8 +629,6 @@ def remove_table_irrelevant_field_instance_columns(
             Biobank phenotype data accession 41826
         table_ukb_43878 (object): Pandas data frame of variables from UK
             Biobank phenotype data accession 43878
-        table_ukb_47488 (object): Pandas data frame of variables from UK
-            Biobank phenotype data accession 47488
         report (bool): whether to print reports
 
     raises:
@@ -596,7 +643,6 @@ def remove_table_irrelevant_field_instance_columns(
     table_variables = table_ukbiobank_variables.copy(deep=True)
     table_ukb_41826 = table_ukb_41826.copy(deep=True)
     table_ukb_43878 = table_ukb_43878.copy(deep=True)
-    table_ukb_47488 = table_ukb_47488.copy(deep=True)
     # Determine which columns to keep for UK Biobank fields and instances.
     columns_keep = determine_ukbiobank_field_instance_columns_keep(
         columns_accession=columns_accession,
@@ -614,7 +660,6 @@ def remove_table_irrelevant_field_instance_columns(
         print("...before pruning...")
         print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
         print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
-        print("table_ukb_47488 shape: " + str(table_ukb_47488.shape))
         utility.print_terminal_partition(level=4)
     # Remove all irrelevant columns.
     table_ukb_41826 = table_ukb_41826.loc[
@@ -623,24 +668,19 @@ def remove_table_irrelevant_field_instance_columns(
     table_ukb_43878 = table_ukb_43878.loc[
         :, table_ukb_43878.columns.isin(columns_keep)
     ]
-    table_ukb_47488 = table_ukb_47488.loc[
-        :, table_ukb_47488.columns.isin(columns_keep)
-    ]
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("...after pruning...")
         print("table_ukb_41826 shape: " + str(table_ukb_41826.shape))
         print("table_ukb_43878 shape: " + str(table_ukb_43878.shape))
-        print("table_ukb_47488 shape: " + str(table_ukb_47488.shape))
         utility.print_terminal_partition(level=4)
     # Collect information.
-    pail = dict()
-    pail["table_ukb_41826"] = table_ukb_41826
-    pail["table_ukb_43878"] = table_ukb_43878
-    pail["table_ukb_47488"] = table_ukb_47488
+    bucket = dict()
+    bucket["table_ukb_41826"] = table_ukb_41826
+    bucket["table_ukb_43878"] = table_ukb_43878
     # Return information.
-    return pail
+    return bucket
 
 
 ##########
@@ -1170,6 +1210,10 @@ def write_product(
 # Procedure
 
 
+# TODO: new parameter for whether to read in and merge the import table...
+
+
+
 def execute_procedure(
     path_dock=None,
 ):
@@ -1208,7 +1252,6 @@ def execute_procedure(
         columns_accession=source["columns_accession"],
         table_ukb_41826=source["table_ukb_41826"],
         table_ukb_43878=source["table_ukb_43878"],
-        table_ukb_47488=source["table_ukb_47488"],
         report=True,
     )
     # Simplify UK Biobank fields with multiple instances.

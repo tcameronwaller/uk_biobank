@@ -38,6 +38,52 @@ import promiscuity.plot as plot
 
 
 ##########
+# Initialization
+
+
+def initialize_directories(
+    restore=None,
+    path_dock=None,
+):
+    """
+    Initialize directories for procedure's product files.
+
+    arguments:
+        restore (bool): whether to remove previous versions of data
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (dict<str>): collection of paths to directories for procedure's files
+
+    """
+
+    # Collect paths.
+    paths = dict()
+    # Define paths to directories.
+    paths["dock"] = path_dock
+    paths["organization"] = os.path.join(path_dock, "organization")
+    paths["cohorts_models"] = os.path.join(
+        path_dock, "organization", "cohorts_models"
+    )
+
+    # Remove previous files to avoid version or batch confusion.
+    if restore:
+        utility.remove_directory(path=paths["organization"])
+    # Initialize directories.
+    utility.create_directories(
+        path=paths["organization"]
+    )
+    utility.create_directories(
+        path=paths["cohorts_models"]
+    )
+    # Return information.
+    return paths
+
+
+##########
 # Read
 
 
@@ -99,26 +145,28 @@ def read_source(
     """
 
     # Specify directories and files.
-    path_table_assembly = os.path.join(
+    path_table_phenotypes = os.path.join(
         path_dock, "assembly", "table_phenotypes.pickle"
     )
-    path_table_ukb_samples = os.path.join(
-        path_dock, "access", "ukb46237_imp_chr21_v3_s487320.sample"
-    )
+
     # Read information from file.
-    table_assembly = pandas.read_pickle(
-        path_table_assembly
+    table_phenotypes = pandas.read_pickle(
+        path_table_phenotypes
     )
-    table_ukb_samples = pandas.read_csv(
-        path_table_ukb_samples,
-        sep="\s+",
-        header=0,
-        dtype="string",
-    )
+    if False:
+        path_table_ukb_samples = os.path.join(
+            path_dock, "access", "ukb46237_imp_chr21_v3_s487320.sample"
+        )
+        table_ukb_samples = pandas.read_csv(
+            path_table_ukb_samples,
+            sep="\s+",
+            header=0,
+            dtype="string",
+        )
     # Compile and return information.
     return {
-        "table_assembly": table_assembly,
-        "table_ukb_samples": table_ukb_samples,
+        "table_phenotypes": table_phenotypes,
+        #"table_ukb_samples": table_ukb_samples,
     }
 
 
@@ -9915,12 +9963,87 @@ def organize_plot_variable_histogram_summary_charts(
     pass
 
 
+# End scrap section...
+##########
+##########
+##########
+##########
+##########
+
+
+##########
+# Write
+
+
+def write_product_organization(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_parent, "table_phenotypes.pickle"
+    )
+    path_table_phenotypes_text = os.path.join(
+        path_parent, "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_pickle(
+        path_table_phenotypes
+    )
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Organization procedure main information.
+    write_product_organization(
+        information=information["organization"],
+        path_parent=paths["organization"],
+    )
+    pass
+
 
 ###############################################################################
-# Procedure
-
+# Drivers
+# The purpose of these driver functions is to make the module's functionality
+# accessible in modular parts.
 
 # Definitions
+
 
 def execute_genotype_sex_age_body(
     table=None,
@@ -10488,4 +10611,67 @@ def execute_cohorts_models_genetic_analysis(
     return pail
 
 
-##########
+###############################################################################
+# Procedure
+
+
+def execute_procedure(
+    path_dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    utility.print_terminal_partition(level=1)
+    print(path_dock)
+    print("version check: 1")
+    # Pause procedure.
+    time.sleep(5.0)
+
+    # Initialize directories.
+    paths = initialize_directories(
+        restore=True,
+        path_dock=path_dock,
+    )
+    # Read source information from file.
+    # Exclusion identifiers are "eid".
+    source = read_source(
+        path_dock=path_dock,
+        report=True,
+    )
+    # Organize variables for persons' genotypes, sex, age, and body mass index
+    # across the UK Biobank.
+    pail_basis = execute_genotype_sex_age_body(
+        table=source["table_phenotypes"],
+        report=True,
+    )
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    pail_hormone = execute_sex_hormones(
+        table=pail_basis["table"], # pail_basis["table_clean"]
+        report=True,
+    )
+    # Organize variables for female menstruation across the UK Biobank.
+    pail_female = execute_female_menstruation(
+        table=pail_hormone["table"], # pail_hormone["table_clean"]
+        report=True,
+    )
+
+    # Collect information.
+    information = dict()
+    information["organization"] = dict()
+    information["organization"]["table_phenotypes"] = pail_female["table"]
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
+    pass
