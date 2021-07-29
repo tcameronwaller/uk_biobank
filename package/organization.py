@@ -1526,6 +1526,197 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
     return value
 
 
+
+def determine_hormones_reportability_less_than_detection_limit(
+    hormone_fields=None,
+    table=None,
+):
+    """
+    Converts hormone concentrations to units of moles per liter (mol/L).
+
+    arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Define reportability
+    for hormone in hormone_fields:
+        # Calculate estimation of free and bioavailable testosterone.
+        reportability_low = str(
+            str(hormone["name"]) + "_" + "reportability_low"
+        )
+        table[reportability_low] = table.apply(
+            lambda row:
+                interpret_biochemistry_reportability_less_than_detection_limit(
+                    field_code_4917=row[hormone["reportability"]],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Return information.
+    return table
+
+
+def define_hormone_measurement_reportability_missingness():
+    """
+    Define data fields in U.K. Biobank for measurement, reportability, and
+    missingness of hormones.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<dict>): data fields for measurement, reportability, and
+            missingness for each hormone
+
+    """
+
+    records = list()
+
+    record = dict()
+    record["name"] = "albumin"
+    record["measurement"] = "30600-0.0"
+    record["reportability"] = "30606-0.0"
+    record["missingness"] = "30605-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "steroid_globulin"
+    record["measurement"] = "30830-0.0"
+    record["reportability"] = "30836-0.0"
+    record["missingness"] = "30835-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone"
+    record["measurement"] = "30850-0.0"
+    record["reportability"] = "30856-0.0"
+    record["missingness"] = "30855-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol"
+    record["measurement"] = "30800-0.0"
+    record["reportability"] = "30806-0.0"
+    record["missingness"] = "30805-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "vitamin_d"
+    record["measurement"] = "30890-0.0"
+    record["reportability"] = "30896-0.0"
+    record["missingness"] = "30895-0.0"
+    records.append(record)
+
+    # Return information.
+    return records
+
+
+def temporary_report_hormones_missingness_reportability(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+
+    ##########
+    # Organize raw hormone variables.
+
+    # Define reportability and missingness variables for each hormone.
+    hormone_fields = define_hormone_measurement_reportability_missingness()
+
+    # Convert variable types to float.
+    columns_hormones = [
+        "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+        "vitamin_d",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_hormones,
+        table=table,
+    )
+    # Convert concentrations to units of moles per liter (mol/L) with adjustment
+    # by specific factors for appropriate scale in analyses (and floats).
+    factors_concentration = dict()
+    factors_concentration["albumin"] = 1E6 # 1 umol / L
+    factors_concentration["steroid_globulin"] = 1E9 # 1 nmol / L
+    factors_concentration["oestradiol"] = 1E12 # 1 pmol / L
+    factors_concentration["oestradiol_free"] = 1E12 # 1 pmol / L
+    factors_concentration["oestradiol_bioavailable"] = 1E12 # 1 pmol / L
+    factors_concentration["testosterone"] = 1E12 # 1 pmol / L
+    factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
+    factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
+    factors_concentration["vitamin_d"] = 1E9 # 1 nmol / L
+    table = convert_hormone_concentration_units_moles_per_liter(
+        table=table,
+        factors_concentration=factors_concentration,
+    )
+
+    # Interpret reportability and missingness variables for hormones.
+    table = determine_hormones_reportability_less_than_detection_limit(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+
+    # TODO: what count and percentage of missing values?
+    # TODO: of those missing values, what percentage have non-missing "missingness reason" variable?
+    # TODO: of those missing values, what percentage have non-missing "reportability" variable?
+    # TODO: of those missing values, what percentage have a "too low" value of "reportability" variable?
+
+
+
+    # Now interpret the missingness and reportability variables...
+
+    # Define binary representation of missingness in the secondary column.
+    column_secondary = str(column_missingness + "_missing")
+    table[column_secondary] = table[column_missingness].apply(
+        lambda value:
+            0 if (not pandas.isna(value)) else 1
+    )
+    # Remove any rows with missing values in the primary or secondary columns.
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=[column_primary, column_secondary],
+        inplace=True,
+    )
+
+
+
+
+    # Collect information.
+    pail = dict()
+    # Return information.
+    return pail
+
+
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -1547,6 +1738,20 @@ def organize_sex_hormone_variables(
 
     # Copy data.
     table = table.copy(deep=True)
+
+    ##########
+    # Organize raw hormone variables.
+
+    # Convert variable types to float.
+    columns_hormones = [
+        "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+        "vitamin_d",
+    ]
+    table = convert_table_columns_variables_types_float(
+        columns=columns_hormones,
+        table=table,
+    )
     # Convert concentrations to units of moles per liter (mol/L) with adjustment
     # by specific factors for appropriate scale in analyses (and floats).
     factors_concentration = dict()
@@ -1563,6 +1768,18 @@ def organize_sex_hormone_variables(
         table=table,
         factors_concentration=factors_concentration,
     )
+
+    ##########
+    # Impute to half-minimum for values missing due to measurements less than
+    # limit of detection.
+
+
+    ##########
+    # Calculate estimates of bioavailable and free hormones.
+
+    # TODO: Organize this block within a new function...
+    # TODO: need to include calculations for the imputation values...
+
     # Define association constants for calculation of free hormones.
     # units: L/mol
     associations = dict()
@@ -1617,17 +1834,8 @@ def organize_sex_hormone_variables(
             ),
         axis="columns", # apply across rows
     )
-    # Convert variable types.
-    columns_hormones = [
-        "albumin", "steroid_globulin",
-        "oestradiol", "oestradiol_free", "oestradiol_bioavailable",
-        "testosterone", "testosterone_free", "testosterone_bioavailable",
-        "vitamin_d",
-    ]
-    table = convert_table_columns_variables_types_float(
-        columns=columns_hormones,
-        table=table,
-    )
+
+
     # Impute missing values for hormones.
     table = utility.impute_continuous_variables_missing_values_half_minimum(
         columns=columns_hormones,
@@ -10650,24 +10858,22 @@ def execute_procedure(
         table=source["table_phenotypes"],
         report=True,
     )
-    if False:
-        # Organize variables for persons' sex hormones across the UK Biobank.
-        pail_hormone = execute_sex_hormones(
-            table=pail_basis["table"], # pail_basis["table_clean"]
-            report=True,
-        )
-        # Organize variables for female menstruation across the UK Biobank.
-        pail_female = execute_female_menstruation(
-            table=pail_hormone["table"], # pail_hormone["table_clean"]
-            report=True,
-        )
-        pass
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    pail_hormone = execute_sex_hormones(
+        table=pail_basis["table"], # pail_basis["table_clean"]
+        report=True,
+    )
+    # Organize variables for female menstruation across the UK Biobank.
+    pail_female = execute_female_menstruation(
+        table=pail_hormone["table"], # pail_hormone["table_clean"]
+        report=True,
+    )
 
     # Collect information.
     information = dict()
     information["organization"] = dict()
-    information["organization"]["table_phenotypes"] = pail_basis["table"]
-    #information["organization"]["table_phenotypes"] = pail_female["table"]
+    #information["organization"]["table_phenotypes"] = pail_basis["table"]
+    information["organization"]["table_phenotypes"] = pail_female["table"]
     # Write product information to file.
     write_product(
         paths=paths,
