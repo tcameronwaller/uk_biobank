@@ -1799,20 +1799,15 @@ def report_hormone_missingness(
             ((count_measurement_missing / count_measurement_total) * 100), 3
         )
 
-        table_measurement_missing = table.loc[
-            (
-                (pandas.isna(table[name])) &
-            ), :
-        ]
+        table_measurement_missing = table[table[name].isna()]
         count_measurement_missing_check = table_measurement_missing.shape[0]
         percentage_measurement_missing_check = round(
             ((count_measurement_missing_check / count_measurement_total) * 100), 3
         )
 
-        table_missingness_range = table.loc[
+        table_missingness_range = table_measurement_missing.loc[
             (
-                (pandas.isna(table[name])) &
-                (table[missingness_range] == 1)
+                (table_measurement_missing[missingness_range] == 1)
             ), :
         ]
         count_missingness_range = table_missingness_range.shape[0]
@@ -1820,10 +1815,9 @@ def report_hormone_missingness(
             ((count_missingness_range / count_measurement_total) * 100), 3
         )
 
-        table_reportability_low = table.loc[
+        table_reportability_low = table_measurement_missing.loc[
             (
-                (pandas.isna(table[name])) &
-                (table[reportability_low] == 1)
+                (table_measurement_missing[reportability_low] == 1)
             ), :
         ]
         count_reportability_low = table_reportability_low.shape[0]
