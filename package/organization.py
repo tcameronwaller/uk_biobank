@@ -1794,7 +1794,7 @@ def report_hormone_missingness(
         measurement_array_valid = copy.deepcopy(table[name].dropna().to_numpy())
         count_measurement_total = int(measurement_array_total.size)
         count_measurement_valid = int(measurement_array_valid.size)
-        count_measurement_missing = int(count_measurement_total = count_measurement_valid)
+        count_measurement_missing = int(count_measurement_total - count_measurement_valid)
 
         percentage_measurement_missing = round(
             ((count_measurement_missing / count_measurement_total) * 100), 3
