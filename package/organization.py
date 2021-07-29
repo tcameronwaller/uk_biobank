@@ -1842,11 +1842,9 @@ def temporary_report_hormones_missingness_reportability(
     hormone_fields = define_hormone_measurement_reportability_missingness()
 
     # Convert variable types to float.
-    columns_hormones = [
-        "albumin", "steroid_globulin",
-        "oestradiol", "testosterone",
-        "vitamin_d",
-    ]
+    columns_hormones = list()
+    for record in hormone_fields:
+        columns_hormones.append(record["measurement"])
     table = convert_table_columns_variables_types_float(
         columns=columns_hormones,
         table=table,
