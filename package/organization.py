@@ -1756,6 +1756,9 @@ def determine_hormones_missingness_beyond_detection_range(
     return table
 
 
+# TODO: run this function on the tables from the phenotype summaries along with the other description stuff
+# TODO: collect information in a table...
+
 def report_hormone_missingness(
     hormone_fields=None,
     table=None,
@@ -1777,6 +1780,8 @@ def report_hormone_missingness(
             cohort
 
     """
+
+    utility.print_terminal_partition(level=2)
 
     # Copy data.
     table = table.copy(deep=True)
@@ -1805,6 +1810,9 @@ def report_hormone_missingness(
             ((count_measurement_missing_check / count_measurement_total) * 100), 3
         )
 
+        # For percentages on "missingness_range" and "reportability_low", use
+        # count missing measurements as total.
+
         table_missingness_range = table_measurement_missing.loc[
             (
                 (table_measurement_missing[missingness_range] == 1)
@@ -1812,7 +1820,7 @@ def report_hormone_missingness(
         ]
         count_missingness_range = table_missingness_range.shape[0]
         percentage_missingness_range = round(
-            ((count_missingness_range / count_measurement_total) * 100), 3
+            ((count_missingness_range / count_measurement_missing) * 100), 3
         )
 
         table_reportability_low = table_measurement_missing.loc[
@@ -1822,13 +1830,12 @@ def report_hormone_missingness(
         ]
         count_reportability_low = table_reportability_low.shape[0]
         percentage_reportability_low = round(
-            ((count_reportability_low / count_measurement_total) * 100), 3
+            ((count_reportability_low / count_measurement_missing) * 100), 3
         )
 
 
         # Report.
-        utility.print_terminal_partition(level=2)
-        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=4)
         print("hormone: " + name)
         print(
             "measurement missingness: " + str(count_measurement_missing) +
