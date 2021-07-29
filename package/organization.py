@@ -1790,15 +1790,47 @@ def report_hormone_missingness(
             str(hormone["name"]) + "_missingness_range"
         )
 
-        measurement_array_total = copy.deepcopy(table[name].to_numpy())
-        measurement_array_valid = copy.deepcopy(table[name].dropna().to_numpy())
-        count_measurement_total = int(measurement_array_total.size)
-        count_measurement_valid = int(measurement_array_valid.size)
+        array_measurement_total = copy.deepcopy(table[name].to_numpy())
+        array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
+        count_measurement_total = int(array_measurement_total.size)
+        count_measurement_valid = int(array_measurement_valid.size)
         count_measurement_missing = int(count_measurement_total - count_measurement_valid)
-
         percentage_measurement_missing = round(
             ((count_measurement_missing / count_measurement_total) * 100), 3
         )
+
+        table_measurement_missing = table.loc[
+            (
+                (pandas.isna(table[name])) &
+            ), :
+        ]
+        count_measurement_missing_check = table_measurement_missing.shape[0]
+        percentage_measurement_missing_check = round(
+            ((count_measurement_missing_check / count_measurement_total) * 100), 3
+        )
+
+        table_missingness_range = table.loc[
+            (
+                (pandas.isna(table[name])) &
+                (table[missingness_range] == 1)
+            ), :
+        ]
+        count_missingness_range = table_missingness_range.shape[0]
+        percentage_missingness_range = round(
+            ((count_missingness_range / count_measurement_total) * 100), 3
+        )
+
+        table_reportability_low = table.loc[
+            (
+                (pandas.isna(table[name])) &
+                (table[reportability_low] == 1)
+            ), :
+        ]
+        count_reportability_low = table_reportability_low.shape[0]
+        percentage_reportability_low = round(
+            ((count_reportability_low / count_measurement_total) * 100), 3
+        )
+
 
         # Report.
         utility.print_terminal_partition(level=2)
@@ -1806,8 +1838,21 @@ def report_hormone_missingness(
         print("hormone: " + name)
         print(
             "measurement missingness: " + str(count_measurement_missing) +
-            "(" + str(percentage_measurement_missing) + "%)"
+            " (" + str(percentage_measurement_missing) + "%)"
         )
+        print(
+            "measurement missingness check: " + str(count_measurement_missing_check) +
+            " (" + str(percentage_measurement_missing_check) + "%)"
+        )
+        print(
+            "measurement missingness due to range: " + str(count_missingness_range) +
+            " (" + str(percentage_missingness_range) + "%)"
+        )
+        print(
+            "measurement missingness with reportability low LOD: " + str(count_reportability_low) +
+            " (" + str(percentage_reportability_low) + "%)"
+        )
+
 
         pass
     pass
