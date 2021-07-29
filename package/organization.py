@@ -932,6 +932,64 @@ def organize_sex_age_body_variables(
 # TODO: also implement the natural log definition of bioavailable testosterone...
 # Chung, Pathology Informatics, 2017 (PubMed:28828199)
 
+
+
+def define_hormone_measurement_reportability_missingness():
+    """
+    Define data fields in U.K. Biobank for measurement, reportability, and
+    missingness of hormones.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<dict>): data fields for measurement, reportability, and
+            missingness for each hormone
+
+    """
+
+    records = list()
+
+    record = dict()
+    record["name"] = "albumin"
+    record["measurement"] = "30600-0.0"
+    record["reportability"] = "30606-0.0"
+    record["missingness"] = "30605-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "steroid_globulin"
+    record["measurement"] = "30830-0.0"
+    record["reportability"] = "30836-0.0"
+    record["missingness"] = "30835-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone"
+    record["measurement"] = "30850-0.0"
+    record["reportability"] = "30856-0.0"
+    record["missingness"] = "30855-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol"
+    record["measurement"] = "30800-0.0"
+    record["reportability"] = "30806-0.0"
+    record["missingness"] = "30805-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "vitamin_d"
+    record["measurement"] = "30890-0.0"
+    record["reportability"] = "30896-0.0"
+    record["missingness"] = "30895-0.0"
+    records.append(record)
+
+    # Return information.
+    return records
+
+
 def convert_hormone_concentration_units_moles_per_liter(
     table=None,
     factors_concentration=None,
@@ -1459,13 +1517,14 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
     """
     Intepret UK Biobank's coding 4917 for multiple data fields.
 
-    Only interpret whether the variable indicates that the variable was not
+    Only interpret whether the variable indicates that the measurement was not
     reportable (hence missing) due to a measurement that was less than the
     limit of detection.
 
-    0: variable either not missing or missing and unreportable because greater
-    than detection limit
-    1: variable missing and unreportable because less than detection limit
+    0: measurement either reportable and not missing or not reportable and
+    missing because greater than detection limit
+    1: measurement not reportable and hence missing because less than detection
+    limit
 
     Data-Field "30606": "Albumin reportability"
     Data-Field "30806": "Oestradiol reportability"
@@ -1526,13 +1585,103 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
     return value
 
 
+def interpret_biochemistry_missingness_beyond_detection_range(
+    field_code_782=None,
+):
+    """
+    Intepret UK Biobank's coding 782 for multiple data fields.
+
+    Only interpret whether the variable indicates that the measurement was
+    missing due to a measurement that was beyond the detection range (either
+    less than or greater than).
+
+    0: measurement missing because of other problem
+    1: measurement not reportable and hence missing because less than detection
+    limit
+
+    ###Data-Field "30606": "Albumin reportability"
+    ###Data-Field "30805": "Oestradiol missing reason"
+    ###Data-Field "30836": "SHBG reportability"
+    ###Data-Field "30856": "Testosterone reportability"
+    ###Data-Field "30896": "Vitamin D reportability"
+    UK Biobank data coding "782" for variable fields.
+    1: "No data returned"
+    2: "Original value above or below reportable limit"
+    3: "Unrecoverable aliquot problem (dip)"
+    4: "Unrecoverable aliquot problem (possible aliquot mis-classification)"
+    5: "Aliquot 4 used"
+    6: ?
+    7: "Analyser deemed result not reportable for reason other than above or
+       below reportable range"
+    8: "Not reportable because dilution factor 0.9-0.99 or 1.01-1.1"
+    9: "Not reportable because dilution factor <0.9 or >1.1"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_code_4917 (float): UK Biobank fields in coding 4917, representing
+            biochemistry reportability
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_code_782)) and
+        (0.5 <= field_code_782 and field_code_782 < 9.5)
+    ):
+        # The variable has a valid value.
+        if (0.5 <= field_code_782 and field_code_782 < 1.5):
+            # 1: ""
+            value = 0
+        elif (1.5 <= field_code_782 and field_code_782 < 2.5):
+            # 2: "Original value above or below reportable limit"
+            value = 1
+        elif (2.5 <= field_code_782 and field_code_782 < 3.5):
+            # 3: ""
+            value = 0
+        elif (3.5 <= field_code_782 and field_code_782 < 4.5):
+            # 4: ""
+            value = 0
+        elif (4.5 <= field_code_782 and field_code_782 < 5.5):
+            # 5: ""
+            value = 0
+        elif (5.5 <= field_code_782 and field_code_782 < 6.5):
+            # Code "6" does not have an explanation.
+            # 6: ""
+            value = float("nan")
+        elif (6.5 <= field_code_782 and field_code_782 < 7.5):
+            # 7: "Analyser deemed result not reportable for reason other than
+            # above or below reportable range"
+            value = 0
+        elif (7.5 <= field_code_782 and field_code_782 < 8.5):
+            # 8: ""
+            value = 0
+        elif (8.5 <= field_code_782 and field_code_782 < 9.5):
+            # 9: ""
+            value = 0
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 
 def determine_hormones_reportability_less_than_detection_limit(
     hormone_fields=None,
     table=None,
 ):
     """
-    Converts hormone concentrations to units of moles per liter (mol/L).
+    Determine for each hormone whether reportability variable indicates that the
+    measurement was not reportable because it was less than detection limit.
 
     arguments:
         hormone_fields (list<dict>): data fields for measurement, reportability,
@@ -1550,11 +1699,10 @@ def determine_hormones_reportability_less_than_detection_limit(
 
     # Copy data.
     table = table.copy(deep=True)
-    # Define reportability
+    # Determine reportability.
     for hormone in hormone_fields:
-        # Calculate estimation of free and bioavailable testosterone.
         reportability_low = str(
-            str(hormone["name"]) + "_" + "reportability_low"
+            str(hormone["name"]) + "_reportability_low"
         )
         table[reportability_low] = table.apply(
             lambda row:
@@ -1568,60 +1716,46 @@ def determine_hormones_reportability_less_than_detection_limit(
     return table
 
 
-def define_hormone_measurement_reportability_missingness():
+def determine_hormones_missingness_beyond_detection_range(
+    hormone_fields=None,
+    table=None,
+):
     """
-    Define data fields in U.K. Biobank for measurement, reportability, and
-    missingness of hormones.
+    Determine for each hormone whether missingness variable indicates that the
+    measurement was not reportable because it was beyond the detection range.
 
     arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
 
     raises:
 
     returns:
-        (list<dict>): data fields for measurement, reportability, and
-            missingness for each hormone
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
 
     """
 
-    records = list()
-
-    record = dict()
-    record["name"] = "albumin"
-    record["measurement"] = "30600-0.0"
-    record["reportability"] = "30606-0.0"
-    record["missingness"] = "30605-0.0"
-    records.append(record)
-
-    record = dict()
-    record["name"] = "steroid_globulin"
-    record["measurement"] = "30830-0.0"
-    record["reportability"] = "30836-0.0"
-    record["missingness"] = "30835-0.0"
-    records.append(record)
-
-    record = dict()
-    record["name"] = "testosterone"
-    record["measurement"] = "30850-0.0"
-    record["reportability"] = "30856-0.0"
-    record["missingness"] = "30855-0.0"
-    records.append(record)
-
-    record = dict()
-    record["name"] = "oestradiol"
-    record["measurement"] = "30800-0.0"
-    record["reportability"] = "30806-0.0"
-    record["missingness"] = "30805-0.0"
-    records.append(record)
-
-    record = dict()
-    record["name"] = "vitamin_d"
-    record["measurement"] = "30890-0.0"
-    record["reportability"] = "30896-0.0"
-    record["missingness"] = "30895-0.0"
-    records.append(record)
-
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine missingness.
+    for hormone in hormone_fields:
+        # Calculate estimation of free and bioavailable testosterone.
+        missingness_range = str(
+            str(hormone["name"]) + "_missingness_range"
+        )
+        table[missingness_range] = table.apply(
+            lambda row:
+                interpret_biochemistry_missingness_beyond_detection_range(
+                    field_code_782=row[hormone["missingness"]],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
     # Return information.
-    return records
+    return table
 
 
 def temporary_report_hormones_missingness_reportability(
@@ -1684,11 +1818,19 @@ def temporary_report_hormones_missingness_reportability(
         hormone_fields=hormone_fields,
         table=table,
     )
+    table = determine_hormones_missingness_beyond_detection_range(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+
 
     # TODO: what count and percentage of missing values?
     # TODO: of those missing values, what percentage have non-missing "missingness reason" variable?
     # TODO: of those missing values, what percentage have non-missing "reportability" variable?
     # TODO: of those missing values, what percentage have a "too low" value of "reportability" variable?
+
+    # "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
+    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
 
 
 

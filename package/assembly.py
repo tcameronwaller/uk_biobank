@@ -802,7 +802,7 @@ def merge_table_variables_identifiers(
     table_identifier_pairs=None,
     table_ukb_41826=None,
     table_ukb_43878=None,
-    table_import=None,
+    table_ukb_47488=None,
     report=None,
 ):
     """
@@ -815,8 +815,8 @@ def merge_table_variables_identifiers(
             phenotype accession 41826
         table_ukb_43878 (object): Pandas data frame of variables from UK Biobank
             phenotype accession 43878
-        table_import (object): Pandas data frame of phenotype variables across
-            UK Biobank cohort for import
+        table_ukb_47488 (object): Pandas data frame of variables from UK Biobank
+            phenotype accession 47488
         report (bool): whether to print reports
 
     raises:
@@ -836,7 +836,7 @@ def merge_table_variables_identifiers(
         utility.print_terminal_partition(level=2)
         print(table_ukb_43878)
         utility.print_terminal_partition(level=2)
-        print(table_import)
+        print(table_ukb_47488)
     # Remove rows with null values of merge identifier.
     table_identifier_pairs.dropna(
         axis="index",
@@ -856,7 +856,7 @@ def merge_table_variables_identifiers(
         subset=["eid"],
         inplace=True,
     )
-    table_import.dropna(
+    table_ukb_47488.dropna(
         axis="index",
         how="any",
         subset=["eid"],
@@ -881,8 +881,8 @@ def merge_table_variables_identifiers(
         drop=True,
         inplace=True,
     )
-    table_import["eid"].astype("string")
-    table_import.set_index(
+    table_ukb_47488["eid"].astype("string")
+    table_ukb_47488.set_index(
         "eid",
         drop=True,
         inplace=True,
@@ -895,21 +895,21 @@ def merge_table_variables_identifiers(
         how="outer",
         left_on="eid",
         right_on="eid",
-        suffixes=("_pairs", "_41826"),
+        suffixes=("_merge", "_41826"),
     )
     table_merge = table_merge.merge(
         table_ukb_43878,
         how="outer",
         left_on="eid",
         right_on="eid",
-        suffixes=("_41826", "_43878"),
+        suffixes=("_merge", "_43878"),
     )
     table_merge = table_merge.merge(
-        table_import,
+        table_ukb_47488,
         how="outer",
         left_on="eid",
         right_on="eid",
-        suffixes=("_merge", "_import"),
+        suffixes=("_merge", "_47488"),
     )
     # Remove excess columns.
 
@@ -1225,7 +1225,7 @@ def execute_procedure(
         table_identifier_pairs=source["table_identifier_pairs"],
         table_ukb_41826=table_ukb_41826_simple,
         table_ukb_43878=prune["table_ukb_43878"],
-        table_import=source["table_import"],
+        table_ukb_47488=prune["table_ukb_47488"],
         report=True,
     )
 
