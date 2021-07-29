@@ -1833,6 +1833,17 @@ def report_hormone_missingness(
             ((count_reportability_low / count_measurement_missing) * 100), 3
         )
 
+        table_both = table_measurement_missing.loc[
+            (
+                (table_measurement_missing[missingness_range] == 1) &
+                (table_measurement_missing[reportability_low] == 1)
+            ), :
+        ]
+        count_both = table_both.shape[0]
+        percentage_both = round(
+            ((count_both / count_measurement_missing) * 100), 3
+        )
+
 
         # Report.
         utility.print_terminal_partition(level=4)
@@ -1846,12 +1857,16 @@ def report_hormone_missingness(
             " (" + str(percentage_measurement_missing_check) + "%)"
         )
         print(
-            "measurement missingness due to range: " + str(count_missingness_range) +
+            "missing with reason 'above or below reportable limit': " + str(count_missingness_range) +
             " (" + str(percentage_missingness_range) + "%)"
         )
         print(
-            "measurement missingness with reportability low LOD: " + str(count_reportability_low) +
+            "missing with reportability 'not reportable... too low': " + str(count_reportability_low) +
             " (" + str(percentage_reportability_low) + "%)"
+        )
+        print(
+            "missing with both annotations: " + str(count_both) +
+            " (" + str(percentage_both) + "%)"
         )
 
 
