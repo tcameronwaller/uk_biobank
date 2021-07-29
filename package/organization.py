@@ -1674,7 +1674,6 @@ def interpret_biochemistry_missingness_beyond_detection_range(
     return value
 
 
-
 def determine_hormones_reportability_less_than_detection_limit(
     hormone_fields=None,
     table=None,
@@ -1742,7 +1741,6 @@ def determine_hormones_missingness_beyond_detection_range(
     table = table.copy(deep=True)
     # Determine missingness.
     for hormone in hormone_fields:
-        # Calculate estimation of free and bioavailable testosterone.
         missingness_range = str(
             str(hormone["name"]) + "_missingness_range"
         )
@@ -1756,6 +1754,63 @@ def determine_hormones_missingness_beyond_detection_range(
         pass
     # Return information.
     return table
+
+
+def report_hormone_missingness(
+    hormone_fields=None,
+    table=None,
+):
+    """
+    Determine for each hormone whether missingness variable indicates that the
+    measurement was not reportable because it was beyond the detection range.
+
+    arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine missingness.
+    for hormone in hormone_fields:
+        name = hormone["name"]
+        reportability_low = str(
+            str(hormone["name"]) + "_reportability_low"
+        )
+        missingness_range = str(
+            str(hormone["name"]) + "_missingness_range"
+        )
+
+        measurement_array_total = copy.deepcopy(table[name].to_numpy())
+        measurement_array_valid = copy.deepcopy(table[name].dropna().to_numpy())
+        count_measurement_total = int(measurement_array_total.size)
+        count_measurement_valid = int(measurement_array_valid.size)
+        count_measurement_missing = int(count_measurement_total = count_measurement_valid)
+
+        percentage_measurement_missing = round(
+            ((count_measurement_missing / count_measurement_total) * 100), 3
+        )
+
+        # Report.
+        utility.print_terminal_partition(level=2)
+        utility.print_terminal_partition(level=3)
+        print("hormone: " + name)
+        print(
+            "measurement missingness: " + str(count_measurement_missing) +
+            "(" + str(percentage_measurement_missing) + "%)"
+        )
+
+        pass
+    pass
 
 
 def temporary_report_hormones_missingness_reportability(
@@ -1832,26 +1887,10 @@ def temporary_report_hormones_missingness_reportability(
     # "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
     # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
 
-
-
-    # Now interpret the missingness and reportability variables...
-
-    # Define binary representation of missingness in the secondary column.
-    column_secondary = str(column_missingness + "_missing")
-    table[column_secondary] = table[column_missingness].apply(
-        lambda value:
-            0 if (not pandas.isna(value)) else 1
+    report_hormone_missingness(
+        hormone_fields=hormone_fields,
+        table=table,
     )
-    # Remove any rows with missing values in the primary or secondary columns.
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=[column_primary, column_secondary],
-        inplace=True,
-    )
-
-
-
 
     # Collect information.
     pail = dict()
