@@ -1526,10 +1526,6 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
     return value
 
 
-
-
-
-
 def organize_sex_hormone_variables(
     table=None,
     report=None,
@@ -10633,7 +10629,7 @@ def execute_procedure(
 
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: 13")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -10654,21 +10650,24 @@ def execute_procedure(
         table=source["table_phenotypes"],
         report=True,
     )
-    # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = execute_sex_hormones(
-        table=pail_basis["table"], # pail_basis["table_clean"]
-        report=True,
-    )
-    # Organize variables for female menstruation across the UK Biobank.
-    pail_female = execute_female_menstruation(
-        table=pail_hormone["table"], # pail_hormone["table_clean"]
-        report=True,
-    )
+    if False:
+        # Organize variables for persons' sex hormones across the UK Biobank.
+        pail_hormone = execute_sex_hormones(
+            table=pail_basis["table"], # pail_basis["table_clean"]
+            report=True,
+        )
+        # Organize variables for female menstruation across the UK Biobank.
+        pail_female = execute_female_menstruation(
+            table=pail_hormone["table"], # pail_hormone["table_clean"]
+            report=True,
+        )
+        pass
 
     # Collect information.
     information = dict()
     information["organization"] = dict()
-    information["organization"]["table_phenotypes"] = pail_female["table"]
+    information["organization"]["table_phenotypes"] = pail_basis["table"]
+    #information["organization"]["table_phenotypes"] = pail_female["table"]
     # Write product information to file.
     write_product(
         paths=paths,
