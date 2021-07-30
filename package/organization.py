@@ -1496,21 +1496,6 @@ def organize_report_column_pair_correlations(
     pass
 
 
-# TODO: imputation method needs to be more sophisticated...
-# TODO: interpret "reportability" and "missingness" data fields...
-# reportability
-# albumin, SHBG, testosterone, oestradiol,  (4917)
-
-# function
-# interpret_biochemical_reportability_too_low()
-# data-coding 4917 values "2" and "4" both indicate that the value was "too low"
-
-
-# TODO: introduce a driver function to iterate on hormones...
-# determine whether each hormone is missing due to limit of detection
-
-# 1. interpret reportability for all hormones
-
 def interpret_biochemistry_reportability_less_than_detection_limit(
     field_code_4917=None,
 ):
@@ -1756,125 +1741,11 @@ def determine_hormones_missingness_beyond_detection_range(
     return table
 
 
-# TODO: run this function on the tables from the phenotype summaries along with the other description stuff
-# TODO: collect information in a table...
-
-def report_hormone_missingness(
-    hormone_fields=None,
-    table=None,
-):
-    """
-    Determine for each hormone whether missingness variable indicates that the
-    measurement was not reportable because it was beyond the detection range.
-
-    arguments:
-        hormone_fields (list<dict>): data fields for measurement, reportability,
-            and missingness for each hormone
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    utility.print_terminal_partition(level=2)
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Determine missingness.
-    for hormone in hormone_fields:
-        name = hormone["name"]
-        reportability_low = str(
-            str(hormone["name"]) + "_reportability_low"
-        )
-        missingness_range = str(
-            str(hormone["name"]) + "_missingness_range"
-        )
-
-        array_measurement_total = copy.deepcopy(table[name].to_numpy())
-        array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
-        count_measurement_total = int(array_measurement_total.size)
-        count_measurement_valid = int(array_measurement_valid.size)
-        count_measurement_missing = int(count_measurement_total - count_measurement_valid)
-        percentage_measurement_missing = round(
-            ((count_measurement_missing / count_measurement_total) * 100), 3
-        )
-
-        table_measurement_missing = table[table[name].isna()]
-        count_measurement_missing_check = table_measurement_missing.shape[0]
-        percentage_measurement_missing_check = round(
-            ((count_measurement_missing_check / count_measurement_total) * 100), 3
-        )
-
-        # For percentages on "missingness_range" and "reportability_low", use
-        # count missing measurements as total.
-
-        table_missingness_range = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[missingness_range] == 1)
-            ), :
-        ]
-        count_missingness_range = table_missingness_range.shape[0]
-        percentage_missingness_range = round(
-            ((count_missingness_range / count_measurement_missing) * 100), 3
-        )
-
-        table_reportability_low = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[reportability_low] == 1)
-            ), :
-        ]
-        count_reportability_low = table_reportability_low.shape[0]
-        percentage_reportability_low = round(
-            ((count_reportability_low / count_measurement_missing) * 100), 3
-        )
-
-        table_both = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[missingness_range] == 1) &
-                (table_measurement_missing[reportability_low] == 1)
-            ), :
-        ]
-        count_both = table_both.shape[0]
-        percentage_both = round(
-            ((count_both / count_measurement_missing) * 100), 3
-        )
+# TODO: I need to make this at least partially executable...
+# TODO: eventually, I want to organize hormone imputations within a separate mini-driver function...
 
 
-        # Report.
-        utility.print_terminal_partition(level=4)
-        print("hormone: " + name)
-        print(
-            "measurement missingness: " + str(count_measurement_missing) +
-            " (" + str(percentage_measurement_missing) + "%)"
-        )
-        print(
-            "measurement missingness check: " + str(count_measurement_missing_check) +
-            " (" + str(percentage_measurement_missing_check) + "%)"
-        )
-        print(
-            "missing with reason 'above or below reportable limit': " + str(count_missingness_range) +
-            " (" + str(percentage_missingness_range) + "%)"
-        )
-        print(
-            "missing with reportability 'not reportable... too low': " + str(count_reportability_low) +
-            " (" + str(percentage_reportability_low) + "%)"
-        )
-        print(
-            "missing with both annotations: " + str(count_both) +
-            " (" + str(percentage_both) + "%)"
-        )
-
-
-        pass
-    pass
-
-
-def temporary_report_hormones_missingness_reportability(
+def organize_sex_hormone_variables(
     table=None,
     report=None,
 ):
@@ -1937,81 +1808,29 @@ def temporary_report_hormones_missingness_reportability(
         table=table,
     )
 
-
-    # TODO: what count and percentage of missing values?
-    # TODO: of those missing values, what percentage have non-missing "missingness reason" variable?
-    # TODO: of those missing values, what percentage have non-missing "reportability" variable?
-    # TODO: of those missing values, what percentage have a "too low" value of "reportability" variable?
-
-    # "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
-    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
-
-    report_hormone_missingness(
-        hormone_fields=hormone_fields,
-        table=table,
-    )
-
-    # Collect information.
-    pail = dict()
-    # Return information.
-    return pail
-
-
-def organize_sex_hormone_variables(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information about sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-
-    ##########
-    # Organize raw hormone variables.
-
-    # Convert variable types to float.
-    columns_hormones = [
-        "albumin", "steroid_globulin",
-        "oestradiol", "testosterone",
-        "vitamin_d",
-    ]
-    table = convert_table_columns_variables_types_float(
-        columns=columns_hormones,
-        table=table,
-    )
-    # Convert concentrations to units of moles per liter (mol/L) with adjustment
-    # by specific factors for appropriate scale in analyses (and floats).
-    factors_concentration = dict()
-    factors_concentration["albumin"] = 1E6 # 1 umol / L
-    factors_concentration["steroid_globulin"] = 1E9 # 1 nmol / L
-    factors_concentration["oestradiol"] = 1E12 # 1 pmol / L
-    factors_concentration["oestradiol_free"] = 1E12 # 1 pmol / L
-    factors_concentration["oestradiol_bioavailable"] = 1E12 # 1 pmol / L
-    factors_concentration["testosterone"] = 1E12 # 1 pmol / L
-    factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
-    factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
-    factors_concentration["vitamin_d"] = 1E9 # 1 nmol / L
-    table = convert_hormone_concentration_units_moles_per_liter(
-        table=table,
-        factors_concentration=factors_concentration,
-    )
-
     ##########
     # Impute to half-minimum for values missing due to measurements less than
     # limit of detection.
+
+    # TODO: ONLY impute if:
+    # TODO: 1. "missing reason" is "above or below reportable limit" AND
+    # TODO: 2. "reportability" is "not reportable ... too low"
+
+    # TODO: imputation method needs to be more sophisticated...
+    # TODO: interpret "reportability" and "missingness" data fields...
+    # reportability
+    # albumin, SHBG, testosterone, oestradiol,  (4917)
+
+    # TODO: introduce a driver function to iterate on hormones...
+    # determine whether each hormone is missing due to limit of detection
+
+
+    # Impute missing values for hormones.
+    #table = utility.impute_continuous_variables_missing_values_half_minimum(
+    #    columns=columns_hormones,
+    #    table=table,
+    #    report=report,
+    #)
 
 
     ##########
@@ -2075,27 +1894,19 @@ def organize_sex_hormone_variables(
         axis="columns", # apply across rows
     )
 
-
-    # Impute missing values for hormones.
-    table = utility.impute_continuous_variables_missing_values_half_minimum(
-        columns=columns_hormones,
-        table=table,
-        report=report,
-    )
-
     # Transform variables' values to normalize distributions.
-    columns_hormones_imputation = [
+    columns_hormones_normalization = [
         "albumin", "steroid_globulin",
-        "albumin_imputation", "steroid_globulin_imputation",
+        #"albumin_imputation", "steroid_globulin_imputation",
         "oestradiol", "oestradiol_free", "oestradiol_bioavailable",
-        "oestradiol_imputation",
+        #"oestradiol_imputation",
         "testosterone", "testosterone_free", "testosterone_bioavailable",
-        "testosterone_imputation",
+        #"testosterone_imputation",
         "vitamin_d",
-        "vitamin_d_imputation",
+        #"vitamin_d_imputation",
     ]
     table = utility.transform_normalize_table_continuous_ratio_variables(
-        columns=columns_hormones_imputation,
+        columns=columns_hormones_normalization,
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
@@ -2113,20 +1924,20 @@ def organize_sex_hormone_variables(
     columns_report = [
         #"eid",
         "IID",
-        "albumin", "albumin_log",
-        "albumin_imputation", "albumin_imputation_log",
-        "steroid_globulin", "steroid_globulin_log",
-        "steroid_globulin_imputation", "steroid_globulin_imputation_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "oestradiol_imputation", "oestradiol_imputation_log",
-        "testosterone", "testosterone_log",
-        "testosterone_free", "testosterone_free_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
-        "testosterone_imputation", "testosterone_imputation_log",
-        "vitamin_d", "vitamin_d_log",
-        "vitamin_d_imputation", "vitamin_d_imputation_log",
+        "albumin", #"albumin_log",
+        #"albumin_imputation", "albumin_imputation_log",
+        "steroid_globulin", #"steroid_globulin_log",
+        #"steroid_globulin_imputation", "steroid_globulin_imputation_log",
+        "oestradiol", #"oestradiol_log",
+        "oestradiol_free", #"oestradiol_free_log",
+        "oestradiol_bioavailable", #"oestradiol_bioavailable_log",
+        #"oestradiol_imputation", "oestradiol_imputation_log",
+        "testosterone", #"testosterone_log",
+        "testosterone_free", #"testosterone_free_log",
+        "testosterone_bioavailable", #"testosterone_bioavailable_log",
+        #"testosterone_imputation", "testosterone_imputation_log",
+        "vitamin_d", #"vitamin_d_log",
+        #"vitamin_d_imputation", "vitamin_d_imputation_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -10024,6 +9835,172 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     return records
 
 
+# TODO: run this function on the tables from the phenotype summaries along with the other description stuff
+# TODO: collect information in a table...
+
+def report_hormone_missingness(
+    hormone_fields=None,
+    table=None,
+):
+    """
+    Determine for each hormone whether missingness variable indicates that the
+    measurement was not reportable because it was beyond the detection range.
+
+    arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    utility.print_terminal_partition(level=2)
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine missingness.
+    for hormone in hormone_fields:
+        name = hormone["name"]
+        reportability_low = str(
+            str(hormone["name"]) + "_reportability_low"
+        )
+        missingness_range = str(
+            str(hormone["name"]) + "_missingness_range"
+        )
+
+        array_measurement_total = copy.deepcopy(table[name].to_numpy())
+        array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
+        count_measurement_total = int(array_measurement_total.size)
+        count_measurement_valid = int(array_measurement_valid.size)
+        count_measurement_missing = int(count_measurement_total - count_measurement_valid)
+        percentage_measurement_missing = round(
+            ((count_measurement_missing / count_measurement_total) * 100), 3
+        )
+
+        table_measurement_missing = table[table[name].isna()]
+        count_measurement_missing_check = table_measurement_missing.shape[0]
+        percentage_measurement_missing_check = round(
+            ((count_measurement_missing_check / count_measurement_total) * 100), 3
+        )
+
+        # For percentages on "missingness_range" and "reportability_low", use
+        # count missing measurements as total.
+
+        table_missingness_range = table_measurement_missing.loc[
+            (
+                (table_measurement_missing[missingness_range] == 1)
+            ), :
+        ]
+        count_missingness_range = table_missingness_range.shape[0]
+        percentage_missingness_range = round(
+            ((count_missingness_range / count_measurement_missing) * 100), 3
+        )
+
+        table_reportability_low = table_measurement_missing.loc[
+            (
+                (table_measurement_missing[reportability_low] == 1)
+            ), :
+        ]
+        count_reportability_low = table_reportability_low.shape[0]
+        percentage_reportability_low = round(
+            ((count_reportability_low / count_measurement_missing) * 100), 3
+        )
+
+        table_both = table_measurement_missing.loc[
+            (
+                (table_measurement_missing[missingness_range] == 1) &
+                (table_measurement_missing[reportability_low] == 1)
+            ), :
+        ]
+        count_both = table_both.shape[0]
+        percentage_both = round(
+            ((count_both / count_measurement_missing) * 100), 3
+        )
+
+
+        # Report.
+        utility.print_terminal_partition(level=4)
+        print("hormone: " + name)
+        print(
+            "measurement missingness: " + str(count_measurement_missing) +
+            " (" + str(percentage_measurement_missing) + "%)"
+        )
+        print(
+            "measurement missingness check: " + str(count_measurement_missing_check) +
+            " (" + str(percentage_measurement_missing_check) + "%)"
+        )
+        print(
+            "missing with reason 'above or below reportable limit': " + str(count_missingness_range) +
+            " (" + str(percentage_missingness_range) + "%)"
+        )
+        print(
+            "missing with reportability 'not reportable... too low': " + str(count_reportability_low) +
+            " (" + str(percentage_reportability_low) + "%)"
+        )
+        print(
+            "missing with both annotations: " + str(count_both) +
+            " (" + str(percentage_both) + "%)"
+        )
+
+
+        pass
+    pass
+
+
+def temporary_report_hormones_missingness_reportability(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+
+    ##########
+    # Organize raw hormone variables.
+
+
+    # TODO: what count and percentage of missing values?
+    # TODO: of those missing values, what percentage have non-missing "missingness reason" variable?
+    # TODO: of those missing values, what percentage have non-missing "reportability" variable?
+    # TODO: of those missing values, what percentage have a "too low" value of "reportability" variable?
+
+    # "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
+    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
+
+    report_hormone_missingness(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+
+    # Collect information.
+    pail = dict()
+    # Return information.
+    return pail
+
+
+
+
+
 ##########
 # Plot
 
@@ -11269,14 +11246,14 @@ def execute_procedure(
         table=source["table_phenotypes"],
         report=True,
     )
-    # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = execute_sex_hormones(
-        table=pail_basis["table"], # pail_basis["table_clean"]
-        report=True,
-    )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = execute_female_menstruation(
-        table=pail_hormone["table"], # pail_hormone["table_clean"]
+        table=pail_basis["table"], # pail_hormone["table_clean"]
+        report=True,
+    )
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    pail_hormone = execute_sex_hormones(
+        table=pail_female["table"], # pail_basis["table_clean"]
         report=True,
     )
 
@@ -11284,7 +11261,7 @@ def execute_procedure(
     information = dict()
     information["organization"] = dict()
     #information["organization"]["table_phenotypes"] = pail_basis["table"]
-    information["organization"]["table_phenotypes"] = pail_female["table"]
+    information["organization"]["table_phenotypes"] = pail_hormone["table"]
     # Write product information to file.
     write_product(
         paths=paths,
