@@ -9431,16 +9431,18 @@ def organize_report_cohort_model_variables_summaries_record(
     columns = [
         "age",
         "body_mass_index", "body_mass_index_log",
-        "menstruation_days",
-        "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "testosterone", "testosterone_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
-        "testosterone_free", "testosterone_free_log",
-        "vitamin_d", "vitamin_d_log",
+        "menstruation_days", "menstruation_days_threshold",
+        "albumin", "albumin_imputation",
+        "steroid_globulin", "steroid_globulin_imputation",
+        "oestradiol", "oestradiol_imputation",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+        "oestradiol_free", "oestradiol_free_imputation",
+        "testosterone", "testosterone_imputation",
+        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
+        "testosterone_free", "testosterone_free_imputation",
+        "vitamin_d", "vitamin_d_imputation",
     ]
+
     # Iterate on relevant columns.
     # Collect information for record.
     for column in columns:
