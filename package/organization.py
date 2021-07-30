@@ -9121,6 +9121,9 @@ def organize_report_contingency_table_stratification_by_missingness(
     pass
 
 
+
+# TODO: use this as an example...
+
 def organize_report_cohort_model_variables_summaries_record(
     name=None,
     cohort_model=None,
@@ -9835,11 +9838,12 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     return records
 
 
-# TODO: run this function on the tables from the phenotype summaries along with the other description stuff
-# TODO: collect information in a table...
-
-def report_hormone_missingness(
-    hormone_fields=None,
+def organize_cohort_hormone_missingness_record(
+    name_cohort=None,
+    name_hormone=None,
+    column_hormone=None,
+    column_reportability_low=None,
+    column_missingness_range=None,
     table=None,
 ):
     """
@@ -9847,115 +9851,112 @@ def report_hormone_missingness(
     measurement was not reportable because it was beyond the detection range.
 
     arguments:
-        hormone_fields (list<dict>): data fields for measurement, reportability,
-            and missingness for each hormone
+        name_cohort (str): name of cohort
+        name_hormone (str): name of hormone
+        column_hormone (str): name of table's column for hormone's measurements
+        column_reportability_low (str): name of table's column for hormone's
+            reportability less than limit of detection
+        column_missingness_range (str): name of table's column for hormone's
+            reason for missingness beyond detection range
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
     raises:
 
     returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
+        (dict): information for summary table record on cohort
 
     """
 
-    utility.print_terminal_partition(level=2)
-
-    # Copy data.
+    # Collect information for record.
+    record = dict()
+    record["cohort"] = str(name_cohort)
+    record["hormone"] = str(name_hormone)
+    # Copy information.
     table = table.copy(deep=True)
-    # Determine missingness.
-    for hormone in hormone_fields:
-        name = hormone["name"]
-        reportability_low = str(
-            str(hormone["name"]) + "_reportability_low"
-        )
-        missingness_range = str(
-            str(hormone["name"]) + "_missingness_range"
-        )
 
-        array_measurement_total = copy.deepcopy(table[name].to_numpy())
-        array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
-        count_measurement_total = int(array_measurement_total.size)
-        count_measurement_valid = int(array_measurement_valid.size)
-        count_measurement_missing = int(count_measurement_total - count_measurement_valid)
-        percentage_measurement_missing = round(
-            ((count_measurement_missing / count_measurement_total) * 100), 3
-        )
+    # Select relevant rows of the table.
+    #array_measurement_total = copy.deepcopy(table[name].to_numpy())
+    #array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
+    table_measurement_valid = table.dropna(
+        axis="index",
+        how="any",
+        subset=[column_hormone],
+        inplace=False,
+    )
+    table_measurement_missing = table[table[column_hormone].isna()]
+    table_missingness_range = table_measurement_missing.loc[
+        (
+            (table_measurement_missing[column_missingness_range] == 1)
+        ), :
+    ]
+    table_reportability_low = table_measurement_missing.loc[
+        (
+            (table_measurement_missing[column_reportability_low] == 1)
+        ), :
+    ]
+    table_both = table_measurement_missing.loc[
+        (
+            (table_measurement_missing[column_missingness_range] == 1) &
+            (table_measurement_missing[column_reportability_low] == 1)
+        ), :
+    ]
 
-        table_measurement_missing = table[table[name].isna()]
-        count_measurement_missing_check = table_measurement_missing.shape[0]
-        percentage_measurement_missing_check = round(
-            ((count_measurement_missing_check / count_measurement_total) * 100), 3
-        )
+    # Count records.
+    #count_measurement_total = int(array_measurement_total.size)
+    #count_measurement_valid = int(array_measurement_valid.size)
+    count_cohort_total = table.shape[0]
+    count_measurement_valid = table_measurement_valid.shape[0]
+    count_measurement_missing = table_measurement_missing.shape[0]
+    count_missingness_range = table_missingness_range.shape[0]
+    count_reportability_low = table_reportability_low.shape[0]
+    count_both = table_both.shape[0]
 
-        # For percentages on "missingness_range" and "reportability_low", use
-        # count missing measurements as total.
+    # Calculate percentages.
+    percentage_measurement_valid = round(
+        ((count_measurement_valid / count_cohort_total) * 100), 3
+    )
+    percentage_measurement_missing = round(
+        ((count_measurement_missing / count_cohort_total) * 100), 3
+    )
+    percentage_missingness_range = round(
+        ((count_missingness_range / count_measurement_missing) * 100), 3
+    )
+    percentage_reportability_low = round(
+        ((count_reportability_low / count_measurement_missing) * 100), 3
+    )
+    percentage_both = round(
+        ((count_both / count_measurement_missing) * 100), 3
+    )
 
-        table_missingness_range = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[missingness_range] == 1)
-            ), :
-        ]
-        count_missingness_range = table_missingness_range.shape[0]
-        percentage_missingness_range = round(
-            ((count_missingness_range / count_measurement_missing) * 100), 3
-        )
-
-        table_reportability_low = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[reportability_low] == 1)
-            ), :
-        ]
-        count_reportability_low = table_reportability_low.shape[0]
-        percentage_reportability_low = round(
-            ((count_reportability_low / count_measurement_missing) * 100), 3
-        )
-
-        table_both = table_measurement_missing.loc[
-            (
-                (table_measurement_missing[missingness_range] == 1) &
-                (table_measurement_missing[reportability_low] == 1)
-            ), :
-        ]
-        count_both = table_both.shape[0]
-        percentage_both = round(
-            ((count_both / count_measurement_missing) * 100), 3
-        )
-
-
-        # Report.
-        utility.print_terminal_partition(level=4)
-        print("hormone: " + name)
-        print(
-            "measurement missingness: " + str(count_measurement_missing) +
-            " (" + str(percentage_measurement_missing) + "%)"
-        )
-        print(
-            "measurement missingness check: " + str(count_measurement_missing_check) +
-            " (" + str(percentage_measurement_missing_check) + "%)"
-        )
-        print(
-            "missing with reason 'above or below reportable limit': " + str(count_missingness_range) +
-            " (" + str(percentage_missingness_range) + "%)"
-        )
-        print(
-            "missing with reportability 'not reportable... too low': " + str(count_reportability_low) +
-            " (" + str(percentage_reportability_low) + "%)"
-        )
-        print(
-            "missing with both annotations: " + str(count_both) +
-            " (" + str(percentage_both) + "%)"
-        )
+    # Collect information for record.
+    record["count_cohort_samples"] = count_cohort_total
+    record["measurement_valid"] = str(
+        str(count_measurement_valid) +
+        " (" + str(percentage_measurement_valid) + "%)"
+    )
+    record["measurement_missingness"] = str(
+        str(count_measurement_missing) +
+        " (" + str(percentage_measurement_missing) + "%)"
+    )
+    record["missingness_range"] = str(
+        str(count_missingness_range) +
+        " (" + str(percentage_missingness_range) + "%)"
+    )
+    record["reportability_low"] = str(
+        str(count_reportability_low) +
+        " (" + str(percentage_reportability_low) + "%)"
+    )
+    record["both_missingness_reportability"] = str(
+        str(count_both) +
+        " (" + str(percentage_both) + "%)"
+    )
+    # Return information.
+    return record
 
 
-        pass
-    pass
-
-
-def temporary_report_hormones_missingness_reportability(
+def organize_cohorts_phenotypes_hormones_missingness(
     table=None,
-    report=None,
 ):
     """
     Organizes information about sex hormones.
@@ -9963,39 +9964,56 @@ def temporary_report_hormones_missingness_reportability(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        report (bool): whether to print reports
 
     raises:
 
     returns:
-        (dict): collection of information about phenotype variables
+        (object): Pandas data frame of missingness of hormones in cohorts
 
     """
 
-    # Copy data.
+    # Copy information.
     table = table.copy(deep=True)
-
-    ##########
-    # Organize raw hormone variables.
-
-
-    # TODO: what count and percentage of missing values?
-    # TODO: of those missing values, what percentage have non-missing "missingness reason" variable?
-    # TODO: of those missing values, what percentage have non-missing "reportability" variable?
-    # TODO: of those missing values, what percentage have a "too low" value of "reportability" variable?
-
-    # "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
-    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
-
-    report_hormone_missingness(
-        hormone_fields=hormone_fields,
+    # Define hormones.
+    hormones = list()
+    hormones.append("albumin")
+    hormones.append("steroid_globulin")
+    hormones.append("testosterone")
+    hormones.append("oestradiol")
+    hormones.append("vitamin_d")
+    # Define cohorts for description.
+    pail_phenotypes = select_organize_cohorts_models_phenotypes_set_summary(
         table=table,
     )
-
-    # Collect information.
-    pail = dict()
+    # Collect summary records and construct table.
+    records = list()
+    # Iterate on cohorts.
+    for collection_cohort in pail_phenotypes:
+        # Iterate on hormones.
+        for hormone in hormones:
+            reportability_low = str(
+                str(hormone) + "_reportability_low"
+            )
+            missingness_range = str(
+                str(hormone) + "_missingness_range"
+            )
+            # Organize information in record.
+            record = organize_cohort_hormone_missingness_record(
+                name_cohort=collection_cohort["name"],
+                name_hormone=hormone,
+                column_hormone=hormone,
+                column_reportability_low=reportability_low,
+                column_missingness_range=missingness_range,
+                table=collection_cohort["table"],
+            )
+            # Collect records.
+            records.append(record)
+            pass
+        pass
+    # Organize table.
+    table_missingness = pandas.DataFrame(data=records)
     # Return information.
-    return pail
+    return table_missingness
 
 
 
@@ -10859,6 +10877,18 @@ def execute_alcohol(
 
 # Descriptions
 
+# TODO: new description table
+# cohort:
+# hormone:
+# total measurement missingness: <count> (<percentage>%)
+# missing with reason "above or below reportable limit": <count> (<percentage>%)
+# missing with reportability "not reportable ... too low": <count> (<percentage>%)
+# missing with both annotations: <count> (<percentage>%)
+
+# "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
+# "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
+
+
 
 def execute_describe_cohorts_models_phenotypes(
     table=None,
@@ -10894,6 +10924,10 @@ def execute_describe_cohorts_models_phenotypes(
     organize_report_contingency_table_stratification_by_missingness(
         table=table,
         report=report,
+    )
+
+    table_missingness = organize_cohorts_phenotypes_hormones_missingness(
+        table=table,
     )
 
     ##########
@@ -10968,6 +11002,7 @@ def execute_describe_cohorts_models_phenotypes(
     pail = dict()
     pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
     pail["table_summary_cohorts_models_genotypes"] = table_genotypes
+    pail["table_cohorts_hormones_missingness"] = table_missingness
     # Return information.
     return pail
 
