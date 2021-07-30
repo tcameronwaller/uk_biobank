@@ -934,7 +934,7 @@ def organize_sex_age_body_variables(
 
 
 
-def define_hormone_measurement_reportability_missingness():
+def define_hormone_fields_measurement_reportability_missingness():
     """
     Define data fields in U.K. Biobank for measurement, reportability, and
     missingness of hormones.
@@ -1496,24 +1496,116 @@ def organize_report_column_pair_correlations(
     pass
 
 
+
+def interpret_biochemistry_missingness_beyond_detection_range(
+    field_code_782=None,
+):
+    """
+    Intepret UK Biobank's coding 782 for multiple data fields.
+
+    Only interpret whether the variable indicates that the measurement was
+    missing due to a measurement that was beyond the detection range (either
+    less than or greater than).
+
+    0: measurement was missing because of other problem
+    1: measurement was not reportable and missing because value was less than or
+    greater than the detection range
+
+    Data-Field "30605": "Albumin missing reason"
+    Data-Field "30835": "SHBG missing reason"
+    Data-Field "30805": "Oestradiol missing reason"
+    Data-Field "30855": "Testosterone missing reason"
+    Data-Field "30895": "Vitamin D missing reason"
+    UK Biobank data coding "782" for variable fields.
+    1: "No data returned"
+    2: "Original value above or below reportable limit"
+    3: "Unrecoverable aliquot problem (dip)"
+    4: "Unrecoverable aliquot problem (possible aliquot mis-classification)"
+    5: "Aliquot 4 used"
+    6: ?
+    7: "Analyser deemed result not reportable for reason other than above or
+       below reportable range"
+    8: "Not reportable because dilution factor 0.9-0.99 or 1.01-1.1"
+    9: "Not reportable because dilution factor <0.9 or >1.1"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_code_4917 (float): UK Biobank fields in coding 4917, representing
+            biochemistry reportability
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_code_782)) and
+        (0.5 <= field_code_782 and field_code_782 < 9.5)
+    ):
+        # The variable has a valid value.
+        if (0.5 <= field_code_782 and field_code_782 < 1.5):
+            # 1: "No data returned"
+            value = 0
+        elif (1.5 <= field_code_782 and field_code_782 < 2.5):
+            # 2: "Original value above or below reportable limit"
+            value = 1
+        elif (2.5 <= field_code_782 and field_code_782 < 3.5):
+            # 3: "Unrecoverable aliquot problem (dip)"
+            value = 0
+        elif (3.5 <= field_code_782 and field_code_782 < 4.5):
+            # 4: "Unrecoverable aliquot problem (possible aliquot
+            # mis-classification)"
+            value = 0
+        elif (4.5 <= field_code_782 and field_code_782 < 5.5):
+            # 5: "Aliquot 4 used"
+            value = 0
+        elif (5.5 <= field_code_782 and field_code_782 < 6.5):
+            # Code "6" does not have an explanation.
+            # 6: ""
+            value = float("nan")
+        elif (6.5 <= field_code_782 and field_code_782 < 7.5):
+            # 7: "Analyser deemed result not reportable for reason other than
+            # above or below reportable range"
+            value = 0
+        elif (7.5 <= field_code_782 and field_code_782 < 8.5):
+            # 8: "Not reportable because dilution factor 0.9-0.99 or 1.01-1.1"
+            value = 0
+        elif (8.5 <= field_code_782 and field_code_782 < 9.5):
+            # 9: "Not reportable because dilution factor <0.9 or >1.1"
+            value = 0
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def interpret_biochemistry_reportability_less_than_detection_limit(
     field_code_4917=None,
 ):
     """
     Intepret UK Biobank's coding 4917 for multiple data fields.
 
-    Only interpret whether the variable indicates that the measurement was not
-    reportable (hence missing) due to a measurement that was less than the
-    limit of detection.
+    Interpret whether the variable indicates that the measurement was not
+    reportable and missing due to a measurement that was less than or greater
+    than the limit of detection.
 
-    0: measurement either reportable and not missing or not reportable and
-    missing because greater than detection limit
-    1: measurement not reportable and hence missing because less than detection
-    limit
+    0: measurement was reportable and not missing
+    1: measurement was not reportable and missing because value was less than
+    detection limit
+    2: measurement was not reportable and missing because value was greater than
+    detection limit
 
     Data-Field "30606": "Albumin reportability"
-    Data-Field "30806": "Oestradiol reportability"
     Data-Field "30836": "SHBG reportability"
+    Data-Field "30806": "Oestradiol reportability"
     Data-Field "30856": "Testosterone reportability"
     Data-Field "30896": "Vitamin D reportability"
     UK Biobank data coding "4917" for variable fields.
@@ -1553,13 +1645,13 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
         elif (2.5 <= field_code_4917 and field_code_4917 < 3.5):
             # 3: "Reportable at assay but not reportable after any corrections
             # (too high)"
-            value = 0
+            value = 2
         elif (3.5 <= field_code_4917 and field_code_4917 < 4.5):
             # 4: "Not reportable at assay (too low)"
             value = 1
         elif (4.5 <= field_code_4917 and field_code_4917 < 5.5):
             # 5: "Not reportable at assay (too high)"
-            value = 0
+            value = 2
         else:
             # uninterpretable
             value = float("nan")
@@ -1568,136 +1660,6 @@ def interpret_biochemistry_reportability_less_than_detection_limit(
         value = float("nan")
     # Return.
     return value
-
-
-def interpret_biochemistry_missingness_beyond_detection_range(
-    field_code_782=None,
-):
-    """
-    Intepret UK Biobank's coding 782 for multiple data fields.
-
-    Only interpret whether the variable indicates that the measurement was
-    missing due to a measurement that was beyond the detection range (either
-    less than or greater than).
-
-    0: measurement missing because of other problem
-    1: measurement not reportable and hence missing because less than detection
-    limit
-
-    ###Data-Field "30606": "Albumin reportability"
-    ###Data-Field "30805": "Oestradiol missing reason"
-    ###Data-Field "30836": "SHBG reportability"
-    ###Data-Field "30856": "Testosterone reportability"
-    ###Data-Field "30896": "Vitamin D reportability"
-    UK Biobank data coding "782" for variable fields.
-    1: "No data returned"
-    2: "Original value above or below reportable limit"
-    3: "Unrecoverable aliquot problem (dip)"
-    4: "Unrecoverable aliquot problem (possible aliquot mis-classification)"
-    5: "Aliquot 4 used"
-    6: ?
-    7: "Analyser deemed result not reportable for reason other than above or
-       below reportable range"
-    8: "Not reportable because dilution factor 0.9-0.99 or 1.01-1.1"
-    9: "Not reportable because dilution factor <0.9 or >1.1"
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_code_4917 (float): UK Biobank fields in coding 4917, representing
-            biochemistry reportability
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_code_782)) and
-        (0.5 <= field_code_782 and field_code_782 < 9.5)
-    ):
-        # The variable has a valid value.
-        if (0.5 <= field_code_782 and field_code_782 < 1.5):
-            # 1: ""
-            value = 0
-        elif (1.5 <= field_code_782 and field_code_782 < 2.5):
-            # 2: "Original value above or below reportable limit"
-            value = 1
-        elif (2.5 <= field_code_782 and field_code_782 < 3.5):
-            # 3: ""
-            value = 0
-        elif (3.5 <= field_code_782 and field_code_782 < 4.5):
-            # 4: ""
-            value = 0
-        elif (4.5 <= field_code_782 and field_code_782 < 5.5):
-            # 5: ""
-            value = 0
-        elif (5.5 <= field_code_782 and field_code_782 < 6.5):
-            # Code "6" does not have an explanation.
-            # 6: ""
-            value = float("nan")
-        elif (6.5 <= field_code_782 and field_code_782 < 7.5):
-            # 7: "Analyser deemed result not reportable for reason other than
-            # above or below reportable range"
-            value = 0
-        elif (7.5 <= field_code_782 and field_code_782 < 8.5):
-            # 8: ""
-            value = 0
-        elif (8.5 <= field_code_782 and field_code_782 < 9.5):
-            # 9: ""
-            value = 0
-        else:
-            # uninterpretable
-            value = float("nan")
-    else:
-        # null
-        value = float("nan")
-    # Return.
-    return value
-
-
-def determine_hormones_reportability_less_than_detection_limit(
-    hormone_fields=None,
-    table=None,
-):
-    """
-    Determine for each hormone whether reportability variable indicates that the
-    measurement was not reportable because it was less than detection limit.
-
-    arguments:
-        hormone_fields (list<dict>): data fields for measurement, reportability,
-            and missingness for each hormone
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Determine reportability.
-    for hormone in hormone_fields:
-        reportability_low = str(
-            str(hormone["name"]) + "_reportability_low"
-        )
-        table[reportability_low] = table.apply(
-            lambda row:
-                interpret_biochemistry_reportability_less_than_detection_limit(
-                    field_code_4917=row[hormone["reportability"]],
-                ),
-            axis="columns", # apply across rows
-        )
-        pass
-    # Return information.
-    return table
 
 
 def determine_hormones_missingness_beyond_detection_range(
@@ -1741,8 +1703,247 @@ def determine_hormones_missingness_beyond_detection_range(
     return table
 
 
-# TODO: I need to make this at least partially executable...
-# TODO: eventually, I want to organize hormone imputations within a separate mini-driver function...
+def determine_hormones_reportability_less_than_detection_limit(
+    hormone_fields=None,
+    table=None,
+):
+    """
+    Determine for each hormone whether reportability variable indicates that the
+    measurement was not reportable because it was less than detection limit.
+
+    arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine reportability.
+    for hormone in hormone_fields:
+        reportability_low = str(
+            str(hormone["name"]) + "_reportability_limit"
+        )
+        table[reportability_low] = table.apply(
+            lambda row:
+                interpret_biochemistry_reportability_less_than_detection_limit(
+                    field_code_4917=row[hormone["reportability"]],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Return information.
+    return table
+
+
+def impute_missing_hormone_detection_limit(
+    hormone=None,
+    sex_text=None,
+    minima=None,
+    maxima=None,
+    measurement=None,
+    missingness_range=None,
+    reportability_limit=None,
+):
+    """
+    Determine imputation value for a hormone.
+
+    If record has a definitive explanation that the hormone's measurement was
+    missing because its value was less than the assay's limit of detection, then
+    impute to half the sex-specific minimal value for that hormone.
+    (missingness_range = 1) and (reportability_limit = 1)
+
+    If record has a definitive explanation that the hormone's measurement was
+    missing because its value was greater than the assay's limit of detection,
+    then impute to the sex-specific maximal value for that hormone.
+    (missingness_range = 1) and (reportability_limit = 2)
+
+    arguments:
+        hormone (str): name of a hormone
+        sex_text (str): textual representation of sex selection
+        minima (dict<float>): sex-specific minimal values of hormone's
+            measurements
+        maxima (dict<float>): sex-specific maximal values of hormone's
+            measurements
+        measurement (float): value of hormone's actual measurement
+        missingness_range (int): binary representation of whether measurement's
+            value was missing because the value was out of detection range
+        reportability_limit (int): integer categorical representation of whether
+            measurement's value was missing because the value was less than or
+            greater than the limit of detection
+
+    raises:
+
+    returns:
+        (float): value for hormone's measurement
+
+    """
+
+    # Interpret field code.
+    if (pandas.isna(measurement)):
+        # Hormone's measurement has a missing value.
+        if (
+            (not pandas.isna(missingness_range)) and
+            (missingness_range == 1) and
+            (not pandas.isna(reportability_limit)) and
+            ((reportability_limit == 1) or (reportability_limit == 2))
+        ):
+            # Record has valid explanations for the missing value of hormone's
+            # measurement.
+            if (reportability_limit == 1):
+                # Hormone's measurement was less than the limit of detection.
+                # Impute to half of the hormone's sex-specific minimal value of
+                # measurement.
+                minimum = minima[sex_text]
+                value = float(minimum / 2)
+            elif (reportability_limit == 2):
+                # Hormone's measurement was greater than the limit of detection.
+                # Impute to the hormone's sex-specific maximal value of
+                # measurement.
+                maximum = maxima[sex_text]
+                value = maximum
+            else:
+                # Uninterpretable.
+                value = measurement
+        else:
+            # Without valid explanations of missing value for hormone's
+            # measurement, do not impute.
+            value = measurement
+    else:
+        # Hormone's measurement has a not missing value.
+        value = measurement
+    # Return information.
+    return value
+
+
+def impute_missing_hormones_detection_limit(
+    hormones=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes imputation of missing measurements for hormones.
+
+    arguments:
+        hormones (list<str>): names of hormones for imputation
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Stratify table by sex to determine sex-specific minimal and maximal
+    # values.
+    table_female = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    table_male = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    # Iterate on hormones.
+    for hormone in hormones:
+        # Determine column names.
+        imputation = str(str(hormone) + "_imputation")
+        missingness_range = str(str(hormone) + "_missingness_range")
+        reportability_limit = str(str(hormone) + "_reportability_limit")
+        # Determine sex-specific minimal and maximal values.
+        minima = dict()
+        minima["female"] = numpy.nanmin(table_female[hormone].to_numpy())
+        minima["male"] = numpy.nanmin(table_male[hormone].to_numpy())
+        maxima = dict()
+        maxima["female"] = numpy.nanmax(table_female[hormone].to_numpy())
+        maxima["male"] = numpy.nanmax(table_male[hormone].to_numpy())
+        # Impute missing measurements.
+        table[imputation] = table.apply(
+            lambda row:
+                impute_missing_hormone_detection_limit(
+                    hormone=hormone,
+                    minima=minima,
+                    maxima=maxima,
+                    sex_text=row["sex_text"],
+                    measurement=row[hormone],
+                    missingness_range=row[missingness_range],
+                    reportability_limit=row[reportability_limit],
+                ),
+            axis="columns", # apply across rows
+        )
+        # Report.
+        if report:
+            # Column name translations.
+            utility.print_terminal_partition(level=3)
+            print("report: impute_missing_hormones_detection_limit()")
+            print("hormone: " + str(hormone))
+            print("minimum female: " + str(minima["female"]))
+            print("minimum male: " + str(minima["male"]))
+            print("maximum female: " + str(maxima["female"]))
+            print("maximum male: " + str(maxima["male"]))
+        pass
+    # Return information.
+    return table
+
+
+def organize_hormones_missingness_imputation(
+    table=None,
+    report=None,
+):
+    """
+    Organizes imputation of missing measurements for hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Interpret missingness and reportability explanation variables for
+    # hormones.
+    table = determine_hormones_reportability_less_than_detection_limit(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+    table = determine_hormones_missingness_beyond_detection_range(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+    # Impute missing values.
+    hormones = [
+        "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+        "vitamin_d",
+    ]
+    table = impute_missing_hormones_detection_limit(
+        hormones=hormones,
+        table=table,
+        report=report,
+    )
+    # Return information.
+    return table
 
 
 def organize_sex_hormone_variables(
@@ -1764,15 +1965,16 @@ def organize_sex_hormone_variables(
 
     """
 
-    # Copy data.
+    # Copy information in table.
     table = table.copy(deep=True)
 
     ##########
     # Organize raw hormone variables.
 
     # Define reportability and missingness variables for each hormone.
-    hormone_fields = define_hormone_measurement_reportability_missingness()
-
+    hormone_fields = (
+        define_hormone_fields_measurement_reportability_missingness()
+    )
     # Convert variable types to float.
     columns_hormones = list()
     for record in hormone_fields:
@@ -1798,39 +2000,12 @@ def organize_sex_hormone_variables(
         factors_concentration=factors_concentration,
     )
 
-    # Interpret reportability and missingness variables for hormones.
-    table = determine_hormones_reportability_less_than_detection_limit(
-        hormone_fields=hormone_fields,
-        table=table,
-    )
-    table = determine_hormones_missingness_beyond_detection_range(
-        hormone_fields=hormone_fields,
-        table=table,
-    )
-
     ##########
-    # Impute to half-minimum for values missing due to measurements less than
-    # limit of detection.
-
-    # TODO: ONLY impute if:
-    # TODO: 1. "missing reason" is "above or below reportable limit" AND
-    # TODO: 2. "reportability" is "not reportable ... too low"
-
-    # TODO: imputation method needs to be more sophisticated...
-    # TODO: interpret "reportability" and "missingness" data fields...
-    # reportability
-    # albumin, SHBG, testosterone, oestradiol,  (4917)
-
-    # TODO: introduce a driver function to iterate on hormones...
-    # determine whether each hormone is missing due to limit of detection
-
-
-    # Impute missing values for hormones.
-    #table = utility.impute_continuous_variables_missing_values_half_minimum(
-    #    columns=columns_hormones,
-    #    table=table,
-    #    report=report,
-    #)
+    # Impute hormone measurements that were missing due to limit of detection.
+    table = organize_hormones_missingness_imputation(
+        table=table,
+        report=report,
+    )
 
 
     ##########
@@ -9121,9 +9296,6 @@ def organize_report_contingency_table_stratification_by_missingness(
     pass
 
 
-
-# TODO: use this as an example...
-
 def organize_report_cohort_model_variables_summaries_record(
     name=None,
     cohort_model=None,
@@ -9838,11 +10010,14 @@ def select_organize_cohorts_models_phenotypes_set_summary(
     return records
 
 
+# TODO: TCW 30 July 2021
+# TODO: work on this... report separate percentages for reportability LOW and reportability HIGH
+
 def organize_cohort_hormone_missingness_record(
     name_cohort=None,
     name_hormone=None,
     column_hormone=None,
-    column_reportability_low=None,
+    column_reportability_limit=None,
     column_missingness_range=None,
     table=None,
 ):
@@ -9850,11 +10025,21 @@ def organize_cohort_hormone_missingness_record(
     Determine for each hormone whether missingness variable indicates that the
     measurement was not reportable because it was beyond the detection range.
 
+    # cohort:
+    # hormone:
+    # total measurement missingness: <count> (<percentage>%)
+    # missing with reason "above or below reportable limit": <count> (<percentage>%)
+    # missing with reportability "not reportable ... too low": <count> (<percentage>%)
+    # missing with both annotations: <count> (<percentage>%)
+
+    # "<hormone>_reportability_limit" 1: not reportable due to measurement less than limit of detection
+    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
+
     arguments:
         name_cohort (str): name of cohort
         name_hormone (str): name of hormone
         column_hormone (str): name of table's column for hormone's measurements
-        column_reportability_low (str): name of table's column for hormone's
+        column_reportability_limit (str): name of table's column for hormone's
             reportability less than limit of detection
         column_missingness_range (str): name of table's column for hormone's
             reason for missingness beyond detection range
@@ -9890,15 +10075,15 @@ def organize_cohort_hormone_missingness_record(
             (table_measurement_missing[column_missingness_range] == 1)
         ), :
     ]
-    table_reportability_low = table_measurement_missing.loc[
+    table_reportability_limit = table_measurement_missing.loc[
         (
-            (table_measurement_missing[column_reportability_low] == 1)
+            (table_measurement_missing[column_reportability_limit] == 1)
         ), :
     ]
     table_both = table_measurement_missing.loc[
         (
             (table_measurement_missing[column_missingness_range] == 1) &
-            (table_measurement_missing[column_reportability_low] == 1)
+            (table_measurement_missing[column_reportability_limit] == 1)
         ), :
     ]
 
@@ -9909,7 +10094,7 @@ def organize_cohort_hormone_missingness_record(
     count_measurement_valid = table_measurement_valid.shape[0]
     count_measurement_missing = table_measurement_missing.shape[0]
     count_missingness_range = table_missingness_range.shape[0]
-    count_reportability_low = table_reportability_low.shape[0]
+    count_reportability_limit = table_reportability_limit.shape[0]
     count_both = table_both.shape[0]
 
     # Calculate percentages.
@@ -9922,8 +10107,8 @@ def organize_cohort_hormone_missingness_record(
     percentage_missingness_range = round(
         ((count_missingness_range / count_measurement_missing) * 100), 3
     )
-    percentage_reportability_low = round(
-        ((count_reportability_low / count_measurement_missing) * 100), 3
+    percentage_reportability_limit = round(
+        ((count_reportability_limit / count_measurement_missing) * 100), 3
     )
     percentage_both = round(
         ((count_both / count_measurement_missing) * 100), 3
@@ -9944,8 +10129,8 @@ def organize_cohort_hormone_missingness_record(
         " (" + str(percentage_missingness_range) + "%)"
     )
     record["reportability_low"] = str(
-        str(count_reportability_low) +
-        " (" + str(percentage_reportability_low) + "%)"
+        str(count_reportability_limit) +
+        " (" + str(percentage_reportability_limit) + "%)"
     )
     record["both_missingness_reportability"] = str(
         str(count_both) +
@@ -9959,7 +10144,8 @@ def organize_cohorts_phenotypes_hormones_missingness(
     table=None,
 ):
     """
-    Organizes information about sex hormones.
+    Organizes a summary table about missingness of hormone measurements in
+    cohorts.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -9991,8 +10177,8 @@ def organize_cohorts_phenotypes_hormones_missingness(
     for collection_cohort in pail_phenotypes:
         # Iterate on hormones.
         for hormone in hormones:
-            reportability_low = str(
-                str(hormone) + "_reportability_low"
+            reportability_limit = str(
+                str(hormone) + "_reportability_limit"
             )
             missingness_range = str(
                 str(hormone) + "_missingness_range"
@@ -10002,7 +10188,7 @@ def organize_cohorts_phenotypes_hormones_missingness(
                 name_cohort=collection_cohort["name"],
                 name_hormone=hormone,
                 column_hormone=hormone,
-                column_reportability_low=reportability_low,
+                column_reportability_limit=reportability_limit,
                 column_missingness_range=missingness_range,
                 table=collection_cohort["table"],
             )
@@ -10877,21 +11063,13 @@ def execute_alcohol(
 
 # Descriptions
 
-# TODO: new description table
-# cohort:
-# hormone:
-# total measurement missingness: <count> (<percentage>%)
-# missing with reason "above or below reportable limit": <count> (<percentage>%)
-# missing with reportability "not reportable ... too low": <count> (<percentage>%)
-# missing with both annotations: <count> (<percentage>%)
-
-# "<hormone>_reportability_low" 1: not reportable due to measurement less than limit of detection
-# "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
-
-
+# TODO: divide this into 2 functions and then decide whether to call each
+# TODO: in particular, the descriptions for genotype cohorts are slow (due to kinship)
+#
 
 def execute_describe_cohorts_models_phenotypes(
     table=None,
+    genotype_cohorts=None,
     set=None,
     path_dock=None,
     report=None,
@@ -10902,6 +11080,8 @@ def execute_describe_cohorts_models_phenotypes(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        genotype_cohorts (bool): whether to generate description for genotype
+            cohorts (slow)
         set (str): name of set of cohorts and models to select and organize
         path_dock (str): path to dock directory for source and product
             directories and files
@@ -10953,42 +11133,45 @@ def execute_describe_cohorts_models_phenotypes(
 
     ##########
 
-    # Read source information from file.
-    table_kinship_pairs = read_source_table_kinship_pairs(
-        path_dock=path_dock,
-        report=False,
-    )
-    # Prepare table to summarize phenotype variables across cohorts and models
-    # for genetic analyses.
-    if (set == "sex_hormones"):
-        pail_genotypes = (
-            select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
-                table=table,
-                table_kinship_pairs=table_kinship_pairs,
-                report=False,
-        ))
-    elif (set == "bipolar_disorder_body"):
-        pail_genotypes = (
-            select_organize_cohorts_models_genotypes_analyses_set_bipolar_body(
-                table=table,
-                table_kinship_pairs=table_kinship_pairs,
-                report=report,
-        ))
-    else:
-        print("set of cohorts and models unrecognizable...")
-        pail_genotypes = list()
-    # Collect summary records and construct table.
-    records = list()
-    for collection in pail_genotypes:
-        record = organize_report_cohort_model_variables_summaries_record(
-            name=collection["name"],
-            cohort_model=collection["cohort_model"],
-            category=collection["category"],
-            table=collection["table"],
+    if (genotype_cohorts):
+        # Read source information from file.
+        table_kinship_pairs = read_source_table_kinship_pairs(
+            path_dock=path_dock,
+            report=False,
         )
-        records.append(record)
-    # Organize table.
-    table_genotypes = pandas.DataFrame(data=records)
+        # Prepare table to summarize phenotype variables across cohorts and models
+        # for genetic analyses.
+        if (set == "sex_hormones"):
+            pail_genotypes = (
+                select_organize_cohorts_models_genotypes_analyses_set_sex_hormones(
+                    table=table,
+                    table_kinship_pairs=table_kinship_pairs,
+                    report=False,
+            ))
+        elif (set == "bipolar_disorder_body"):
+            pail_genotypes = (
+                select_organize_cohorts_models_genotypes_analyses_set_bipolar_body(
+                    table=table,
+                    table_kinship_pairs=table_kinship_pairs,
+                    report=report,
+            ))
+        else:
+            print("set of cohorts and models unrecognizable...")
+            pail_genotypes = list()
+        # Collect summary records and construct table.
+        records = list()
+        for collection in pail_genotypes:
+            record = organize_report_cohort_model_variables_summaries_record(
+                name=collection["name"],
+                cohort_model=collection["cohort_model"],
+                category=collection["category"],
+                table=collection["table"],
+            )
+            records.append(record)
+        # Organize table.
+        table_genotypes = pandas.DataFrame(data=records)
+    else:
+        table_genotypes = pandas.DataFrame()
 
     ##########
 
