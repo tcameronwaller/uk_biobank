@@ -1953,6 +1953,7 @@ def calculate_estimation_bioavailable_oestradiol(
 
 
 def organize_calculation_estimate_bioavailable_free_hormones(
+    factors_concentration=None,
     table=None,
     report=None,
 ):
@@ -1961,6 +1962,8 @@ def organize_calculation_estimate_bioavailable_free_hormones(
     of testosterone and oestradiol.
 
     arguments:
+        factors_concentration (dict<float>): factors by which to multiply
+            concentrations for the sake of float storage and analysis
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
@@ -2156,10 +2159,12 @@ def organize_sex_hormone_variables(
     ##########
     # Calculate estimates of bioavailable and free hormones.
     table = organize_calculation_estimate_bioavailable_free_hormones(
+        factors_concentration=factors_concentration,
         table=table,
         report=report,
     )
 
+    ##########
     # Transform variables' values to normalize distributions.
     columns_hormones_normalization = [
         "albumin", "albumin_imputation",
