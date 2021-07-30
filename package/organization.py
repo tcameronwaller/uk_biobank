@@ -1496,7 +1496,6 @@ def organize_report_column_pair_correlations(
     pass
 
 
-
 def interpret_biochemistry_missingness_beyond_detection_range(
     field_code_782=None,
 ):
@@ -1899,6 +1898,7 @@ def impute_missing_hormones_detection_limit(
 
 
 def organize_hormones_missingness_imputation(
+    hormone_fields=None,
     table=None,
     report=None,
 ):
@@ -1906,6 +1906,8 @@ def organize_hormones_missingness_imputation(
     Organizes imputation of missing measurements for hormones.
 
     arguments:
+        hormone_fields (list<dict>): data fields for measurement, reportability,
+            and missingness for each hormone
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
@@ -1932,11 +1934,9 @@ def organize_hormones_missingness_imputation(
         table=table,
     )
     # Impute missing values.
-    hormones = [
-        "albumin", "steroid_globulin",
-        "oestradiol", "testosterone",
-        "vitamin_d",
-    ]
+    hormones = list()
+    for record in hormone_fields:
+        hormones.append(record["name"])
     table = impute_missing_hormones_detection_limit(
         hormones=hormones,
         table=table,
@@ -2003,6 +2003,7 @@ def organize_sex_hormone_variables(
     ##########
     # Impute hormone measurements that were missing due to limit of detection.
     table = organize_hormones_missingness_imputation(
+        hormone_fields=hormone_fields,
         table=table,
         report=report,
     )
