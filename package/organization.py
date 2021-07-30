@@ -3829,6 +3829,85 @@ def determine_female_menopause_ordinal_strict(
     return value
 
 
+def determine_female_menstruation_days_threshold(
+    sex_text=None,
+    menopause_ordinal=None,
+    menstruation_days=None,
+    threshold_premenopause=None,
+    threshold_perimenopause=None,
+):
+    """
+    Determine a female person's categorical menstruation phase.
+
+    0: follicular phase of menstruation
+    1: luteal phase of menstruation
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_ordinal (float): ordinal representation of whether female
+            person has experienced menopause
+        menstruation_days (int): count of days since previous menstruation
+            (menstrual period)
+        threshold_premenopause (int): threshold in days for menstrual cycle in
+            premenopausal female persons, above which to set menstruation days
+            to missing
+        threshold_perimenopause (int): threshold in days for menstrual cycle in
+            perimenopausal female persons, above which to set menstruation days
+            to missing
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine categorical phase of menstruation cycle.
+    if (sex_text == "female"):
+        # Determine whether any variables have missing values.
+        if (
+            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_days))
+        ):
+            # Determine threshold values for premenopausal females.
+            if (menopause_ordinal == 0):
+                if (menstruation_days < threshold_premenopause):
+                    # Days of menstrual cycle are below threshold.
+                    value = menstruation_days
+                elif (menstruation_days >= threshold_premenopause):
+                    # Days of menstrual cycle are above threshold.
+                    value = float("nan")
+                else:
+                    # Confusion in interpretation.
+                    value = float("nan")
+            # Determine threshold values for perimenopausal females.
+            elif (menopause_ordinal == 1):
+                if (menstruation_days < threshold_perimenopause):
+                    # Days of menstrual cycle are below threshold.
+                    value = menstruation_days
+                elif (menstruation_days >= threshold_perimenopause):
+                    # Days of menstrual cycle are above threshold.
+                    value = float("nan")
+                else:
+                    # Confusion in interpretation.
+                    value = float("nan")
+            # Determine threshold values for postmenopausal females.
+            elif (menopause_ordinal == 2):
+                # Menstruation undefined for postmenopause females.
+                value = float("nan")
+            else:
+                # Person does not qualify for any categories.
+                value = float("nan")
+        else:
+            # Variables have missing values.
+            value = float("nan")
+    else:
+        # Menstruation undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def determine_female_menstruation_phase(
     sex_text=None,
     menopause_ordinal=None,
@@ -4049,6 +4128,7 @@ def determine_female_menstruation_phase_cycle(
                 ):
                     # Person qualifies for early follicular phase or late luteal
                     # phase.
+                    # "shoulder"
                     value = 0
                 elif (
                     (menstruation_phase_early_late == 1) or
@@ -4056,6 +4136,7 @@ def determine_female_menstruation_phase_cycle(
                 ):
                     # Person qualitifies for late follicular or early luteal
                     # phase.
+                    # "ovulation"
                     value = 1
                 else:
                     # Persons does not qualify for any categories.
@@ -4246,11 +4327,6 @@ def determine_female_any_hormone_alteration_medication(
     return value
 
 
-# TODO: a lot to be done here...
-# TODO: apply thresholds to menstruation_days
-# TODO: maybe a new variable named "menstruation_days_threshold"
-
-
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -4289,6 +4365,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         table=table,
     )
 
+    ##########
+    # Menstrual cycle
+
     # Determine count of days since person's last menstrual period.
     table["menstruation_days"] = table.apply(
         lambda row:
@@ -4319,6 +4398,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    ##########
+    # Menopause
 
     # Determine whether female persons experienced hysterectomy.
     table["hysterectomy"] = table.apply(
@@ -4434,13 +4516,33 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply across rows
     )
 
+    ##########
+    # Menstrual cycle
+
+    # Set thresholds on days of menstrual cycle that are specific to
+    # premenopause or perimenopause status.
+    # Notice that these thresholds differ from those for definition of
+    # menopause status.
+    # Rather, these thresholds clean up the menopause cohorts after definition.
+    table["menstruation_days_threshold"] = table.apply(
+        lambda row:
+            determine_female_menstruation_days_threshold(
+                sex_text=row["sex_text"],
+                menopause_ordinal=row["menopause_ordinal"],
+                menstruation_days=row["menstruation_days"],
+                threshold_premenopause=31, # threshold in days
+                threshold_perimenopause=41, # threshold in days
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine female persons' categorical menstruation phase.
     table["menstruation_phase"] = table.apply(
         lambda row:
             determine_female_menstruation_phase(
                 sex_text=row["sex_text"],
                 menopause_ordinal=row["menopause_ordinal"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_days=row["menstruation_days_threshold"],
                 threshold_premenopause=15, # threshold in days
                 threshold_perimenopause=15, # threshold in days
             ),
@@ -4453,7 +4555,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             determine_female_menstruation_phase_early_late(
                 sex_text=row["sex_text"],
                 menopause_ordinal=row["menopause_ordinal"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_days=row["menstruation_days_threshold"],
                 threshold_middle_follicular=5, # threshold in days
                 threshold_ovulation=15,
                 threshold_middle_luteal=20, # threshold in days
@@ -4484,6 +4586,10 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    ##########
+    # Medications and therapies that alter hormone levels
+
     # Determine whether person was using oral contraception recently.
     table["oral_contraception"] = table.apply(
         lambda row:
@@ -4557,10 +4663,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "IID",
         "sex_text",
         "age",
-        "menstruation_days",
         "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
         "menopause_binary", "menopause_binary_strict",
         "menopause_ordinal", "menopause_ordinal_strict",
+        "menstruation_days", "menstruation_days_threshold",
+        "menstruation_cycle_duration", "menstruation_cycle_irregularity",
         "menstruation_phase",
         "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
@@ -10485,6 +10592,70 @@ def write_product(
 # Drivers
 # The purpose of these driver functions is to make the module's functionality
 # accessible in modular parts.
+
+##########
+# Data export
+
+
+# This function is mostly obsolete... but still might come in handy
+def organize_hormone_female_export_table(
+    table=None,
+    select_columns=None,
+    report=None,
+):
+    """
+    Organizes information for export.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        select_columns (bool): whether to select specific columns from table
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+
+    """
+
+    table = table.copy(deep=True)
+    if (select_columns):
+        columns_export = [
+            #"eid",
+            "IID",
+            "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+            "pregnancy",
+            "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+            "menopause_binary", "menopause_ordinal",
+            "menstruation_days", "menstruation_phase",
+            "oral_contraception", "hormone_replacement",
+            "hormone_alteration",
+            "albumin", "albumin_log", "steroid_globulin", "steroid_globulin_log",
+            "oestradiol", "oestradiol_log",
+            "oestradiol_free", "oestradiol_free_log",
+            "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+            "testosterone", "testosterone_log",
+            "testosterone_free", "testosterone_free_log",
+            "testosterone_bioavailable", "testosterone_bioavailable_log",
+
+        ]
+        table = table.loc[
+            :, table.columns.isin(columns_export)
+        ]
+        table = table[[*columns_export]]
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: organize_hormone_export_table()")
+        utility.print_terminal_partition(level=3)
+        print(table)
+        print("table shape (rows, columns): " + str(table.shape))
+        print(table.columns.to_list())
+    # Return information.
+    return table
+
 
 # Definitions
 
