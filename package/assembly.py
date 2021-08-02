@@ -33,6 +33,7 @@ import pickle
 import copy
 import random
 import itertools
+import time
 
 # Relevant
 
@@ -1186,9 +1187,12 @@ def execute_procedure(
 
     """
 
+    # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
     print("version check: 1")
+    # Pause procedure.
+    time.sleep(5.0)
 
     # Initialize directories.
     paths = initialize_directories(

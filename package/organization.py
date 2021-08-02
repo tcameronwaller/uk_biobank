@@ -14,12 +14,16 @@
 import sys
 #print(sys.path)
 import os
+#import shutil
+#import csv
 import math
 import statistics
 import pickle
 import copy
 import random
 import itertools
+import textwrap
+import time
 
 # Relevant
 
@@ -1062,6 +1066,8 @@ def convert_hormone_concentration_units_moles_per_liter(
     # Return information.
     return table
 
+# TODO: TCW 30 July 2021
+# TODO: I'm working on replacing this function with a function that returns a text report
 
 def organize_report_column_pair_correlations(
     column_one=None,
@@ -9397,6 +9403,111 @@ def organize_report_contingency_table_stratification_by_missingness(
     pass
 
 
+# TODO: I need to test this...
+def organize_text_report_column_pair_correlations(
+    column_one=None,
+    column_two=None,
+    table=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        column_one (str): name of first column
+        column_two (str): name of second column
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (str): textual report
+
+    """
+
+    table = table.copy(deep=True)
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=[column_one, column_two],
+        inplace=True,
+    )
+    count_rows = table.shape[0]
+    pearson_correlation, pearson_probability = scipy.stats.pearsonr(
+        table[column_one].to_numpy(),
+        table[column_two].to_numpy(),
+    )
+    spearman_correlation, spearman_probability = scipy.stats.spearmanr(
+        table[column_one].to_numpy(),
+        table[column_two].to_numpy(),
+    )
+    # Report.
+    report_text = str()
+    report_text += textwrap.dedent(
+        """\
+
+            --------------------------------------------------
+            column one: {column_one}
+            column two: {column_two}
+            non-missing records: {count_rows}
+            ----------
+            Correlations
+            ----------
+            Pearson: {pearson_correlation} (p: {pearson_probability})
+            Spearman: {spearman_correlation} (p: {spearman_probability})
+            --------------------------------------------------
+        """
+    ).format(
+        column_one=column_one,
+        column_two=column_two,
+        count_rows=count_rows,
+        pearson_correlation=round(pearson_correlation, 3),
+        pearson_probability=round(pearson_probability, 5),
+        spearman_correlation=round(spearman_correlation, 3),
+        spearman_probability=round(spearman_probability, 5),
+    )
+    # Return information.
+    return report_text
+
+
+
+# TODO: work on these text reports...
+def organize_text_report_phenotype_correlations(
+    table=None,
+):
+    """
+    Organizes information about persons' sex hormones across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Organize textual report.
+    report_text = str()
+    report_text += organize_text_report_column_pair_correlations(
+        column_one="testosterone",
+        column_two="steroid_globulin",
+        table=None,
+    )
+
+    # TODO: okay so now I need to append that new text report to the collection text string report...
+
+
+    # Return information.
+    return report_text
+
+
 def organize_report_cohort_model_variables_summaries_record(
     name=None,
     cohort_model=None,
@@ -10311,6 +10422,9 @@ def organize_cohorts_phenotypes_hormones_missingness(
 ##########
 # Plot
 
+# TODO: it would be NICE to to organize these plots within sub-directories
+
+
 
 def plot_variable_values_histogram(
     label_title=None,
@@ -10360,6 +10474,8 @@ def plot_variable_values_histogram(
     return figure
 
 
+
+# TODO: change name to "ordinal_group" or something like that to differentiate from "categorical_group"
 def plot_variable_means_dots_by_day(
     label_title=None,
     column_phenotype=None,
@@ -11170,6 +11286,9 @@ def execute_alcohol(
 # TODO: in particular, the descriptions for genotype cohorts are slow (due to kinship)
 #
 
+# TODO: also write out "print" reports to text files for Chi-square tests and correlations
+
+
 def execute_describe_cohorts_models_phenotypes(
     table=None,
     genotype_cohorts=None,
@@ -11295,7 +11414,7 @@ def execute_describe_cohorts_models_phenotypes(
 
 # Plots
 
-
+# TODO: I think I need
 def organize_plot_cohort_model_phenotypes(
     name=None,
     menstruation=None,
@@ -11544,9 +11663,10 @@ def execute_procedure(
 
     """
 
+    # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 13")
+    print("version check: 1")
     # Pause procedure.
     time.sleep(5.0)
 
