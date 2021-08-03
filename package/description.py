@@ -770,7 +770,7 @@ def organize_phenotypes_plots_histogram(
     # Collect records of information about each cohort and model.
     records = list()
     records_novel = (
-        stratificiation.stratify_set_primary_sex_menopause_age(
+        ukb_strat.stratify_set_primary_sex_menopause_age(
             table=table,
         )
     )
