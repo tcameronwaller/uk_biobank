@@ -561,13 +561,8 @@ def organize_cohorts_phenotypes_hormones_missingness(
     return table_missingness
 
 
-
-
-
 ##########
 # Plot
-
-# TODO: it would be NICE to to organize these plots within sub-directories
 
 
 def plot_variable_values_histogram(
@@ -617,8 +612,6 @@ def plot_variable_values_histogram(
     # Return.
     return figure
 
-
-# TODO: change name to "ordinal_group" or something like that to differentiate from "categorical_group"
 
 def plot_variable_means_dot_trajectory(
     label_title=None,
@@ -765,6 +758,10 @@ def organize_phenotypes_plots_histogram(
 
     """
 
+    # TODO: (TCW, 3 August 2021) Consider histograms for alcohol variables...
+    # "alcohol_frequency", "alcohol_previous", "alcohol_drinks_monthly",
+    # "alcoholism"
+
     # Copy information.
     table = table.copy(deep=True)
     # Prepare table to summarize phenotype variables across cohorts and models.
@@ -787,6 +784,7 @@ def organize_phenotypes_plots_histogram(
         phenotypes = [
             "age",
             "body_mass_index",
+            "month",
             "albumin", "albumin_imputation",
             "steroid_globulin", "steroid_globulin_imputation",
             "oestradiol", "oestradiol_imputation",
@@ -864,6 +862,20 @@ def organize_phenotypes_plots_dot_trajectory(
         ]
         # Iterate on phenotypes.
         for phenotype in phenotypes:
+            # Plot hormone trajectories across month of assessment.
+            # Chart.
+            name_label = str(str(record["name"]) + "_" + str(phenotype))
+            name_plot = str(name_label + "_dot_month")
+            pail[name_plot] = plot_variable_means_dot_trajectory(
+                label_title=name_label,
+                column_phenotype=phenotype,
+                column_trajectory="month",
+                threshold_trajectory=13,
+                title_abscissa="month of assessment and blood draw",
+                title_ordinate="mean concentration (95% C.I.)",
+                table=record["table"],
+            )
+
             # Determine whether the current cohort and model table is relevant to
             # the plot of phenotypes across days of menstrual cycle.
             if (record["menstruation"]):
@@ -873,10 +885,10 @@ def organize_phenotypes_plots_dot_trajectory(
                 pail[name_plot] = plot_variable_means_dot_trajectory(
                     label_title=name_label,
                     column_phenotype=phenotype,
-                    column_day="menstruation_days_threshold",
-                    threshold_days=45,
+                    column_trajectory="menstruation_days_threshold",
+                    threshold_trajectory=45,
                     title_abscissa="days of menstrual cycle",
-                    title_ordinate="mean concentration",
+                    title_ordinate="mean concentration (95% C.I.)",
                     table=record["table"],
                 )
                 pass

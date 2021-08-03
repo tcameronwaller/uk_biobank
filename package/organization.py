@@ -62,7 +62,6 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.plot as plot
 
 ###############################################################################
 # Functionality
@@ -602,6 +601,59 @@ def interpret_sex_consensus(
     return value
 
 
+def interpret_assessment_month(
+    field_55=None,
+):
+    """
+    Intepret UK Biobank's coding for data field 55.
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data coding "8" for variable field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value for month.
+        value = float(field_55)
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def determine_sex_text(
     sex=None,
 ):
@@ -638,6 +690,32 @@ def determine_sex_text(
         sex_text = "nan"
     # Return information.
     return sex_text
+
+
+def determine_assessment_month(
+    field_55=None,
+):
+    """
+    Determine whether female persons experienced bilateral oophorectomy.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oophorectomy.
+    month = interpret_assessment_month(
+        field_55=field_55,
+    )
+    # Set value.
+    value = month
+    # Return information.
+    return value
 
 
 def define_ordinal_stratifications_by_sex_continuous_variables(
@@ -826,6 +904,14 @@ def organize_sex_age_body_variables(
         table=table,
         report=report,
     )
+    # Determine month of assessment.
+    table["month"] = table.apply(
+        lambda row:
+            determine_assessment_month(
+                field_55=row["55-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -833,6 +919,7 @@ def organize_sex_age_body_variables(
     table_clean.drop(
         labels=[
             "31-0.0",
+            "55-0.0",
             "22001-0.0", #"21022-0.0",
             "21002-0.0", "50-0.0",
             #"21001-0.0",
@@ -849,6 +936,7 @@ def organize_sex_age_body_variables(
         "sex", "sex_text",
         "age", "age_grade_female", "age_grade_male",
         "body_mass_index", "body_mass_index_log",
+        "month",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -7931,115 +8019,6 @@ def organize_auditc_questionnaire_alcoholism_variables(
     bucket["table_report"] = table_report
     # Return information.
     return bucket
-
-
-def plot_variable_series_histogram(
-    series=None,
-    bins=None,
-    file=None,
-    path_directory=None,
-):
-    """
-    Plots charts from the analysis process.
-
-    arguments:
-        comparison (dict): information for chart
-        path_directory (str): path for directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify path to directory and file.
-    path_file = os.path.join(
-        path_directory, file
-    )
-
-    # Define fonts.
-    fonts = plot.define_font_properties()
-    # Define colors.
-    colors = plot.define_color_properties()
-
-    # Report.
-    utility.print_terminal_partition(level=1)
-    print(file)
-    print(len(series))
-    # Create figure.
-    figure = plot.plot_distribution_histogram(
-        series=series,
-        name="",
-        bin_method="count",
-        bin_count=bins,
-        label_bins="values",
-        label_counts="counts of persons per bin",
-        fonts=fonts,
-        colors=colors,
-        line=False,
-        position=1,
-        text="",
-    )
-    # Write figure.
-    plot.write_figure_png(
-        path=path_file,
-        figure=figure
-    )
-
-    pass
-
-
-def organize_plot_variable_histogram_summary_charts(
-    table=None,
-    paths=None,
-):
-    """
-    Organizes information about alcoholism from the AUDIT-C questionnaire.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-        (dict): collection of information about quantity of alcohol consumption
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-
-    # Specify directories and files.
-    # Create figures.
-    plot_variable_series_histogram(
-        series=table["alcohol_frequency"].dropna().to_list(),
-        bins=6,
-        file="histogram_alcohol_frequency.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcohol_previous"].dropna().to_list(),
-        bins=4,
-        file="histogram_alcohol_previous.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcohol_drinks_monthly"].dropna().to_list(),
-        bins=50,
-        file="histogram_alcohol_drinks_monthly.png",
-        path_directory=paths["plot"],
-    )
-    plot_variable_series_histogram(
-        series=table["alcoholism"].dropna().to_list(),
-        bins=15,
-        file="histogram_alcoholism.png",
-        path_directory=paths["plot"],
-    )
-
-    pass
 
 
 # End scrap section...
