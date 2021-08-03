@@ -63,7 +63,7 @@ import networkx
 # Custom
 import promiscuity.utility as utility
 import promiscuity.plot as plot
-import stratification
+import uk_biobank.stratification as ukb_strat
 
 ###############################################################################
 # Functionality
@@ -527,7 +527,7 @@ def organize_cohorts_phenotypes_hormones_missingness(
     hormones.append("oestradiol")
     hormones.append("vitamin_d")
     # Define cohorts for description.
-    pail_phenotypes = stratification.stratify_cohorts_models_phenotypes_sets(
+    pail_phenotypes = ukb_strat.stratify_cohorts_models_phenotypes_sets(
         table=table,
     )
     # Collect summary records and construct table.
@@ -838,7 +838,7 @@ def organize_phenotypes_plots_dot_trajectory(
     # Collect records of information about each cohort and model.
     records = list()
     records_novel = (
-        stratification.stratify_set_primary_sex_menopause_age(
+        ukb_strat.stratify_set_primary_sex_menopause_age(
             table=table,
         )
     )
@@ -962,7 +962,7 @@ def execute_describe_cohorts_models_phenotypes(
     # These cohorts and models are simple and do not include multiple covariates
     # for genetic analyses.
     pail_phenotypes = (
-        stratification.stratify_cohorts_models_phenotypes_sets(
+        ukb_strat.stratify_cohorts_models_phenotypes_sets(
         table=table,
     ))
     # Collect summary records and construct table.
@@ -982,7 +982,7 @@ def execute_describe_cohorts_models_phenotypes(
 
     if (genotype_cohorts):
         # Read source information from file.
-        table_kinship_pairs = stratification.read_source_table_kinship_pairs(
+        table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
             path_dock=path_dock,
             report=False,
         )
@@ -990,14 +990,14 @@ def execute_describe_cohorts_models_phenotypes(
         # for genetic analyses.
         if (set == "sex_hormones"):
             pail_genotypes = (
-                stratification.stratify_cohorts_genotypes_set_sex_hormones(
+                ukb_strat.stratify_cohorts_genotypes_set_sex_hormones(
                     table=table,
                     table_kinship_pairs=table_kinship_pairs,
                     report=False,
             ))
         elif (set == "bipolar_disorder_body"):
             pail_genotypes = (
-                stratification.stratify_cohorts_genotypes_set_bipolar_body(
+                ukb_strat.stratify_cohorts_genotypes_set_bipolar_body(
                     table=table,
                     table_kinship_pairs=table_kinship_pairs,
                     report=report,
