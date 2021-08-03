@@ -834,7 +834,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
-def organize_sex_age_body_variables(
+def organize_general_variables(
     table=None,
     report=None,
 ):
@@ -8195,7 +8195,7 @@ def execute_genotype_sex_age_body(
         report=report,
     )
     # Organize information about general attributes.
-    pail_sex_age_body = organize_sex_age_body_variables(
+    pail_general = organize_general_variables(
         table=table_genotype,
         report=report,
     )
@@ -8206,9 +8206,9 @@ def execute_genotype_sex_age_body(
         utility.print_terminal_partition(level=2)
         print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
-        print(pail_sex_age_body)
+        print(pail_general)
     # Return information.
-    return pail_sex_age_body
+    return pail_general
 
 
 def execute_sex_hormones(

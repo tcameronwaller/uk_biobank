@@ -527,7 +527,7 @@ def organize_cohorts_phenotypes_hormones_missingness(
     hormones.append("oestradiol")
     hormones.append("vitamin_d")
     # Define cohorts for description.
-    pail_phenotypes = select_organize_cohorts_models_phenotypes_sets(
+    pail_phenotypes = stratification.stratify_cohorts_models_phenotypes_sets(
         table=table,
     )
     # Collect summary records and construct table.
@@ -947,10 +947,10 @@ def execute_describe_cohorts_models_phenotypes(
     # TODO: store the contingency table reports in a text file?
 
     # Organize reports on contingency tables by missingness.
-    organize_report_contingency_table_stratification_by_missingness(
-        table=table,
-        report=report,
-    )
+    #organize_report_contingency_table_stratification_by_missingness(
+    #    table=table,
+    #    report=report,
+    #)
 
     table_missingness = organize_cohorts_phenotypes_hormones_missingness(
         table=table,
