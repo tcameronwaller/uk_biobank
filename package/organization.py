@@ -5242,7 +5242,7 @@ def interpret_alcohol_consumption_status(
         elif (1.5 <= field_20117 and field_20117 < 2.5):
             # 2: "Current"
             interpretation = 2
-        elif (-3.5 <= field_1558 and field_1558 < -2.5):
+        elif (-3.5 <= field_20117 and field_20117 < -2.5):
             # -3: "Prefer not to answer"
             interpretation = float("nan")
         else:
@@ -5292,7 +5292,7 @@ def interpret_former_alcohol_consumption(
         elif (0.5 <= field_3731 and field_3731 < 1.5):
             # 1: "Yes"
             interpretation = 1
-        elif (-3.5 <= field_1558 and field_1558 < -2.5):
+        elif (-3.5 <= field_3731 and field_3731 < -2.5):
             # -3: "Prefer not to answer"
             interpretation = float("nan")
         else:
@@ -5715,8 +5715,6 @@ def organize_alcohol_consumption_frequency_variables(
     )
     # Determine whether person consumes alcohol not currently but previously.
     #table["alcohol_previous"]
-
-
     # Determine whether person never consumes any alcohol.
     table["alcohol_ever"] = table.apply(
         lambda row:
