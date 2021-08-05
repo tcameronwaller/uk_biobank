@@ -2584,9 +2584,168 @@ def stratify_set_female_pregnancy(
     return records
 
 
-# TODO: I need...
-# 1. cohort of CURRENT alcohol consumers
-# 2. cohort of EVER alcohol consumers
+def stratify_set_alcohol_sex_menopause_age(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    Persons who consumed alcohol currently.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    # Sex
+
+    record = dict()
+    record["name"] = "female_alcohol_current"
+    record["cohort_model"] = "female_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_alcohol_current"
+    record["cohort_model"] = "male_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause
+
+    record = dict()
+    record["name"] = "female_premenopause_ordinal_alcohol_current"
+    record["cohort_model"] = "female_premenopause_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_perimenopause_ordinal_alcohol_current"
+    record["cohort_model"] = "female_perimenopause_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_postmenopause_ordinal_alcohol_current"
+    record["cohort_model"] = "female_postmenopause_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Age
+
+    record = dict()
+    record["name"] = "female_younger_alcohol_current"
+    record["cohort_model"] = "female_younger_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 0) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_older_alcohol_current"
+    record["cohort_model"] = "female_older_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 2) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_younger_alcohol_current"
+    record["cohort_model"] = "male_younger_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 0) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_older_alcohol_current"
+    record["cohort_model"] = "male_older_alcohol_current"
+    record["category"] = "alcohol_current"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 2) &
+            (table["alcohol_current"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
 
 def stratify_cohorts_models_phenotypes_sets(
     table=None,
@@ -2638,6 +2797,13 @@ def stratify_cohorts_models_phenotypes_sets(
 
     records_novel = (
         stratify_set_female_pregnancy(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
             table=table,
         )
     )
