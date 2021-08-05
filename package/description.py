@@ -775,6 +775,12 @@ def organize_phenotypes_plots_histogram(
         )
     )
     records.extend(records_novel)
+    records_novel = (
+        ukb_strat.stratify_set_alcohol_sex_menopause_age(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
 
     # Collect information for plots.
     pail = dict()
@@ -794,6 +800,7 @@ def organize_phenotypes_plots_histogram(
             "testosterone_bioavailable", "testosterone_bioavailable_imputation",
             "testosterone_free", "testosterone_free_imputation",
             "vitamin_d", "vitamin_d_imputation",
+            "alcohol_frequency",
         ]
         if (record["menstruation"]):
             phenotypes.append("menstruation_days_threshold")
