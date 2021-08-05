@@ -2584,6 +2584,9 @@ def stratify_set_female_pregnancy(
     return records
 
 
+# TODO: I need a new cohort that excludes persons who "NEVER" consume alcohol...
+# TODO: use "alcohol_never" variable
+
 def stratify_cohorts_models_phenotypes_sets(
     table=None,
 ):

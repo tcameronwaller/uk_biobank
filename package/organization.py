@@ -5133,301 +5133,512 @@ def organize_depression_variables(
 # Alcohol consumption
 
 
-def determine_alcohol_consumption_frequency(
-    frequency=None,
+def interpret_alcohol_consumption_frequency(
+    field_1558=None,
 ):
     """
-    Translate information from UK Biobank about whether person
-    never consumes any alcohol.
+    Intepret UK Biobank's data-coding for data-field 1558.
+
+    Data-Field "1558": "Alcohol intake frequency"
+    UK Biobank data-coding "100402" for data-field "1558".
+    1: "Daily or almost daily"
+    2: "Three or four times a week"
+    3: "Once or twice a week"
+    4: "One to three times a month"
+    5: "Special occasions only"
+    6: "Never"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
 
     arguments:
-        frequency (float): frequency of alcohol consumption, UK Biobank field
-            1558
+        field_1558 (float): UK Biobank field 1558, frequency of alcohol
+            consumption
 
     raises:
 
     returns:
-        (float): ordinal representation of person's frequency of alcohol
-            consumption
+        (float): interpretation value
 
     """
 
-    # Determine whether the variable has a valid (non-missing) value.
+    # Interpret field code.
     if (
-        (not pandas.isna(frequency)) and
-        (0.5 <= frequency and frequency < 6.5)
+        (not pandas.isna(field_1558)) and
+        (-3.5 <= field_1558 and field_1558 < 6.5)
     ):
         # The variable has a valid value.
-        if (5.5 <= frequency and frequency < 6.5):
-            # "never"
-            alcohol_frequency = 0
-        elif (4.5 <= frequency and frequency < 5.5):
-            # "special occasions only"
-            alcohol_frequency = 1
-        elif (3.5 <= frequency and frequency < 4.5):
-            # "one to three times a month"
-            alcohol_frequency = 2
-        elif (2.5 <= frequency and frequency < 3.5):
-            # "once or twice a week"
-            alcohol_frequency = 3
-        elif (1.5 <= frequency and frequency < 2.5):
-            # "three or four times a week"
-            alcohol_frequency = 4
-        elif (0.5 <= frequency and frequency < 1.5):
-            # "daily or almost daily"
-            alcohol_frequency = 5
+        # Interpret the value.
+        if (5.5 <= field_1558 and field_1558 < 6.5):
+            # 6: "Never"
+            interpretation = 0
+        elif (4.5 <= field_1558 and field_1558 < 5.5):
+            # 5: "Special occasions only"
+            interpretation = 1
+        elif (3.5 <= field_1558 and field_1558 < 4.5):
+            # 4: "One to three times a month"
+            interpretation = 2
+        elif (2.5 <= field_1558 and field_1558 < 3.5):
+            # 3: "Once or twice a week"
+            interpretation = 3
+        elif (1.5 <= field_1558 and field_1558 < 2.5):
+            # 2: "Three or four times a week"
+            interpretation = 4
+        elif (0.5 <= field_1558 and field_1558 < 1.5):
+            # 1: "Daily or almost daily"
+            interpretation = 5
+        elif (-3.5 <= field_1558 and field_1558 < -2.5):
+            # -3: "Prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
     else:
-        # "prefer not to answer" or null
-        alcohol_frequency = float("nan")
-    # Return information.
-    return alcohol_frequency
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
 
 
-def determine_current_alcohol_consumption(
-    consumer=None,
-    alcohol_frequency=None,
+def interpret_alcohol_consumption_status(
+    field_20117=None,
 ):
     """
-    Translate information from UK Biobank about whether person consumes alcohol
+    Intepret UK Biobank's data-coding for data-field 20117.
+
+    Data-Field "20117": "Alcohol drinker status"
+    UK Biobank data-coding "90" for data-field "20117".
+    0: "Never"
+    1: "Previous"
+    2: "Current"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_20117 (float): UK Biobank field 20117, current alcohol consumption
+            status
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_20117)) and
+        (-3.5 <= field_20117 and field_20117 < 2.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (-0.5 <= field_20117 and field_20117 < 0.5):
+            # 0: "Never"
+            interpretation = 0
+        elif (0.5 <= field_20117 and field_20117 < 1.5):
+            # 1: "Previous"
+            interpretation = 1
+        elif (1.5 <= field_20117 and field_20117 < 2.5):
+            # 2: "Current"
+            interpretation = 2
+        elif (-3.5 <= field_1558 and field_1558 < -2.5):
+            # -3: "Prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_former_alcohol_consumption(
+    field_3731=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 3731.
+
+    Data-Field "3731": "Former alcohol drinker"
+    UK Biobank data-coding "100352" for data-field "3731".
+    1: "Yes"
+    0: "No"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_3731 (float): UK Biobank field 3731, former alcohol consumption
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_3731)) and
+        (-3.5 <= field_3731 and field_3731 < 1.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (-0.5 <= field_3731 and field_3731 < 0.5):
+            # 0: "No"
+            interpretation = 0
+        elif (0.5 <= field_3731 and field_3731 < 1.5):
+            # 1: "Yes"
+            interpretation = 1
+        elif (-3.5 <= field_1558 and field_1558 < -2.5):
+            # -3: "Prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_alcohol_consumption_trend(
+    field_1628=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 1628.
+
+    Data-Field "1628": "Alcohol intake versus 10 years previously"
+    UK Biobank data-coding "100417" for data-field "1628".
+    1: "More nowadays"
+    2: "About the same"
+    3: "Less nowadays"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_1628 (float): UK Biobank field 1628, trend in alcohol consumption
+            trend in alcohol consumption current versus previous
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_1628)) and
+        (-3.5 <= field_1628 and field_1628 < 3.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (0.5 <= field_1628 and field_1628 < 1.5):
+            # 1: "More nowadays"
+            # "More nowadays" means previous was less than current.
+            interpretation = 0
+        elif (1.5 <= field_1628 and field_1628 < 2.5):
+            # 2: "About the same"
+            interpretation = 1
+        elif (2.5 <= field_1628 and field_1628 < 3.5):
+            # 3: "Less nowadays"
+            # "Less nowadays" means previous was more than current.
+            interpretation = 2
+        elif (-1.5 <= field_1628 and field_1628 < -0.5):
+            # -1: "Do not know"
+            interpretation = float("nan")
+        elif (-3.5 <= field_1628 and field_1628 < -2.5):
+            # -3: "Prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def determine_alcohol_consumption_frequency(
+    field_1558=None,
+):
+    """
+    Determine frequency of alcohol consumption.
+
+    arguments:
+        field_1558 (float): UK Biobank field 1558, frequency of alcohol
+            consumption
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret data field coding.
+    interpretation = interpret_alcohol_consumption_frequency(
+        field_1558=field_1558,
+    )
+    # Apply any relevant logic.
+    value = interpretation
+    # Return information.
+    return value
+
+
+def determine_alcohol_consumption_status(
+    field_20117=None,
+):
+    """
+    Determine frequency of alcohol consumption.
+
+    arguments:
+        field_20117 (float): UK Biobank field 20117, current alcohol consumption
+            status
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret data field coding.
+    interpretation = interpret_alcohol_consumption_status(
+        field_20117=field_20117,
+    )
+    # Apply any relevant logic.
+    value = interpretation
+    # Return information.
+    return value
+
+
+def determine_former_alcohol_consumption(
+    field_3731=None,
+):
+    """
+    Determine former alcohol consumption.
+
+    arguments:
+        field_3731 (float): UK Biobank field 3731, former alcohol consumption
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret data field coding.
+    interpretation = interpret_former_alcohol_consumption(
+        field_3731=field_3731,
+    )
+    # Apply any relevant logic.
+    value = interpretation
+    # Return information.
+    return value
+
+
+def determine_alcohol_consumption_trend(
+    field_1628=None,
+):
+    """
+    Determine frequency of alcohol consumption.
+
+    arguments:
+        field_1628 (float): UK Biobank field 1628, comparison of current alcohol
+            consumption to previous alcohol consumption
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret data field coding.
+    interpretation = interpret_alcohol_consumption_trend(
+        field_1628=field_1628,
+    )
+    # Apply any relevant logic.
+    value = interpretation
+    # Return information.
+    return value
+
+
+def determine_alcohol_consumption_current(
+    alcohol_frequency=None,
+    alcohol_status=None,
+    alcohol_trend=None,
+):
+    """
+    Determine current alcohol consumption status.
+
+    arguments:
+        alcohol_frequency (float): frequency of alcohol consumption
+        alcohol_status (float): alcohol consumption status
+        alcohol_trend (float): ordinal representation of previous alcohol
+            consumption relative to current
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Apply any relevant logic.
+    if (
+        (
+            (not pandas.isna(alcohol_frequency)) and
+            (alcohol_frequency in [1, 2, 3, 4, 5])
+        ) or (
+            (not pandas.isna(alcohol_status)) and
+            (alcohol_status == 2)
+        ) or (
+            (not pandas.isna(alcohol_trend)) and
+            (alcohol_trend in [0, 1, 2])
+        )
+    ):
+        # Current alcohol consumption.
+        value = 1
+    elif (
+        (
+            (
+                (not pandas.isna(alcohol_frequency)) and
+                (alcohol_frequency == 0)
+            ) or (
+                (not pandas.isna(alcohol_status)) and
+                (alcohol_status in [0, 1])
+            )
+        ) and (
+            (pandas.isna(alcohol_trend))
+        )
+    ):
+        # Previous or never alcohol consumption.
+        value = 0
+    else:
+        # Missing or uninterpretable values.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_alcohol_consumption_ever(
+    alcohol_frequency=None,
+    alcohol_status=None,
+    alcohol_former=None,
+    alcohol_trend=None,
+):
+    """
+    Determine whether person ever consumed alcohol, either previously or
+    currently.
+
+    Accommodate inexact float values.
+
+    Current alcohol consumption implies previous alcohol consumption (unless
+    person is literally in the process of taking their first sip).
+
+    arguments:
+        alcohol_frequency (float): frequency of alcohol consumption
+        alcohol_status (float): status of alcohol consumption
+        alcohol_former (float): former alcohol consumption
+        alcohol_trend (float): ordinal representation of previous alcohol
+            consumption relative to current
+
+    raises:
+
+    returns:
+        (float): binary representation of whether person ever consumed alcohol
+
+    """
+
+    # Apply any relevant logic.
+    if (
+        (
+            (not pandas.isna(alcohol_frequency)) and
+            (alcohol_frequency in [1, 2, 3, 4, 5])
+        ) or
+        (
+            (not pandas.isna(alcohol_status)) and
+            (alcohol_status in [1, 2])
+        ) or (
+            (not pandas.isna(alcohol_former)) and
+            (alcohol_former == 1)
+        ) or (
+            (not pandas.isna(alcohol_trend)) and
+            (alcohol_trend in [0, 1, 2])
+        )
+    ):
+        # Previous (or current) alcohol consumption.
+        value = 1
+    elif (
+        (
+            (not pandas.isna(alcohol_frequency)) and
+            (alcohol_frequency == 0)
+        ) and (
+            (not pandas.isna(alcohol_status)) and
+            (alcohol_status == 0)
+        ) and (
+            (pandas.isna(alcohol_former)) or
+            (alcohol_former == 0)
+        ) and (
+            (pandas.isna(alcohol_trend))
+        )
+    ):
+        # Never alcohol consumption.
+        value = 0
+    else:
+        # Missing or uninterpretable values.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_alcohol_consumption_never(
+    alcohol_ever=None,
+):
+    """
+    Determine whether person never consumed alcohol, neither previously nor
     currently.
 
     Accommodate inexact float values.
 
     arguments:
-        consumer (float): status of alcohol consumption, UK Biobank field
-            20117
-        alcohol_frequency (float): ordinal representation of person's frequency
-            of alcohol consumption, derivation of UK Biobank field 1558
+        alcohol_ever (float): whether person ever consumed alcohol
 
     raises:
 
     returns:
-        (float): binary representation of whether person consumes alcohol
-            currently
+        (float): binary representation of whether person never consumed alcohol
 
     """
 
-    # Interpret consumer status.
+    # Apply any relevant logic.
     if (
-        (not pandas.isna(consumer)) and
-        (-0.5 <= consumer and consumer < 2.5)
+        (not pandas.isna(alcohol_ever)) and
+        (alcohol_ever == 1)
     ):
-        # The variable has a valid value.
-        if (1.5 <= consumer and consumer < 2.5):
-            # "current"
-            consumer_boolean = True
-        else:
-            # "never", or "previous"
-            consumer_boolean = False
-    else:
-        # "prefer not to answer" or null
-        consumer_boolean = float("nan")
-    # Interpret consumption frequency.
-    if (not math.isnan(alcohol_frequency)):
-        # The variable has a valid value.
-        if (0.5 <= alcohol_frequency and alcohol_frequency < 5.5):
-            # The person consumes alcohol currently.
-            frequency_boolean = True
-        else:
-            frequency_boolean = False
-    else:
-        frequency_boolean = float("nan")
-    # Integrate information from multiple variables.
-    if (
-        (not math.isnan(consumer_boolean)) or
-        (not math.isnan(frequency_boolean))
+        # Previous (or current) alcohol consumption.
+        value = 0
+    elif (
+        (not pandas.isna(alcohol_ever)) and
+        (alcohol_ever == 0)
     ):
-        if (consumer_boolean or frequency_boolean):
-            alcohol_current = 1
-        else:
-            alcohol_current = 0
+        # Never alcohol consumption.
+        value = 1
     else:
-        alcohol_current = float("nan")
+        # Missing or uninterpretable values.
+        value = float("nan")
     # Return information.
-    return alcohol_current
-
-
-def determine_previous_alcohol_consumption(
-    consumer=None,
-    former=None,
-    comparison=None,
-    alcohol_current=None,
-):
-    """
-    Translate information from UK Biobank about whether person
-    never consumes any alcohol.
-
-    Accommodate inexact float values.
-
-    arguments:
-        consumer (float): status of alcohol consumption, UK Biobank field
-            20117
-        former (float): former alcohol consumption, UK Biobank field
-            3731
-        comparison (float): comparison to previous alcohol consumption, UK
-            Biobank field 1628
-        alcohol_current (float): binary representation of whether person
-            consumes alcohol currently
-
-    raises:
-
-    returns:
-        (float): binary representation of whether person consumed alcohol
-            previously
-
-    """
-
-    # Interpret consumer.
-    if (
-        (not pandas.isna(consumer)) and
-        (-0.5 <= consumer and consumer < 2.5)
-    ):
-        # The variable has a valid value.
-        if (0.5 <= consumer and consumer < 2.5):
-            # "current" or "previous"
-            consumer_boolean = True
-        else:
-            # "never"
-            consumer_boolean = False
-    else:
-        # "prefer not to answer" or null
-        consumer_boolean = float("nan")
-    # Interpret former.
-    if (
-        (not pandas.isna(former)) and
-        (-0.5 <= former and former < 1.5)
-    ):
-        # The variable has a valid value.
-        if (0.5 <= former and former < 1.5):
-            # "yes"
-            former_boolean = True
-        else:
-            # "no"
-            former_boolean = False
-    else:
-        # "prefer not to answer" or null
-        former_boolean = float("nan")
-    # Interpret comparison.
-    if (
-        (not pandas.isna(comparison)) and
-        (-0.5 <= former and former < 3.5)
-    ):
-        # "less nowadays", "about the same", or "more nowadays"
-        comparison_boolean = True
-    else:
-        # "do not know", "prefer not to answer", or null
-        comparison_boolean = float("nan")
-    # Interpret alcohol current.
-    if (not math.isnan(alcohol_current)):
-        # The variable has a valid value.
-        if (0.5 <= alcohol_current and alcohol_current < 1.5):
-            # The person consumes alcohol currently.
-            alcohol_current_boolean = True
-        else:
-            alcohol_current_boolean = False
-    else:
-        alcohol_current_boolean = float("nan")
-    # Integrate information from multiple variables.
-    if (
-        (not math.isnan(consumer_boolean)) or
-        (not math.isnan(former_boolean)) or
-        (not math.isnan(comparison_boolean)) or
-        (not math.isnan(alcohol_current_boolean))
-    ):
-        if (
-            consumer_boolean or
-            former_boolean or
-            comparison_boolean or
-            alcohol_current_boolean
-        ):
-            alcohol_previous = 1
-        else:
-            alcohol_previous = 0
-    else:
-        alcohol_previous = float("nan")
-    # Return information.
-    return alcohol_previous
-
-
-# TODO: code alcohol_none as True / False / None
-def determine_alcohol_none(
-    alcohol_frequency=None,
-    alcohol_current=None,
-    alcohol_previous=None,
-):
-    """
-    Translate information from UK Biobank about whether person
-    never consumes any alcohol.
-
-    Accommodate inexact float values.
-
-    arguments:
-        alcohol_frequency (float): ordinal representation of person's frequency
-            of alcohol consumption, derivation of UK Biobank field 1558
-        alcohol_current (float): binary representation of whether person
-            consumes alcohol currently
-        alcohol_previous (float): binary representation of whether person
-            consumed alcohol previously
-
-    raises:
-
-    returns:
-        (bool): whether person never consumes any alcohol
-
-    """
-
-    # Interpret consumption frequency.
-    if (not math.isnan(alcohol_frequency)):
-        # The variable has a valid value.
-        if (-0.5 <= alcohol_frequency and alcohol_frequency < 0.5):
-            # The person never consumes alcohol currently.
-            frequency_boolean = True
-        else:
-            frequency_boolean = False
-    else:
-        frequency_boolean = float("nan")
-    # Interpret current consumption.
-    if (not math.isnan(alcohol_current)):
-        # The variable has a valid value.
-        if (-0.5 <= alcohol_current and alcohol_current < 0.5):
-            # The person never consumes alcohol currently.
-            current_boolean = True
-        else:
-            current_boolean = False
-    else:
-        current_boolean = float("nan")
-    # Interpret previous consumption.
-    if (not math.isnan(alcohol_previous)):
-        # The variable has a valid value.
-        if (-0.5 <= alcohol_previous and alcohol_previous < 0.5):
-            # The person never consumed alcohol previously.
-            previous_boolean = True
-        else:
-            previous_boolean = False
-    else:
-        previous_boolean = float("nan")
-    # Integrate information from multiple variables.
-    if (
-        (not math.isnan(frequency_boolean)) and
-        (not math.isnan(current_boolean)) and
-        (not math.isnan(previous_boolean))
-    ):
-        if (
-            frequency_boolean and
-            current_boolean and
-            previous_boolean
-        ):
-            # Person has never consumed alcohol, previously or currently.
-            alcohol_none = 1
-        else:
-            # Person has consumed alcohol.
-            alcohol_none = 0
-    else:
-        alcohol_none = float("nan")
-    # Return information.
-    return alcohol_none
+    return value
 
 
 def organize_alcohol_consumption_frequency_variables(
@@ -5436,42 +5647,6 @@ def organize_alcohol_consumption_frequency_variables(
 ):
     """
     Organizes information about previous and current alcohol consumption.
-
-    "frequency", field 1558: "Alcohol intake frequency"
-    UK Biobank data coding 100402 for variable field 1558.
-    "daily or almost daily": 1
-    "three or four times a week": 2
-    "once or twice a week": 3
-    "one to three times a month": 4
-    "special occasions only": 5
-    "never": 6
-    "prefer not to answer": -3
-
-    "former", field 3731: "Former alcohol drinker"
-    Variable 3731 was only collected for persons who never consume any alcohol
-    currently (UK Biobank variable 1558).
-    UK Biobank data coding 100352 for variable field 3731.
-    "yes": 1
-    "no": 0
-    "prefer not to answer": -3
-
-    "consumer", field 20117: "Alcohol drinker status"
-    Variable 20117 is a derivation of variables 1558 and 3731.
-    UK Biobank data coding 90 for variable field 20117.
-    "current": 2
-    "previous": 1
-    "never": 0
-    "prefer not to answer": -3
-
-    "comparison", field 1628: "Alcohol intake versus 10 years previously"
-    Variable 1628 was only collected for persons who consume alcohol currently
-    (UK Biobank variable 1558).
-    UK Biobank data coding 100417 for variable field 1628.
-    "more nowadays": 1
-    "about the same": 2
-    "less nowadays": 3
-    "do not know": -1
-    "prefer not to answer": -3
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -5499,45 +5674,74 @@ def organize_alcohol_consumption_frequency_variables(
     table["alcohol_frequency"] = table.apply(
         lambda row:
             determine_alcohol_consumption_frequency(
-                frequency=row["1558-0.0"],
+                field_1558=row["1558-0.0"],
             ),
         axis="columns", # apply across rows
     )
+    # Determine person's alcohol consumption status.
+    table["alcohol_status"] = table.apply(
+        lambda row:
+            determine_alcohol_consumption_status(
+                field_20117=row["20117-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine person's former alcohol consumption status.
+    table["alcohol_former"] = table.apply(
+        lambda row:
+            determine_former_alcohol_consumption(
+                field_3731=row["3731-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    # Determine person's former alcohol consumption status.
+    table["alcohol_trend"] = table.apply(
+        lambda row:
+            determine_alcohol_consumption_trend(
+                field_1628=row["1628-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
     # Determine whether person consumes alcohol currently.
     table["alcohol_current"] = table.apply(
         lambda row:
-            determine_current_alcohol_consumption(
-                consumer=row["20117-0.0"],
+            determine_alcohol_consumption_current(
                 alcohol_frequency=row["alcohol_frequency"],
+                alcohol_status=row["alcohol_status"],
+                alcohol_trend=row["alcohol_trend"],
             ),
         axis="columns", # apply across rows
     )
+    # Determine whether person consumes alcohol not currently but previously.
+    #table["alcohol_previous"]
+
+
     # Determine whether person never consumes any alcohol.
-    table["alcohol_previous"] = table.apply(
+    table["alcohol_ever"] = table.apply(
         lambda row:
-            determine_previous_alcohol_consumption(
-                consumer=row["20117-0.0"],
-                former=row["3731-0.0"],
-                comparison=row["1628-0.0"],
-                alcohol_current=row["alcohol_current"],
+            determine_alcohol_consumption_ever(
+                alcohol_frequency=row["alcohol_frequency"],
+                alcohol_status=row["alcohol_status"],
+                alcohol_former=row["alcohol_former"],
+                alcohol_trend=row["alcohol_trend"],
             ),
         axis="columns", # apply across rows
     )
     # Determine whether person never consumes any alcohol, either currently or
     # previously.
-    table["alcohol_none"] = table.apply(
+    table["alcohol_never"] = table.apply(
         lambda row:
-            determine_alcohol_none(
-                alcohol_frequency=row["alcohol_frequency"],
-                alcohol_current=row["alcohol_current"],
-                alcohol_previous=row["alcohol_previous"]
+            determine_alcohol_consumption_never(
+                alcohol_ever=row["alcohol_ever"],
             ),
         axis="columns", # apply across rows
     )
+
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
     table_clean.drop(
-        labels=["1558-0.0", "3731-0.0", "1628-0.0", "20117-0.0",],
+        labels=["1558-0.0", "20117-0.0", "3731-0.0", "1628-0.0",],
         axis="columns",
         inplace=True
     )
@@ -5548,9 +5752,12 @@ def organize_alcohol_consumption_frequency_variables(
             "eid", "IID",
             "1558-0.0", "3731-0.0", "1628-0.0", "20117-0.0",
             "alcohol_frequency",
-            "alcohol_previous",
+            "alcohol_status",
+            "alcohol_former",
+            "alcohol_trend",
             "alcohol_current",
-            "alcohol_none",
+            "alcohol_ever",
+            "alcohol_never",
         ])
     ]
     # Report.
@@ -5841,21 +6048,21 @@ def organize_alcohol_consumption_variables(
         report=report,
     )
     # Organize information about current alcohol consumption quantity.
-    pail_quantity = organize_alcohol_consumption_quantity_variables(
-        table=pail_consumption["table_clean"],
-        report=report,
-    )
-    # Collect information.
-    pail = dict()
-    pail["consumption"] = pail_consumption
-    pail["quantity"] = pail_quantity
+    if False:
+        pail_quantity = organize_alcohol_consumption_quantity_variables(
+            table=pail_consumption["table"],
+            report=report,
+        )
     # Return information.
-    return pail
+    return pail_consumption
 
 
 ##########
 # Alcohol AUDIT questionnaire
 
+
+# TODO: TCW 3 August 2021
+# TODO: this code block of AUDIT-C and AUDIT-P looks pretty good... but good idea to double check.
 
 def interpret_alcohol_audit_one(
     value=None,
@@ -8346,16 +8553,16 @@ def execute_alcohol(
     )
     #print(pail_alcohol_consumption["quantity"]["table_clean"])
 
-    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
-    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
-    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
-    pail_audit = organize_alcohol_audit_questionnaire_variables(
-        table=pail_alcohol_consumption["quantity"]["table_clean"],
-        report=False,
-    )
-    #print(pail_audit["audit"]["table_clean"])
-
     if False:
+        # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+        # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+        # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
+        pail_audit = organize_alcohol_audit_questionnaire_variables(
+            table=pail_alcohol_consumption["quantity"]["table_clean"],
+            report=False,
+        )
+        #print(pail_audit["audit"]["table_clean"])
+
         # Organize International Classification of Disease (ICD) ICD9 and ICD10
         # codes for diagnoses relevant to alcoholism.
         # Organize codes for self diagnoses relevant to alcoholism.
@@ -8374,17 +8581,15 @@ def execute_alcohol(
         )
         #print(pail_alcoholism["table_clean"])
 
-    # Copy information.
-    table_alcohol = pail_audit["audit"]["table_clean"].copy(deep=True)
     # Report.
     if report:
-        # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("Report from organize_alcohol_consumption()")
+        print("report: execute_alcohol()")
         utility.print_terminal_partition(level=3)
-        print(table_alcohol)
+        print(pail_alcohol_consumption["table_report"])
     # Return information.
-    return table_alcohol
+    return pail_alcohol_consumption
+
 
 
 

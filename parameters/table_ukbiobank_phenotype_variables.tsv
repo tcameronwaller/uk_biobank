@@ -65,11 +65,11 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	ins
 1	2784	string	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0.0;	
 1	2794	string	female		220791		Age started oral contraceptive pill	Female-specific factors		0.0;	
 1	2804	string	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0.0;	
-1	1558	string	alcohol_consumption	alcohol_frequency	501612	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
-1	20117	string	alcohol_consumption	alcohol_status	501612	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
-1	3731	string	alcohol_consumption	alcohol_previous	42317	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
-1	1628	string	alcohol_consumption	alcohol_trend	460892	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
-1	1618	string	alcohol_consumption	alcohol_meal	395102	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
+1	1558	string	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
+1	20117	string	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
+1	3731	string	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
+1	1628	string	alcohol_consumption	alcohol_trend	460865	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
+1	1618	string	alcohol_consumption	alcohol_meal	395083	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
 1	1588	float32	alcohol_consumption	alcohol_weekly_beer	349120	ratio	Average weekly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
 1	1568	float32	alcohol_consumption	alcohol_weekly_wine_red	349121	ratio	Average weekly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
 1	1578	float32	alcohol_consumption	alcohol_weekly_wine_white	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
