@@ -918,6 +918,18 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
         )
     )
     records.extend(records_novel)
+    records_novel = (
+        ukb_strat.stratify_set_female_hormone_alteration(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+    records_novel = (
+        ukb_strat.stratify_set_alcohol_sex_menopause_age(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
 
     # Collect information for plots.
     pail = dict()
@@ -937,6 +949,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
                 "testosterone_bioavailable", "testosterone_bioavailable_imputation",
                 "testosterone_free", "testosterone_free_imputation",
                 "vitamin_d", "vitamin_d_imputation",
+                "alcohol_frequency",
             ]
             # Iterate on phenotypes.
             for phenotype in phenotypes:
@@ -948,7 +961,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
                     label_title=name_label,
                     column_phenotype=phenotype,
                     column_trajectory="menstruation_days_threshold",
-                    threshold_trajectory=45,
+                    threshold_trajectory=30,
                     title_abscissa="days of menstrual cycle",
                     title_ordinate="mean concentration (95% C.I.)",
                     table=record["table"],
