@@ -1065,6 +1065,80 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
+def create_reduce_categorical_variable_dummies(
+    table=None,
+    column=None,
+    prefix=None,
+    separator=None,
+    report=None,
+):
+    """
+    Creates binary indicator (dummy) variables for values of a single
+    categorical variable and reduces these by principal components.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        column (str): name of column with categorical variable for which to
+            define binary dummies and reduce by principal components
+        prefix (str): prefix for names of new dummy and principal component
+            columns in table
+        separator (str): separator for names of new columns
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    def match_column_dummy(
+        name=None,
+        prefix=None,
+        separator=None,
+    ):
+        if (separator in str(name)):
+            name_prefix = str(name).split(separator)[0].strip()
+            if (str(prefix) == str(name_prefix)):
+                match = True
+            else:
+                match = False
+        else:
+            match = False
+        return match
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Create binary dummies for variable categories.
+    table = pandas.get_dummies(
+        table,
+        prefix=prefix,
+        prefix_sep=separator,
+        dummy_na=True,
+        columns=[column],
+        drop_first=False, # whether to create "k - 1" dummies, adequate
+        dtype=numpy.uint8,
+    )
+    # Extract names of columns for dummies.
+    columns = copy.deepcopy(table.columns.to_list())
+    columns_dummies = list(filter(
+        lambda column_trial: match_column_dummy(
+            name=column_trial,
+            prefix=prefix,
+            separator=separator,
+        ),
+        columns
+    ))
+    # 
+
+
+
+    # Return information.
+    return table
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
