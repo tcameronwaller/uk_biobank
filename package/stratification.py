@@ -902,7 +902,7 @@ def organize_phenotype_covariate_table_plink_format(
         )
         pass
     # Translate continuous variables, whether they are phenotypes or covariates.
-    table_type = convert_table_columns_variables_types_float(
+    table_type = utility.convert_table_columns_variables_types_float(
         columns=continuous_variables,
         table=table,
     )

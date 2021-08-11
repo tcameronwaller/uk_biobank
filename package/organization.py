@@ -353,39 +353,6 @@ def translate_column_field_instance_names(
     return translations
 
 
-def convert_table_columns_variables_types_float(
-    columns=None,
-    table=None,
-):
-    """
-    Converts data variable types.
-
-    arguments:
-        columns (list<str>): names of columns
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Convert data variable types.
-    for column in columns:
-        table[column] = pandas.to_numeric(
-            table[column],
-            errors="coerce", # force any invalid values to missing or null
-            downcast="float",
-        )
-    # Return information.
-    return table
-
-
 def convert_table_prefix_columns_variables_types_float(
     prefix=None,
     table=None,
@@ -419,7 +386,7 @@ def convert_table_prefix_columns_variables_types_float(
         columns
     ))
     # Convert data variable types.
-    table_type = convert_table_columns_variables_types_float(
+    table_type = utility.convert_table_columns_variables_types_float(
         columns=columns_match,
         table=table,
     )
@@ -547,7 +514,7 @@ def organize_genotype_principal_component_variables(
     columns_type = [
         "22006-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -1131,7 +1098,7 @@ def create_reduce_categorical_variable_dummies(
         ),
         columns
     ))
-    # 
+    #
 
 
 
@@ -1205,7 +1172,7 @@ def organize_assessment_basis_variables(
     columns_type = [
         "31-0.0", "22001-0.0", "21022-0.0", "21001-0.0"
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -2556,7 +2523,7 @@ def organize_sex_hormone_variables(
     columns_hormones = list()
     for record in hormone_fields:
         columns_hormones.append(record["measurement"])
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_hormones,
         table=table,
     )
@@ -4876,7 +4843,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "2784-0.0", "2794-0.0", "2804-0.0",
         "2814-0.0", "3536-0.0", "3546-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -5297,7 +5264,7 @@ def organize_psychology_variables(
         "neuroticism",
         "bipolar.cc",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -6009,7 +5976,7 @@ def organize_alcohol_consumption_frequency_variables(
     columns_type = [
         "1558-0.0", "3731-0.0", "1628-0.0", "20117-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -6280,7 +6247,7 @@ def organize_alcohol_consumption_quantity_variables(
         "1588-0.0", "1568-0.0", "1578-0.0", "1608-0.0", "1598-0.0", "5364-0.0",
         "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0", "4462-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -6685,7 +6652,7 @@ def organize_alcohol_auditc_variables(
     columns_type = [
         "20414-0.0", "20403-0.0", "20416-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
@@ -6905,7 +6872,7 @@ def organize_alcohol_auditp_variables(
         "20413-0.0", "20407-0.0", "20412-0.0", "20409-0.0", "20408-0.0",
         "20411-0.0", "20405-0.0",
     ]
-    table = convert_table_columns_variables_types_float(
+    table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
