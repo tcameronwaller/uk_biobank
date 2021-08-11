@@ -629,7 +629,7 @@ def interpret_assessment_center(
         # The variable has a valid value.
         # Determine code interpretation.
         field_54 = copy.deepcopy(field_54)
-        field_54_string = str(field_54)
+        field_54_string = str(int(field_54))
         if (field_54_string in codes_interpretations.keys()):
             interpretation = (
                 codes_interpretations[field_54_string]["interpretation"]
@@ -762,15 +762,15 @@ def interpret_sex_consensus(
 
 def determine_assessment_center_category(
     field_54=None,
-    path_dock=None,
+    codes_interpretations=None,
 ):
     """
     Determine whether female persons experienced bilateral oophorectomy.
 
     arguments:
         field_54 (float): UK Biobank field 54, assessment center
-        path_dock (str): path to dock directory for source and product
-            directories and files
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
 
     raises:
 
@@ -779,15 +779,11 @@ def determine_assessment_center_category(
 
     """
 
-    # Read reference table of interpretations of variable codes.
-    source = read_source_fields_codes_interpretations(
-        path_dock=path_dock,
-    )
     # Interpret codes.
     # Set value.
     value = interpret_assessment_center(
         field_54=field_54,
-        codes_interpretations=source["field_54"],
+        codes_interpretations=codes_interpretations,
     )
     # Return information.
     return value
@@ -1108,8 +1104,14 @@ def create_reduce_categorical_variable_indicators(
         columns
     ))
 
-    print("here is the table after dummy stuff")
-    print(table)
+    table_demo = table.copy(deep=True)
+    table_demo = table_demo.loc[
+        :, table_demo.columns.isin(["eid", "IID",].extend(columns_dummies))
+    ]
+    print("here is the table after dummy stuff...")
+    print(table_demo)
+
+
     # Report.
     unique_values = table[column].unique()
     count_unique_values = unique_values.size
@@ -1150,12 +1152,22 @@ def organize_assessment_basis_variables(
     # Copy information.
     table = table.copy(deep=True)
 
+    # Read reference table of interpretations of variable codes.
+    source = read_source_fields_codes_interpretations(
+        path_dock=path_dock,
+    )
+
     # Determine assessment center.
+    utility.print_terminal_partition(level=2)
+    print("report: determine_assessment_center_category()")
+    print(source["field_54"]["11013"])
+    print(source["field_54"]["11021"])
+
     table["assessment_site"] = table.apply(
         lambda row:
             determine_assessment_center_category(
                 field_54=row["54-0.0"],
-                path_dock=path_dock,
+                codes_interpretations=source["field_54"],
             ),
         axis="columns", # apply across rows
     )
