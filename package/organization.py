@@ -1032,7 +1032,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
-def create_reduce_categorical_variable_dummies(
+def create_reduce_categorical_variable_indicators(
     table=None,
     column=None,
     prefix=None,
@@ -1098,9 +1098,16 @@ def create_reduce_categorical_variable_dummies(
         ),
         columns
     ))
-    #
-
-
+    # Report.
+    unique_values = table[column].unique()
+    count_unique_values = unique_values.size
+    count_dummies = len(columns_dummies)
+    utility.print_terminal_partition(level=2)
+    print("report: create_reduce_categorical_variable_indicators()")
+    utility.print_terminal_partition(level=3)
+    print("count of original unique values: " + str(count_unique_values))
+    print(unique_values)
+    print("count of dummy variables: " + str(count_dummies))
 
     # Return information.
     return table
@@ -1132,7 +1139,7 @@ def organize_assessment_basis_variables(
     table = table.copy(deep=True)
 
     # Determine assessment center.
-    table["assessment_center"] = table.apply(
+    table["assessment_site"] = table.apply(
         lambda row:
             determine_assessment_center_category(
                 field_54=row["54-0.0"],
@@ -1160,6 +1167,14 @@ def organize_assessment_basis_variables(
     # TODO: I need to introduce a function to create categorical dummy variables
     # TODO: AND to prepare PCA reductions of those dummy variables
     # TODO: AND report variance for each PC
+
+    table = create_reduce_categorical_variable_indicators(
+        table=table,
+        column="assessment_site",
+        prefix="site",
+        separator="_",
+        report=True,
+    )
 
 
 
