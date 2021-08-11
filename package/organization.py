@@ -1098,6 +1098,8 @@ def create_reduce_categorical_variable_indicators(
         ),
         columns
     ))
+
+    print(table)
     # Report.
     unique_values = table[column].unique()
     count_unique_values = unique_values.size
