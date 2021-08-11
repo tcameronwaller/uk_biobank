@@ -1160,6 +1160,7 @@ def organize_assessment_basis_variables(
     # Determine assessment center.
     utility.print_terminal_partition(level=2)
     print("report: determine_assessment_center_category()")
+    print(source["field_54"])
     print(source["field_54"]["11013"])
     print(source["field_54"]["11021"])
 
