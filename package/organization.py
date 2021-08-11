@@ -677,6 +677,59 @@ def interpret_assessment_center(
     return interpretation
 
 
+def interpret_assessment_month(
+    field_55=None,
+):
+    """
+    Intepret UK Biobank's coding for data field 55.
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data coding "8" for variable field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value for month.
+        value = float(field_55)
+    else:
+        # Missing value.
+        value = float("nan")
+    # Return.
+    return value
+
+
 def interpret_sex_consensus(
     field_31=None,
     field_22001=None,
@@ -737,59 +790,6 @@ def interpret_sex_consensus(
         # Sex is missing in both variables.
         value = float("nan")
     # Return information.
-    return value
-
-
-def interpret_assessment_month(
-    field_55=None,
-):
-    """
-    Intepret UK Biobank's coding for data field 55.
-
-    Data-Field "55": "Month of attending assessment centre"
-    UK Biobank data coding "8" for variable field "55".
-    1: "January"
-    2: "February"
-    3: "March"
-    4: "April"
-    5: "May"
-    6: "June"
-    7: "July"
-    8: "August"
-    9: "September"
-    10: "October"
-    11: "November"
-    12: "December"
-
-    Note:
-    "
-    Calendar month that participant attended a UK Biobank assessment centre.
-    Automatically acquired at Reception stage.
-    "
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_55 (float): UK Biobank field 55, month of assessment
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_55)) and
-        (0.5 <= field_55 and field_55 < 12.5)
-    ):
-        # The variable has a valid value for month.
-        value = float(field_55)
-    else:
-        # Missing value.
-        value = float("nan")
-    # Return.
     return value
 
 
@@ -949,7 +949,6 @@ def determine_assessment_month_category(
     return value
 
 
-
 def define_ordinal_stratifications_by_sex_continuous_variables(
     index=None,
     sex_text=None,
@@ -1100,6 +1099,30 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply across rows
     )
+    # Determine month of assessment.
+    table["month_order"] = table.apply(
+        lambda row:
+            determine_assessment_month_order(
+                field_55=row["55-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+    table["month"] = table.apply(
+        lambda row:
+            determine_assessment_month_category(
+                field_55=row["55-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
+    # TODO: TCW 10 August 2021
+    # TODO: I need to introduce a function to create categorical dummy variables
+    # TODO: AND to prepare PCA reductions of those dummy variables
+    # TODO: AND report variance for each PC
+
+
+
+
 
     # TODO: TCW 10 August 2021
     # TODO: follow pattern of interpret --> determine
@@ -1159,31 +1182,6 @@ def organize_assessment_basis_variables(
         table=table,
         report=report,
     )
-    # Determine month of assessment.
-    table["month_order"] = table.apply(
-        lambda row:
-            determine_assessment_month_order(
-                field_55=row["55-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-    # Determine month of assessment.
-    table["month"] = table.apply(
-        lambda row:
-            determine_assessment_month_category(
-                field_55=row["55-0.0"],
-            ),
-        axis="columns", # apply across rows
-    )
-
-
-    # TODO: TCW 10 August 2021
-    # TODO: I need to introduce a function to create categorical dummy variables
-    # TODO: AND to prepare PCA reductions of those dummy variables
-    # TODO: AND report variance for each PC
-
-
-
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
