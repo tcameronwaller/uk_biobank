@@ -1101,8 +1101,8 @@ def organize_assessment_basis_variables(
         axis="columns", # apply across rows
     )
 
-
-
+    # TODO: TCW 10 August 2021
+    # TODO: follow pattern of interpret --> determine
 
     # Convert variable types.
     columns_type = [
@@ -1143,9 +1143,6 @@ def organize_assessment_basis_variables(
 
 
     # Determine body mass index (BMI).
-
-
-
 
 
     # Transform variables' values to normalize distributions.

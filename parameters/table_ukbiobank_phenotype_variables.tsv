@@ -1,11 +1,11 @@
 include	field	type	category	name	coverage	scale	ukb_description	ukb_category	instances_array	instances_keep	note
-1	54	string	center		502478		UK Biobank assessment centre	Reception		0.0;	
+1	54	float32	center		502478		UK Biobank assessment centre	Reception		0.0;	
 1	55	float32	season		502464		Month of attending assessment centre	Reception		0.0;	
 1	22000	float32	genotype		488237		Genotype measurement batch	Genotyping process and sample QC		0.0;	
 1	22009	float32	genotype	genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
 1	22006	float32	genotype		409594		Genetic ethnic grouping, “White British” and similar ancestry	Genotyping process and sample QC		0.0;	
-1	22021	string	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
-1	31	string	basis	sex	502492	nominal	Sex	Baseline characteristics		0.0;	
+1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
+1	31	float32	basis	sex	502492	nominal	Sex	Baseline characteristics		0.0;	
 1	22001	float32	basis	sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
 1	21022	float32	basis	age	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
 1	21002	float32	basis	weight	499809	ratio	Weight	Body size measures		0.0;	
@@ -55,21 +55,21 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	ins
 1	2834	float32	female	oophorectomy	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	oophorectomy mimics menopause
 1	3882	float32	female		22526		Age at bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	
 1	3140	float32	female	pregnancy	272558	nominal	Pregnant	Female-specific factors		0.0;	
-1	3700	string	female	menstruation	64174		Time since last menstrual period	Female-specific factors		0.0;	only for pre-menopausal females (field 2724)
-1	3710	string	female		64164		Length of menstrual cycle	Female-specific factors		0.0;	
-1	3720	string	female		76486		Menstruating today	Female-specific factors		0.0;	
-1	2714	string	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0.0;	
-1	2814	string	female		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	3536	string	female		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	3546	string	female		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	2784	string	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0.0;	
-1	2794	string	female		220791		Age started oral contraceptive pill	Female-specific factors		0.0;	
-1	2804	string	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0.0;	
-1	1558	string	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
-1	20117	string	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
-1	3731	string	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
-1	1628	string	alcohol_consumption	alcohol_trend	460865	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
-1	1618	string	alcohol_consumption	alcohol_meal	395083	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
+1	3700	float32	female	menstruation	64174		Time since last menstrual period	Female-specific factors		0.0;	only for pre-menopausal females (field 2724)
+1	3710	float32	female		64164		Length of menstrual cycle	Female-specific factors		0.0;	
+1	3720	float32	female		76486		Menstruating today	Female-specific factors		0.0;	
+1	2714	float32	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0.0;	
+1	2814	float32	female		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+1	3536	float32	female		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+1	3546	float32	female		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
+1	2784	float32	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0.0;	
+1	2794	float32	female		220791		Age started oral contraceptive pill	Female-specific factors		0.0;	
+1	2804	float32	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0.0;	
+1	1558	float32	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
+1	20117	float32	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
+1	3731	float32	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
+1	1628	float32	alcohol_consumption	alcohol_trend	460865	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
+1	1618	float32	alcohol_consumption	alcohol_meal	395083	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
 1	1588	float32	alcohol_consumption	alcohol_weekly_beer	349120	ratio	Average weekly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
 1	1568	float32	alcohol_consumption	alcohol_weekly_wine_red	349121	ratio	Average weekly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
 1	1578	float32	alcohol_consumption	alcohol_weekly_wine_white	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
