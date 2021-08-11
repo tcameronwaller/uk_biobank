@@ -165,6 +165,66 @@ def read_source(
     }
 
 
+def read_source_fields_codes_interpretations(
+    path_dock=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Specify directories and files.
+    path_table_field_54 = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_field_54_code_interpretation.tsv"
+    )
+    # Organize code interpretations.
+    table_field_54 = pandas.read_csv(
+        path_table_field_54,
+        sep="\t",
+        header=0,
+        dtype={
+            "code": "string",
+            "interpretation": "string",
+            "coding": "string",
+            "meaning": "string",
+        },
+    )
+    table_field_54.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_field_54.set_index(
+        "code",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    field_54_codes_interpretations = table_field_54.to_dict()
+    # Compile and return information.
+    return {
+        "field_54": field_54_codes_interpretations,
+    }
+
+
+
+
 ##########
 # Genotype
 
@@ -535,7 +595,86 @@ def organize_genotype_principal_component_variables(
 
 
 ##########
-# Sex, age, and body
+# General assessment
+
+
+def interpret_assessment_center(
+    field_54=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field 54.
+
+    Data-Field "54": "UK Biobank assessment centre"
+    UK Biobank data-coding "10" for data-field "54".
+    11012: "Barts"
+    11021: "Birmingham"
+    11011: "Bristol"
+    11008: "Bury"
+    11003: "Cardiff"
+    11024: "Cheadle (revisit)"
+    11020: "Croydon"
+    11005: "Edinburgh"
+    11004: "Glasgow"
+    11018: "Hounslow"
+    11010: "Leeds"
+    11016: "Liverpool"
+    11001: "Manchester"
+    11017: "Middlesborough"
+    11009: "Newcastle"
+    11013: "Nottingham"
+    11002: "Oxford"
+    11007: "Reading"
+    11014: "Sheffield"
+    10003: "Stockport (pilot)"
+    11006: "Stoke"
+    11022: "Swansea"
+    11023: "Wrexham"
+    11025: "Cheadle (imaging)"
+    11026: "Reading (imaging)"
+    11027: "Newcastle (imaging)"
+    11028: "Bristol (imaging)"
+
+    Note:
+    "
+    The UK Biobank assessment centre at which participant consented.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_54 (float): UK Biobank field 54, assessment center
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_54)) and
+        (10003 <= field_54 and field_54 < 11029)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_54 = copy.deepcopy(field_54)
+        field_54_string = str(field_54)
+        if (field_54_string in codes_interpretations.keys()):
+            interpretation = (
+                codes_interpretations[field_54_string]["interpretation"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
 
 
 def interpret_sex_consensus(
@@ -636,7 +775,7 @@ def interpret_assessment_month(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -648,9 +787,42 @@ def interpret_assessment_month(
         # The variable has a valid value for month.
         value = float(field_55)
     else:
-        # null
+        # Missing value.
         value = float("nan")
     # Return.
+    return value
+
+
+def determine_assessment_center_category(
+    field_54=None,
+    path_dock=None,
+):
+    """
+    Determine whether female persons experienced bilateral oophorectomy.
+
+    arguments:
+        field_54 (float): UK Biobank field 54, assessment center
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Read reference table of interpretations of variable codes.
+    source = read_source_fields_codes_interpretations(
+        path_dock=path_dock,
+    )
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_center(
+        field_54=field_54,
+        codes_interpretations=source["field_54"],
+    )
+    # Return information.
     return value
 
 
@@ -692,7 +864,7 @@ def determine_sex_text(
     return sex_text
 
 
-def determine_assessment_month(
+def determine_assessment_month_order(
     field_55=None,
 ):
     """
@@ -716,6 +888,66 @@ def determine_assessment_month(
     value = month
     # Return information.
     return value
+
+
+def determine_assessment_month_category(
+    field_55=None,
+):
+    """
+    Determine whether female persons experienced bilateral oophorectomy.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oophorectomy.
+    month = interpret_assessment_month(
+        field_55=field_55,
+    )
+    # Set value.
+    if (
+        (not pandas.isna(month))
+    ):
+        # The variable has a valid value for month.
+        if (month == 1):
+            value = "January"
+        elif (month == 2):
+            value = "February"
+        elif (month == 3):
+            value = "March"
+        elif (month == 4):
+            value = "April"
+        elif (month == 5):
+            value = "May"
+        elif (month == 6):
+            value = "June"
+        elif (month == 7):
+            value = "July"
+        elif (month == 8):
+            value = "August"
+        elif (month == 9):
+            value = "September"
+        elif (month == 10):
+            value = "October"
+        elif (month == 11):
+            value = "November"
+        elif (month == 12):
+            value = "December"
+        else:
+            # Uninterpretable value.
+            value = "nan"
+    else:
+        # Missing value.
+        value = "nan"
+    # Return information.
+    return value
+
 
 
 def define_ordinal_stratifications_by_sex_continuous_variables(
@@ -834,8 +1066,9 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
-def organize_general_variables(
+def organize_assessment_basis_variables(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -844,6 +1077,8 @@ def organize_general_variables(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -855,6 +1090,19 @@ def organize_general_variables(
 
     # Copy information.
     table = table.copy(deep=True)
+
+    # Determine assessment center.
+    table["assessment_center"] = table.apply(
+        lambda row:
+            determine_assessment_center_category(
+                field_54=row["54-0.0"],
+                path_dock=path_dock,
+            ),
+        axis="columns", # apply across rows
+    )
+
+
+
 
     # Convert variable types.
     columns_type = [
@@ -890,6 +1138,16 @@ def organize_general_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    # Determine age.
+
+
+    # Determine body mass index (BMI).
+
+
+
+
+
     # Transform variables' values to normalize distributions.
     table = utility.transform_normalize_table_continuous_ratio_variables(
         columns=["body_mass_index"],
@@ -905,13 +1163,29 @@ def organize_general_variables(
         report=report,
     )
     # Determine month of assessment.
-    table["month"] = table.apply(
+    table["month_order"] = table.apply(
         lambda row:
-            determine_assessment_month(
+            determine_assessment_month_order(
                 field_55=row["55-0.0"],
             ),
         axis="columns", # apply across rows
     )
+    # Determine month of assessment.
+    table["month"] = table.apply(
+        lambda row:
+            determine_assessment_month_category(
+                field_55=row["55-0.0"],
+            ),
+        axis="columns", # apply across rows
+    )
+
+
+    # TODO: TCW 10 August 2021
+    # TODO: I need to introduce a function to create categorical dummy variables
+    # TODO: AND to prepare PCA reductions of those dummy variables
+    # TODO: AND report variance for each PC
+
+
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -2438,7 +2712,7 @@ def interpret_menstruation_days(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -2492,7 +2766,7 @@ def interpret_menstruation_cycle_duration(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -2552,7 +2826,7 @@ def interpret_menstruation_cycle_irregularity(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -2606,7 +2880,7 @@ def interpret_menstruation_period_current(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -2843,7 +3117,7 @@ def interpret_oophorectomy(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -2897,7 +3171,7 @@ def interpret_pregnancy(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -3145,7 +3419,7 @@ def interpret_recent_hormone_replacement_therapy(
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
@@ -8372,8 +8646,9 @@ def organize_hormone_female_export_table(
 # Definitions
 
 
-def execute_genotype_sex_age_body(
+def execute_genotype_assessment_basis(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -8383,7 +8658,8 @@ def execute_genotype_sex_age_body(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        selection (str): type of table to select and return
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -8400,8 +8676,9 @@ def execute_genotype_sex_age_body(
         report=report,
     )
     # Organize information about general attributes.
-    pail_general = organize_general_variables(
+    pail_basis = organize_assessment_basis_variables(
         table=table_genotype,
+        path_dock=path_dock,
         report=report,
     )
 
@@ -8411,9 +8688,9 @@ def execute_genotype_sex_age_body(
         utility.print_terminal_partition(level=2)
         print("report: execute_genotype_sex_age_body()")
         utility.print_terminal_partition(level=3)
-        print(pail_general)
+        print(pail_basis["table"])
     # Return information.
-    return pail_general
+    return pail_basis
 
 
 def execute_sex_hormones(
