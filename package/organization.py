@@ -1078,6 +1078,15 @@ def create_reduce_categorical_variable_indicators(
 
     # Copy information.
     table = table.copy(deep=True)
+
+    table_demo = table.copy(deep=True)
+    table_demo = table_demo.loc[
+        :, table_demo.columns.isin(["eid", "IID", column])
+    ]
+    print("here is the table before dummy stuff...")
+    print(table_demo)
+
+
     # Create binary dummies for variable categories.
     table = pandas.get_dummies(
         table,
@@ -1099,6 +1108,7 @@ def create_reduce_categorical_variable_indicators(
         columns
     ))
 
+    print("here is the table after dummy stuff")
     print(table)
     # Report.
     unique_values = table[column].unique()
