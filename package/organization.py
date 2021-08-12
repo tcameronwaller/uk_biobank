@@ -1105,8 +1105,13 @@ def create_reduce_categorical_variable_indicators(
         ),
         columns
     ))
+
+
+
+
+
     columns_example = copy.deepcopy(columns_dummies)
-    columns_example.extend(["eid", "IID"])
+    columns_example.extend(["eid", "IID", column])
 
     table_demo = table.copy(deep=True)
     table_demo = table_demo.loc[
@@ -1117,6 +1122,8 @@ def create_reduce_categorical_variable_indicators(
 
 
     # Report.
+    print("here are the columns in the table...")
+    print(table.columns.to_list())
     unique_values = table[column].unique()
     count_unique_values = unique_values.size
     count_dummies = len(columns_dummies)
