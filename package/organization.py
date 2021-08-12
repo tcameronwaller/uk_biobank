@@ -216,7 +216,9 @@ def read_source_fields_codes_interpretations(
         drop=True,
         inplace=True
     )
-    field_54_codes_interpretations = table_field_54.to_dict()
+    field_54_codes_interpretations = table_field_54.to_dict(
+        orient="index",
+    )
     # Compile and return information.
     return {
         "field_54": field_54_codes_interpretations,
@@ -1156,6 +1158,10 @@ def organize_assessment_basis_variables(
     source = read_source_fields_codes_interpretations(
         path_dock=path_dock,
     )
+
+    # TODO: TCW 11 August 2021
+    # TODO: the reference dictionary was not as I thought it was...
+    # TODO: try exporting differently...
 
     # Determine assessment center.
     utility.print_terminal_partition(level=2)
