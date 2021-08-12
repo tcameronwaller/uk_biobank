@@ -208,7 +208,7 @@ def read_source_fields_codes_interpretations(
     table_field_54.reset_index(
         level=None,
         inplace=True,
-        drop=False,
+        drop=True,
     )
     table_field_54.set_index(
         "code",
@@ -1105,10 +1105,12 @@ def create_reduce_categorical_variable_indicators(
         ),
         columns
     ))
+    columns_example = copy.deepcopy(columns_dummies)
+    columns_example.extend(["eid", "IID"])
 
     table_demo = table.copy(deep=True)
     table_demo = table_demo.loc[
-        :, table_demo.columns.isin(["eid", "IID",].extend(columns_dummies))
+        :, table_demo.columns.isin(columns_example)
     ]
     print("here is the table after dummy stuff...")
     print(table_demo)
@@ -1159,17 +1161,7 @@ def organize_assessment_basis_variables(
         path_dock=path_dock,
     )
 
-    # TODO: TCW 11 August 2021
-    # TODO: the reference dictionary was not as I thought it was...
-    # TODO: try exporting differently...
-
     # Determine assessment center.
-    utility.print_terminal_partition(level=2)
-    print("report: determine_assessment_center_category()")
-    print(source["field_54"])
-    print(source["field_54"]["11013"])
-    print(source["field_54"]["11021"])
-
     table["assessment_site"] = table.apply(
         lambda row:
             determine_assessment_center_category(
@@ -1193,6 +1185,8 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply across rows
     )
+
+    # Create binary indicators of categories and reduce their dimensionality.
 
     # TODO: TCW 10 August 2021
     # TODO: I need to introduce a function to create categorical dummy variables
