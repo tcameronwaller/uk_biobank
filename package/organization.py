@@ -1032,6 +1032,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
 
 def create_reduce_categorical_variable_indicators(
     table=None,
+    index=None,
     column=None,
     prefix=None,
     separator=None,
@@ -1041,9 +1042,15 @@ def create_reduce_categorical_variable_indicators(
     Creates binary indicator (dummy) variables for values of a single
     categorical variable and reduces these by principal components.
 
+    Pandas function drops the original column for the categorical variable.
+    Copy, split, and merge tables to preserve the original column with its
+    indicator variables.
+
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        index (str): name of table's index column by which to merge after create
+            of columns for indicator variables
         column (str): name of column with categorical variable for which to
             define binary dummies and reduce by principal components
         prefix (str): prefix for names of new dummy and principal component
@@ -1076,18 +1083,30 @@ def create_reduce_categorical_variable_indicators(
 
     # Copy information.
     table = table.copy(deep=True)
-
-    table_demo = table.copy(deep=True)
-    table_demo = table_demo.loc[
-        :, table_demo.columns.isin(["eid", "IID", column])
+    table_indicators = table.copy(deep=True)
+    # Organize tables.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_indicators.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_indicators = table_indicators.loc[
+        :, table_indicators.columns.isin([index, column])
     ]
-    print("here is the table before dummy stuff...")
-    print(table_demo)
-
-
     # Create binary dummies for variable categories.
-    table = pandas.get_dummies(
-        table,
+    table_indicators = pandas.get_dummies(
+        table_indicators,
         prefix=prefix,
         prefix_sep=separator,
         dummy_na=True,
@@ -1095,6 +1114,20 @@ def create_reduce_categorical_variable_indicators(
         drop_first=False, # whether to create "k - 1" dummies, adequate
         dtype=numpy.uint8,
     )
+    table_indicators.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table = table.merge(
+        table_indicators,
+        how="outer",
+        left_on=index,
+        right_on=index,
+        suffixes=("_original", "_indicator"),
+    )
+
     # Extract names of columns for dummies.
     columns = copy.deepcopy(table.columns.to_list())
     columns_dummies = list(filter(
@@ -1106,10 +1139,6 @@ def create_reduce_categorical_variable_indicators(
         columns
     ))
 
-
-
-
-
     columns_example = copy.deepcopy(columns_dummies)
     columns_example.extend(["eid", "IID", column])
 
@@ -1119,7 +1148,6 @@ def create_reduce_categorical_variable_indicators(
     ]
     print("here is the table after dummy stuff...")
     print(table_demo)
-
 
     # Report.
     print("here are the columns in the table...")
@@ -1202,6 +1230,7 @@ def organize_assessment_basis_variables(
 
     table = create_reduce_categorical_variable_indicators(
         table=table,
+        index="eid",
         column="assessment_site",
         prefix="site",
         separator="_",
