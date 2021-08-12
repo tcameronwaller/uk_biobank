@@ -1238,9 +1238,6 @@ def organize_assessment_basis_variables(
     )
 
 
-
-
-
     # TODO: TCW 10 August 2021
     # TODO: follow pattern of interpret --> determine
 
@@ -1385,6 +1382,15 @@ def organize_assessment_basis_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
+
+
+##########
+# Development code
+
+
+
+
+
 
 
 ##########
@@ -1677,7 +1683,7 @@ def interpret_biochemistry_missingness_beyond_detection_range(
     return value
 
 
-def interpret_biochemistry_reportability_less_than_detection_limit(
+def interpret_biochemistry_reportability_detection_limit(
     field_code_4917=None,
 ):
     """
@@ -1793,7 +1799,7 @@ def determine_hormones_missingness_beyond_detection_range(
     return table
 
 
-def determine_hormones_reportability_less_than_detection_limit(
+def determine_hormones_reportability_detection_limit(
     hormone_fields=None,
     table=None,
 ):
@@ -1824,7 +1830,7 @@ def determine_hormones_reportability_less_than_detection_limit(
         )
         table[reportability_low] = table.apply(
             lambda row:
-                interpret_biochemistry_reportability_less_than_detection_limit(
+                interpret_biochemistry_reportability_detection_limit(
                     field_code_4917=row[hormone["reportability"]],
                 ),
             axis="columns", # apply across rows
@@ -2016,7 +2022,7 @@ def organize_hormones_missingness_imputation(
 
     # Interpret missingness and reportability explanation variables for
     # hormones.
-    table = determine_hormones_reportability_less_than_detection_limit(
+    table = determine_hormones_reportability_detection_limit(
         hormone_fields=hormone_fields,
         table=table,
     )
@@ -8798,7 +8804,7 @@ def execute_genotype_assessment_basis(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("report: execute_genotype_sex_age_body()")
+        print("report: execute_genotype_assessment_basis()")
         utility.print_terminal_partition(level=3)
         print(pail_basis["table"])
     # Return information.
@@ -8906,7 +8912,7 @@ def execute_psychology_psychiatry(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("report: execute_genotype_sex_age_body()")
+        print("report: execute_psychology_psychiatry()")
         utility.print_terminal_partition(level=3)
         print(pail_psychology["table_clean"])
     # Return information.
@@ -9020,8 +9026,9 @@ def execute_procedure(
     )
     # Organize variables for persons' genotypes, sex, age, and body mass index
     # across the UK Biobank.
-    pail_basis = execute_genotype_sex_age_body(
+    pail_basis = execute_genotype_assessment_basis(
         table=source["table_phenotypes"],
+        path_dock=path_dock,
         report=True,
     )
     # Organize variables for female menstruation across the UK Biobank.
