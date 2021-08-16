@@ -1595,10 +1595,16 @@ def dev_reduce_categorical_variable_indicators(
         inplace=True
     )
 
+    utility.print_terminal_partition(level=2)
+    print("report: create_categorical_variable_indicators()")
+    utility.print_terminal_partition(level=3)
+    print(table_indicators)
+
+
     # Reduce dimensionality of indicator variables.
     table_reduction = (
         decomposition.calculate_singular_value_decomposition_factors(
-            threshold_valid_proportion_per_column=0.9,
+            threshold_valid_proportion_per_column=0.5,
             table=table_indicators,
             report=report,
         )
