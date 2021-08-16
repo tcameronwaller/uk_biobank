@@ -1513,7 +1513,7 @@ def dev_create_categorical_variable_indicators(
         columns_report = copy.deepcopy(columns_indicators)
         columns_report.insert(0, column)
         columns_report.insert(0, "IID")
-        columns_report.insert(0, "eid")
+        #columns_report.insert(0, "eid")
         table_report = table.copy(deep=True)
         table_report = table_report.loc[
             :, table_report.columns.isin(columns_report)
@@ -2122,6 +2122,8 @@ def interpret_biochemistry_reportability_detection_limit(
     3: "Reportable at assay but not reportable after any corrections (too high)"
     4: "Not reportable at assay (too low)"
     5: "Not reportable at assay (too high)"
+
+    Note: "Absence of a value here means that a result has not been attempted."
 
     Accommodate inexact float values.
 
