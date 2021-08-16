@@ -528,7 +528,7 @@ def organize_genotype_principal_component_variables(
             determine_ancestry_white_british(
                 field_22006=row["22006-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Report.
@@ -1204,7 +1204,7 @@ def organize_assessment_basis_variables(
                 field_54=row["54-0.0"],
                 codes_interpretations=source["field_54"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine month of assessment.
     table["month_order"] = table.apply(
@@ -1212,14 +1212,14 @@ def organize_assessment_basis_variables(
             determine_assessment_month_order(
                 field_55=row["55-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["month"] = table.apply(
         lambda row:
             determine_assessment_month_category(
                 field_55=row["55-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Create binary indicators of categories and reduce their dimensionality.
@@ -1266,7 +1266,7 @@ def organize_assessment_basis_variables(
                 field_31=row["31-0.0"],
                 field_22001=row["22001-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine text representation of person's sex.
     table["sex_text"] = table.apply(
@@ -1274,7 +1274,7 @@ def organize_assessment_basis_variables(
             determine_sex_text(
                 sex=row["sex"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine age.
@@ -1389,7 +1389,7 @@ def organize_assessment_basis_variables(
 # Development code
 
 
-# TODO: currently this is the only function that'll need to be replaced in the non-dev code
+# TODO: this dev function is "ready" for the main code base
 def dev_create_categorical_variable_indicators(
     table=None,
     index=None,
@@ -1530,6 +1530,88 @@ def dev_create_categorical_variable_indicators(
     return pail
 
 
+def dev_reduce_categorical_variable_indicators(
+    table=None,
+    index=None,
+    columns_indicators=None,
+    prefix=None,
+    separator=None,
+    report=None,
+):
+    """
+    Creates binary indicator (dummy) variables for values of a single
+    categorical variable.
+
+    Pandas function drops the original column for the categorical variable.
+    Copy, split, and merge tables to preserve the original column with its
+    indicator variables.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        index (str): name of table's index column by which to merge after create
+            of columns for indicator variables
+        columns_indicators (list<str>): names of columns with binary indicator
+            (dummy) variables to reduce by principal components
+        prefix (str): prefix for names of new dummy and principal component
+            columns in table
+        separator (str): separator for names of new columns
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information about creation of categorical indicator variables
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    table_indicators = table.copy(deep=True)
+    # Organize tables.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_indicators.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_indicators = table_indicators.loc[
+        :, table_indicators.columns.isin([index, columns_indicators])
+    ]
+    table_indicators.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+
+    # Reduce dimensionality of indicator variables.
+    table_reduction = (
+        decomposition.calculate_singular_value_decomposition_factors(
+            threshold_valid_proportion_per_column=0.9,
+            table=table_indicators,
+            report=report,
+        )
+    )
+
+    # TODO: follow pattern from "dev_create_categorical_variable_indicators()"
+
+    # Collect information.
+    pail = dict()
+    # Return information.
+    return pail
+
+
 # TODO: currently this is the only function that'll need to be replaced in the non-dev code
 def dev_create_reduce_categorical_variable_indicators(
     table=None,
@@ -1569,18 +1651,26 @@ def dev_create_reduce_categorical_variable_indicators(
     """
 
     # Create dummy indicator variables for each category of original variable.
-    pail_indicators = dev_create_categorical_variable_indicators(
+    pail_indicator = dev_create_categorical_variable_indicators(
         table=table,
         index=index,
         column=column,
         prefix=str(prefix + "-" + "indicator"),
         separator=separator,
-        report=report,
+        report=False,
     )
     # Reduce dimensionality of indicator variables.
+    pail_reduction = dev_reduce_categorical_variable_indicators(
+        table=pail_indicator["table"],
+        index=index,
+        columns_indicators=pail_indicator["columns_indicators"],
+        prefix=str(prefix + "-" + "component"),
+        separator=separator,
+        report=report,
+    )
 
     # Return information.
-    return pail_indicators["table"]
+    return pail_indicator["table"]
 
 
 def dev_organize_assessment_basis_variables(
@@ -1620,7 +1710,7 @@ def dev_organize_assessment_basis_variables(
                 field_54=row["54-0.0"],
                 codes_interpretations=source["field_54"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine month of assessment.
     table["month_order"] = table.apply(
@@ -1628,14 +1718,14 @@ def dev_organize_assessment_basis_variables(
             determine_assessment_month_order(
                 field_55=row["55-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["month"] = table.apply(
         lambda row:
             determine_assessment_month_category(
                 field_55=row["55-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Create binary indicators of categories and reduce their dimensionality.
@@ -1682,7 +1772,7 @@ def dev_organize_assessment_basis_variables(
                 field_31=row["31-0.0"],
                 field_22001=row["22001-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine text representation of person's sex.
     table["sex_text"] = table.apply(
@@ -1690,7 +1780,7 @@ def dev_organize_assessment_basis_variables(
             determine_sex_text(
                 sex=row["sex"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine age.
@@ -1921,31 +2011,31 @@ def convert_hormone_concentration_units_moles_per_liter(
         lambda row: float(
             (row["30600-0.0"] / 66472.2) * factors_concentration["albumin"]
         ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     ) # 1 mole = 66472.2 g
     table["steroid_globulin"] = table.apply(
         lambda row: float(
             (row["30830-0.0"] / 1E9) * factors_concentration["steroid_globulin"]
         ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     ) # 1 mol = 1E9 nmol
     table["oestradiol"] = table.apply(
         lambda row: float(
             (row["30800-0.0"] / 1E12) * factors_concentration["oestradiol"]
         ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     ) # 1 mol = 1E12 pmol
     table["testosterone"] = table.apply(
         lambda row: float(
             (row["30850-0.0"] / 1E9) * factors_concentration["testosterone"]
         ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     ) # 1 mol = 1E9 nmol
     table["vitamin_d"] = table.apply(
         lambda row: float(
             (row["30890-0.0"] / 1E9) * factors_concentration["vitamin_d"]
         ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     ) # 1 mol = 1E9 nmol
     # Return information.
     return table
@@ -2206,7 +2296,7 @@ def determine_hormones_missingness_beyond_detection_range(
                 interpret_biochemistry_missingness_beyond_detection_range(
                     field_code_782=row[hormone["missingness"]],
                 ),
-            axis="columns", # apply across rows
+            axis="columns", # apply function to each row
         )
         pass
     # Return information.
@@ -2247,7 +2337,7 @@ def determine_hormones_reportability_detection_limit(
                 interpret_biochemistry_reportability_detection_limit(
                     field_code_4917=row[hormone["reportability"]],
                 ),
-            axis="columns", # apply across rows
+            axis="columns", # apply function to each row
         )
         pass
     # Return information.
@@ -2391,7 +2481,7 @@ def impute_missing_hormones_detection_limit(
                     missingness_range=row[missingness_range],
                     reportability_limit=row[reportability_limit],
                 ),
-            axis="columns", # apply across rows
+            axis="columns", # apply function to each row
         )
         # Report.
         if report:
@@ -2891,7 +2981,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["testosterone_bioavailable"] = table.apply(
         lambda row:
@@ -2901,7 +2991,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Calculate estimation of free, bioavailable oestradiol.
     table["oestradiol_free"] = table.apply(
@@ -2914,7 +3004,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["oestradiol_bioavailable"] = table.apply(
         lambda row:
@@ -2926,7 +3016,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Imputations.
@@ -2941,7 +3031,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["testosterone_bioavailable_imputation"] = table.apply(
         lambda row:
@@ -2951,7 +3041,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Calculate estimation of free, bioavailable oestradiol.
     table["oestradiol_free_imputation"] = table.apply(
@@ -2964,7 +3054,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["oestradiol_bioavailable_imputation"] = table.apply(
         lambda row:
@@ -2976,7 +3066,7 @@ def organize_calculation_estimate_bioavailable_free_hormones(
                 factors_concentration=factors_concentration,
                 associations=associations,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Return information.
@@ -5356,7 +5446,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_3700=row["3700-0.0"],
                 field_3720=row["3720-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine count of days in person's usual menstrual cycle.
@@ -5366,7 +5456,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 field_3710=row["3710-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person reports irregularity in menstrual cycle.
     table["menstruation_cycle_irregularity"] = table.apply(
@@ -5375,7 +5465,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 field_3710=row["3710-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     ##########
@@ -5389,7 +5479,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_2724=row["2724-0.0"],
                 field_3591=row["3591-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether female persons experienced bilateral oophorectomy.
     table["oophorectomy"] = table.apply(
@@ -5398,7 +5488,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 field_2834=row["2834-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether female persons have experienced either hysterectomy or
     # oophorectomy.
@@ -5409,7 +5499,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether female persons self reported natural menopause, which
@@ -5420,7 +5510,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 field_2724=row["2724-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether female persons have experienced menopause.
@@ -5437,7 +5527,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["menopause_binary_strict"] = table.apply(
         lambda row:
@@ -5451,7 +5541,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether female persons have experienced menopause.
@@ -5476,7 +5566,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     table["menopause_ordinal_strict"] = table.apply(
         lambda row:
@@ -5492,7 +5582,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     ##########
@@ -5512,7 +5602,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 threshold_premenopause=31, # threshold in days
                 threshold_perimenopause=41, # threshold in days
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine female persons' categorical menstruation phase.
@@ -5525,7 +5615,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 threshold_premenopause=15, # threshold in days
                 threshold_perimenopause=15, # threshold in days
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine female persons' ordinal menstruation phase.
@@ -5539,7 +5629,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 threshold_ovulation=15,
                 threshold_middle_luteal=20, # threshold in days
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine female persons' ordinal menstruation phase from cyclical
@@ -5553,7 +5643,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                     row["menstruation_phase_early_late"]
                 ),
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether female persons were pregnant.
@@ -5563,7 +5653,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 field_3140=row["3140-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     ##########
@@ -5580,7 +5670,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_2794=row["2794-0.0"],
                 field_2804=row["2804-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person was using hormone replacement therapy recently.
     table["hormone_replacement"] = table.apply(
@@ -5593,7 +5683,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_3536=row["3536-0.0"],
                 field_3546=row["3546-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person was using any hormone-altering medications
     # recently.
@@ -5604,7 +5694,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 oral_contraception=row["oral_contraception"],
                 hormone_therapy=row["hormone_replacement"],
              ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine combination categories by menopause and hormone-atering therapy.
     # Report on 28 April 2021.
@@ -5776,7 +5866,7 @@ def organize_psychology_variables(
             interpret_import_bipolar_disorder(
                 import_bipolar_disorder=row["bipolar.cc"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Remove columns for variables that are not necessary anymore.
@@ -6482,7 +6572,7 @@ def organize_alcohol_consumption_frequency_variables(
             determine_alcohol_consumption_frequency(
                 field_1558=row["1558-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine person's alcohol consumption status.
     table["alcohol_status"] = table.apply(
@@ -6490,7 +6580,7 @@ def organize_alcohol_consumption_frequency_variables(
             determine_alcohol_consumption_status(
                 field_20117=row["20117-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine person's former alcohol consumption status.
     table["alcohol_former"] = table.apply(
@@ -6498,7 +6588,7 @@ def organize_alcohol_consumption_frequency_variables(
             determine_former_alcohol_consumption(
                 field_3731=row["3731-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine person's former alcohol consumption status.
     table["alcohol_trend"] = table.apply(
@@ -6506,7 +6596,7 @@ def organize_alcohol_consumption_frequency_variables(
             determine_alcohol_consumption_trend(
                 field_1628=row["1628-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether person consumes alcohol currently.
@@ -6517,7 +6607,7 @@ def organize_alcohol_consumption_frequency_variables(
                 alcohol_status=row["alcohol_status"],
                 alcohol_trend=row["alcohol_trend"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person consumes alcohol not currently but previously.
     #table["alcohol_previous"]
@@ -6530,7 +6620,7 @@ def organize_alcohol_consumption_frequency_variables(
                 alcohol_former=row["alcohol_former"],
                 alcohol_trend=row["alcohol_trend"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person never consumes any alcohol, either currently or
     # previously.
@@ -6539,7 +6629,7 @@ def organize_alcohol_consumption_frequency_variables(
             determine_alcohol_consumption_never(
                 alcohol_ever=row["alcohol_ever"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Remove columns for variables that are not necessary anymore.
@@ -6758,7 +6848,7 @@ def organize_alcohol_consumption_quantity_variables(
                 liquor=row["1598-0.0"],
                 other=row["5364-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Calculate sum of drinks monthly.
     table["drinks_monthly"] = table.apply(
@@ -6771,7 +6861,7 @@ def organize_alcohol_consumption_quantity_variables(
                 liquor=row["4440-0.0"],
                 other=row["4462-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine sum of total drinks monthly.
     table["alcohol_drinks_monthly"] = table.apply(
@@ -6782,7 +6872,7 @@ def organize_alcohol_consumption_quantity_variables(
                 drinks_monthly=row["drinks_monthly"],
                 weeks_per_month=4.345, # 52.143 weeks per year (12 months)
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
@@ -7160,7 +7250,7 @@ def organize_alcohol_auditc_variables(
                 audit_2=row["20403-0.0"],
                 audit_3=row["20416-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
@@ -7384,7 +7474,7 @@ def organize_alcohol_auditp_variables(
                 audit_9=row["20411-0.0"],
                 audit_10=row["20405-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
@@ -7481,7 +7571,7 @@ def organize_alcohol_audit_variables(
                 alcohol_auditc=row["alcohol_auditc"],
                 alcohol_auditp=row["alcohol_auditp"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
@@ -7780,7 +7870,7 @@ def organize_alcoholism_diagnosis_variables(
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_a"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person has diagnoses in group B.
     table["alcohol_diagnosis_b"] = table.apply(
@@ -7791,7 +7881,7 @@ def organize_alcoholism_diagnosis_variables(
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_b"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person has diagnoses in group C.
     table["alcohol_diagnosis_c"] = table.apply(
@@ -7802,7 +7892,7 @@ def organize_alcoholism_diagnosis_variables(
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_c"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person has diagnoses in group D.
     table["alcohol_diagnosis_d"] = table.apply(
@@ -7813,7 +7903,7 @@ def organize_alcoholism_diagnosis_variables(
                 fields_icd_10=["41270_array", "41202_array", "41204_array",],
                 codes_icd_group=codes_icd["group_d"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person has self diagnoses.
     table["alcohol_diagnosis_self"] = table.apply(
@@ -7823,7 +7913,7 @@ def organize_alcoholism_diagnosis_variables(
                 fields=["20002_array"],
                 codes_match=codes_self,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Remove columns for variables that are not necessary anymore.
@@ -8658,7 +8748,7 @@ def organize_alcoholism_cases_controls_variables(
                 threshold_audit_control=threshold_audit_control,
                 threshold_audit_case=threshold_audit_case,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person is a case or control for alcoholism type 2.
     # case: ICD9 or ICD10 codes in diagnostic group A, B, C, or D
@@ -8686,7 +8776,7 @@ def organize_alcoholism_cases_controls_variables(
                 threshold_audit_control=threshold_audit_control,
                 threshold_audit_case=threshold_audit_case,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine whether person is a case or control for alcoholism type 3.
     # case:
@@ -8715,7 +8805,7 @@ def organize_alcoholism_cases_controls_variables(
                 threshold_audit_control=threshold_audit_control,
                 threshold_audit_case=threshold_audit_case,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether person is a case or control for alcoholism type 4.
@@ -8745,7 +8835,7 @@ def organize_alcoholism_cases_controls_variables(
                 threshold_audit_control=threshold_audit_control,
                 threshold_audit_case=threshold_audit_case,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Determine whether person is a case or control for alcoholism type 5.
@@ -8775,7 +8865,7 @@ def organize_alcoholism_cases_controls_variables(
                 threshold_audit_control=threshold_audit_control,
                 threshold_audit_case=threshold_audit_case,
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
 
     # Remove columns for variables that are not necessary anymore.
@@ -8987,7 +9077,7 @@ def organize_auditc_questionnaire_alcoholism_variables(
             translate_alcohol_none_auditc(
                 frequency=row["20414-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Determine alcoholism aggregate score.
     table["alcoholism"] = table.apply(
@@ -8997,7 +9087,7 @@ def organize_auditc_questionnaire_alcoholism_variables(
                 quantity=row["20403-0.0"],
                 binge=row["20416-0.0"],
             ),
-        axis="columns", # apply across rows
+        axis="columns", # apply function to each row
     )
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
