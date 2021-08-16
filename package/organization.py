@@ -1511,13 +1511,14 @@ def dev_create_categorical_variable_indicators(
         print("count of dummy indicator variables: " + str(count_indicators))
         # Organize table.
         columns_report = copy.deepcopy(columns_indicators)
-        columns_report.insert(0, "column")
+        columns_report.insert(0, column)
         columns_report.insert(0, "IID")
         columns_report.insert(0, "eid")
         table_report = table.copy(deep=True)
         table_report = table_report.loc[
             :, table_report.columns.isin(columns_report)
         ]
+        table_report = table_report[[*columns_report]]
         utility.print_terminal_partition(level=3)
         print("Here is table with dummy indicator variables...")
         print(table_report)
@@ -1555,7 +1556,8 @@ def dev_create_reduce_categorical_variable_indicators(
             define binary dummies and reduce by principal components
         prefix (str): prefix for names of new dummy and principal component
             columns in table
-        separator (str): separator for names of new columns
+        separator (str): separator for names of new columns, preferrably
+            underscore "_" and not hyphen "-"
         report (bool): whether to print reports
 
     raises:
@@ -1571,7 +1573,7 @@ def dev_create_reduce_categorical_variable_indicators(
         table=table,
         index=index,
         column=column,
-        prefix=str(prefix + separator + "indicator" + separator),
+        prefix=str(prefix + "-" + "indicator"),
         separator=separator,
         report=report,
     )
