@@ -1468,7 +1468,7 @@ def dev_create_categorical_variable_indicators(
         table_indicators,
         prefix=prefix,
         prefix_sep=separator,
-        dummy_na=True,
+        dummy_na=False, # whether to create indicators for missing values
         columns=[column],
         drop_first=False, # whether to create "k - 1" dummies, adequate
         dtype=numpy.uint8,
@@ -1658,7 +1658,7 @@ def dev_create_reduce_categorical_variable_indicators(
         column=column,
         prefix=str(prefix + "-" + "indicator"),
         separator=separator,
-        report=False,
+        report=report,
     )
     # Reduce dimensionality of indicator variables.
     pail_reduction = dev_reduce_categorical_variable_indicators(
