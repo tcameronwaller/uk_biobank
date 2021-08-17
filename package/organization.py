@@ -62,7 +62,7 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.decomposition as decomposition
+import promiscuity.decomposition as decomp
 
 ###############################################################################
 # Functionality
