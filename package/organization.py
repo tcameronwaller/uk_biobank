@@ -1548,8 +1548,8 @@ def dev_reduce_categorical_variable_indicators(
             of columns for indicator variables
         columns_indicators (list<str>): names of columns with binary indicator
             (dummy) variables to reduce by principal components
-        prefix (str): prefix for names of new dummy and principal component
-            columns in table
+        prefix (str): prefix for names of new principal component columns in
+            table
         separator (str): separator for names of new columns
         report (bool): whether to print reports
 
@@ -1601,6 +1601,8 @@ def dev_reduce_categorical_variable_indicators(
     pail_reduction = (
         decomp.organize_principal_components_by_singular_value_decomposition(
             table=table_indicators,
+            prefix=prefix,
+            separator=separator,
             report=report,
         )
     )
