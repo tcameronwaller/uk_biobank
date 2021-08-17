@@ -1601,6 +1601,7 @@ def dev_reduce_categorical_variable_indicators(
     pail_reduction = (
         decomp.organize_principal_components_by_singular_value_decomposition(
             table=table_indicators,
+            index_name=index,
             prefix=prefix,
             separator=separator,
             report=report,
