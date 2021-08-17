@@ -1597,12 +1597,9 @@ def dev_reduce_categorical_variable_indicators(
     utility.print_terminal_partition(level=3)
     print(table_indicators)
 
-
     # Reduce dimensionality of indicator variables.
-    table_reduction = (
-        decomposition.calculate_singular_value_decomposition_factors(
-            threshold_valid_proportion_per_column=0.5,
-            threshold_column_relative_variance=0.5,
+    pail_reduction = (
+        decomp.organize_principal_components_by_singular_value_decomposition(
             table=table_indicators,
             report=report,
         )
