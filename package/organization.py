@@ -1598,14 +1598,20 @@ def dev_reduce_categorical_variable_indicators(
     print(table_indicators)
 
     # Reduce dimensionality of indicator variables.
-    pail_reduction = (
-        decomp.organize_principal_components_by_singular_value_decomposition(
-            table=table_indicators,
-            index_name=index,
-            prefix=prefix,
-            separator=separator,
-            report=report,
+    if False:
+        pail_reduction = (
+            decomp.organize_principal_components_by_singular_value_decomposition(
+                table=table_indicators,
+                index_name=index,
+                prefix=prefix,
+                separator=separator,
+                report=report,
+            )
         )
+
+    pail_test = decomp.compare_principal_components_methods(
+        table=table_indicators,
+        report=report,
     )
 
     # TODO: follow pattern from "dev_create_categorical_variable_indicators()"
