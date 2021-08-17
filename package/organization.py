@@ -1539,12 +1539,7 @@ def dev_reduce_categorical_variable_indicators(
     report=None,
 ):
     """
-    Creates binary indicator (dummy) variables for values of a single
-    categorical variable.
-
-    Pandas function drops the original column for the categorical variable.
-    Copy, split, and merge tables to preserve the original column with its
-    indicator variables.
+    Reduces binary indicator (dummy) variables by Principal Component Analysis.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -1607,6 +1602,7 @@ def dev_reduce_categorical_variable_indicators(
     table_reduction = (
         decomposition.calculate_singular_value_decomposition_factors(
             threshold_valid_proportion_per_column=0.5,
+            threshold_column_relative_variance=0.5,
             table=table_indicators,
             report=report,
         )
