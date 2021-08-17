@@ -1585,8 +1585,10 @@ def dev_reduce_categorical_variable_indicators(
         inplace=True,
         drop=False,
     )
+    columns = copy.deepcopy(columns_indicators)
+    columns.insert(0, index)
     table_indicators = table_indicators.loc[
-        :, table_indicators.columns.isin([index, columns_indicators])
+        :, table_indicators.columns.isin(columns)
     ]
     table_indicators.set_index(
         index,
