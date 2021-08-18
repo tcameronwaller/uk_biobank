@@ -1546,6 +1546,8 @@ def dev_reduce_categorical_variable_indicators(
             Biobank cohort
         index (str): name of table's index column by which to merge after create
             of columns for indicator variables
+        column (str): name of column with categorical variable for which to
+            define binary dummies and reduce by principal components
         columns_indicators (list<str>): names of columns with binary indicator
             (dummy) variables to reduce by principal components
         prefix (str): prefix for names of new principal component columns in
@@ -1559,6 +1561,21 @@ def dev_reduce_categorical_variable_indicators(
         (dict): information about creation of categorical indicator variables
 
     """
+
+    def match_column_component(
+        name=None,
+        prefix=None,
+        separator=None,
+    ):
+        if (separator in str(name)):
+            name_prefix = str(name).split(separator)[0].strip()
+            if (str(prefix) == str(name_prefix)):
+                match = True
+            else:
+                match = False
+        else:
+            match = False
+        return match
 
     # Copy information.
     table = table.copy(deep=True)
@@ -1580,10 +1597,10 @@ def dev_reduce_categorical_variable_indicators(
         inplace=True,
         drop=False,
     )
-    columns = copy.deepcopy(columns_indicators)
-    columns.insert(0, index)
+    columns_keep = copy.deepcopy(columns_indicators)
+    columns_keep.insert(0, index)
     table_indicators = table_indicators.loc[
-        :, table_indicators.columns.isin(columns)
+        :, table_indicators.columns.isin(columns_keep)
     ]
     table_indicators.set_index(
         index,
@@ -1592,18 +1609,7 @@ def dev_reduce_categorical_variable_indicators(
         inplace=True
     )
 
-    utility.print_terminal_partition(level=2)
-    print("report: create_categorical_variable_indicators()")
-    utility.print_terminal_partition(level=3)
-    print(table_indicators)
-
     # Reduce dimensionality of indicator variables.
-    if False:
-        pail_test = decomp.compare_principal_components_methods(
-            table=table_indicators,
-            report=report,
-        )
-
     pail_reduction = (
         decomp.organize_principal_components_by_singular_value_decomposition(
             table=table_indicators,
@@ -1613,14 +1619,70 @@ def dev_reduce_categorical_variable_indicators(
             report=report,
         )
     )
+    # Organize table.
+    table_component_scores = (
+        pail_reduction["table_component_scores"].copy(deep=True)
+    )
+    table_component_scores.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_component_scores.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table = table.merge(
+        table_component_scores,
+        how="outer",
+        left_on=index,
+        right_on=index,
+        suffixes=("_original", "_component"),
+    )
+    # Extract names of columns for dummies.
+    columns = copy.deepcopy(table.columns.to_list())
+    columns_components = list(filter(
+        lambda column_trial: match_column_component(
+            name=column_trial,
+            prefix=prefix,
+            separator=separator,
+        ),
+        columns
+    ))
 
-    # TODO: time to merge in the Principal Component Scores to the full table
-
-
-    # TODO: follow pattern from "dev_create_categorical_variable_indicators()"
-
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: reduce_categorical_variable_indicators()")
+        utility.print_terminal_partition(level=3)
+        # Description.
+        unique_values = table[column].unique()
+        count_unique_values = unique_values.size
+        count_indicators = len(columns_indicators)
+        count_components = len(columns_components)
+        print("count of original unique values: " + str(count_unique_values))
+        print(unique_values)
+        print("count of dummy indicator variables: " + str(count_indicators))
+        print("count of component variables: " + str(count_components))
+        # Organize table.
+        columns_report = copy.deepcopy(columns_components)
+        columns_report.insert(0, column)
+        columns_report.insert(0, "IID")
+        #columns_report.insert(0, "eid")
+        table_report = table.copy(deep=True)
+        table_report = table_report.loc[
+            :, table_report.columns.isin(columns_report)
+        ]
+        table_report = table_report[[*columns_report]]
+        utility.print_terminal_partition(level=3)
+        print("Here is table with component variables...")
+        print(table_report)
     # Collect information.
     pail = dict()
+    pail["table"] = table
+    pail["columns_components"] = columns_components
     # Return information.
     return pail
 
@@ -1683,7 +1745,7 @@ def dev_create_reduce_categorical_variable_indicators(
     )
 
     # Return information.
-    return pail_indicator["table"]
+    return pail_reduction["table"]
 
 
 def dev_organize_assessment_basis_variables(
@@ -1740,14 +1802,7 @@ def dev_organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-
     # Create binary indicators of categories and reduce their dimensionality.
-
-    # TODO: TCW 10 August 2021
-    # TODO: I need to introduce a function to create categorical dummy variables
-    # TODO: AND to prepare PCA reductions of those dummy variables
-    # TODO: AND report variance for each PC
-
     table = dev_create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
@@ -1756,7 +1811,6 @@ def dev_organize_assessment_basis_variables(
         separator="_",
         report=True,
     )
-
     table = dev_create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
