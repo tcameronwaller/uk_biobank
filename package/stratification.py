@@ -1038,6 +1038,16 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # Cohort, model selection: sets for genetic analyses on phenotypes and genotypes
 
 
+# TODO: TCW 18 August 2021
+# TODO: I NEED to include "missingness" and "reportability" columns for the
+# TODO: basic hormone measurements (NOT for free, bioavailable, imputation).
+
+# TODO: this is a bit more complex...
+# TODO: ONLY include those "missingness" and "reportability" columns for the
+# TODO: cohorts-models of the "ordinal" representations of the hormones...
+
+
+
 def select_organize_cohorts_variables_by_sex_hormone(
     hormone=None,
     table_kinship_pairs=None,
@@ -1066,6 +1076,12 @@ def select_organize_cohorts_variables_by_sex_hormone(
         (dict): collection of information about phenotype variables
 
     """
+
+    # Determine relevant columns.
+    #hormone = str(hormone)
+    #hormone_missingness = str(str(hormone) + "_missingness_range")
+    #column_reportability = str(str(hormone) + "_reportability_limit")
+    #column_ordinal = str(str(hormone) + "_cohort_ordinal")
 
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.

@@ -915,482 +915,8 @@ def determine_assessment_month_category(
     return value
 
 
-def define_ordinal_stratifications_by_sex_continuous_variables(
-    index=None,
-    sex_text=None,
-    variables=None,
-    table=None,
-    report=None,
-):
-    """
-    Stratify persons to ordinal bins by their values of continuous variables.
 
-    arguments:
-        index (str): name of column for identifier index
-        sex_text (str): name of column for textual representation of sex
-        variables (list<str>): names of columns for continuous variables by
-            which to define stratification variables
-        table (object): Pandas data frame of features (columns) across
-            observations (rows)
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of information about persons
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    # Females.
-    table_female = table.copy(deep=True)
-    table_female = table_female.loc[
-        (table_female[sex_text] == "female"), :
-    ]
-    # Males.
-    table_male = table.copy(deep=True)
-    table_male = table_male.loc[
-        (table_male[sex_text] == "male"), :
-    ]
-    # Collect records.
-    table_collection = pandas.DataFrame()
-    # Stratify separately by sex.
-    for variable in variables:
-        variable_female = str(variable + "_grade_female")
-        variable_male = str(variable + "_grade_male")
-        table_female[variable_female] = pandas.qcut(
-            table_female[variable],
-            q=3,
-            labels=[0, 1, 2,],
-        )
-        table_male[variable_male] = pandas.qcut(
-            table_male[variable],
-            q=3,
-            labels=[0, 1, 2,],
-        )
-        # Report.
-        if report:
-            utility.print_terminal_partition(level=2)
-            print("define_ordinal_stratifications_by_sex_continuous_variables")
-            print("variable: " + str(variable))
-            print("female tertiles")
-            print(pandas.qcut(
-                table_female[variable],
-                q=3,
-                labels=[0, 1, 2,],
-                retbins=True,
-            ))
-            print(pandas.qcut(
-                table_female[variable],
-                q=3,
-                labels=[0, 1, 2,],
-            ).value_counts())
-            print("male tertiles")
-            print(pandas.qcut(
-                table_male[variable],
-                q=3,
-                labels=[0, 1, 2,],
-                retbins=True,
-            ))
-            print(pandas.qcut(
-                table_male[variable],
-                q=3,
-                labels=[0, 1, 2,],
-            ).value_counts())
-    # Combine records for female and male persons.
-    table_collection = table_collection.append(
-        table_female,
-        ignore_index=True,
-    )
-    table_collection = table_collection.append(
-        table_male,
-        ignore_index=True,
-    )
-    # Organize table.
-    table_collection.reset_index(
-        level=None,
-        inplace=True,
-        drop=True,
-    )
-    table_collection.set_index(
-        index,
-        append=False,
-        drop=True,
-        inplace=True
-    )
-    # Report.
-    if report:
-        print(table_collection)
-    # Return information.
-    return table_collection
-
-
-def create_reduce_categorical_variable_indicators(
-    table=None,
-    index=None,
-    column=None,
-    prefix=None,
-    separator=None,
-    report=None,
-):
-    """
-    Creates binary indicator (dummy) variables for values of a single
-    categorical variable and reduces these by principal components.
-
-    Pandas function drops the original column for the categorical variable.
-    Copy, split, and merge tables to preserve the original column with its
-    indicator variables.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        index (str): name of table's index column by which to merge after create
-            of columns for indicator variables
-        column (str): name of column with categorical variable for which to
-            define binary dummies and reduce by principal components
-        prefix (str): prefix for names of new dummy and principal component
-            columns in table
-        separator (str): separator for names of new columns
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of phenotype variables across UK Biobank
-            cohort
-
-    """
-
-    def match_column_dummy(
-        name=None,
-        prefix=None,
-        separator=None,
-    ):
-        if (separator in str(name)):
-            name_prefix = str(name).split(separator)[0].strip()
-            if (str(prefix) == str(name_prefix)):
-                match = True
-            else:
-                match = False
-        else:
-            match = False
-        return match
-
-    # Copy information.
-    table = table.copy(deep=True)
-    table_indicators = table.copy(deep=True)
-    # Organize tables.
-    table.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    table.set_index(
-        index,
-        append=False,
-        drop=True,
-        inplace=True
-    )
-    table_indicators.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
-    table_indicators = table_indicators.loc[
-        :, table_indicators.columns.isin([index, column])
-    ]
-    # Create binary dummies for variable categories.
-    table_indicators = pandas.get_dummies(
-        table_indicators,
-        prefix=prefix,
-        prefix_sep=separator,
-        dummy_na=True,
-        columns=[column],
-        drop_first=False, # whether to create "k - 1" dummies, adequate
-        dtype=numpy.uint8,
-    )
-    table_indicators.set_index(
-        index,
-        append=False,
-        drop=True,
-        inplace=True
-    )
-    table = table.merge(
-        table_indicators,
-        how="outer",
-        left_on=index,
-        right_on=index,
-        suffixes=("_original", "_indicator"),
-    )
-
-    # Extract names of columns for dummies.
-    columns = copy.deepcopy(table.columns.to_list())
-    columns_dummies = list(filter(
-        lambda column_trial: match_column_dummy(
-            name=column_trial,
-            prefix=prefix,
-            separator=separator,
-        ),
-        columns
-    ))
-
-    columns_example = copy.deepcopy(columns_dummies)
-    columns_example.extend(["eid", "IID", column])
-
-    table_demo = table.copy(deep=True)
-    table_demo = table_demo.loc[
-        :, table_demo.columns.isin(columns_example)
-    ]
-    print("here is the table after dummy stuff...")
-    print(table_demo)
-
-    # Report.
-    print("here are the columns in the table...")
-    print(table.columns.to_list())
-    unique_values = table[column].unique()
-    count_unique_values = unique_values.size
-    count_dummies = len(columns_dummies)
-    utility.print_terminal_partition(level=2)
-    print("report: create_reduce_categorical_variable_indicators()")
-    utility.print_terminal_partition(level=3)
-    print("count of original unique values: " + str(count_unique_values))
-    print(unique_values)
-    print("count of dummy variables: " + str(count_dummies))
-
-    # Return information.
-    return table
-
-
-def organize_assessment_basis_variables(
-    table=None,
-    path_dock=None,
-    report=None,
-):
-    """
-    Organizes information about general attributes.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        path_dock (str): path to dock directory for source and product
-            directories and files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collection of information about phenotype variables
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Read reference table of interpretations of variable codes.
-    source = read_source_fields_codes_interpretations(
-        path_dock=path_dock,
-    )
-
-    # Determine assessment center.
-    table["assessment_site"] = table.apply(
-        lambda row:
-            determine_assessment_center_category(
-                field_54=row["54-0.0"],
-                codes_interpretations=source["field_54"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    # Determine month of assessment.
-    table["month_order"] = table.apply(
-        lambda row:
-            determine_assessment_month_order(
-                field_55=row["55-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    table["month"] = table.apply(
-        lambda row:
-            determine_assessment_month_category(
-                field_55=row["55-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-
-    # Create binary indicators of categories and reduce their dimensionality.
-
-    # TODO: TCW 10 August 2021
-    # TODO: I need to introduce a function to create categorical dummy variables
-    # TODO: AND to prepare PCA reductions of those dummy variables
-    # TODO: AND report variance for each PC
-
-    table = create_reduce_categorical_variable_indicators(
-        table=table,
-        index="eid",
-        column="assessment_site",
-        prefix="site",
-        separator="_",
-        report=True,
-    )
-
-
-    # TODO: TCW 10 August 2021
-    # TODO: follow pattern of interpret --> determine
-
-    # Convert variable types.
-    columns_type = [
-        "31-0.0", "22001-0.0", "21022-0.0", "21001-0.0"
-    ]
-    table = utility.convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
-    )
-
-    # Translate column names.
-    translations = dict()
-    translations["21022-0.0"] = "age"
-    translations["21001-0.0"] = "body_mass_index"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Determine sex consensus between self-report and genotypic sex.
-    table["sex"] = table.apply(
-        lambda row:
-            interpret_sex_consensus(
-                field_31=row["31-0.0"],
-                field_22001=row["22001-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    # Determine text representation of person's sex.
-    table["sex_text"] = table.apply(
-        lambda row:
-            determine_sex_text(
-                sex=row["sex"],
-            ),
-        axis="columns", # apply function to each row
-    )
-
-    # Determine age.
-
-
-    # Determine body mass index (BMI).
-
-
-    # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_table_continuous_ratio_variables(
-        columns=["body_mass_index"],
-        table=table,
-    )
-    # Introduce stratification variables by values of continuous variables, in
-    # particular age within female and male persons.
-    table = define_ordinal_stratifications_by_sex_continuous_variables(
-        index="eid",
-        sex_text="sex_text",
-        variables=["age"],
-        table=table,
-        report=report,
-    )
-    # Remove columns for variables that are not necessary anymore.
-    # Pandas drop throws error if column names do not exist.
-    table_clean = table.copy(deep=True)
-    table_clean.drop(
-        labels=[
-            "31-0.0",
-            "55-0.0",
-            "22001-0.0", #"21022-0.0",
-            "21002-0.0", "50-0.0",
-            #"21001-0.0",
-            "23104-0.0",
-        ],
-        axis="columns",
-        inplace=True
-    )
-    # Organize information for report.
-    table_report = table.copy(deep=True)
-    columns_report = [
-        #"eid",
-        "IID",
-        "sex", "sex_text",
-        "age", "age_grade_female", "age_grade_male",
-        "body_mass_index", "body_mass_index_log",
-        "month",
-    ]
-    table_report = table_report.loc[
-        :, table_report.columns.isin(columns_report)
-    ]
-    table_report = table_report[[*columns_report]]
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("report: organize_sex_age_body_variables()")
-        utility.print_terminal_partition(level=3)
-        print("translations of general attribute column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        utility.print_terminal_partition(level=2)
-        print("Translation of columns for general attributes: ")
-        print(table_report)
-        utility.print_terminal_partition(level=3)
-        # Variable types.
-        utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        print(table_report.dtypes)
-        utility.print_terminal_partition(level=3)
-
-        table_female = table_report.loc[
-            (table_report["sex_text"] == "female"), :
-        ]
-        table_female_young = table_female.loc[
-            (table_female["age_grade_female"] == 0), :
-        ]
-        table_female_old = table_female.loc[
-            (table_female["age_grade_female"] == 2), :
-        ]
-        age_mean_female_young = numpy.nanmean(
-            table_female_young["age"].to_numpy()
-        )
-        age_mean_female_old = numpy.nanmean(table_female_old["age"].to_numpy())
-        print("mean age in young females: " + str(age_mean_female_young))
-        print("mean age in old females: " + str(age_mean_female_old))
-
-        table_male = table_report.loc[
-            (table_report["sex_text"] == "male"), :
-        ]
-        table_male_young = table_male.loc[
-            (table_male["age_grade_male"] == 0), :
-        ]
-        table_male_old = table_male.loc[
-            (table_male["age_grade_male"] == 2), :
-        ]
-        age_mean_male_young = numpy.nanmean(table_male_young["age"].to_numpy())
-        age_mean_male_old = numpy.nanmean(table_male_old["age"].to_numpy())
-        print("mean age in young males: " + str(age_mean_male_young))
-        print("mean age in old males: " + str(age_mean_male_old))
-
-    # Collect information.
-    pail = dict()
-    pail["table"] = table
-    pail["table_clean"] = table_clean
-    pail["table_report"] = table_report
-    # Return information.
-    return pail
-
-
-##########
-# Development code
-
-
-# TODO: this dev function is "ready" for the main code base
-def dev_create_categorical_variable_indicators(
+def create_categorical_variable_indicators(
     table=None,
     index=None,
     column=None,
@@ -1537,7 +1063,7 @@ def dev_create_categorical_variable_indicators(
     return pail
 
 
-def dev_reduce_categorical_variable_indicators(
+def reduce_categorical_variable_indicators(
     table=None,
     index=None,
     column=None,
@@ -1695,8 +1221,7 @@ def dev_reduce_categorical_variable_indicators(
     return pail
 
 
-# TODO: currently this is the only function that'll need to be replaced in the non-dev code
-def dev_create_reduce_categorical_variable_indicators(
+def create_reduce_categorical_variable_indicators(
     table=None,
     index=None,
     column=None,
@@ -1734,7 +1259,7 @@ def dev_create_reduce_categorical_variable_indicators(
     """
 
     # Create dummy indicator variables for each category of original variable.
-    pail_indicator = dev_create_categorical_variable_indicators(
+    pail_indicator = create_categorical_variable_indicators(
         table=table,
         index=index,
         column=column,
@@ -1743,7 +1268,7 @@ def dev_create_reduce_categorical_variable_indicators(
         report=report,
     )
     # Reduce dimensionality of indicator variables.
-    pail_reduction = dev_reduce_categorical_variable_indicators(
+    pail_reduction = reduce_categorical_variable_indicators(
         table=pail_indicator["table"],
         index=index,
         column=column,
@@ -1752,12 +1277,133 @@ def dev_create_reduce_categorical_variable_indicators(
         separator=separator,
         report=report,
     )
-
     # Return information.
     return pail_reduction["table"]
 
 
-def dev_organize_assessment_basis_variables(
+
+
+
+def define_ordinal_stratifications_by_sex_continuous_variables(
+    index=None,
+    sex_text=None,
+    variables=None,
+    table=None,
+    report=None,
+):
+    """
+    Stratify persons to ordinal bins by their values of continuous variables.
+
+    arguments:
+        index (str): name of column for identifier index
+        sex_text (str): name of column for textual representation of sex
+        variables (list<str>): names of columns for continuous variables by
+            which to define stratification variables
+        table (object): Pandas data frame of features (columns) across
+            observations (rows)
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about persons
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Females.
+    table_female = table.copy(deep=True)
+    table_female = table_female.loc[
+        (table_female[sex_text] == "female"), :
+    ]
+    # Males.
+    table_male = table.copy(deep=True)
+    table_male = table_male.loc[
+        (table_male[sex_text] == "male"), :
+    ]
+    # Collect records.
+    table_collection = pandas.DataFrame()
+    # Stratify separately by sex.
+    for variable in variables:
+        variable_female = str(variable + "_grade_female")
+        variable_male = str(variable + "_grade_male")
+        table_female[variable_female] = pandas.qcut(
+            table_female[variable],
+            q=3,
+            labels=[0, 1, 2,],
+        )
+        table_male[variable_male] = pandas.qcut(
+            table_male[variable],
+            q=3,
+            labels=[0, 1, 2,],
+        )
+        # Report.
+        if report:
+            utility.print_terminal_partition(level=2)
+            print("define_ordinal_stratifications_by_sex_continuous_variables")
+            print("variable: " + str(variable))
+            print("female tertiles")
+            print(pandas.qcut(
+                table_female[variable],
+                q=3,
+                labels=[0, 1, 2,],
+                retbins=True,
+            ))
+            print(pandas.qcut(
+                table_female[variable],
+                q=3,
+                labels=[0, 1, 2,],
+            ).value_counts())
+            print("male tertiles")
+            print(pandas.qcut(
+                table_male[variable],
+                q=3,
+                labels=[0, 1, 2,],
+                retbins=True,
+            ))
+            print(pandas.qcut(
+                table_male[variable],
+                q=3,
+                labels=[0, 1, 2,],
+            ).value_counts())
+    # Combine records for female and male persons.
+    table_collection = table_collection.append(
+        table_female,
+        ignore_index=True,
+    )
+    table_collection = table_collection.append(
+        table_male,
+        ignore_index=True,
+    )
+    # Organize table.
+    table_collection.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_collection.set_index(
+        index,
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    # Report.
+    if report:
+        print(table_collection)
+    # Return information.
+    return table_collection
+
+# TODO: TCW 18 August 2021
+# TODO: set reasonable limits on "age" and "BMI" raw data-fields to make sure accurate
+# TODO: follow "interpret_" "determine_" pattern for "age" and "BMI"
+
+def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
     report=None,
@@ -1812,7 +1458,7 @@ def dev_organize_assessment_basis_variables(
         axis="columns", # apply function to each row
     )
     # Create binary indicators of categories and reduce their dimensionality.
-    table = dev_create_reduce_categorical_variable_indicators(
+    table = create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
         column="assessment_site",
@@ -1820,7 +1466,7 @@ def dev_organize_assessment_basis_variables(
         separator="_",
         report=True,
     )
-    table = dev_create_reduce_categorical_variable_indicators(
+    table = create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
         column="month",
@@ -1973,11 +1619,6 @@ def dev_organize_assessment_basis_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
-
-
-
-
-
 
 
 ##########
@@ -2414,10 +2055,10 @@ def determine_hormones_reportability_detection_limit(
     table = table.copy(deep=True)
     # Determine reportability.
     for hormone in hormone_fields:
-        reportability_low = str(
+        reportability = str(
             str(hormone["name"]) + "_reportability_limit"
         )
-        table[reportability_low] = table.apply(
+        table[reportability] = table.apply(
             lambda row:
                 interpret_biochemistry_reportability_detection_limit(
                     field_code_4917=row[hormone["reportability"]],
@@ -2630,6 +2271,221 @@ def organize_hormones_missingness_imputation(
     )
     # Return information.
     return table
+
+
+# TODO: TCW 18 August 2021
+# TODO: this function is READY
+def determine_cohort_specific_hormone_ordinal(
+    missingness_range=None,
+    reportability_limit=None,
+    measurement=None,
+    median=None,
+):
+    """
+    Determine for a hormone the cohort-specific ordinal representation with
+    consideration of cohort-specific median and reportability due to detection
+    limit.
+
+    Ordinal code:
+    0: below limit of detection
+    1: measurement in range, below cohort-specific median
+    2: measurement in range, equal to or above cohort-specific median
+    3: above limit of detection
+
+    arguments:
+        missingness_range (int): binary representation of whether measurement's
+            value was missing because the value was out of detection range
+        reportability_limit (int): integer categorical representation of whether
+            measurement's value was missing because the value was less than or
+            greater than the limit of detection
+        measurement (float): value of hormone's actual measurement
+        median (float): cohort-specific median value of hormone's measurements
+        missingness_range (int): binary representation of whether measurement's
+            value was missing because the value was out of detection range
+
+    raises:
+
+    returns:
+        (float): value for hormone's measurement
+
+    """
+
+    # Interpret field code.
+    if (pandas.isna(measurement)):
+        # Hormone's measurement has a missing value.
+        if (
+            (not pandas.isna(missingness_range)) and
+            (missingness_range == 1) and
+            (not pandas.isna(reportability_limit)) and
+            ((reportability_limit == 1) or (reportability_limit == 2))
+        ):
+            # Record has valid explanations for the missing value of hormone's
+            # measurement.
+            if (reportability_limit == 1):
+                # Hormone's measurement was less than the limit of detection.
+                value = 0
+            elif (reportability_limit == 2):
+                # Hormone's measurement was greater than the limit of detection.
+                value = 3
+            else:
+                # Uninterpretable.
+                value = float("nan")
+        else:
+            # Without valid explanations of missing value for hormone's
+            # measurement, do not assign ordinal value.
+            value = float("nan")
+    else:
+        # Hormone's measurement has a not missing value.
+        if (
+            (not pandas.isna(median)) and
+            (measurement < median)
+        ):
+            # Measurement is less than median.
+            value = 1
+        elif (
+            (not pandas.isna(median)) and
+            (measurement >= median)
+        ):
+            # Measurement is greater than or equal to median.
+            value = 2
+        else:
+            # Uninterpretable.
+            value = float("nan")
+    # Return information.
+    return value
+
+# TODO: TCW 18 August 2021
+# 1. accept hormone name
+# 2. accept cohort name (replace _ with -)
+# 3. accept cohort-stratified table "table_cohort"
+# 4. accept complete table (for collection)
+# - - copy complete table
+# 5. define column names for hormone's measurement, missingness_range, and reportability_limit
+# 6. calculate hormone ordinal within cohort-stratified table
+# 7. reduce cohort-stratified table to only index and "<hormone>_<cohort>_ordinal"
+# 8. merge (introduces missing values to persons not in cohort)
+
+def determine_cohort_specific_hormone_ordinal_representation(
+    hormone=None,
+    table=None,
+):
+    """
+    Determine for a hormone the cohort-specific ordinal representation with
+    consideration of cohort-specific median and reportability due to detection
+    limit.
+
+    It is important that the hormone's median value is cohort-specific to
+    account for influences from sex and female menopause.
+
+    arguments:
+        hormone (str): name of a hormone
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Determine relevant columns.
+    column_hormone = str(hormone)
+    column_missingness = str(str(hormone) + "_missingness_range")
+    column_reportability = str(str(hormone) + "_reportability_limit")
+    column_ordinal = str(str(hormone) + "_cohort_ordinal")
+    # Calculate cohort-specific median.
+    array = copy.deepcopy(table[column_hormone].dropna().to_numpy())
+    count = int(array.size)
+    if (count > 10):
+        median = numpy.nanmedian(array)
+    else:
+        median = float("nan")
+    # Determine cohort-specific ordinal representation.
+    table[column_ordinal] = table.apply(
+        lambda row:
+            determine_cohort_specific_hormone_ordinal(
+                missingness_range=row[column_missingness],
+                reportability_limit=row[column_reportability],
+                measurement=row[column_hormone],
+                median=median,
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Return information.
+    return table
+
+
+# TODO: new driver function...
+# 1. define cohort-stratified tables
+# stratification.stratify_set_primary_sex_menopause_age(table=None)
+# female
+# female_younger
+# female_older
+# female_premenopause
+# female_perimenopause
+# female_postmenopause
+# male
+# male_younger
+# male_older
+# TODO: iterate on cohort-stratified tables
+# TODO: iterate on hormone measurements...
+
+
+def organize_cohorts_specific_hormones_ordinal_representations(
+    table=None,
+    report=None,
+):
+    """
+    Organize the definition of cohort-specific ordinal representations of
+    hormones with consideration of cohort-specific medians and reportabilities
+    due to detection limits.
+
+    It is important that each hormone's median value is cohort-specific to
+    account for influences from sex and female menopause.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Define relevant cohorts.
+    cohorts_records = stratification.stratify_set_primary_sex_menopause_age(
+        table=table
+    )
+    # TODO: use "cohort_model" as name of cohort
+
+    # Define relevant hormones.
+    # These ordinal representations are only relevant to the raw hormones with
+    # direct measurements.
+    # Exclude estimates of bioavailable and free hormones.
+    hormones = [
+        "albumin", "steroid_globulin", "vitamin_d",
+        "oestradiol", "testosterone",
+    ]
+
+    # Iterate across cohorts.
+    #for
+
+    # Iterate across hormones.
+
+
+    pass
+
+
+
+
 
 
 # Estimation of bioavailable and free hormones
@@ -9400,53 +9256,6 @@ def execute_genotype_assessment_basis(
     return pail_basis
 
 
-def dev_execute_genotype_assessment_basis(
-    table=None,
-    path_dock=None,
-    report=None,
-):
-    """
-    Organizes information about persons' genotypes, sex, age, and body mass
-    index across UK Biobank.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        path_dock (str): path to dock directory for source and product
-            directories and files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collecton of Pandas data frames of phenotype variables across
-            UK Biobank cohort
-
-    """
-
-    # Organize information about genotype principal components.
-    table_genotype = organize_genotype_principal_component_variables(
-        table=table,
-        report=report,
-    )
-    # Organize information about general attributes.
-    pail_basis = dev_organize_assessment_basis_variables(
-        table=table_genotype,
-        path_dock=path_dock,
-        report=report,
-    )
-
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("report: execute_genotype_assessment_basis()")
-        utility.print_terminal_partition(level=3)
-        print(pail_basis["table"])
-    # Return information.
-    return pail_basis
-
-
 def execute_sex_hormones(
     table=None,
     report=None,
@@ -9669,7 +9478,7 @@ def execute_procedure(
     )
     # Organize variables for female menstruation across the UK Biobank.
     pail_female = execute_female_menstruation(
-        table=pail_basis["table"], # pail_hormone["table_clean"]
+        table=pail_basis["table"],
         report=True,
     )
     # Organize variables for persons' sex hormones across the UK Biobank.
@@ -9678,11 +9487,17 @@ def execute_procedure(
         report=True,
     )
 
+    # Organize variables for persons' alcohol consumption across the UK Biobank.
+    pail_alcohol = ukb_organization.execute_alcohol(
+        table=pail_hormone["table"],
+        report=True,
+    )
+
     # Collect information.
     information = dict()
     information["organization"] = dict()
     #information["organization"]["table_phenotypes"] = pail_basis["table"]
-    information["organization"]["table_phenotypes"] = pail_hormone["table"]
+    information["organization"]["table_phenotypes"] = pail_alcohol["table"]
     # Write product information to file.
     write_product(
         paths=paths,
