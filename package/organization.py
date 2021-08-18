@@ -1614,6 +1614,8 @@ def dev_reduce_categorical_variable_indicators(
         )
     )
 
+    # TODO: time to merge in the Principal Component Scores to the full table
+
 
     # TODO: follow pattern from "dev_create_categorical_variable_indicators()"
 
@@ -1751,6 +1753,15 @@ def dev_organize_assessment_basis_variables(
         index="eid",
         column="assessment_site",
         prefix="site",
+        separator="_",
+        report=True,
+    )
+
+    table = dev_create_reduce_categorical_variable_indicators(
+        table=table,
+        index="eid",
+        column="month",
+        prefix="month",
         separator="_",
         report=True,
     )
