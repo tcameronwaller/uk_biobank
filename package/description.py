@@ -274,6 +274,81 @@ def organize_text_report_phenotype_correlations(
     return report_text
 
 
+# TODO: TCW 18 August 2021
+# TODO: include in this summary record the counts of a cohort's persons with
+# TODO: each ordinal value of hormones
+# TODO: some cohorts will have all missing values...
+
+def organize_report_variables_summaries_record_hormone_cohort_ordinal(
+    record=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        record (dict): information for summary table record on cohort
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for cohort-specific ordinal representations of
+    # hormones.
+    hormones = [
+        "albumin", "steroid_globulin", "vitamin_d",
+        "oestradiol", "testosterone",
+    ]
+    cohorts = [
+        "female", "female-younger", "female-older",
+        "male", "male-younger", "male-older",
+        "female-premenopause", "female-perimenopause", "female-postmenopause",
+    ]
+    # Iterate across cohorts.
+    for cohort in cohorts:
+        # Iterate across hormones.
+        for hormone in hormones:
+            column_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
+            values = copy.deepcopy(table[column_ordinal].dropna().to_list())
+            if (len(values) > 10):
+                count_values_0 = len(list(filter(
+                    lambda value: (value == 0),
+                    values
+                )))
+                count_values_1 = len(list(filter(
+                    lambda value: (value == 1),
+                    values
+                )))
+                count_values_2 = len(list(filter(
+                    lambda value: (value == 2),
+                    values
+                )))
+                count_values_3 = len(list(filter(
+                    lambda value: (value == 3),
+                    values
+                )))
+            else:
+                count_values_0 = 0
+                count_values_1 = 0
+                count_values_2 = 0
+                count_values_3 = 0
+            # Collect information for record.
+            record[str(column_ordinal + "_0")] = str(count_values_0)
+            record[str(column_ordinal + "_1")] = str(count_values_1)
+            record[str(column_ordinal + "_2")] = str(count_values_2)
+            record[str(column_ordinal + "_3")] = str(count_values_3)
+            pass
+        pass
+
+    # Return information.
+    return record
+
+
 def organize_report_cohort_model_variables_summaries_record(
     name=None,
     cohort_model=None,
@@ -364,6 +439,12 @@ def organize_report_cohort_model_variables_summaries_record(
         record[str(column + "_min")] = str(round(minimum, 3))
         record[str(column + "_max")] = str(round(maximum, 3))
         pass
+    # Collect information for cohort-specific ordinal representations of
+    # hormones.
+    record = organize_report_variables_summaries_record_hormone_cohort_ordinal(
+        record=record,
+        table=table,
+    )
     # Return information.
     return record
 

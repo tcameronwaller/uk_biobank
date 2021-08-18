@@ -9521,7 +9521,7 @@ def execute_procedure(
     )
 
     # Organize variables for persons' alcohol consumption across the UK Biobank.
-    pail_alcohol = ukb_organization.execute_alcohol(
+    pail_alcohol = execute_alcohol(
         table=pail_hormone["table"],
         report=True,
     )
