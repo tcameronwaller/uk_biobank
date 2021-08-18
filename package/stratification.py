@@ -1716,17 +1716,22 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female"
+    record["cohort"] = "female"
     record["cohort_model"] = "female"
     record["category"] = "sex"
     record["phenotype"] = "null"
     record["menstruation"] = False
     record["table"] = table.loc[
-        (table["sex_text"] == "female"), :
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0)
+        ), :
     ]
     records.append(record)
 
     record = dict()
     record["name"] = "male"
+    record["cohort"] = "male"
     record["cohort_model"] = "male"
     record["category"] = "sex"
     record["menstruation"] = False
@@ -1739,7 +1744,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_premenopause_ordinal"
-    record["cohort_model"] = "female_premenopause"
+    record["cohort"] = "female-premenopause"
+    record["cohort_model"] = "female-premenopause"
     record["category"] = "menopause_ordinal"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -1753,7 +1759,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_perimenopause_ordinal"
-    record["cohort_model"] = "female_perimenopause"
+    record["cohort"] = "female-perimenopause"
+    record["cohort_model"] = "female-perimenopause"
     record["category"] = "menopause_ordinal"
     record["menstruation"] = True
     record["table"] = table.loc[
@@ -1767,7 +1774,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_postmenopause_ordinal"
-    record["cohort_model"] = "female_postmenopause"
+    record["cohort"] = "female-postmenopause"
+    record["cohort_model"] = "female-postmenopause"
     record["category"] = "menopause_ordinal"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1783,7 +1791,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_younger"
-    record["cohort_model"] = "female_younger"
+    record["cohort"] = "female-younger"
+    record["cohort_model"] = "female-younger"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1797,7 +1806,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_older"
-    record["cohort_model"] = "female_older"
+    record["cohort"] = "female-older"
+    record["cohort_model"] = "female-older"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1811,7 +1821,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "male_younger"
-    record["cohort_model"] = "male_younger"
+    record["cohort"] = "male-younger"
+    record["cohort_model"] = "male-younger"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1824,7 +1835,8 @@ def stratify_set_primary_sex_menopause_age(
 
     record = dict()
     record["name"] = "male_older"
-    record["cohort_model"] = "male_older"
+    record["cohort"] = "male-older"
+    record["cohort_model"] = "male-older"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[

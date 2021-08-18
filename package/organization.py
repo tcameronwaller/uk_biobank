@@ -63,6 +63,7 @@ import networkx
 # Custom
 import promiscuity.utility as utility
 import promiscuity.decomposition as decomp
+import uk_biobank.stratification as ukb_strat
 
 ###############################################################################
 # Functionality
@@ -2273,8 +2274,9 @@ def organize_hormones_missingness_imputation(
     return table
 
 
-# TODO: TCW 18 August 2021
-# TODO: this function is READY
+# Cohort-specific ordinal representations
+
+
 def determine_cohort_specific_hormone_ordinal(
     missingness_range=None,
     reportability_limit=None,
@@ -2354,19 +2356,11 @@ def determine_cohort_specific_hormone_ordinal(
     # Return information.
     return value
 
-# TODO: TCW 18 August 2021
-# 1. accept hormone name
-# 2. accept cohort name (replace _ with -)
-# 3. accept cohort-stratified table "table_cohort"
-# 4. accept complete table (for collection)
-# - - copy complete table
-# 5. define column names for hormone's measurement, missingness_range, and reportability_limit
-# 6. calculate hormone ordinal within cohort-stratified table
-# 7. reduce cohort-stratified table to only index and "<hormone>_<cohort>_ordinal"
-# 8. merge (introduces missing values to persons not in cohort)
 
-def determine_cohort_specific_hormone_ordinal_representation(
+def organize_cohort_specific_hormone_ordinal_representation(
     hormone=None,
+    cohort=None,
+    table_cohort=None,
     table=None,
 ):
     """
@@ -2379,8 +2373,10 @@ def determine_cohort_specific_hormone_ordinal_representation(
 
     arguments:
         hormone (str): name of a hormone
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+        cohort (str): name of a cohort
+        table_cohort (object): Pandas data frame for a single cohort
+        table (object): Pandas data frame collecting information for all cohorts
+            and hormones
 
     raises:
 
@@ -2390,22 +2386,23 @@ def determine_cohort_specific_hormone_ordinal_representation(
 
     """
 
-    # Copy data.
+    # Copy information.
+    table_cohort = table_cohort.copy(deep=True)
     table = table.copy(deep=True)
-    # Determine relevant columns.
+    # Define names of relevant columns.
     column_hormone = str(hormone)
     column_missingness = str(str(hormone) + "_missingness_range")
     column_reportability = str(str(hormone) + "_reportability_limit")
-    column_ordinal = str(str(hormone) + "_cohort_ordinal")
+    column_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
     # Calculate cohort-specific median.
-    array = copy.deepcopy(table[column_hormone].dropna().to_numpy())
+    array = copy.deepcopy(table_cohort[column_hormone].dropna().to_numpy())
     count = int(array.size)
     if (count > 10):
         median = numpy.nanmedian(array)
     else:
         median = float("nan")
     # Determine cohort-specific ordinal representation.
-    table[column_ordinal] = table.apply(
+    table_cohort[column_ordinal] = table_cohort.apply(
         lambda row:
             determine_cohort_specific_hormone_ordinal(
                 missingness_range=row[column_missingness],
@@ -2415,24 +2412,19 @@ def determine_cohort_specific_hormone_ordinal_representation(
             ),
         axis="columns", # apply function to each row
     )
+    # Merge cohort table back to the collection table.
+    table_cohort = table_cohort.loc[
+        :, table_cohort.columns.isin([column_ordinal])
+    ]
+    table = table.merge(
+        table_cohort,
+        how="outer",
+        left_on="eid",
+        right_on="eid",
+        suffixes=("_original", "_cohort"),
+    )
     # Return information.
     return table
-
-
-# TODO: new driver function...
-# 1. define cohort-stratified tables
-# stratification.stratify_set_primary_sex_menopause_age(table=None)
-# female
-# female_younger
-# female_older
-# female_premenopause
-# female_perimenopause
-# female_postmenopause
-# male
-# male_younger
-# male_older
-# TODO: iterate on cohort-stratified tables
-# TODO: iterate on hormone measurements...
 
 
 def organize_cohorts_specific_hormones_ordinal_representations(
@@ -2461,10 +2453,9 @@ def organize_cohorts_specific_hormones_ordinal_representations(
     """
 
     # Define relevant cohorts.
-    cohorts_records = stratification.stratify_set_primary_sex_menopause_age(
+    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
         table=table
     )
-    # TODO: use "cohort_model" as name of cohort
 
     # Define relevant hormones.
     # These ordinal representations are only relevant to the raw hormones with
@@ -2476,16 +2467,49 @@ def organize_cohorts_specific_hormones_ordinal_representations(
     ]
 
     # Iterate across cohorts.
-    #for
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
 
-    # Iterate across hormones.
+        # Iterate across hormones.
+        for hormone in hormones:
+            table = organize_cohort_specific_hormone_ordinal_representation(
+                hormone=hormone,
+                cohort=cohort,
+                table_cohort=cohort_record["table"],
+                table=table,
+            )
+            pass
+        pass
 
-
-    pass
-
-
-
-
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_cohorts_specific_hormones_ordinal_representations()")
+        utility.print_terminal_partition(level=3)
+        # Organize table.
+        columns_report = list()
+        hormone = "oestradiol"
+        columns_report.append(hormone)
+        for cohort_record in cohorts_records:
+            columns_report.append(
+                str(
+                    str(hormone) + "_" +
+                    str(cohort_record["cohort"]) + "_ordinal"
+                )
+            )
+        columns_report.insert(0, "IID")
+        #columns_report.insert(0, "eid")
+        table_report = table.copy(deep=True)
+        table_report = table_report.loc[
+            :, table_report.columns.isin(columns_report)
+        ]
+        table_report = table_report[[*columns_report]]
+        utility.print_terminal_partition(level=3)
+        print("Here is table with cohort-specific ordinal variables...")
+        print(table_report)
+    # Return information.
+    return table
 
 
 # Estimation of bioavailable and free hormones
@@ -3075,6 +3099,15 @@ def organize_sex_hormone_variables(
     # Impute hormone measurements that were missing due to limit of detection.
     table = organize_hormones_missingness_imputation(
         hormone_fields=hormone_fields,
+        table=table,
+        report=report,
+    )
+
+    ##########
+    # Define cohort-specific ordinal representations of hormones with
+    # consideration of cohort-specific medians and reportabilities due to
+    # detection limits.
+    table = organize_cohorts_specific_hormones_ordinal_representations(
         table=table,
         report=report,
     )
@@ -9454,7 +9487,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: 1")
+    print("version check: TCW, 18 August 2021")
     # Pause procedure.
     time.sleep(5.0)
 
