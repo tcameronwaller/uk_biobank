@@ -1533,6 +1533,7 @@ def dev_create_categorical_variable_indicators(
 def dev_reduce_categorical_variable_indicators(
     table=None,
     index=None,
+    column=None,
     columns_indicators=None,
     prefix=None,
     separator=None,
@@ -1738,6 +1739,7 @@ def dev_create_reduce_categorical_variable_indicators(
     pail_reduction = dev_reduce_categorical_variable_indicators(
         table=pail_indicator["table"],
         index=index,
+        column=column,
         columns_indicators=pail_indicator["columns_indicators"],
         prefix=str(prefix + "-" + "component"),
         separator=separator,
