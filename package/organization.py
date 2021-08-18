@@ -1463,6 +1463,13 @@ def dev_create_categorical_variable_indicators(
     table_indicators = table_indicators.loc[
         :, table_indicators.columns.isin([index, column])
     ]
+    # Drop any rows with missing values in the original column.
+    table_indicators.dropna(
+        axis="index",
+        how="any",
+        subset=None,
+        inplace=True,
+    )
     # Create binary dummies for variable categories.
     table_indicators = pandas.get_dummies(
         table_indicators,
