@@ -1003,7 +1003,7 @@ def create_categorical_variable_indicators(
         prefix_sep=separator,
         dummy_na=False, # whether to create indicators for missing values
         columns=[column],
-        drop_first=True, # whether to create "k - 1" dummies, adequate
+        drop_first=False, # whether to create "k - 1" dummies, adequate
         dtype=numpy.uint8,
     )
     table_indicators.set_index(
@@ -1057,12 +1057,12 @@ def create_categorical_variable_indicators(
         print(table_report)
         # Aggregate by sum.
         table_report.drop(
-            ["IID"],
+            ["IID", column],
             axis=1,
             inplace=True,
         )
         series_aggregate = table_report.aggregate(
-            lambda column: numpy.nansum(column.to_numpy()),
+            lambda column_current: numpy.nansum(column_current.to_numpy()),
             axis="index", # Apply function to each column in table.
         )
         table_aggregate = series_aggregate.to_frame(name="sum")
