@@ -63,7 +63,7 @@ import networkx
 # Custom
 import promiscuity.utility as utility
 import promiscuity.decomposition as decomp
-import uk_biobank.stratification as ukb_strat
+import uk_biobank.stratification as ukb_strat # problem when executing uk_biobank not as sub-directory...
 
 ###############################################################################
 # Functionality
@@ -916,7 +916,6 @@ def determine_assessment_month_category(
     return value
 
 
-
 def create_categorical_variable_indicators(
     table=None,
     index=None,
@@ -1053,9 +1052,24 @@ def create_categorical_variable_indicators(
             :, table_report.columns.isin(columns_report)
         ]
         table_report = table_report[[*columns_report]]
-        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=4)
         print("Here is table with dummy indicator variables...")
         print(table_report)
+        # Aggregate by sum.
+        table_report.drop(
+            ["IID"],
+            axis=1,
+            inplace=True,
+        )
+        series_aggregate = table_report.aggregate(
+            lambda column: numpy.nansum(column.to_numpy()),
+            axis="index", # Apply function to each column in table.
+        )
+        table_aggregate = series_aggregate.to_frame(name="sum")
+        utility.print_terminal_partition(level=4)
+        print("Here are sums for each category...")
+        print(series_aggregate)
+        print(table_aggregate)
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -1280,9 +1294,6 @@ def create_reduce_categorical_variable_indicators(
     )
     # Return information.
     return pail_reduction["table"]
-
-
-
 
 
 def define_ordinal_stratifications_by_sex_continuous_variables(
