@@ -2639,6 +2639,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_alcohol_current"
+    record["cohort"] = "female-alcohol-current"
     record["cohort_model"] = "female_alcohol_current"
     record["category"] = "alcohol_current"
     record["phenotype"] = "null"
@@ -2646,6 +2647,7 @@ def stratify_set_alcohol_sex_menopause_age(
     record["table"] = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table["alcohol_current"] == 1)
         ), :
     ]
@@ -2653,6 +2655,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "male_alcohol_current"
+    record["cohort"] = "male-alcohol-current"
     record["cohort_model"] = "male_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
@@ -2668,6 +2671,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_premenopause_ordinal_alcohol_current"
+    record["cohort"] = "female-premenopause-alcohol-current"
     record["cohort_model"] = "female_premenopause_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = True
@@ -2683,6 +2687,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_perimenopause_ordinal_alcohol_current"
+    record["cohort"] = "female-perimenopause-alcohol-current"
     record["cohort_model"] = "female_perimenopause_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = True
@@ -2698,6 +2703,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_postmenopause_ordinal_alcohol_current"
+    record["cohort"] = "female-postmenopause-alcohol-current"
     record["cohort_model"] = "female_postmenopause_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
@@ -2715,6 +2721,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_younger_alcohol_current"
+    record["cohort"] = "female-younger-alcohol-current"
     record["cohort_model"] = "female_younger_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
@@ -2730,6 +2737,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "female_older_alcohol_current"
+    record["cohort"] = "female-older-alcohol-current"
     record["cohort_model"] = "female_older_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
@@ -2745,6 +2753,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "male_younger_alcohol_current"
+    record["cohort"] = "male-younger-alcohol-current"
     record["cohort_model"] = "male_younger_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
@@ -2759,6 +2768,7 @@ def stratify_set_alcohol_sex_menopause_age(
 
     record = dict()
     record["name"] = "male_older_alcohol_current"
+    record["cohort"] = "male-older-alcohol-current"
     record["cohort_model"] = "male_older_alcohol_current"
     record["category"] = "alcohol_current"
     record["menstruation"] = False
