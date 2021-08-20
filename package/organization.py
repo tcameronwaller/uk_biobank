@@ -1823,10 +1823,11 @@ def organize_assessment_basis_variables(
     columns_report = [
         #"eid",
         "IID",
+        "assessment_site", "assessment_region",
+        "assessment_month", "assessment_month_order", "assessment_season",
         "sex", "sex_text",
         "age", "age_grade_female", "age_grade_male",
         "body_mass_index", "body_mass_index_log",
-        "month",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
