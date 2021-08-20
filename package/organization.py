@@ -832,7 +832,7 @@ def interpret_assessment_month_category(
         field_55 = copy.deepcopy(field_55)
         field_55_string = str(int(field_55))
         if (field_55_string in codes_interpretations.keys()):
-            interpretation = int(
+            interpretation = (
                 codes_interpretations[field_55_string]["interpretation"]
             )
         else:
