@@ -1,28 +1,28 @@
-coding	meaning	code	interpretation
-10003	Stockport (pilot)	10003	Stockport (pilot)
-11001	Manchester	11001	Manchester
-11002	Oxford	11002	Oxford
-11003	Cardiff	11003	Cardiff
-11004	Glasgow	11004	Glasgow
-11005	Edinburgh	11005	Edinburgh
-11006	Stoke	11006	Stoke
-11007	Reading	11007	Reading
-11008	Bury	11008	Bury
-11009	Newcastle	11009	Newcastle
-11010	Leeds	11010	Leeds
-11011	Bristol	11011	Bristol
-11012	Barts	11012	Barts
-11013	Nottingham	11013	Nottingham
-11014	Sheffield	11014	Sheffield
-11016	Liverpool	11016	Liverpool
-11017	Middlesborough	11017	Middlesborough
-11018	Hounslow	11018	Hounslow
-11020	Croydon	11020	Croydon
-11021	Birmingham	11021	Birmingham
-11022	Swansea	11022	Swansea
-11023	Wrexham	11023	Wrexham
-11024	Cheadle (revisit)	11024	Cheadle (revisit)
-11025	Cheadle (imaging)	11025	Cheadle (imaging)
-11026	Reading (imaging)	11026	Reading (imaging)
-11027	Newcastle (imaging)	11027	Newcastle (imaging)
-11028	Bristol (imaging)	11028	Bristol (imaging)
+coding	meaning	code	interpretation	region_name	region
+10003	Stockport (pilot)	10003	Stockport (pilot)	central	1
+11001	Manchester	11001	Manchester	central	1
+11002	Oxford	11002	Oxford	south	0
+11003	Cardiff	11003	Cardiff	south	0
+11004	Glasgow	11004	Glasgow	north	2
+11005	Edinburgh	11005	Edinburgh	north	2
+11006	Stoke	11006	Stoke	central	1
+11007	Reading	11007	Reading	south	0
+11008	Bury	11008	Bury	central	1
+11009	Newcastle	11009	Newcastle	north	2
+11010	Leeds	11010	Leeds	central	1
+11011	Bristol	11011	Bristol	south	0
+11012	Barts	11012	Barts	south	0
+11013	Nottingham	11013	Nottingham	central	1
+11014	Sheffield	11014	Sheffield	central	1
+11016	Liverpool	11016	Liverpool	central	1
+11017	Middlesborough	11017	Middlesborough	north	2
+11018	Hounslow	11018	Hounslow	south	0
+11020	Croydon	11020	Croydon	south	0
+11021	Birmingham	11021	Birmingham	central	1
+11022	Swansea	11022	Swansea	south	0
+11023	Wrexham	11023	Wrexham	central	1
+11024	Cheadle (revisit)	11024	Cheadle (revisit)	central	1
+11025	Cheadle (imaging)	11025	Cheadle (imaging)	central	1
+11026	Reading (imaging)	11026	Reading (imaging)	south	0
+11027	Newcastle (imaging)	11027	Newcastle (imaging)	north	2
+11028	Bristol (imaging)	11028	Bristol (imaging)	south	0

@@ -195,6 +195,11 @@ def read_source_fields_codes_interpretations(
         path_dock, "parameters", "uk_biobank",
         "table_ukbiobank_field_54_code_interpretation.tsv"
     )
+    path_table_field_55 = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_field_55_code_interpretation.tsv"
+    )
+
     # Organize code interpretations.
     table_field_54 = pandas.read_csv(
         path_table_field_54,
@@ -205,6 +210,8 @@ def read_source_fields_codes_interpretations(
             "interpretation": "string",
             "coding": "string",
             "meaning": "string",
+            "region_name": "string",
+            "region": numpy.int32,
         },
     )
     table_field_54.reset_index(
@@ -221,12 +228,39 @@ def read_source_fields_codes_interpretations(
     field_54_codes_interpretations = table_field_54.to_dict(
         orient="index",
     )
+
+    table_field_55 = pandas.read_csv(
+        path_table_field_55,
+        sep="\t",
+        header=0,
+        dtype={
+            "code": "string",
+            "interpretation": "string",
+            "coding": "string",
+            "meaning": "string",
+            "season": numpy.int32,
+        },
+    )
+    table_field_55.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_field_55.set_index(
+        "code",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    field_55_codes_interpretations = table_field_55.to_dict(
+        orient="index",
+    )
+
     # Compile and return information.
     return {
         "field_54": field_54_codes_interpretations,
+        "field_55": field_55_codes_interpretations,
     }
-
-
 
 
 ##########
@@ -569,7 +603,7 @@ def organize_genotype_principal_component_variables(
 # General assessment
 
 
-def interpret_assessment_center(
+def interpret_assessment_site(
     field_54=None,
     codes_interpretations=None,
 ):
@@ -648,8 +682,107 @@ def interpret_assessment_center(
     return interpretation
 
 
-def interpret_assessment_month(
+def interpret_assessment_site_region(
+    field_54=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field 54.
+
+    Data-Field "54": "UK Biobank assessment centre"
+    UK Biobank data-coding "10" for data-field "54".
+
+    Note:
+    "
+    The UK Biobank assessment centre at which participant consented.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_54 (float): UK Biobank field 54, assessment center
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_54)) and
+        (10003 <= field_54 and field_54 < 11029)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_54 = copy.deepcopy(field_54)
+        field_54_string = str(int(field_54))
+        if (field_54_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_54_string]["region"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_assessment_month_order(
     field_55=None,
+):
+    """
+    Intepret UK Biobank's coding for data field 55.
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data coding "8" for variable field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+    Accommodate inexact float values.
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+    raises:
+    returns:
+        (float): interpretation value
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value for month.
+        value = float(field_55)
+    else:
+        # Missing value.
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_assessment_month_category(
+    field_55=None,
+    codes_interpretations=None,
 ):
     """
     Intepret UK Biobank's coding for data field 55.
@@ -679,6 +812,8 @@ def interpret_assessment_month(
 
     arguments:
         field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
 
     raises:
 
@@ -692,13 +827,87 @@ def interpret_assessment_month(
         (not pandas.isna(field_55)) and
         (0.5 <= field_55 and field_55 < 12.5)
     ):
-        # The variable has a valid value for month.
-        value = float(field_55)
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["interpretation"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
     else:
         # Missing value.
-        value = float("nan")
+        interpretation = str("nan")
     # Return.
-    return value
+    return interpretation
+
+
+def interpret_assessment_month_season(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data field 55.
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data coding "8" for variable field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["season"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
 
 
 def interpret_sex_consensus(
@@ -764,12 +973,12 @@ def interpret_sex_consensus(
     return value
 
 
-def determine_assessment_center_category(
+def determine_assessment_site_category(
     field_54=None,
     codes_interpretations=None,
 ):
     """
-    Determine whether female persons experienced bilateral oophorectomy.
+    Determine assessment site.
 
     arguments:
         field_54 (float): UK Biobank field 54, assessment center
@@ -785,12 +994,126 @@ def determine_assessment_center_category(
 
     # Interpret codes.
     # Set value.
-    value = interpret_assessment_center(
+    value = interpret_assessment_site(
         field_54=field_54,
         codes_interpretations=codes_interpretations,
     )
     # Return information.
     return value
+
+
+def determine_assessment_site_region(
+    field_54=None,
+    codes_interpretations=None,
+):
+    """
+    Determine assessment site.
+
+    arguments:
+        field_54 (float): UK Biobank field 54, assessment center
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_site_region(
+        field_54=field_54,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_order(
+    field_55=None,
+):
+    """
+    Determine assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_order(
+        field_55=field_55,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_category(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Determine assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_category(
+        field_55=field_55,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_season(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Determine assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_season(
+        field_55=field_55,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
 
 
 def determine_sex_text(
@@ -829,91 +1152,6 @@ def determine_sex_text(
         sex_text = "nan"
     # Return information.
     return sex_text
-
-
-def determine_assessment_month_order(
-    field_55=None,
-):
-    """
-    Determine whether female persons experienced bilateral oophorectomy.
-
-    arguments:
-        field_55 (float): UK Biobank field 55, month of assessment
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret oophorectomy.
-    month = interpret_assessment_month(
-        field_55=field_55,
-    )
-    # Set value.
-    value = month
-    # Return information.
-    return value
-
-
-def determine_assessment_month_category(
-    field_55=None,
-):
-    """
-    Determine whether female persons experienced bilateral oophorectomy.
-
-    arguments:
-        field_55 (float): UK Biobank field 55, month of assessment
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret oophorectomy.
-    month = interpret_assessment_month(
-        field_55=field_55,
-    )
-    # Set value.
-    if (
-        (not pandas.isna(month))
-    ):
-        # The variable has a valid value for month.
-        if (month == 1):
-            value = "January"
-        elif (month == 2):
-            value = "February"
-        elif (month == 3):
-            value = "March"
-        elif (month == 4):
-            value = "April"
-        elif (month == 5):
-            value = "May"
-        elif (month == 6):
-            value = "June"
-        elif (month == 7):
-            value = "July"
-        elif (month == 8):
-            value = "August"
-        elif (month == 9):
-            value = "September"
-        elif (month == 10):
-            value = "October"
-        elif (month == 11):
-            value = "November"
-        elif (month == 12):
-            value = "December"
-        else:
-            # Uninterpretable value.
-            value = "nan"
-    else:
-        # Missing value.
-        value = "nan"
-    # Return information.
-    return value
 
 
 def create_categorical_variable_indicators(
@@ -1445,30 +1683,49 @@ def organize_assessment_basis_variables(
         path_dock=path_dock,
     )
 
-    # Determine assessment center.
+    # Determine assessment site.
     table["assessment_site"] = table.apply(
         lambda row:
-            determine_assessment_center_category(
+            determine_assessment_site_category(
                 field_54=row["54-0.0"],
                 codes_interpretations=source["field_54"],
             ),
         axis="columns", # apply function to each row
     )
+    table["assessment_region"] = table.apply(
+        lambda row:
+            determine_assessment_site_region(
+                field_54=row["54-0.0"],
+                codes_interpretations=source["field_54"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Determine month of assessment.
-    table["month_order"] = table.apply(
+    table["assessment_month_order"] = table.apply(
         lambda row:
             determine_assessment_month_order(
                 field_55=row["55-0.0"],
             ),
         axis="columns", # apply function to each row
     )
-    table["month"] = table.apply(
+    table["assessment_month"] = table.apply(
         lambda row:
             determine_assessment_month_category(
                 field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
             ),
         axis="columns", # apply function to each row
     )
+    table["assessment_season"] = table.apply(
+        lambda row:
+            determine_assessment_month_season(
+                field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Create binary indicators of categories and reduce their dimensionality.
     table = create_reduce_categorical_variable_indicators(
         table=table,
@@ -1481,7 +1738,7 @@ def organize_assessment_basis_variables(
     table = create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
-        column="month",
+        column="assessment_month",
         prefix="month",
         separator="_",
         report=True,
