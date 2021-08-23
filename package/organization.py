@@ -1755,129 +1755,120 @@ def create_reduce_categorical_variable_indicators(
 
 
 def report_ordinal_stratifications_by_sex_continuous_variable(
-    variable=None,
-    table_female=None,
-    table_male=None,
+    sex_text=None,
+    variables=None,
+    table=None,
 ):
     """
     Stratify persons to ordinal bins by their values of continuous variables.
 
     arguments:
-        variable (str): name of columns for a continuous variable by
+        sex_text (str): name of column for textual representation of sex
+        variables (list<str>): names of columns for continuous variables by
             which to define stratification variables
-        table_female (object): Pandas data frame of female cohort
-        table_male (object): Pandas data frame of male cohort
+        table (object): Pandas data frame of features (columns) across
+            observations (rows)
 
     raises:
 
     returns:
-        (object): Pandas data frame of information about persons
 
     """
 
-    # Copy information.
-    table_female = table_female.copy(deep=True)
-    table_male = table_male.copy(deep=True)
-    # Report.
-    utility.print_terminal_partition(level=3)
-    print("report_ordinal_stratifications_by_sex_continuous_variable")
-    print("variable: " + str(variable))
-
-    utility.print_terminal_partition(level=5)
-    print("female tertiles")
     #print(pandas.qcut(
     #    table_female[variable], q=3, labels=[0, 1, 2,], retbins=True,
     #))
     #print(pandas.qcut(
     #    table_female[variable], q=3, labels=[0, 1, 2,],
     #).value_counts())
-    print("cohort: female low")
-    table_cohort = table_female.loc[
-        (
-            (table_female[str(variable + "_grade_female")] == 0)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
 
-    print("cohort: female middle")
-    table_cohort = table_female.loc[
-        (
-            (table_female[str(variable + "_grade_female")] == 1)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
+    # Copy information.
+    table = table.copy(deep=True)
+    # Report.
+    utility.print_terminal_partition(level=3)
+    print("report_ordinal_stratifications_by_sex_continuous_variable")
 
-    print("cohort: female high")
-    table_cohort = table_female.loc[
-        (
-            (table_female[str(variable + "_grade_female")] == 2)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
+    # Iterate on variables and cohorts.
+    for variable in variables:
+        utility.print_terminal_partition(level=5)
+        print("variable: " + str(variable))
 
-    utility.print_terminal_partition(level=5)
-    print("male tertiles")
+        # Collect records of information about each cohort.
+        records = list()
 
-    print("cohort: male low")
-    table_cohort = table_male.loc[
-        (
-            (table_male[str(variable + "_grade_male")] == 0)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
+        record = dict()
+        record["name"] = "female low"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "female") &
+                (table[str(variable + "_grade_female")] == 0)
+            ), :
+        ]
+        records.append(record)
 
-    print("cohort: male middle")
-    table_cohort = table_male.loc[
-        (
-            (table_male[str(variable + "_grade_male")] == 1)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
+        record = dict()
+        record["name"] = "female middle"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "female") &
+                (table[str(variable + "_grade_female")] == 1)
+            ), :
+        ]
+        records.append(record)
 
-    print("cohort: male high")
-    table_cohort = table_male.loc[
-        (
-            (table_male[str(variable + "_grade_male")] == 2)
-        ), :
-    ]
-    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
-    count = str(int(array.size))
-    minimum = str(round(numpy.nanmin(array), 3))
-    maximum = str(round(numpy.nanmax(array), 3))
-    print("count: " + count)
-    print("minimum: " + minimum)
-    print("maximum: " + maximum)
+        record = dict()
+        record["name"] = "female high"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "female") &
+                (table[str(variable + "_grade_female")] == 2)
+            ), :
+        ]
+        records.append(record)
 
+        record = dict()
+        record["name"] = "male low"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "male") &
+                (table[str(variable + "_grade_male")] == 0)
+            ), :
+        ]
+        records.append(record)
+
+        record = dict()
+        record["name"] = "male middle"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "male") &
+                (table[str(variable + "_grade_male")] == 1)
+            ), :
+        ]
+        records.append(record)
+
+        record = dict()
+        record["name"] = "male high"
+        record["table"] = table.loc[
+            (
+                (table[sex_text] == "male") &
+                (table[str(variable + "_grade_male")] == 2)
+            ), :
+        ]
+        records.append(record)
+
+        # Iterate on tables.
+        for record in records:
+            array = copy.deepcopy(record["table"][variable].dropna().to_numpy())
+            count_string = str(int(array.size))
+            mean_string = str(round(numpy.nanmean(array), 3))
+            minimum_string = str(round(numpy.nanmin(array), 3))
+            maximum_string = str(round(numpy.nanmax(array), 3))
+            print("count: " + count_string)
+            print("mean: " + mean_string)
+            print("minimum: " + minimum_string)
+            print("maximum: " + maximum_string)
+            pass
+        pass
     pass
 
 
@@ -1940,13 +1931,6 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
             q=3,
             labels=[0, 1, 2,],
         )
-        # Report.
-        if report:
-            report_ordinal_stratifications_by_sex_continuous_variable(
-                variable=variable,
-                table_female=table_female,
-                table_male=table_male,
-            )
     # Combine records for female and male persons.
     table_collection = table_collection.append(
         table_female,
@@ -1970,7 +1954,11 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     )
     # Report.
     if report:
-        print(table_collection)
+        report_ordinal_stratifications_by_sex_continuous_variables(
+            sex_text=sex_text,
+            variables=variables,
+            table=table,
+        )
     # Return information.
     return table_collection
 
@@ -2147,12 +2135,6 @@ def organize_assessment_basis_variables(
         utility.print_terminal_partition(level=2)
         print("report: organize_sex_age_body_variables()")
         utility.print_terminal_partition(level=3)
-        print("translations of general attribute column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        utility.print_terminal_partition(level=2)
-        print("Translation of columns for general attributes: ")
         print(table_report)
         utility.print_terminal_partition(level=3)
         # Variable types.
