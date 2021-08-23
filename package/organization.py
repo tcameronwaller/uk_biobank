@@ -1783,7 +1783,7 @@ def report_ordinal_stratifications_by_sex_continuous_variable(
     print("report_ordinal_stratifications_by_sex_continuous_variable")
     print("variable: " + str(variable))
 
-    utlity.print_terminal_partition(level=5)
+    utility.print_terminal_partition(level=5)
     print("female tertiles")
     #print(pandas.qcut(
     #    table_female[variable], q=3, labels=[0, 1, 2,], retbins=True,
@@ -1833,7 +1833,7 @@ def report_ordinal_stratifications_by_sex_continuous_variable(
     print("minimum: " + minimum)
     print("maximum: " + maximum)
 
-    utlity.print_terminal_partition(level=5)
+    utility.print_terminal_partition(level=5)
     print("male tertiles")
 
     print("cohort: male low")
