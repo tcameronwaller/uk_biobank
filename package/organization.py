@@ -1792,6 +1792,7 @@ def report_ordinal_stratifications_by_sex_continuous_variables(
     for variable in variables:
         utility.print_terminal_partition(level=5)
         print("variable: " + str(variable))
+        utility.print_terminal_partition(level=5)
 
         # Collect records of information about each cohort.
         records = list()
@@ -1863,6 +1864,8 @@ def report_ordinal_stratifications_by_sex_continuous_variables(
             mean_string = str(round(numpy.nanmean(array), 3))
             minimum_string = str(round(numpy.nanmin(array), 3))
             maximum_string = str(round(numpy.nanmax(array), 3))
+            print("..........")
+            print("cohort: " + record["name"])
             print("count: " + count_string)
             print("mean: " + mean_string)
             print("minimum: " + minimum_string)

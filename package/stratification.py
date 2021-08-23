@@ -1691,7 +1691,7 @@ def stratify_cohorts_genotypes_set_bipolar_body(
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
 
 
-def stratify_set_primary_sex_menopause_age(
+def stratify_set_primary_sex_age_body_menopause(
     table=None,
 ):
     """
@@ -1743,7 +1743,7 @@ def stratify_set_primary_sex_menopause_age(
     # Menopause
 
     record = dict()
-    record["name"] = "female_premenopause_ordinal"
+    record["name"] = "female-premenopause"
     record["cohort"] = "female-premenopause"
     record["cohort_model"] = "female-premenopause"
     record["category"] = "menopause_ordinal"
@@ -1758,7 +1758,7 @@ def stratify_set_primary_sex_menopause_age(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_perimenopause_ordinal"
+    record["name"] = "female-perimenopause"
     record["cohort"] = "female-perimenopause"
     record["cohort_model"] = "female-perimenopause"
     record["category"] = "menopause_ordinal"
@@ -1773,7 +1773,7 @@ def stratify_set_primary_sex_menopause_age(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause_ordinal"
+    record["name"] = "female-postmenopause"
     record["cohort"] = "female-postmenopause"
     record["cohort_model"] = "female-postmenopause"
     record["category"] = "menopause_ordinal"
@@ -1790,9 +1790,9 @@ def stratify_set_primary_sex_menopause_age(
     # Age
 
     record = dict()
-    record["name"] = "female_younger"
-    record["cohort"] = "female-younger"
-    record["cohort_model"] = "female-younger"
+    record["name"] = "female-age-low"
+    record["cohort"] = "female-age-low"
+    record["cohort_model"] = "female-age-low"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1805,9 +1805,24 @@ def stratify_set_primary_sex_menopause_age(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_older"
-    record["cohort"] = "female-older"
-    record["cohort_model"] = "female-older"
+    record["name"] = "female-age-middle"
+    record["cohort"] = "female-age-middle"
+    record["cohort_model"] = "female-age-middle"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female-age-high"
+    record["cohort"] = "female-age-high"
+    record["cohort_model"] = "female-age-high"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1820,9 +1835,9 @@ def stratify_set_primary_sex_menopause_age(
     records.append(record)
 
     record = dict()
-    record["name"] = "male_younger"
-    record["cohort"] = "male-younger"
-    record["cohort_model"] = "male-younger"
+    record["name"] = "male-age-low"
+    record["cohort"] = "male-age-low"
+    record["cohort_model"] = "male-age-low"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
@@ -1834,15 +1849,118 @@ def stratify_set_primary_sex_menopause_age(
     records.append(record)
 
     record = dict()
-    record["name"] = "male_older"
-    record["cohort"] = "male-older"
-    record["cohort_model"] = "male-older"
+    record["name"] = "male-age-middle"
+    record["cohort"] = "male-age-middle"
+    record["cohort_model"] = "male-age-middle"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male-age-high"
+    record["cohort"] = "male-age-high"
+    record["cohort_model"] = "male-age-high"
     record["category"] = "age"
     record["menstruation"] = False
     record["table"] = table.loc[
         (
             (table["sex_text"] == "male") &
             (table["age_grade_male"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Body Mass Index (BMI)
+
+    record = dict()
+    record["name"] = "female-body-low"
+    record["cohort"] = "female-body-low"
+    record["cohort_model"] = "female-body-low"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["body_grade_female"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female-body-middle"
+    record["cohort"] = "female-body-middle"
+    record["cohort_model"] = "female-body-middle"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["body_grade_female"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female-body-high"
+    record["cohort"] = "female-body-high"
+    record["cohort_model"] = "female-body-high"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["body_grade_female"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male-body-low"
+    record["cohort"] = "male-body-low"
+    record["cohort_model"] = "male-body-low"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["body_grade_male"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male-body-middle"
+    record["cohort"] = "male-body-middle"
+    record["cohort_model"] = "male-body-middle"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["body_grade_male"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male-body-high"
+    record["cohort"] = "male-body-high"
+    record["cohort_model"] = "male-body-high"
+    record["category"] = "body"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["body_grade_male"] == 2)
         ), :
     ]
     records.append(record)
@@ -2806,7 +2924,7 @@ def stratify_cohorts_models_phenotypes_sets(
     # Collect records of information about each cohort and model.
     records = list()
     records_novel = (
-        stratify_set_primary_sex_menopause_age(
+        stratify_set_primary_sex_age_body_menopause(
             table=table,
         )
     )
