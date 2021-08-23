@@ -910,27 +910,26 @@ def interpret_assessment_month_season(
     return interpretation
 
 
-def interpret_sex_consensus(
+def interpret_sex_self_report(
     field_31=None,
-    field_22001=None,
 ):
     """
-    Determine consensus sex (biological sex, not social gender).
-    Prioritize interpretation of the genetic sex variable.
+    Intepret UK Biobank's data-coding for data-field 31.
 
-    Data-Field "31": "sex"
-    UK Biobank data coding "9" for variable field "31".
-    "female": 0
-    "male": 1
+    Data-Field "31": "Sex"
+    UK Biobank data-coding "9" for data-field "31".
+    0: "Female"
+    1: "Male"
 
-    Data-Field "22001": "genetic sex"
-    UK Biobank data coding "9" for variable field "22001".
-    "female": 0
-    "male": 1
+    Accommodate inexact float values.
+
+    Note:
+    "Acquired from central registry at recruitment, but in some cases updated by
+    the participant. Hence this field may contain a mixture of the sex the NHS
+    had recorded for the participant and self-reported sex."
 
     arguments:
-        field_31 (float): UK Biobank field 31, person's self-reported sex
-        field_22001 (float): UK Biobank field 22001, ...
+        field_31 (float): UK Biobank field 31, self-report sex
 
     raises:
 
@@ -939,38 +938,143 @@ def interpret_sex_consensus(
 
     """
 
+    # Interpret field code.
     if (
-        (
-            (not pandas.isna(field_22001)) and
-            (-0.5 <= field_22001 and field_22001 < 1.5)
-        )
+        (not pandas.isna(field_31)) and
+        (-0.5 <= field_31 and field_31 < 1.5)
     ):
-        # Genetic sex variable has a valid value.
-        # Prioritize interpretation of the genetic sex variable.
-        if (-0.5 <= field_22001 and field_22001 < 0.5):
-            # "female": 0
-            value = 0
-        elif (0.5 <= field_22001 and field_22001 < 1.5):
-            # "male": 1
-            value = 1
-    elif (
-        (
-            (not pandas.isna(field_31)) and
-            (-0.5 <= field_31 and field_31 < 1.5)
-        )
-    ):
-        # Self-reported sex variable has a valid value.
+        # The variable has a valid value.
+        # Interpret the value.
         if (-0.5 <= field_31 and field_31 < 0.5):
-            # "female": 0
-            value = 0
+            # 0: "Female"
+            interpretation = 0
         elif (0.5 <= field_31 and field_31 < 1.5):
-            # "male": 1
-            value = 1
+            # 1: "Male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
     else:
-        # Sex is missing in both variables.
-        value = float("nan")
-    # Return information.
-    return value
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_sex_genetic(
+    field_22001=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 22001.
+
+    Data-Field "22001": "Genetic sex"
+    UK Biobank data-coding "9" for data-field "22001".
+    0: "Female"
+    1: "Male"
+
+    Accommodate inexact float values.
+
+    Note:
+    "Note that in over 300 cases the genetic sex differs from the self-reported
+    value in Field 31."
+
+    arguments:
+        field_22001 (float): UK Biobank field 22001, genetic sex
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_22001)) and
+        (-0.5 <= field_22001 and field_22001 < 1.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (-0.5 <= field_22001 and field_22001 < 0.5):
+            # 0: "Female"
+            interpretation = 0
+        elif (0.5 <= field_22001 and field_22001 < 1.5):
+            # 1: "Male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_age(
+    field_21022=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 21022.
+
+    Accommodate inexact float values.
+
+    Note:
+
+    arguments:
+        field_21022 (float): UK Biobank field 21022, age
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_21022))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        interpretation = float(field_21022)
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_body_mass_index(
+    field_21001=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 21001.
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_21001 (float): UK Biobank field 21001, body mass index
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_21001))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        interpretation = float(field_21001)
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
 
 
 def determine_assessment_site_category(
@@ -1114,6 +1218,49 @@ def determine_assessment_month_season(
     return value
 
 
+def determine_biological_sex_consensus(
+    field_31=None,
+    field_22001=None,
+):
+    """
+    Determine consensus sex (biological sex, not social gender).
+    Prioritize interpretation of the genetic sex variable.
+
+    arguments:
+        field_31 (float): UK Biobank field 31, person's self-reported sex
+        field_22001 (float): UK Biobank field 22001, genetic sex
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret days since previous menstruation.
+    sex_self_report = interpret_sex_self_report(
+        field_31=field_31,
+    )
+    # Interpret whether person was experiencing menstruation period currently.
+    sex_genetic = interpret_sex_genetic(
+        field_22001=field_22001,
+    )
+    # Comparison.
+    # Prioritize genetic sex.
+    if (not pandas.isna(sex_genetic)):
+        # Genetic sex variable has a valid value.
+        # Prioritize this variable.
+        value = sex_genetic
+    elif (not pandas.isna(sex_self_report)):
+        # Person has missing value for genetic sex.
+        # Self-report sex variable has a valid value.
+        # Resort to self-report sex in absence of genetic sex.
+        value = sex_self_report
+    else:
+        # Lack of information.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 def determine_sex_text(
@@ -1152,6 +1299,79 @@ def determine_sex_text(
         sex_text = "nan"
     # Return information.
     return sex_text
+
+
+def determine_age(
+    field_21022=None,
+):
+    """
+    Determine age with consideration of possible range.
+
+    arguments:
+        field_21022 (float): UK Biobank field 21022, age
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret age.
+    age = interpret_age(
+        field_21022=field_21022,
+    )
+    # Comparison.
+    if (
+        (not pandas.isna(age)) and
+        (0.0 <= age and age < 150.0)
+    ):
+        # Age variable has a valid value.
+        value = age
+    else:
+        # Lack of information or unreasonable information.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_body_mass_index(
+    field_21001=None,
+):
+    """
+    Determine body mass index (BMI) with consideration of possible range.
+
+    Maximum realistic body mass index (BMI) is less than 185, which would be the
+    BMI of a person with height 6 feet 1 inches and body weight 1,400 pounds.
+
+    https://www.nhlbi.nih.gov/health/educational/lose_wt/BMI/bmicalc.htm
+
+    arguments:
+        field_21001 (float): UK Biobank field 21001, body mass index
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret age.
+    body = interpret_body_mass_index(
+        field_21001=field_21001,
+    )
+    # Comparison.
+    if (
+        (not pandas.isna(body)) and
+        (5.0 <= body and body < 190.0)
+    ):
+        # Age variable has a valid value.
+        value = body
+    else:
+        # Lack of information or unreasonable information.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 def create_categorical_variable_indicators(
@@ -1534,6 +1754,133 @@ def create_reduce_categorical_variable_indicators(
     return pail_reduction["table"]
 
 
+def report_ordinal_stratifications_by_sex_continuous_variable(
+    variable=None,
+    table_female=None,
+    table_male=None,
+):
+    """
+    Stratify persons to ordinal bins by their values of continuous variables.
+
+    arguments:
+        variable (str): name of columns for a continuous variable by
+            which to define stratification variables
+        table_female (object): Pandas data frame of female cohort
+        table_male (object): Pandas data frame of male cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about persons
+
+    """
+
+    # Copy information.
+    table_female = table_female.copy(deep=True)
+    table_male = table_male.copy(deep=True)
+    # Report.
+    utility.print_terminal_partition(level=3)
+    print("report_ordinal_stratifications_by_sex_continuous_variable")
+    print("variable: " + str(variable))
+
+    utlity.print_terminal_partition(level=5)
+    print("female tertiles")
+    #print(pandas.qcut(
+    #    table_female[variable], q=3, labels=[0, 1, 2,], retbins=True,
+    #))
+    #print(pandas.qcut(
+    #    table_female[variable], q=3, labels=[0, 1, 2,],
+    #).value_counts())
+    print("cohort: female low")
+    table_cohort = table_female.loc[
+        (
+            (table_female[str(variable + "_grade_female")] == 0)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    print("cohort: female middle")
+    table_cohort = table_female.loc[
+        (
+            (table_female[str(variable + "_grade_female")] == 1)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    print("cohort: female high")
+    table_cohort = table_female.loc[
+        (
+            (table_female[str(variable + "_grade_female")] == 2)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    utlity.print_terminal_partition(level=5)
+    print("male tertiles")
+
+    print("cohort: male low")
+    table_cohort = table_male.loc[
+        (
+            (table_male[str(variable + "_grade_male")] == 0)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    print("cohort: male middle")
+    table_cohort = table_male.loc[
+        (
+            (table_male[str(variable + "_grade_male")] == 1)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    print("cohort: male high")
+    table_cohort = table_male.loc[
+        (
+            (table_male[str(variable + "_grade_male")] == 2)
+        ), :
+    ]
+    array = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+    count = str(int(array.size))
+    minimum = str(round(numpy.nanmin(array), 3))
+    maximum = str(round(numpy.nanmax(array), 3))
+    print("count: " + count)
+    print("minimum: " + minimum)
+    print("maximum: " + maximum)
+
+    pass
+
+
 def define_ordinal_stratifications_by_sex_continuous_variables(
     index=None,
     sex_text=None,
@@ -1595,33 +1942,11 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
         )
         # Report.
         if report:
-            utility.print_terminal_partition(level=2)
-            print("define_ordinal_stratifications_by_sex_continuous_variables")
-            print("variable: " + str(variable))
-            print("female tertiles")
-            print(pandas.qcut(
-                table_female[variable],
-                q=3,
-                labels=[0, 1, 2,],
-                retbins=True,
-            ))
-            print(pandas.qcut(
-                table_female[variable],
-                q=3,
-                labels=[0, 1, 2,],
-            ).value_counts())
-            print("male tertiles")
-            print(pandas.qcut(
-                table_male[variable],
-                q=3,
-                labels=[0, 1, 2,],
-                retbins=True,
-            ))
-            print(pandas.qcut(
-                table_male[variable],
-                q=3,
-                labels=[0, 1, 2,],
-            ).value_counts())
+            report_ordinal_stratifications_by_sex_continuous_variable(
+                variable=variable,
+                table_female=table_female,
+                table_male=table_male,
+            )
     # Combine records for female and male persons.
     table_collection = table_collection.append(
         table_female,
@@ -1649,9 +1974,6 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     # Return information.
     return table_collection
 
-# TODO: TCW 18 August 2021
-# TODO: set reasonable limits on "age" and "BMI" raw data-fields to make sure accurate
-# TODO: follow "interpret_" "determine_" pattern for "age" and "BMI"
 
 def organize_assessment_basis_variables(
     table=None,
@@ -1744,31 +2066,10 @@ def organize_assessment_basis_variables(
         report=True,
     )
 
-
-    # TODO: TCW 10 August 2021
-    # TODO: follow pattern of interpret --> determine
-
-    # Convert variable types.
-    columns_type = [
-        "31-0.0", "22001-0.0", "21022-0.0", "21001-0.0"
-    ]
-    table = utility.convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
-    )
-
-    # Translate column names.
-    translations = dict()
-    translations["21022-0.0"] = "age"
-    translations["21001-0.0"] = "body_mass_index"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
     # Determine sex consensus between self-report and genotypic sex.
     table["sex"] = table.apply(
         lambda row:
-            interpret_sex_consensus(
+            determine_biological_sex_consensus(
                 field_31=row["31-0.0"],
                 field_22001=row["22001-0.0"],
             ),
@@ -1782,37 +2083,45 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-
     # Determine age.
-
-
-    # Determine body mass index (BMI).
-
-
-    # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_table_continuous_ratio_variables(
-        columns=["body_mass_index"],
-        table=table,
+    table["age"] = table.apply(
+        lambda row:
+            determine_age(
+                field_21022=row["21022-0.0"],
+            ),
+        axis="columns", # apply function to each row
     )
+    # Determine Body Mass Index (BMI).
+    table["body"] = table.apply(
+        lambda row:
+            determine_body_mass_index(
+                field_21001=row["21001-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Introduce stratification variables by values of continuous variables, in
     # particular age within female and male persons.
     table = define_ordinal_stratifications_by_sex_continuous_variables(
         index="eid",
         sex_text="sex_text",
-        variables=["age"],
+        variables=["age", "body"],
         table=table,
         report=report,
     )
+    # Transform variables' values to normalize distributions.
+    table = utility.transform_normalize_table_continuous_ratio_variables(
+        columns=["body"],
+        table=table,
+    )
+
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
     table_clean.drop(
         labels=[
-            "31-0.0",
-            "55-0.0",
-            "22001-0.0", #"21022-0.0",
-            "21002-0.0", "50-0.0",
-            #"21001-0.0",
+            "31-0.0", "50-0.0", "54-0.0", "55-0.0",
+            "21001-0.0", "21002-0.0", "21022-0.0", "22001-0.0",
             "23104-0.0",
         ],
         axis="columns",
@@ -1827,7 +2136,7 @@ def organize_assessment_basis_variables(
         "assessment_month", "assessment_month_order", "assessment_season",
         "sex", "sex_text",
         "age", "age_grade_female", "age_grade_male",
-        "body_mass_index", "body_mass_index_log",
+        "body", "body_grade_female", "body_grade_male", "body_log",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -2662,7 +2971,7 @@ def organize_cohort_specific_hormone_ordinal_representation(
     column_hormone = str(hormone)
     column_missingness = str(str(hormone) + "_missingness_range")
     column_reportability = str(str(hormone) + "_reportability_limit")
-    column_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
+    column_order = str(str(hormone) + "_" + str(cohort) + "_order")
     # Calculate cohort-specific median.
     array = copy.deepcopy(table_cohort[column_hormone].dropna().to_numpy())
     count = int(array.size)
@@ -2671,7 +2980,7 @@ def organize_cohort_specific_hormone_ordinal_representation(
     else:
         median = float("nan")
     # Determine cohort-specific ordinal representation.
-    table_cohort[column_ordinal] = table_cohort.apply(
+    table_cohort[column_order] = table_cohort.apply(
         lambda row:
             determine_cohort_specific_hormone_ordinal(
                 missingness_range=row[column_missingness],
@@ -2683,7 +2992,7 @@ def organize_cohort_specific_hormone_ordinal_representation(
     )
     # Merge cohort table back to the collection table.
     table_cohort = table_cohort.loc[
-        :, table_cohort.columns.isin([column_ordinal])
+        :, table_cohort.columns.isin([column_order])
     ]
     table = table.merge(
         table_cohort,
@@ -2764,7 +3073,7 @@ def organize_cohorts_specific_hormones_ordinal_representations(
             columns_report.append(
                 str(
                     str(hormone) + "_" +
-                    str(cohort_record["cohort"]) + "_ordinal"
+                    str(cohort_record["cohort"]) + "_order"
                 )
             )
         columns_report.insert(0, "IID")
@@ -8905,7 +9214,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                     hormone="None... not specific",
                     variables_names_valid=[
                         "eid", "IID",
-                        "sex", "sex_text", "age", "body_mass_index",
+                        "sex", "sex_text", "age", "body",
                         "alcohol_none",
                         alcoholism,
                     ],
@@ -8921,7 +9230,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                         hormone=hormone,
                         variables_names_valid=[
                             "eid", "IID",
-                            "sex", "sex_text", "age", "body_mass_index",
+                            "sex", "sex_text", "age", "body",
                             "alcohol_none",
                             alcoholism,
                             hormone,
@@ -9475,7 +9784,7 @@ def organize_hormone_female_export_table(
         columns_export = [
             #"eid",
             "IID",
-            "sex", "sex_text", "age", "body_mass_index", "body_mass_index_log",
+            "sex", "sex_text", "age", "body", "body_log",
             "pregnancy",
             "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
             "menopause_binary", "menopause_ordinal",

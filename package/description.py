@@ -382,7 +382,7 @@ def organize_report_cohort_model_variables_summaries_record(
     # Collect information for general columns.
     columns = [
         "age",
-        "body_mass_index", "body_mass_index_log",
+        "body", "body_log",
         "menstruation_days", "menstruation_days_threshold",
         "albumin", "albumin_imputation",
         "steroid_globulin", "steroid_globulin_imputation",
@@ -870,7 +870,7 @@ def organize_phenotypes_plots_histogram(
         # Define phenotypes.
         phenotypes = [
             "age",
-            "body_mass_index",
+            "body",
             "month",
             "albumin", "albumin_imputation",
             "steroid_globulin", "steroid_globulin_imputation",

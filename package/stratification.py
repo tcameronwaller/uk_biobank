@@ -1105,7 +1105,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy",
                     hormone,
                 ],
@@ -1116,7 +1116,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                     "eid", "IID",
                     "white_british",
                     "sex", "sex_text", "age", "age_grade_male",
-                    "body_mass_index_log",
+                    "body_log",
                     hormone,
                 ],
                 male_prefixes=["genotype_pc_",],
@@ -1143,7 +1143,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "hormone_alteration",
                     hormone,
@@ -1176,7 +1176,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "menstruation_days",
                     "menstruation_phase", "menstruation_phase_cycle",
@@ -1211,7 +1211,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "hormone_alteration",
                     hormone,
@@ -1244,7 +1244,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "menstruation_days",
                     "menstruation_phase", "menstruation_phase_cycle",
@@ -1279,7 +1279,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "menstruation_days",
                     "menstruation_phase", "menstruation_phase_cycle",
@@ -1314,7 +1314,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_mass_index_log",
+                    "sex", "sex_text", "age", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "hormone_alteration",
                     hormone,
@@ -1352,7 +1352,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                     "eid", "IID",
                     "white_british",
                     "sex", "sex_text", "age", "age_grade_male",
-                    "body_mass_index_log",
+                    "body_log",
                     hormone,
                 ],
                 male_prefixes=["genotype_pc_",],
@@ -1384,7 +1384,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
-                "body_mass_index_log",
+                "body_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -1416,7 +1416,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 "eid", "IID",
                 "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
-                "body_mass_index_log",
+                "body_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -1538,7 +1538,7 @@ def select_organize_cohorts_variables_by_body(
                 "eid", "IID",
                 #"white_british",
                 "sex", "sex_text", "age",
-                "body_mass_index", "body_mass_index_log",
+                "body", "body_log",
                 "bipolar_disorder",
             ],
             prefixes=["genotype_pc_",],
@@ -1565,7 +1565,7 @@ def select_organize_cohorts_variables_by_body(
                 "eid", "IID",
                 "white_british",
                 "sex", "sex_text", "age",
-                "body_mass_index", "body_mass_index_log",
+                "body", "body_log",
                 "bipolar_disorder",
             ],
             prefixes=["genotype_pc_",],
@@ -1592,7 +1592,7 @@ def select_organize_cohorts_variables_by_body(
                 "eid", "IID",
                 #"white_british",
                 "sex", "sex_text", "age",
-                "body_mass_index", "body_mass_index_log",
+                "body", "body_log",
                 "bipolar_disorder",
             ],
             prefixes=["genotype_pc_",],
@@ -1619,7 +1619,7 @@ def select_organize_cohorts_variables_by_body(
                 "eid", "IID",
                 "white_british",
                 "sex", "sex_text", "age",
-                "body_mass_index", "body_mass_index_log",
+                "body", "body_log",
                 "bipolar_disorder",
             ],
             prefixes=["genotype_pc_",],
@@ -1659,7 +1659,7 @@ def stratify_cohorts_genotypes_set_bipolar_body(
     records = list()
     # Select and organize variables across cohorts.
     phenotypes = [
-        "body_mass_index", "body_mass_index_log",
+        "body", "body_log",
     ]
     for phenotype in phenotypes:
         records_phenotype = select_organize_cohorts_variables_by_body(
