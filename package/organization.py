@@ -1957,7 +1957,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
         report_ordinal_stratifications_by_sex_continuous_variables(
             sex_text=sex_text,
             variables=variables,
-            table=table,
+            table=table_collection,
         )
     # Return information.
     return table_collection
