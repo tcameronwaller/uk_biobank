@@ -1754,7 +1754,7 @@ def create_reduce_categorical_variable_indicators(
     return pail_reduction["table"]
 
 
-def report_ordinal_stratifications_by_sex_continuous_variable(
+def report_ordinal_stratifications_by_sex_continuous_variables(
     sex_text=None,
     variables=None,
     table=None,
