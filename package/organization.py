@@ -3065,11 +3065,11 @@ def organize_cohort_specific_hormone_ordinal_representation(
     table_cohort = table_cohort.copy(deep=True)
     table = table.copy(deep=True)
     # Define names of relevant columns.
-    hormone_name = hormone.replace("_", "-")
+    #hormone_name = hormone.replace("_", "-")
     column_hormone = str(hormone)
     column_missingness = str(str(hormone) + "_missingness_range")
     column_reportability = str(str(hormone) + "_reportability_limit")
-    column_order = str(str(hormone_name) + "_" + str(cohort) + "_order")
+    column_order = str(str(hormone) + "_" + str(cohort) + "_order")
     # Calculate cohort-specific median.
     array = copy.deepcopy(table_cohort[column_hormone].dropna().to_numpy())
     count = int(array.size)
@@ -3166,12 +3166,12 @@ def organize_cohorts_specific_hormones_ordinal_representations(
         # Organize table.
         columns_report = list()
         hormone = "oestradiol"
-        hormone_name = hormone.replace("_", "-")
+        #hormone_name = hormone.replace("_", "-")
         columns_report.append(hormone)
         for cohort_record in cohorts_records:
             columns_report.append(
                 str(
-                    str(hormone_name) + "_" +
+                    str(hormone) + "_" +
                     str(cohort_record["cohort"]) + "_order"
                 )
             )
