@@ -1038,21 +1038,6 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # Cohort, model selection: sets for genetic analyses on phenotypes and genotypes
 
 
-# TODO: TCW 18 August 2021
-# TODO: I NEED to include "missingness" and "reportability" columns for the
-# TODO: basic hormone measurements (NOT for free, bioavailable, imputation).
-
-# TODO: this is a bit more complex...
-# TODO: ONLY include those "missingness" and "reportability" columns for the
-# TODO: cohorts-models of the "ordinal" representations of the hormones...
-
-
-# TODO: TCW 24 August 2021
-# TODO: this work-flow works for CONTINUOUS variables...
-
-
-
-
 def stratify_genotype_cohorts_by_phenotype_response(
     phenotype_response=None,
     type_response=None,
@@ -1089,80 +1074,92 @@ def stratify_genotype_cohorts_by_phenotype_response(
 
     """
 
-    # Determine relevant columns.
-    #hormone = str(hormone)
-    #hormone_missingness = str(str(hormone) + "_missingness_range")
-    #column_reportability = str(str(hormone) + "_reportability_limit")
-    #column_ordinal = str(str(hormone) + "_cohort_ordinal")
+    # Copy information in table.
+    table = table.copy(deep=True)
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
 
     # Organize hormone names.
-    phenotype_response_hyphen = phenotype_response.replace("_", "-")
+    phenotype_response_name = phenotype_response.replace("_", "-")
+    if (cohort_order):
+        phenotype_response_specific_name = str(
+            phenotype_response_name + "_order"
+        )
+    else:
+        phenotype_response_specific_name = phenotype_response_name
+
 
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
 
     # Cohort: non-pregnant females and males together
-    record = dict()
-    record["category"] = "female_male"
-    record["cohort"] = "female-male"
-    record["cohort_model"] = "female-male"
-    if (cohort_order):
-        phenotype_response_cohort = str()
-
-    record["phenotype_response"] = phenotype_response
-    record["type_response"] = type_response
-
-
-
-    record["name"] = str(
-        record["cohort_model"] + "_" + phenotype_response_hyphen
-    )
-    record["name_table"] = str("table_" + record["name"])
-
-
-    record["name"] = str("table_female-male_" + hormone_hyphen)
-    record["cohort_model"] = "female_male"
-    record["category"] = "female_male"
-    record["table"] = (
-        select_records_by_ancestry_sex_specific_valid_variables_values(
-            name=record["name"],
-            white_british=[1,],
-            female=True,
-            female_pregnancy=[0,],
-            female_menopause_binary=[0, 1,],
-            female_menopause_ordinal=[0, 1, 2,],
-            female_variables=[
-                "eid", "IID",
-                "white_british",
-                "assessment_season",
-                "sex", "sex_text", "age", "body_log",
-                "pregnancy",
-                hormone,
-            ],
-            female_prefixes=["genotype_pc_",],
-            male=True,
-            age_grade_male=[0, 1, 2,],
-            male_variables=[
-                "eid", "IID",
-                "white_british",
-                "assessment_season",
-                "sex", "sex_text", "age", "age_grade_male",
-                "body_log",
-                hormone,
-            ],
-            male_prefixes=["genotype_pc_",],
-            table_kinship_pairs=table_kinship_pairs,
-            table=table,
-    ))
-    records.append(record)
+    if False:
+        record = dict()
+        record["category"] = "female-male"
+        record["cohort"] = "female-male"
+        record["cohort_model"] = "female-male"
+        if (cohort_order):
+            phenotype_response_specific = str(
+                str(phenotype_response_name) + "_" + str(cohort) + "_order"
+            )
+        else:
+            phenotype_response_specific = phenotype_response
+        record["phenotype_response"] = phenotype_response_specific
+        record["type_response"] = type_response
+        record["name"] = str(
+            record["cohort_model"] + "_" + phenotype_response_specific_name
+        )
+        record["name_table"] = str("table_" + record["name"])
+        record["table"] = (
+            select_records_by_ancestry_sex_specific_valid_variables_values(
+                name=record["name"],
+                white_british=[1,],
+                female=True,
+                female_pregnancy=[0,],
+                female_menopause_binary=[0, 1,],
+                female_menopause_ordinal=[0, 1, 2,],
+                female_variables=[
+                    "eid", "IID",
+                    "white_british",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "body_log",
+                    "pregnancy",
+                    phenotype_response_specific,
+                ],
+                female_prefixes=["genotype_pc_",],
+                male=True,
+                age_grade_male=[0, 1, 2,],
+                male_variables=[
+                    "eid", "IID",
+                    "white_british",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "age_grade_male",
+                    "body_log",
+                    phenotype_response_specific,
+                ],
+                male_prefixes=["genotype_pc_",],
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+        ))
+        records.append(record)
 
     # Cohort: all non-pregnant females together
     record = dict()
-    record["name"] = str("table_female_" + hormone_hyphen)
-    record["cohort_model"] = "female"
     record["category"] = "female"
-    record["phenotype"] = hormone
+    record["cohort"] = "female"
+    record["cohort_model"] = "female"
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1177,7 +1174,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "assessment_season",
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_ordinal", "hormone_alteration",
-                hormone,
+                phenotype_response_specific,
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
@@ -1191,10 +1188,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
 
     # Cohort: premenopausal females by ordinal menopause definition
     record = dict()
-    record["name"] = str("table_female-premenopause_" + hormone_hyphen)
-    record["cohort_model"] = "female-premenopause"
     record["category"] = "female_menopause_ordinal"
-    record["phenotype"] = hormone
+    record["cohort"] = "female-premenopause"
+    record["cohort_model"] = "female-premenopause"
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1212,7 +1220,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "menstruation_days",
                 "menstruation_phase", "menstruation_phase_cycle",
                 "hormone_alteration",
-                hormone,
+                phenotype_response_specific,
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
@@ -1226,10 +1234,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
 
     # Cohort: perimenopausal females by ordinal menopause definition
     record = dict()
-    record["name"] = str("table_female-perimenopause_" + hormone_hyphen)
-    record["cohort_model"] = "female-perimenopause"
     record["category"] = "female_menopause_ordinal"
-    record["phenotype"] = hormone
+    record["cohort"] = "female-perimenopause"
+    record["cohort_model"] = "female-perimenopause"
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1247,7 +1266,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "menstruation_days",
                 "menstruation_phase", "menstruation_phase_cycle",
                 "hormone_alteration",
-                hormone,
+                phenotype_response_specific,
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
@@ -1261,10 +1280,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
 
     # Cohort: postmenopausal females by ordinal menopause definition
     record = dict()
-    record["name"] = str("table_female-postmenopause_" + hormone_hyphen)
-    record["cohort_model"] = "female-postmenopause"
     record["category"] = "female_menopause_ordinal"
-    record["phenotype"] = hormone
+    record["cohort"] = "female-postmenopause"
+    record["cohort_model"] = "female-postmenopause"
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1280,7 +1310,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
-                hormone,
+                phenotype_response_specific,
             ],
             female_prefixes=["genotype_pc_",],
             male=False,
@@ -1294,10 +1324,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
 
     # Cohort: males
     record = dict()
-    record["name"] = str("table_male_" + hormone_hyphen)
-    record["cohort_model"] = "male"
     record["category"] = "male"
-    record["phenotype"] = hormone
+    record["cohort"] = "male"
+    record["cohort_model"] = "male"
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1316,7 +1357,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
-                hormone,
+                phenotype_response_specific,
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
@@ -1325,12 +1366,22 @@ def stratify_genotype_cohorts_by_phenotype_response(
     records.append(record)
 
     # Cohort: young males
-
     record = dict()
-    record["name"] = str("table_male-age-low_" + hormone_hyphen)
+    record["category"] = "male-age"
+    record["cohort"] = "male-age-low"
     record["cohort_model"] = "male-age-low"
-    record["category"] = "male"
-    record["phenotype"] = hormone
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1349,7 +1400,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
-                hormone,
+                phenotype_response_specific,
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
@@ -1358,10 +1409,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
     records.append(record)
 
     record = dict()
-    record["name"] = str("table_male-age-middle_" + hormone_hyphen)
+    record["category"] = "male-age"
+    record["cohort"] = "male-age-middle"
     record["cohort_model"] = "male-age-middle"
-    record["category"] = "male"
-    record["phenotype"] = hormone
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1380,7 +1442,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
-                hormone,
+                phenotype_response_specific,
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
@@ -1391,10 +1453,21 @@ def stratify_genotype_cohorts_by_phenotype_response(
     # Cohort: old males
 
     record = dict()
-    record["name"] = str("table_male-age-high_" + hormone_hyphen)
+    record["category"] = "male-age"
+    record["cohort"] = "male-age-high"
     record["cohort_model"] = "male-age-high"
-    record["category"] = "male"
-    record["phenotype"] = hormone
+    if (cohort_order):
+        phenotype_response_specific = str(
+            str(phenotype_response_name) + "_" + str(cohort) + "_order"
+        )
+    else:
+        phenotype_response_specific = phenotype_response
+    record["phenotype_response"] = phenotype_response_specific
+    record["type_response"] = type_response
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_specific_name
+    )
+    record["name_table"] = str("table_" + record["name"])
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
@@ -1413,7 +1486,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
-                hormone,
+                phenotype_response_specific,
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
@@ -1425,8 +1498,66 @@ def stratify_genotype_cohorts_by_phenotype_response(
     return records
 
 
+def stratify_genotype_cohorts_logistic_set_sex_hormones(
+    table=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts and model covariates for genetic
+    analyses.
 
-# I just need another one of these drivers for "binary" hormone variables...
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    records = list()
+    # Select and organize variables across cohorts.
+    phenotypes = [
+        "vitamin_d_detection",
+        "albumin_detection",
+        "steroid_globulin_detection",
+        "oestradiol_detection",
+        "testosterone_detection",
+    ]
+    for phenotype in phenotypes:
+        records_phenotype = stratify_genotype_cohorts_by_phenotype_response(
+            phenotype_response=phenotype,
+            type_response="logistic",
+            cohort_order=False,
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+        )
+        records.extend(records_phenotype)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "select_organize_cohorts_models_genotypes_analyses_set_sex_hormones"
+        )
+        print(
+            "report: " + function_name
+        )
+        for record in records:
+            utility.print_terminal_partition(level=5)
+            print(record["name"])
+            print(
+                "Count records: " + str(record["table"].shape[0])
+            )
+    # Return information.
+    return records
+
 
 def stratify_genotype_cohorts_linear_set_sex_hormones(
     table=None,
@@ -1515,10 +1646,6 @@ def stratify_genotype_cohorts_linear_set_sex_hormones(
             )
     # Return information.
     return records
-
-
-
-
 
 
 def select_organize_cohorts_variables_by_body(
@@ -3017,7 +3144,8 @@ def stratify_cohorts_models_phenotypes_sets(
 # TODO: pass flag "plink_format"
 
 
-def execute_stratify_for_linear_genotype_analysis(
+
+def execute_stratify_logistic_genotype_analysis_set_sex_hormone(
     table=None,
     set=None,
     path_dock=None,
@@ -3047,52 +3175,154 @@ def execute_stratify_for_linear_genotype_analysis(
         path_dock=path_dock,
         report=report,
     )
-    # Determine which set of cohorts and models to select and organize.
-    if (set == "sex_hormones"):
-        # Collect summary records and construct table.
-        pail_records = (
-            stratify_genotype_cohorts_linear_set_sex_hormones(
-                table=table,
-                table_kinship_pairs=table_kinship_pairs,
-                report=report,
+    # Collect stratification information and tables.
+    records = (
+        stratify_genotype_cohorts_logistic_set_sex_hormones(
+            table=table,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+    ))
+    # Translate variable encodings and table format for analysis in PLINK2.
+    pail = dict()
+    for record in records:
+        pail[record["name_table"]] = (
+            organize_phenotype_covariate_table_plink_format(
+                boolean_phenotypes=[],
+                binary_phenotypes=[record["phenotype_response"]],
+                continuous_variables=[],
+                remove_null_records=False,
+                table=record["table"],
         ))
-        # Translate variable encodings and table format for analysis in PLINK2.
-        pail = dict()
-        for collection in pail_records:
-            pail[collection["name"]] = (
-                organize_phenotype_covariate_table_plink_format(
-                    boolean_phenotypes=[],
-                    binary_phenotypes=[],
-                    continuous_variables=[collection["phenotype"]],
-                    remove_null_records=False,
-                    table=collection["table"],
-            ))
-            pass
         pass
-    elif (set == "bipolar_disorder_body"):
-        pail_records = (
-            stratify_cohorts_genotypes_set_bipolar_body(
-                table=table,
-                table_kinship_pairs=table_kinship_pairs,
-                report=report,
-        ))
-        # Translate variable encodings and table format for analysis in PLINK2.
-        pail = dict()
-        for collection in pail_records:
-            pail[collection["name"]] = (
-                organize_phenotype_covariate_table_plink_format(
-                    boolean_phenotypes=[],
-                    binary_phenotypes=[],
-                    continuous_variables=[collection["phenotype"]],
-                    remove_null_records=False,
-                    table=collection["table"],
-            ))
-            pass
-        pass
-    else:
-        print("set of cohorts and models unrecognizable...")
-        pail = dict()
 
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "execute_stratify_linear_set_sex_hormone_for_genotype_analysis()"
+        )
+        print("report: " + function_name)
+        utility.print_terminal_partition(level=3)
+        for name in pail.keys():
+            print(name)
+    # Return information.
+    return pail
+
+
+def execute_stratify_linear_genotype_analysis_set_sex_hormone(
+    table=None,
+    set=None,
+    path_dock=None,
+    report=None,
+):
+    """
+    Organizes information about cohorts and models for genetic analysis.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        set (str): name of set of cohorts and models to select and organize
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Read source information from file.
+    table_kinship_pairs = read_source_table_kinship_pairs(
+        path_dock=path_dock,
+        report=report,
+    )
+    # Collect stratification information and tables.
+    records = (
+        stratify_genotype_cohorts_linear_set_sex_hormones(
+            table=table,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+    ))
+    # Translate variable encodings and table format for analysis in PLINK2.
+    pail = dict()
+    for record in records:
+        pail[record["name_table"]] = (
+            organize_phenotype_covariate_table_plink_format(
+                boolean_phenotypes=[],
+                binary_phenotypes=[],
+                continuous_variables=[record["phenotype_response"]],
+                remove_null_records=False,
+                table=record["table"],
+        ))
+        pass
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "execute_stratify_linear_set_sex_hormone_for_genotype_analysis()"
+        )
+        print("report: " + function_name)
+        utility.print_terminal_partition(level=3)
+        for name in pail.keys():
+            print(name)
+    # Return information.
+    return pail
+
+
+def execute_stratify_set_bipolar_disorder_body_for_genotype_analysis(
+    table=None,
+    set=None,
+    path_dock=None,
+    report=None,
+):
+    """
+    Organizes information about cohorts and models for genetic analysis.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        set (str): name of set of cohorts and models to select and organize
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Read source information from file.
+    table_kinship_pairs = read_source_table_kinship_pairs(
+        path_dock=path_dock,
+        report=report,
+    )
+    # Collect stratification information and tables.
+    pail_records = (
+        stratify_cohorts_genotypes_set_bipolar_body(
+            table=table,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+    ))
+    # Translate variable encodings and table format for analysis in PLINK2.
+    pail = dict()
+    for collection in pail_records:
+        pail[collection["name"]] = (
+            organize_phenotype_covariate_table_plink_format(
+                boolean_phenotypes=[],
+                binary_phenotypes=[],
+                continuous_variables=[collection["phenotype"]],
+                remove_null_records=False,
+                table=collection["table"],
+        ))
     # Report.
     if report:
         # Column name translations.
@@ -3106,8 +3336,6 @@ def execute_stratify_for_linear_genotype_analysis(
             print(name)
     # Return information.
     return pail
-
-
 
 
 
