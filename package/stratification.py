@@ -1053,8 +1053,10 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
 
 
-def stratify_genotype_cohorts_linear_by_sex_hormone(
-    hormone=None,
+def stratify_genotype_cohorts_by_phenotype_response(
+    phenotype_response=None,
+    type_response=None,
+    cohort_order=None,
     table_kinship_pairs=None,
     table=None,
 ):
@@ -1069,7 +1071,12 @@ def stratify_genotype_cohorts_linear_by_sex_hormone(
     after combination.
 
     arguments:
-        hormone (str): name of column for hormone variable
+        phenotype_response (str): name of table's column for phenotype response
+            (outcome) variable
+        type_response (str): type of phenotype response, either "logistic" or
+            "linear"
+        cohort_order (bool): whether phenotype response is a cohort-specific
+           ordinal variable
         table_kinship_pairs (object): Pandas data frame of kinship coefficients
             across pairs of persons in UK Biobank cohort
         table (object): Pandas data frame of phenotype variables across UK
@@ -1089,295 +1096,233 @@ def stratify_genotype_cohorts_linear_by_sex_hormone(
     #column_ordinal = str(str(hormone) + "_cohort_ordinal")
 
     # Organize hormone names.
-    hormone_hyphen = hormone.replace("_", "-")
+    phenotype_response_hyphen = phenotype_response.replace("_", "-")
 
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
 
     # Cohort: non-pregnant females and males together
-    if False:
-        record = dict()
-        record["name"] = str("table_female-male_" + hormone_hyphen)
-        record["cohort_model"] = "female_male"
-        record["category"] = "female_male"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[0, 1, 2,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "body_log",
-                    "pregnancy",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=True,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "age_grade_male",
-                    "body_log",
-                    hormone,
-                ],
-                male_prefixes=["genotype_pc_",],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["category"] = "female_male"
+    record["cohort"] = "female-male"
+    record["cohort_model"] = "female-male"
+    if (cohort_order):
+        phenotype_response_cohort = str()
+
+    record["phenotype_response"] = phenotype_response
+    record["type_response"] = type_response
+
+
+
+    record["name"] = str(
+        record["cohort_model"] + "_" + phenotype_response_hyphen
+    )
+    record["name_table"] = str("table_" + record["name"])
+
+
+    record["name"] = str("table_female-male_" + hormone_hyphen)
+    record["cohort_model"] = "female_male"
+    record["category"] = "female_male"
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "body_log",
+                "pregnancy",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: all non-pregnant females together
-    if True:
-        record = dict()
-        record["name"] = str("table_female_" + hormone_hyphen)
-        record["cohort_model"] = "female"
-        record["category"] = "female"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[0, 1, 2,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "body", "body_log",
-                    "pregnancy", "menopause_ordinal", "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
-
-    # Cohort: premenopausal females by binary menopause definition
-    if False:
-        record = dict()
-        record["name"] = str(
-            "table_female_premenopause_binary_" + hormone_hyphen
-        )
-        record["cohort_model"] = "female_premenopause_binary"
-        record["category"] = "female_menopause_binary"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0,],
-                female_menopause_ordinal=[0, 1, 2],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "sex", "sex_text", "age", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "menstruation_days",
-                    "menstruation_phase", "menstruation_phase_cycle",
-                    "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
-
-    # Cohort: postmenopausal females by binary menopause definition
-    if False:
-        record = dict()
-        record["name"] = str(
-            "table_female_postmenopause_binary_" + hormone_hyphen
-        )
-        record["cohort_model"] = "female_postmenopause_binary"
-        record["category"] = "female_menopause_binary"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[1,],
-                female_menopause_ordinal=[0, 1, 2,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "sex", "sex_text", "age", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["name"] = str("table_female_" + hormone_hyphen)
+    record["cohort_model"] = "female"
+    record["category"] = "female"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "body", "body_log",
+                "pregnancy", "menopause_ordinal", "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[],
+            male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: premenopausal females by ordinal menopause definition
-    if True:
-        record = dict()
-        record["name"] = str("table_female-premenopause_" + hormone_hyphen)
-        record["cohort_model"] = "female-premenopause"
-        record["category"] = "female_menopause_ordinal"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[0,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "body", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "menstruation_days",
-                    "menstruation_phase", "menstruation_phase_cycle",
-                    "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["name"] = str("table_female-premenopause_" + hormone_hyphen)
+    record["cohort_model"] = "female-premenopause"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "body", "body_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "menstruation_days",
+                "menstruation_phase", "menstruation_phase_cycle",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[],
+            male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: perimenopausal females by ordinal menopause definition
-    if True:
-        record = dict()
-        record["name"] = str("table_female-perimenopause_" + hormone_hyphen)
-        record["cohort_model"] = "female-perimenopause"
-        record["category"] = "female_menopause_ordinal"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[1,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "body", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "menstruation_days",
-                    "menstruation_phase", "menstruation_phase_cycle",
-                    "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["name"] = str("table_female-perimenopause_" + hormone_hyphen)
+    record["cohort_model"] = "female-perimenopause"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[1,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "body", "body_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "menstruation_days",
+                "menstruation_phase", "menstruation_phase_cycle",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[],
+            male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: postmenopausal females by ordinal menopause definition
-    if True:
-        record = dict()
-        record["name"] = str("table_female-postmenopause_" + hormone_hyphen)
-        record["cohort_model"] = "female-postmenopause"
-        record["category"] = "female_menopause_ordinal"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=True,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[2,],
-                female_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "body", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "hormone_alteration",
-                    hormone,
-                ],
-                female_prefixes=["genotype_pc_",],
-                male=False,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[],
-                male_prefixes=[],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["name"] = str("table_female-postmenopause_" + hormone_hyphen)
+    record["cohort_model"] = "female-postmenopause"
+    record["category"] = "female_menopause_ordinal"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "body", "body_log",
+                "pregnancy", "menopause_binary", "menopause_ordinal",
+                "hormone_alteration",
+                hormone,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[],
+            male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: males
-    if True:
-        record = dict()
-        record["name"] = str("table_male_" + hormone_hyphen)
-        record["cohort_model"] = "male"
-        record["category"] = "male"
-        record["phenotype"] = hormone
-        record["table"] = (
-            select_records_by_ancestry_sex_specific_valid_variables_values(
-                name=record["name"],
-                white_british=[1,],
-                female=False,
-                female_pregnancy=[0,],
-                female_menopause_binary=[0, 1,],
-                female_menopause_ordinal=[0, 1, 2,],
-                female_variables=[],
-                female_prefixes=[],
-                male=True,
-                age_grade_male=[0, 1, 2,],
-                male_variables=[
-                    "eid", "IID",
-                    "white_british",
-                    "assessment_season",
-                    "sex", "sex_text", "age", "age_grade_male",
-                    "body", "body_log",
-                    hormone,
-                ],
-                male_prefixes=["genotype_pc_",],
-                table_kinship_pairs=table_kinship_pairs,
-                table=table,
-        ))
-        records.append(record)
+    record = dict()
+    record["name"] = str("table_male_" + hormone_hyphen)
+    record["cohort_model"] = "male"
+    record["category"] = "male"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body", "body_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
 
     # Cohort: young males
 
@@ -1480,6 +1425,9 @@ def stratify_genotype_cohorts_linear_by_sex_hormone(
     return records
 
 
+
+# I just need another one of these drivers for "binary" hormone variables...
+
 def stratify_genotype_cohorts_linear_set_sex_hormones(
     table=None,
     table_kinship_pairs=None,
@@ -1528,9 +1476,24 @@ def stratify_genotype_cohorts_linear_set_sex_hormones(
         "testosterone_free", "testosterone_free_log",
         "testosterone_free_imputation", "testosterone_free_imputation_log",
     ]
+    hormones_order = [
+        "vitamin_d", "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+    ]
     for hormone in hormones:
-        records_hormone = select_organize_cohorts_variables_by_sex_hormone(
-            hormone=hormone,
+        records_hormone = stratify_genotype_cohorts_by_phenotype_response(
+            phenotype_response=hormone,
+            type_response="linear",
+            cohort_order=False,
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+        )
+        records.extend(records_hormone)
+    for hormone in hormones_order:
+        records_hormone = stratify_genotype_cohorts_by_phenotype_response(
+            phenotype_response=hormone,
+            type_response="linear",
+            cohort_order=True,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
         )
@@ -1753,6 +1716,7 @@ def stratify_cohorts_genotypes_set_bipolar_body(
 
 
 ##########
+# Phenotype cohorts
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
 
 
@@ -3048,6 +3012,9 @@ def stratify_cohorts_models_phenotypes_sets(
 # TODO: "<hormone>_detection" binary variables
 
 # "execute_stratify_for_logistic_genotype_analysis"
+
+
+# TODO: pass flag "plink_format"
 
 
 def execute_stratify_for_linear_genotype_analysis(
