@@ -3128,7 +3128,7 @@ def organize_cohorts_specific_hormones_ordinal_representations(
     """
 
     # Define relevant cohorts.
-    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
+    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
         table=table
     )
 
@@ -3137,7 +3137,7 @@ def organize_cohorts_specific_hormones_ordinal_representations(
     # direct measurements.
     # Exclude estimates of bioavailable and free hormones.
     hormones = [
-        "albumin", "steroid_globulin", "vitamin_d",
+        "vitamin_d", "albumin", "steroid_globulin",
         "oestradiol", "testosterone",
     ]
 
