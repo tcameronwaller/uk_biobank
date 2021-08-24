@@ -949,7 +949,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
     table=None,
 ):
     """
-    Selects records for males with sex-specific criteria.
+    Selects records for females and males without sex-specific criteria.
 
     arguments:
         name (str): unique name for the relevant cohort, model, and phenotype
@@ -1047,6 +1047,8 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # TODO: cohorts-models of the "ordinal" representations of the hormones...
 
 
+# TODO: TCW 24 August 2021
+# TODO: this work-flow works for CONTINUOUS variables...
 
 def select_organize_cohorts_variables_by_sex_hormone(
     hormone=None,
@@ -1510,18 +1512,18 @@ def stratify_cohorts_genotypes_set_sex_hormones(
         "steroid_globulin_imputation", "steroid_globulin_imputation_log",
         "oestradiol", "oestradiol_log",
         "oestradiol_imputation", "oestradiol_imputation_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "oestradiol_free_imputation", "oestradiol_free_imputation_log",
         "oestradiol_bioavailable", "oestradiol_bioavailable_log",
         "oestradiol_bioavailable_imputation",
         "oestradiol_bioavailable_imputation_log",
+        "oestradiol_free", "oestradiol_free_log",
+        "oestradiol_free_imputation", "oestradiol_free_imputation_log",
         "testosterone", "testosterone_log",
         "testosterone_imputation", "testosterone_imputation_log",
-        "testosterone_free", "testosterone_free_log",
-        "testosterone_free_imputation", "testosterone_free_imputation_log",
         "testosterone_bioavailable", "testosterone_bioavailable_log",
         "testosterone_bioavailable_imputation",
         "testosterone_bioavailable_imputation_log",
+        "testosterone_free", "testosterone_free_log",
+        "testosterone_free_imputation", "testosterone_free_imputation_log",
     ]
     for hormone in hormones:
         records_hormone = select_organize_cohorts_variables_by_sex_hormone(
@@ -3031,6 +3033,16 @@ def stratify_cohorts_models_phenotypes_sets(
 # accessible in modular parts.
 
 # Stratification and formatting for genetic analyses
+
+
+# TODO: rename this "execute_" function to indicate that it is for LINEAR variables
+
+# TODO: create a new function for LOGISTIC variables
+# TODO: "<hormone>_detection" binary variables
+
+# "execute_stratify_for_linear_genotype_analysis"
+
+# "execute_stratify_for_logistic_genotype_analysis"
 
 
 def execute_cohorts_models_genetic_analysis(

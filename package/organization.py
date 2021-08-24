@@ -2201,7 +2201,6 @@ def organize_assessment_basis_variables(
 # Chung, Pathology Informatics, 2017 (PubMed:28828199)
 
 
-
 def define_hormone_fields_measurement_reportability_missingness():
     """
     Define data fields in U.K. Biobank for measurement, reportability, and
@@ -2634,6 +2633,114 @@ def determine_hormones_reportability_detection_limit(
     return table
 
 
+def determine_hormone_binary_detection(
+    hormone=None,
+    measurement=None,
+    missingness_range=None,
+    reportability_limit=None,
+):
+    """
+    Organizes binary representation of whether hormone was measurable or was
+    missing due to the detection limit.
+
+    1: hormone has a valid measurement
+    0: hormone has a missing measurement due to the detection range
+    NA: hormone has a missing measurement without explicit annotation that the
+    reason was detection limit
+
+    arguments:
+        hormone (str): name of a hormone
+        measurement (float): value of hormone's actual measurement
+        missingness_range (int): binary representation of whether measurement's
+            value was missing because the value was out of detection range
+        reportability_limit (int): integer categorical representation of whether
+            measurement's value was missing because the value was less than or
+            greater than the limit of detection
+
+    raises:
+
+    returns:
+        (float): value for hormone's measurement
+
+    """
+
+    # Interpret field code.
+    if (pandas.isna(measurement)):
+        # Hormone's measurement has a missing value.
+        if (
+            (not pandas.isna(missingness_range)) and
+            (missingness_range == 1) and
+            (not pandas.isna(reportability_limit)) and
+            ((reportability_limit == 1) or (reportability_limit == 2))
+        ):
+            # Record has valid explanations for the missing value of hormone's
+            # measurement.
+            # Measurement's missingness is due to detection range.
+            value = 0
+        else:
+            # Without valid explanations of missing value for hormone's
+            # measurement, do not assign definitive value.
+            value = float("nan")
+    else:
+        # Hormone's measurement has a not missing value.
+        value = 1
+    # Return information.
+    return value
+
+
+def determine_hormones_binary_detection(
+    hormones=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes binary representation of whether hormone was measurable or was
+    missing due to the detection limit.
+
+    arguments:
+        hormones (list<str>): names of hormones for imputation
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Iterate on hormones.
+    for hormone in hormones:
+        # Determine column names.
+        detection = str(str(hormone) + "_detection")
+        missingness_range = str(str(hormone) + "_missingness_range")
+        reportability_limit = str(str(hormone) + "_reportability_limit")
+        # Impute missing measurements.
+        table[detection] = table.apply(
+            lambda row:
+                determine_hormone_binary_detection(
+                    hormone=hormone,
+                    measurement=row[hormone],
+                    missingness_range=row[missingness_range],
+                    reportability_limit=row[reportability_limit],
+                ),
+            axis="columns", # apply function to each row
+        )
+        # Report.
+        if report:
+            # Column name translations.
+            utility.print_terminal_partition(level=3)
+            print("report: determine_hormones_binary_detection()")
+            print("hormone: " + str(hormone))
+        pass
+    # Return information.
+    return table
+
+
 def impute_missing_hormone_detection_limit(
     hormone=None,
     sex_text=None,
@@ -2788,7 +2895,7 @@ def impute_missing_hormones_detection_limit(
     return table
 
 
-def organize_hormones_missingness_imputation(
+def organize_hormones_missingness_detection_imputation(
     hormone_fields=None,
     table=None,
     report=None,
@@ -2816,11 +2923,11 @@ def organize_hormones_missingness_imputation(
 
     # Interpret missingness and reportability explanation variables for
     # hormones.
-    table = determine_hormones_reportability_detection_limit(
+    table = determine_hormones_missingness_beyond_detection_range(
         hormone_fields=hormone_fields,
         table=table,
     )
-    table = determine_hormones_missingness_beyond_detection_range(
+    table = determine_hormones_reportability_detection_limit(
         hormone_fields=hormone_fields,
         table=table,
     )
@@ -2828,6 +2935,11 @@ def organize_hormones_missingness_imputation(
     hormones = list()
     for record in hormone_fields:
         hormones.append(record["name"])
+    table = determine_hormones_binary_detection(
+        hormones=hormones,
+        table=table,
+        report=report,
+    )
     table = impute_missing_hormones_detection_limit(
         hormones=hormones,
         table=table,
@@ -3659,8 +3771,10 @@ def organize_sex_hormone_variables(
     )
 
     ##########
+    # Determine binary representations of whether hormone measurements were
+    # missing due to limit of detection.
     # Impute hormone measurements that were missing due to limit of detection.
-    table = organize_hormones_missingness_imputation(
+    table = organize_hormones_missingness_detection_imputation(
         hormone_fields=hormone_fields,
         table=table,
         report=report,
@@ -3686,6 +3800,7 @@ def organize_sex_hormone_variables(
     ##########
     # Transform variables' values to normalize distributions.
     columns_hormones_normalization = [
+        "vitamin_d", "vitamin_d_imputation",
         "albumin", "albumin_imputation",
         "steroid_globulin", "steroid_globulin_imputation",
         "oestradiol", "oestradiol_imputation",
@@ -3694,7 +3809,6 @@ def organize_sex_hormone_variables(
         "testosterone", "testosterone_imputation",
         "testosterone_bioavailable", "testosterone_bioavailable_imputation",
         "testosterone_free", "testosterone_free_imputation",
-        "vitamin_d", "vitamin_d_imputation",
     ]
     table = utility.transform_normalize_table_continuous_ratio_variables(
         columns=columns_hormones_normalization,
@@ -3715,24 +3829,29 @@ def organize_sex_hormone_variables(
     columns_report = [
         #"eid",
         "IID",
+        "vitamin_d",
+        "vitamin_d_detection",
+        "vitamin_d_imputation",
         "albumin",
+        "albumin_detection",
         "albumin_imputation",
         "steroid_globulin",
+        "steroid_globulin_detection",
         "steroid_globulin_imputation",
         "oestradiol",
+        "oestradiol_detection",
         "oestradiol_imputation",
         "oestradiol_bioavailable",
         "oestradiol_bioavailable_imputation",
         "oestradiol_free",
         "oestradiol_free_imputation",
         "testosterone",
+        "testosterone_detection",
         "testosterone_imputation",
         "testosterone_bioavailable",
         "testosterone_bioavailable_imputation",
         "testosterone_free",
         "testosterone_free_imputation",
-        "vitamin_d",
-        "vitamin_d_imputation",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
