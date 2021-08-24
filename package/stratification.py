@@ -1050,7 +1050,10 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # TODO: TCW 24 August 2021
 # TODO: this work-flow works for CONTINUOUS variables...
 
-def select_organize_cohorts_variables_by_sex_hormone(
+
+
+
+def stratify_genotype_cohorts_linear_by_sex_hormone(
     hormone=None,
     table_kinship_pairs=None,
     table=None,
@@ -1477,7 +1480,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
     return records
 
 
-def stratify_cohorts_genotypes_set_sex_hormones(
+def stratify_genotype_cohorts_linear_set_sex_hormones(
     table=None,
     table_kinship_pairs=None,
     report=None,
@@ -1549,6 +1552,10 @@ def stratify_cohorts_genotypes_set_sex_hormones(
             )
     # Return information.
     return records
+
+
+
+
 
 
 def select_organize_cohorts_variables_by_body(
@@ -3040,12 +3047,10 @@ def stratify_cohorts_models_phenotypes_sets(
 # TODO: create a new function for LOGISTIC variables
 # TODO: "<hormone>_detection" binary variables
 
-# "execute_stratify_for_linear_genotype_analysis"
-
 # "execute_stratify_for_logistic_genotype_analysis"
 
 
-def execute_cohorts_models_genetic_analysis(
+def execute_stratify_for_linear_genotype_analysis(
     table=None,
     set=None,
     path_dock=None,
@@ -3079,7 +3084,7 @@ def execute_cohorts_models_genetic_analysis(
     if (set == "sex_hormones"):
         # Collect summary records and construct table.
         pail_records = (
-            stratify_cohorts_genotypes_set_sex_hormones(
+            stratify_genotype_cohorts_linear_set_sex_hormones(
                 table=table,
                 table_kinship_pairs=table_kinship_pairs,
                 report=report,
