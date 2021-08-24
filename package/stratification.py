@@ -1083,6 +1083,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
     #column_reportability = str(str(hormone) + "_reportability_limit")
     #column_ordinal = str(str(hormone) + "_cohort_ordinal")
 
+    # Organize hormone names.
+    hormone_hyphen = hormone.replace("_", "-")
+
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
@@ -1090,7 +1093,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: non-pregnant females and males together
     if False:
         record = dict()
-        record["name"] = str("table_female_male_" + hormone)
+        record["name"] = str("table_female-male_" + hormone_hyphen)
         record["cohort_model"] = "female_male"
         record["category"] = "female_male"
         record["phenotype"] = hormone
@@ -1105,6 +1108,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
+                    "assessment_season",
                     "sex", "sex_text", "age", "body_log",
                     "pregnancy",
                     hormone,
@@ -1115,6 +1119,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 male_variables=[
                     "eid", "IID",
                     "white_british",
+                    "assessment_season",
                     "sex", "sex_text", "age", "age_grade_male",
                     "body_log",
                     hormone,
@@ -1128,7 +1133,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: all non-pregnant females together
     if True:
         record = dict()
-        record["name"] = str("table_female_" + hormone)
+        record["name"] = str("table_female_" + hormone_hyphen)
         record["cohort_model"] = "female"
         record["category"] = "female"
         record["phenotype"] = hormone
@@ -1143,9 +1148,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_log",
-                    "pregnancy", "menopause_binary", "menopause_ordinal",
-                    "hormone_alteration",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "body", "body_log",
+                    "pregnancy", "menopause_ordinal", "hormone_alteration",
                     hormone,
                 ],
                 female_prefixes=["genotype_pc_",],
@@ -1161,7 +1166,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: premenopausal females by binary menopause definition
     if False:
         record = dict()
-        record["name"] = str("table_female_premenopause_binary_" + hormone)
+        record["name"] = str(
+            "table_female_premenopause_binary_" + hormone_hyphen
+        )
         record["cohort_model"] = "female_premenopause_binary"
         record["category"] = "female_menopause_binary"
         record["phenotype"] = hormone
@@ -1196,7 +1203,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: postmenopausal females by binary menopause definition
     if False:
         record = dict()
-        record["name"] = str("table_female_postmenopause_binary_" + hormone)
+        record["name"] = str(
+            "table_female_postmenopause_binary_" + hormone_hyphen
+        )
         record["cohort_model"] = "female_postmenopause_binary"
         record["category"] = "female_menopause_binary"
         record["phenotype"] = hormone
@@ -1229,8 +1238,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: premenopausal females by ordinal menopause definition
     if True:
         record = dict()
-        record["name"] = str("table_female_premenopause_ordinal_" + hormone)
-        record["cohort_model"] = "female_premenopause_ordinal"
+        record["name"] = str("table_female-premenopause_" + hormone_hyphen)
+        record["cohort_model"] = "female-premenopause"
         record["category"] = "female_menopause_ordinal"
         record["phenotype"] = hormone
         record["table"] = (
@@ -1244,7 +1253,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_log",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "body", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "menstruation_days",
                     "menstruation_phase", "menstruation_phase_cycle",
@@ -1264,8 +1274,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: perimenopausal females by ordinal menopause definition
     if True:
         record = dict()
-        record["name"] = str("table_female_perimenopause_ordinal_" + hormone)
-        record["cohort_model"] = "female_perimenopause_ordinal"
+        record["name"] = str("table_female-perimenopause_" + hormone_hyphen)
+        record["cohort_model"] = "female-perimenopause"
         record["category"] = "female_menopause_ordinal"
         record["phenotype"] = hormone
         record["table"] = (
@@ -1279,7 +1289,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_log",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "body", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "menstruation_days",
                     "menstruation_phase", "menstruation_phase_cycle",
@@ -1299,8 +1310,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: postmenopausal females by ordinal menopause definition
     if True:
         record = dict()
-        record["name"] = str("table_female_postmenopause_ordinal_" + hormone)
-        record["cohort_model"] = "female_postmenopause_ordinal"
+        record["name"] = str("table_female-postmenopause_" + hormone_hyphen)
+        record["cohort_model"] = "female-postmenopause"
         record["category"] = "female_menopause_ordinal"
         record["phenotype"] = hormone
         record["table"] = (
@@ -1314,7 +1325,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 female_variables=[
                     "eid", "IID",
                     "white_british",
-                    "sex", "sex_text", "age", "body_log",
+                    "assessment_season",
+                    "sex", "sex_text", "age", "body", "body_log",
                     "pregnancy", "menopause_binary", "menopause_ordinal",
                     "hormone_alteration",
                     hormone,
@@ -1332,7 +1344,7 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: males
     if True:
         record = dict()
-        record["name"] = str("table_male_" + hormone)
+        record["name"] = str("table_male_" + hormone_hyphen)
         record["cohort_model"] = "male"
         record["category"] = "male"
         record["phenotype"] = hormone
@@ -1351,8 +1363,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
                 male_variables=[
                     "eid", "IID",
                     "white_british",
+                    "assessment_season",
                     "sex", "sex_text", "age", "age_grade_male",
-                    "body_log",
+                    "body", "body_log",
                     hormone,
                 ],
                 male_prefixes=["genotype_pc_",],
@@ -1364,8 +1377,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: young males
 
     record = dict()
-    record["name"] = str("table_male_young_" + hormone)
-    record["cohort_model"] = "male_young"
+    record["name"] = str("table_male-age-low_" + hormone_hyphen)
+    record["cohort_model"] = "male-age-low"
     record["category"] = "male"
     record["phenotype"] = hormone
     record["table"] = (
@@ -1383,8 +1396,40 @@ def select_organize_cohorts_variables_by_sex_hormone(
             male_variables=[
                 "eid", "IID",
                 "white_british",
+                "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
-                "body_log",
+                "body", "body_log",
+                hormone,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
+
+    record = dict()
+    record["name"] = str("table_male-age-middle_" + hormone_hyphen)
+    record["cohort_model"] = "male-age-middle"
+    record["category"] = "male"
+    record["phenotype"] = hormone
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            female=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            age_grade_male=[1,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "assessment_season",
+                "sex", "sex_text", "age", "age_grade_male",
+                "body", "body_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -1396,8 +1441,8 @@ def select_organize_cohorts_variables_by_sex_hormone(
     # Cohort: old males
 
     record = dict()
-    record["name"] = str("table_male_old_" + hormone)
-    record["cohort_model"] = "male_old"
+    record["name"] = str("table_male-age-high_" + hormone_hyphen)
+    record["cohort_model"] = "male-age-high"
     record["category"] = "male"
     record["phenotype"] = hormone
     record["table"] = (
@@ -1415,8 +1460,9 @@ def select_organize_cohorts_variables_by_sex_hormone(
             male_variables=[
                 "eid", "IID",
                 "white_british",
+                "assessment_season",
                 "sex", "sex_text", "age", "age_grade_male",
-                "body_log",
+                "body", "body_log",
                 hormone,
             ],
             male_prefixes=["genotype_pc_",],
@@ -1456,16 +1502,26 @@ def stratify_cohorts_genotypes_set_sex_hormones(
     records = list()
     # Select and organize variables across cohorts.
     hormones = [
-        "albumin", "albumin_log", "albumin_imputation_log",
+        "vitamin_d", "vitamin_d_log",
+        "vitamin_d_imputation", "vitamin_d_imputation_log",
+        "albumin", "albumin_log",
+        "albumin_imputation", "albumin_imputation_log",
         "steroid_globulin", "steroid_globulin_log",
-        "steroid_globulin_imputation_log",
-        "oestradiol", "oestradiol_log", "oestradiol_imputation_log",
+        "steroid_globulin_imputation", "steroid_globulin_imputation_log",
+        "oestradiol", "oestradiol_log",
+        "oestradiol_imputation", "oestradiol_imputation_log",
         "oestradiol_free", "oestradiol_free_log",
+        "oestradiol_free_imputation", "oestradiol_free_imputation_log",
         "oestradiol_bioavailable", "oestradiol_bioavailable_log",
-        "testosterone", "testosterone_log", "testosterone_imputation_log",
+        "oestradiol_bioavailable_imputation",
+        "oestradiol_bioavailable_imputation_log",
+        "testosterone", "testosterone_log",
+        "testosterone_imputation", "testosterone_imputation_log",
         "testosterone_free", "testosterone_free_log",
+        "testosterone_free_imputation", "testosterone_free_imputation_log",
         "testosterone_bioavailable", "testosterone_bioavailable_log",
-        "vitamin_d", "vitamin_d_log", "vitamin_d_imputation_log",
+        "testosterone_bioavailable_imputation",
+        "testosterone_bioavailable_imputation_log",
     ]
     for hormone in hormones:
         records_hormone = select_organize_cohorts_variables_by_sex_hormone(
