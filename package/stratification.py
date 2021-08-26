@@ -1078,7 +1078,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
     table = table.copy(deep=True)
     table_kinship_pairs = table_kinship_pairs.copy(deep=True)
 
-    # Organize phenotype name.
+    # Organize concise name for phenotype response variable.
     if (cohort_order):
         phenotype_response_name = str(phenotype_response + "_order")
     else:
@@ -1087,6 +1087,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
+
+    # TODO: need to introduce "table_cohort" for all cohorts!!!
 
     # Cohort: non-pregnant females and males together
     if False:
@@ -1135,8 +1137,13 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 ],
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
-                table=table,
+                table=table_cohort,
         ))
+        if (cohort_order):
+            record["table"][phenotype_response_name] = (
+                record["table"][phenotype_response_specific]
+            )
+            pass
         records.append(record)
 
     # Cohort: all non-pregnant females together
@@ -1180,6 +1187,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: premenopausal females by ordinal menopause definition
@@ -1226,6 +1238,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: perimenopausal females by ordinal menopause definition
@@ -1272,6 +1289,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: postmenopausal females by ordinal menopause definition
@@ -1316,6 +1338,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: males
@@ -1359,6 +1386,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: young males
@@ -1402,6 +1434,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     record = dict()
@@ -1444,6 +1481,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Cohort: old males
@@ -1488,6 +1530,11 @@ def stratify_genotype_cohorts_by_phenotype_response(
             table_kinship_pairs=table_kinship_pairs,
             table=table,
     ))
+    if (cohort_order):
+        record["table"][phenotype_response_name] = (
+            record["table"][phenotype_response_specific]
+        )
+        pass
     records.append(record)
 
     # Return information.

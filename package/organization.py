@@ -2644,9 +2644,14 @@ def determine_hormone_binary_detection(
     missing due to the detection limit.
 
     1: hormone has a valid measurement
-    0: hormone has a missing measurement due to the detection range
+    0: hormone has a missing measurement due to the detection range (above or
+    below)
     NA: hormone has a missing measurement without explicit annotation that the
     reason was detection limit
+
+    Note:
+    - hormones tend to have missing values either above or below the detection
+    range (not both)
 
     arguments:
         hormone (str): name of a hormone
