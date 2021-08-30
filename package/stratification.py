@@ -385,6 +385,227 @@ def filter_persons_ukbiobank_by_kinship(
 
 
 ##########
+# Format adjustment for PLINK2
+
+
+def translate_boolean_phenotype_plink(
+    boolean_value=None,
+):
+    """
+    Translate information from simple binary representation to plink
+    representation.
+
+    Accommodate inexact float values and null values.
+
+    https://www.cog-genomics.org/plink/1.9/input
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "Missing phenotypes are normally expected to be encoded as -9. You can
+        change this to another integer with --missing-phenotype. (This is a
+        slight change from PLINK 1.07: floating point values are now disallowed
+        due to rounding issues, and nonnumeric values such as 'NA' are rejected
+        since they're treated as missing phenotypes no matter what. Note that
+        --output-missing-phenotype can be given a nonnumeric string.)
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. This also forces phenotypes to
+        be interpreted as case/control."
+
+    arguments:
+        boolean_value (float): boolean (False, True) representation of a
+            phenotype
+
+    raises:
+
+    returns:
+        (float): plink binary representation of a phenotype
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (not pandas.isna(boolean_value)):
+        # The variable has a valid value.
+        if (not boolean_value):
+            # control, original value: False
+            # control, Plink translation: 1
+            value = 1
+        elif (boolean_value):
+            # case, original value: True
+            # case, Plink translation: 2
+            value = 2
+    else:
+        # null
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def translate_binary_phenotype_plink(
+    binary_value=None,
+):
+    """
+    Translate information from simple binary representation to plink
+    representation.
+
+    Accommodate inexact float values and null values.
+
+    https://www.cog-genomics.org/plink/2.0/input
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "
+        Missing case/control or quantitative phenotypes are expected to be
+        encoded as 'NA'/'nan' (any capitalization) or -9. (Other strings which
+        don't start with a number are now interpreted as categorical
+        phenotype/covariate values.) You can change the numeric missing
+        phenotype code to another integer with --input-missing-phenotype, or
+        just disable -9 with --no-input-missing-phenotype.
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. Note that this only affects
+        interpretation of input files; output files still use 1=control/2=case
+        encoding.
+        (Unlike PLINK 1.x, this does not force all phenotypes to be interpreted
+        as case/control.)
+        "
+
+    arguments:
+        binary_value (float): binary (0, 1) representation of a phenotype
+
+    raises:
+
+    returns:
+        (float): plink binary representation of a phenotype
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(binary_value)) and
+        (-0.5 <= binary_value and binary_value < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= binary_value and binary_value < 0.5):
+            # control, original value: 0
+            # control, Plink translation: 1
+            value = 1
+        elif (0.5 <= binary_value and binary_value < 1.5):
+            # case, original value: 1
+            # case, Plink translation: 2
+            value = 2
+    else:
+        # null
+        value = -9
+    # Return information.
+    return value
+
+
+def organize_phenotype_covariate_table_plink_format(
+    boolean_phenotypes=None,
+    binary_phenotypes=None,
+    continuous_variables=None,
+    remove_null_records=None,
+    table=None,
+):
+    """
+    Organize table for phenotypes and covariates in format for PLINK.
+
+    1. Remove any rows with missing, empty values.
+    PLINK cannot accommodate rows with empty cells.
+
+    2. Introduce family identifiers.
+    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
+    columns in the sample table.
+
+    3. Sort column sequence.
+    PLINK requires FID and IID columns to come first.
+
+    arguments:
+        boolean_phenotypes (list<str>): names of columns with discrete boolean
+            case-control phenotypes (control: False, case: True) that need
+            conversion to PLINK format (control: 1, case: 2)
+        binary_phenotypes (list<str>): names of columns with discrete binary
+            case-control phenotypes (control: 0, case: 1) that need conversion
+            to PLINK format (control: 1, case: 2)
+        continuous_variables (list<str>): names of columns that PLINK ought
+            to interpret as continuous variables (ordinal discrete, interval
+            continuous, or ratio continuous)
+        remove_null_records (bool): whether to remove records with any null
+            values
+        table (object): Pandas data frame of information about phenotype and
+            covariate variables for GWAS
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of information about phenotype and
+            covariate variables in format for GWAS in PLINK
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Translate binary phenotype variables.
+    for boolean_phenotype in boolean_phenotypes:
+        table[boolean_phenotype] = table.apply(
+            lambda row:
+                translate_boolean_phenotype_plink(
+                    boolean_value=row[boolean_phenotype],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Translate binary phenotype variables.
+    for binary_phenotype in binary_phenotypes:
+        table[binary_phenotype] = table.apply(
+            lambda row:
+                translate_binary_phenotype_plink(
+                    binary_value=row[binary_phenotype],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Translate continuous variables, whether they are phenotypes or covariates.
+    table_type = utility.convert_table_columns_variables_types_float(
+        columns=continuous_variables,
+        table=table,
+    )
+    # Organize.
+    table.reset_index(
+        level=None,
+        inplace=True
+    )
+    # Remove table rows with any empty cells or missing values.
+    if remove_null_records:
+        table.dropna(
+            axis="index",
+            how="any",
+            subset=None,
+            inplace=True,
+        )
+    # Introduce family identifier.
+    table["FID"] = table["IID"]
+    # Sort column sequence.
+    columns = table.columns.to_list()
+    columns_sequence = list(filter(
+        lambda element: element not in ["eid", "IID", "FID"],
+        columns
+    ))
+    columns_sequence.insert(0, "eid") # third column
+    columns_sequence.insert(0, "IID") # second column
+    columns_sequence.insert(0, "FID") # first column
+    table_columns = table.loc[
+        :, table.columns.isin(columns_sequence)
+    ]
+    table_sequence = table_columns[[*columns_sequence]]
+    # Return information.
+    return table_sequence
+
+
+##########
 # Cohort, model selection: general
 
 
@@ -726,218 +947,6 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     return table_unrelated
 
 
-def translate_boolean_phenotype_plink(
-    boolean_value=None,
-):
-    """
-    Translate information from simple binary representation to plink
-    representation.
-
-    Accommodate inexact float values and null values.
-
-    https://www.cog-genomics.org/plink/1.9/input
-    Section: "Phenotypes"
-    Subsection: "Phenotype encoding"
-        "Missing phenotypes are normally expected to be encoded as -9. You can
-        change this to another integer with --missing-phenotype. (This is a
-        slight change from PLINK 1.07: floating point values are now disallowed
-        due to rounding issues, and nonnumeric values such as 'NA' are rejected
-        since they're treated as missing phenotypes no matter what. Note that
-        --output-missing-phenotype can be given a nonnumeric string.)
-
-        Case/control phenotypes are expected to be encoded as 1=unaffected
-        (control), 2=affected (case); 0 is accepted as an alternate missing
-        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
-        status instead, while 1 maps to affected. This also forces phenotypes to
-        be interpreted as case/control."
-
-    arguments:
-        boolean_value (float): boolean (False, True) representation of a
-            phenotype
-
-    raises:
-
-    returns:
-        (float): plink binary representation of a phenotype
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (not pandas.isna(boolean_value)):
-        # The variable has a valid value.
-        if (not boolean_value):
-            # control, original value: False
-            # control, Plink translation: 1
-            value = 1
-        elif (boolean_value):
-            # case, original value: True
-            # case, Plink translation: 2
-            value = 2
-    else:
-        # null
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def translate_binary_phenotype_plink(
-    binary_value=None,
-):
-    """
-    Translate information from simple binary representation to plink
-    representation.
-
-    Accommodate inexact float values and null values.
-
-    https://www.cog-genomics.org/plink/1.9/input
-    Section: "Phenotypes"
-    Subsection: "Phenotype encoding"
-        "Missing phenotypes are normally expected to be encoded as -9. You can
-        change this to another integer with --missing-phenotype. (This is a
-        slight change from PLINK 1.07: floating point values are now disallowed
-        due to rounding issues, and nonnumeric values such as 'NA' are rejected
-        since they're treated as missing phenotypes no matter what. Note that
-        --output-missing-phenotype can be given a nonnumeric string.)
-
-        Case/control phenotypes are expected to be encoded as 1=unaffected
-        (control), 2=affected (case); 0 is accepted as an alternate missing
-        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
-        status instead, while 1 maps to affected. This also forces phenotypes to
-        be interpreted as case/control."
-
-    arguments:
-        binary_value (float): binary (0, 1) representation of a phenotype
-
-    raises:
-
-    returns:
-        (float): plink binary representation of a phenotype
-
-    """
-
-    # Determine whether the variable has a valid (non-missing) value.
-    if (
-        (not math.isnan(binary_value)) and
-        (-0.5 <= binary_value and binary_value < 1.5)
-    ):
-        # The variable has a valid value.
-        if (-0.5 <= binary_value and binary_value < 0.5):
-            # control, original value: 0
-            # control, Plink translation: 1
-            value = 1
-        elif (0.5 <= binary_value and binary_value < 1.5):
-            # case, original value: 1
-            # case, Plink translation: 2
-            value = 2
-    else:
-        # null
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def organize_phenotype_covariate_table_plink_format(
-    boolean_phenotypes=None,
-    binary_phenotypes=None,
-    continuous_variables=None,
-    remove_null_records=None,
-    table=None,
-):
-    """
-    Organize table for phenotypes and covariates in format for PLINK.
-
-    1. Remove any rows with missing, empty values.
-    PLINK cannot accommodate rows with empty cells.
-
-    2. Introduce family identifiers.
-    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
-    columns in the sample table.
-
-    3. Sort column sequence.
-    PLINK requires FID and IID columns to come first.
-
-    arguments:
-        boolean_phenotypes (list<str>): names of columns with discrete boolean
-            case-control phenotypes (control: False, case: True) that need
-            conversion to PLINK format (control: 1, case: 2)
-        binary_phenotypes (list<str>): names of columns with discrete binary
-            case-control phenotypes (control: 0, case: 1) that need conversion
-            to PLINK format (control: 1, case: 2)
-        continuous_variables (list<str>): names of columns that PLINK ought
-            to interpret as continuous variables (ordinal discrete, interval
-            continuous, or ratio continuous)
-        remove_null_records (bool): whether to remove records with any null
-            values
-        table (object): Pandas data frame of information about phenotype and
-            covariate variables for GWAS
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of information about phenotype and
-            covariate variables in format for GWAS in PLINK
-
-    """
-
-    # Copy data.
-    table = table.copy(deep=True)
-    # Translate binary phenotype variables.
-    for boolean_phenotype in boolean_phenotypes:
-        table[boolean_phenotype] = table.apply(
-            lambda row:
-                translate_boolean_phenotype_plink(
-                    boolean_value=row[boolean_phenotype],
-                ),
-            axis="columns", # apply across rows
-        )
-        pass
-    # Translate binary phenotype variables.
-    for binary_phenotype in binary_phenotypes:
-        table[binary_phenotype] = table.apply(
-            lambda row:
-                translate_binary_phenotype_plink(
-                    binary_value=row[binary_phenotype],
-                ),
-            axis="columns", # apply across rows
-        )
-        pass
-    # Translate continuous variables, whether they are phenotypes or covariates.
-    table_type = utility.convert_table_columns_variables_types_float(
-        columns=continuous_variables,
-        table=table,
-    )
-    # Organize.
-    table.reset_index(
-        level=None,
-        inplace=True
-    )
-    # Remove table rows with any empty cells or missing values.
-    if remove_null_records:
-        table.dropna(
-            axis="index",
-            how="any",
-            subset=None,
-            inplace=True,
-        )
-    # Introduce family identifier.
-    table["FID"] = table["IID"]
-    # Sort column sequence.
-    columns = table.columns.to_list()
-    columns_sequence = list(filter(
-        lambda element: element not in ["eid", "IID", "FID"],
-        columns
-    ))
-    columns_sequence.insert(0, "eid") # third column
-    columns_sequence.insert(0, "IID") # second column
-    columns_sequence.insert(0, "FID") # first column
-    table_columns = table.loc[
-        :, table.columns.isin(columns_sequence)
-    ]
-    table_sequence = table_columns[[*columns_sequence]]
-    # Return information.
-    return table_sequence
-
-
 def select_records_by_ancestry_case_control_valid_variables_values(
     name=None,
     white_british=None,
@@ -1118,8 +1127,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 female_menopause_ordinal=[0, 1, 2,],
                 female_variables=[
                     "eid", "IID",
-                    "white_british",
+                    "assessment_region",
                     "assessment_season",
+                    "white_british",
                     "sex", "sex_text", "age", "body_log",
                     "pregnancy",
                     phenotype_response_specific,
@@ -1129,10 +1139,10 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 age_grade_male=[0, 1, 2,],
                 male_variables=[
                     "eid", "IID",
-                    "white_british",
+                    "assessment_region",
                     "assessment_season",
-                    "sex", "sex_text", "age", "age_grade_male",
-                    "body_log",
+                    "white_british",
+                    "sex", "sex_text", "age", "body_log",
                     phenotype_response_specific,
                 ],
                 male_prefixes=["genotype_pc_",],
@@ -1173,8 +1183,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_ordinal", "hormone_alteration",
                 phenotype_response_specific,
@@ -1221,8 +1232,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             female_menopause_ordinal=[0,],
             female_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "menstruation_days",
@@ -1272,8 +1284,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             female_menopause_ordinal=[1,],
             female_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "menstruation_days",
@@ -1323,8 +1336,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             female_menopause_ordinal=[2,],
             female_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "body", "body_log",
                 "pregnancy", "menopause_binary", "menopause_ordinal",
                 "hormone_alteration",
@@ -1376,8 +1390,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             age_grade_male=[0, 1, 2,],
             male_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
                 phenotype_response_specific,
@@ -1424,8 +1439,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             age_grade_male=[0,],
             male_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
                 phenotype_response_specific,
@@ -1471,8 +1487,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             age_grade_male=[1,],
             male_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
                 phenotype_response_specific,
@@ -1520,8 +1537,9 @@ def stratify_genotype_cohorts_by_phenotype_response(
             age_grade_male=[2,],
             male_variables=[
                 "eid", "IID",
-                "white_british",
+                "assessment_region",
                 "assessment_season",
+                "white_british",
                 "sex", "sex_text", "age", "age_grade_male",
                 "body", "body_log",
                 phenotype_response_specific,
@@ -3182,9 +3200,6 @@ def stratify_cohorts_models_phenotypes_sets(
 # TODO: "<hormone>_detection" binary variables
 
 # "execute_stratify_for_logistic_genotype_analysis"
-
-
-# TODO: pass flag "plink_format"
 
 
 
