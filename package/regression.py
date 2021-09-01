@@ -210,6 +210,50 @@ def read_source_cohort_model_reference(
 # Need a coherent name for this section...
 
 
+def define_model_dependence_records_hormones():
+    """
+    Define records for regression model and dependent variables.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<dict>): information from regressions
+
+    """
+
+    records = [
+        {"dependence": "vitamin_d_log", "model": "complex"},
+        {"dependence": "vitamin_d_imputation_log", "model": "complex"},
+        {"dependence": "albumin", "model": "complex"},
+        {"dependence": "albumin_imputation", "model": "complex"},
+        {"dependence": "steroid_globulin_log", "model": "complex"},
+        {"dependence": "steroid_globulin_imputation_log", "model": "complex"},
+        {"dependence": "oestradiol_log", "model": "complex"},
+        {"dependence": "oestradiol_log", "model": "alternate_one"},
+        {"dependence": "oestradiol_log", "model": "alternate_two"},
+        {"dependence": "oestradiol_imputation", "model": "complex"},
+        {"dependence": "oestradiol_bioavailable_log", "model": "complex"},
+        {
+            "dependence": "oestradiol_bioavailable_imputation",
+            "model": "complex"
+        },
+        {"dependence": "oestradiol_free_log", "model": "complex"},
+        {"dependence": "oestradiol_free_imputation", "model": "complex"},
+        {"dependence": "testosterone_log", "model": "complex"},
+        {"dependence": "testosterone_imputation", "model": "complex"},
+        {"dependence": "testosterone_bioavailable_log", "model": "complex"},
+        {
+            "dependence": "testosterone_bioavailable_imputation",
+            "model": "complex"
+        },
+        {"dependence": "testosterone_free_log", "model": "complex"},
+        {"dependence": "testosterone_free_imputation", "model": "complex"},
+    ]
+    return records
+
+
 def drive_regressions_female_cohorts_models_hormones(
     table=None,
     table_cohort_model=None,
@@ -239,7 +283,7 @@ def drive_regressions_female_cohorts_models_hormones(
     cohorts_relevant = [
         "female", "female_premenopause", "female_perimenopause",
         "female_postmenopause",
-        #"male", "male_age_low", "male_age_middle", "male_age_high",
+        "male", "male_age_low", "male_age_middle", "male_age_high",
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
@@ -247,36 +291,25 @@ def drive_regressions_female_cohorts_models_hormones(
     ))
 
     # Define relevant dependent variables.
-    dependences = [
-        "vitamin_d_log", "vitamin_d_imputation_log",
-        "albumin", "albumin_imputation",
-        "steroid_globulin_log", "steroid_globulin_imputation_log",
-        "oestradiol_log", "oestradiol_imputation",
-        "oestradiol_bioavailable_log", "oestradiol_bioavailable_imputation",
-        "oestradiol_free_log", "oestradiol_free_imputation",
-        "testosterone_log", "testosterone_imputation",
-        "testosterone_bioavailable_log", "testosterone_bioavailable_imputation",
-        "testosterone_free_log", "testosterone_free_imputation",
-    ]
-
+    records_models = define_model_dependence_records_hormones()
     # Iterate across cohorts.
     for cohort_record in cohorts_records:
         cohort = cohort_record["cohort"]
         menstruation = cohort_record["menstruation"]
         table_cohort = cohort_record["table"]
         # Iterate across outcomes (dependent variables).
-        for dependence in dependences:
+        for record_model in records_models:
             # Define cohort-specific ordinal representation.
             dependence_ordinal = str(
-                str(dependence) + "_" + str(cohort) + "_order"
+                str(record_model["dependence"]) + "_" + str(cohort) + "_order"
             )
             pail_regression = (
                 pro_regression.drive_cohort_model_linear_regression(
                     table=table_cohort,
                     table_cohort_model=table_cohort_model,
                     cohort=cohort,
-                    model="complex",
-                    dependence=dependence,
+                    model=record_model["model"],
+                    dependence=record_model["dependence"],
                     report=report,
 
             ))
