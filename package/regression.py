@@ -225,14 +225,19 @@ def define_model_dependence_records_hormones():
 
     records = [
         {"dependence": "vitamin_d_log", "model": "complex"},
+        {"dependence": "vitamin_d_log", "model": "simple"},
         {"dependence": "vitamin_d_imputation_log", "model": "complex"},
         {"dependence": "albumin", "model": "complex"},
+        {"dependence": "albumin", "model": "alternate_one"},
+        {"dependence": "albumin", "model": "simple"},
         {"dependence": "albumin_imputation", "model": "complex"},
         {"dependence": "steroid_globulin_log", "model": "complex"},
+        {"dependence": "steroid_globulin_log", "model": "simple"},
         {"dependence": "steroid_globulin_imputation_log", "model": "complex"},
         {"dependence": "oestradiol_log", "model": "complex"},
         {"dependence": "oestradiol_log", "model": "alternate_one"},
         {"dependence": "oestradiol_log", "model": "alternate_two"},
+        {"dependence": "oestradiol_log", "model": "simple"},
         {"dependence": "oestradiol_imputation", "model": "complex"},
         {"dependence": "oestradiol_bioavailable_log", "model": "complex"},
         {
@@ -242,6 +247,7 @@ def define_model_dependence_records_hormones():
         {"dependence": "oestradiol_free_log", "model": "complex"},
         {"dependence": "oestradiol_free_imputation", "model": "complex"},
         {"dependence": "testosterone_log", "model": "complex"},
+        {"dependence": "testosterone_log", "model": "simple"},
         {"dependence": "testosterone_imputation", "model": "complex"},
         {"dependence": "testosterone_bioavailable_log", "model": "complex"},
         {
