@@ -287,9 +287,9 @@ def drive_regressions_female_cohorts_models_hormones(
         table=table
     )
     cohorts_relevant = [
-        "female", "female_premenopause", "female_perimenopause",
-        "female_postmenopause",
-        #"male", "male_age_low", "male_age_middle", "male_age_high",
+        #"female", "female_premenopause", "female_perimenopause",
+        #"female_postmenopause",
+        "male", "male_age_low", "male_age_middle", "male_age_high",
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
