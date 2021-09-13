@@ -305,15 +305,15 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
         "oestradiol", "testosterone",
     ]
     cohorts = [
-        "female", "female-younger", "female-older",
-        "male", "male-younger", "male-older",
-        "female-premenopause", "female-perimenopause", "female-postmenopause",
+        "female", "female_age_low", "female_age_middle", "female_age_high",
+        "male", "male_age_low", "male_age_middle", "male_age_high",
+        "female_premenopause", "female_perimenopause", "female_postmenopause",
     ]
     # Iterate across cohorts.
     for cohort in cohorts:
         # Iterate across hormones.
         for hormone in hormones:
-            column_ordinal = str(str(hormone) + "_" + str(cohort) + "_ordinal")
+            column_ordinal = str(str(hormone) + "_" + str(cohort) + "_order")
             values = copy.deepcopy(table[column_ordinal].dropna().to_list())
             if (len(values) > 10):
                 count_values_0 = len(list(filter(

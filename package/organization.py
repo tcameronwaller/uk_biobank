@@ -2489,6 +2489,7 @@ def interpret_biochemistry_reportability_detection_limit(
     detection limit
     2: measurement was not reportable and missing because value was greater than
     detection limit
+    NA: not reportable and missing without definitive explanation (per 4917)
 
     Data-Field "30606": "Albumin reportability"
     Data-Field "30836": "SHBG reportability"
