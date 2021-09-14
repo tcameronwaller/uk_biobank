@@ -8415,11 +8415,6 @@ def parse_interpret_match_diagnosis_codes(
     return match
 
 
-
-# TODO: TCW 14 September
-# TODO: this function still uses "True" and "False"
-# TODO: switch to binary
-
 def determine_diagnosis_icd_alcoholism_group(
     row=None,
     fields_icd_9=None,
