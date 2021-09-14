@@ -257,7 +257,7 @@ def define_model_dependence_records_hormones():
         #{"dependence": "albumin", "model": "simple"},
         {"dependence": "albumin_imputation", "model": "complex"},
         {"dependence": "steroid_globulin_log", "model": "complex"},
-        {#"dependence": "steroid_globulin_log", "model": "simple"},
+        #{"dependence": "steroid_globulin_log", "model": "simple"},
         {"dependence": "steroid_globulin_imputation_log", "model": "complex"},
         {"dependence": "oestradiol_log", "model": "complex"},
         #{"dependence": "oestradiol_log", "model": "alternate_one"},
