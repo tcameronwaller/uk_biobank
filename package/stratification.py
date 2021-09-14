@@ -2947,15 +2947,35 @@ def stratify_set_female_pregnancy(
     return records
 
 
+# TODO: TCW 14 September 2021
+# TODO: I THINK that I can change this to accept arguments for alcohol variable
+# TODO: (such as "alcohol_ever" or "alcoholism_control_case_any") and a value
+# TODO: then I can use the same function to prepare cohorts for alcoholism controls AND cases
+
+# name: "alcoholism_control_case_any"
+# NA: missing value indicates neither control nor case
+# 0: control
+# 1: case
+
+
 def stratify_set_alcohol_sex_menopause_age(
+    alcohol_variable=None,
+    alcohol_value=None,
     table=None,
 ):
     """
     Organizes information and plots for sex hormones.
 
-    Persons who consumed alcohol currently.
+    This function allows selection of cohorts on the basis of a variety of
+    alcohol variables.
+    Examples include current or previous alcohol consumption and designation as
+    a control or case for alcoholism.
 
     arguments:
+        alcohol_variable (str): name of column for an alcohol variable of
+            interest for cohort stratification
+        alcohol_value (float): a single specific value of the alcohol variable
+            for cohort stratification
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 

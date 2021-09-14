@@ -8731,6 +8731,8 @@ def determine_alcoholism_control(
             match_diagnosis = False
     else:
         # Missing information.
+        # Missing information in diagnostic variables would disqualify control.
+        # But diagnostic variables do not have missing values.
         match_diagnosis = False
 
     # Determine whether person had only moderate scores in AUDIT questionnaires.
@@ -8879,15 +8881,15 @@ def determine_alcoholism_case_two(
         (not pandas.isna(alcohol_diagnosis_a)) and
         (not pandas.isna(alcohol_diagnosis_b)) and
         (not pandas.isna(alcohol_diagnosis_c)) and
-        (not pandas.isna(alcohol_diagnosis_d)) and
-        (not pandas.isna(alcohol_diagnosis_self))
+        (not pandas.isna(alcohol_diagnosis_d))# and
+        #(not pandas.isna(alcohol_diagnosis_self))
     ):
         if (
             (alcohol_diagnosis_a == 1) or
             (alcohol_diagnosis_b == 1) or
             (alcohol_diagnosis_c == 1) or
-            (alcohol_diagnosis_d == 1) or
-            (alcohol_diagnosis_self == 1)
+            (alcohol_diagnosis_d == 1)# or
+            #(alcohol_diagnosis_self == 1)
         ):
             # Person qualified for at least one diagnostic definition of
             # alcoholism.
@@ -9156,6 +9158,10 @@ def determine_alcoholism_control_case(
 
     Ensure mutual exclusivity of alcoholism control and case statuses.
 
+    NA: missing value indicates neither control nor case
+    0: control
+    1: case
+
     arguments:
         alcoholism_control (float): binary logical representation of alcoholism
             control status
@@ -9356,11 +9362,13 @@ def organize_alcoholism_case_control_definitions(
     # Use "less than" logic (record < threshold) for control thresholds.
     # Use "greater than or equal" logic (record >= threshold) for case
     # thresholds.
+    # Be a bit more permissive with the AUDIT-C score to allow for persons who
+    # consume a lot of alcohol without psychological problems.
     threshold_auditc_control = 5 # include AUDIT-C scores 0-4
     threshold_auditc_case = 10
     threshold_auditp_control = 4 # include AUDIT-P scores 0-3
     threshold_auditp_case = 5
-    threshold_audit_control = 9 # include AUDIT scores 0-8
+    threshold_audit_control = 8 # include AUDIT scores 0-7
     threshold_audit_case = 15 # AUDIT score 15 or more "likely alcohol dep"
 
     # Determine qualification for control status for alcohol dependence.
@@ -9450,6 +9458,10 @@ def organize_alcoholism_case_control_definitions(
     )
 
     # Combine alcoholism case and control definitions.
+    # name: "alcoholism_control_case_any"
+    # NA: missing value indicates neither control nor case
+    # 0: control
+    # 1: case
     table["alcoholism_control_case_any"] = table.apply(
         lambda row:
             determine_alcoholism_control_case(
