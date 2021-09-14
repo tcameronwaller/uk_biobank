@@ -8371,6 +8371,8 @@ def parse_field_array_codes(
         codes = list()
     return codes
 
+# TODO: TCW 14 September 2021
+# TODO: I could possibly rewrite this more efficiently using "any()" and "filter()"
 
 def parse_interpret_match_diagnosis_codes(
     row=None,
@@ -8379,6 +8381,8 @@ def parse_interpret_match_diagnosis_codes(
 ):
     """
     Parses and interprets ICD diagnosis codes.
+
+    Any match in either ICD9 or ICD10 codes suffices for a diagnostic match.
 
     arguments:
         row (object): Pandas series corresponding to a row of a Pandas data
@@ -8411,6 +8415,11 @@ def parse_interpret_match_diagnosis_codes(
     return match
 
 
+
+# TODO: TCW 14 September
+# TODO: this function still uses "True" and "False"
+# TODO: switch to binary
+
 def determine_diagnosis_icd_alcoholism_group(
     row=None,
     fields_icd_9=None,
@@ -8419,6 +8428,10 @@ def determine_diagnosis_icd_alcoholism_group(
 ):
     """
     Organizes information about diagnoses relevant to alcoholism.
+
+    Do not propagate missing values in ICD codes as the absence of a code does
+    not necessarily indicate missing information. It could indicate a valid
+    null.
 
     arguments:
         row (object): Pandas series corresponding to a row of a Pandas data
@@ -8451,9 +8464,51 @@ def determine_diagnosis_icd_alcoholism_group(
     )
     # Interpret matches from either ICD9 or ICD10 codes.
     if (icd_9_group or icd_10_group):
-        match = True
+        match = 1
     else:
-        match = False
+        match = 0
+    # Return information.
+    return match
+
+
+def determine_diagnosis_alcoholism_self(
+    row=None,
+    fields=None,
+    codes_match=None,
+):
+    """
+    Organizes information about diagnoses relevant to alcoholism.
+
+    Do not propagate missing values in ICD codes as the absence of a code does
+    not necessarily indicate missing information. It could indicate a valid
+    null.
+
+    arguments:
+        row (object): Pandas series corresponding to a row of a Pandas data
+            frame
+        fields (list<str>): names of columns for UK Biobank fields for self
+            report of alcohol dependence
+        codes_match (dict<list<str>>): diagnostic codes for self report of
+            alcohol dependence
+
+    raises:
+
+    returns:
+        (bool): whether values in the current row match the diagnostic group
+
+    """
+
+    # Determine whether any codes in any ICD9 fields match diagnostic group.
+    self_report = parse_interpret_match_diagnosis_codes(
+        row=row,
+        fields=fields,
+        codes_match=codes_match,
+    )
+    # Interpret matches from either ICD9 or ICD10 codes.
+    if (self_report):
+        match = 1
+    else:
+        match = 0
     # Return information.
     return match
 
@@ -8531,7 +8586,7 @@ def organize_alcoholism_diagnosis_variables(
     # Determine whether person has self diagnoses.
     table["alcohol_diagnosis_self"] = table.apply(
         lambda row:
-            parse_interpret_match_diagnosis_codes(
+            determine_diagnosis_alcoholism_self(
                 row=row.copy(deep=True),
                 fields=["20002_array"],
                 codes_match=codes_self,
@@ -10078,7 +10133,7 @@ def execute_alcohol(
     # Organize information about alcohol consumption.
     pail_alcohol_consumption = organize_alcohol_consumption_variables(
         table=table,
-        report=False,
+        report=True,
     )
     #print(pail_alcohol_consumption["table_report"])
 
@@ -10087,21 +10142,21 @@ def execute_alcohol(
     # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
     pail_audit = organize_alcohol_audit_questionnaire_variables(
         table=pail_alcohol_consumption["table"],
-        report=False,
+        report=True,
     )
     #print(pail_audit["table_report"])
 
+    # Organize International Classification of Disease (ICD) ICD9 and ICD10
+    # codes for diagnoses relevant to alcoholism.
+    # Organize codes for self diagnoses relevant to alcoholism.
+    pail_diagnosis = organize_alcoholism_diagnosis_variables(
+        table=pail_audit["table"],
+        report=True,
+    )
+    #print(pail_diagnosis["table_report"])
+
 
     if False:
-
-        # Organize International Classification of Disease (ICD) ICD9 and ICD10
-        # codes for diagnoses relevant to alcoholism.
-        # Organize codes for self diagnoses relevant to alcoholism.
-        pail_diagnosis = organize_alcoholism_diagnosis_variables(
-            table=pail_audit["audit"]["table_clean"],
-            report=False,
-        )
-        #print(pail_diagnosis["table_clean"])
 
         # Organize alcoholism cases and controls.
         # Report females and males who consume alcohol and are candidates for
@@ -10117,9 +10172,9 @@ def execute_alcohol(
         utility.print_terminal_partition(level=2)
         print("report: execute_alcohol()")
         utility.print_terminal_partition(level=3)
-        print(pail_audit["audit"]["table_report"])
+        print(pail_diagnosis["table_report"])
     # Return information.
-    return pail_audit
+    return pail_diagnosis
 
 
 
