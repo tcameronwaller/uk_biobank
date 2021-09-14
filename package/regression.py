@@ -177,14 +177,18 @@ def read_source_cohort_model_reference(
     """
 
     # Specify directories and files.
-    path_table_sex_age_menopause_hormones = os.path.join(
+    path_table_linear_hormones_sex_age_menopause = os.path.join(
         path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
-        "table_sex_age_menopause_hormones.tsv"
+        "table_linear_hormones_sex_age_menopause.tsv"
+    )
+    path_table_linear_hormones_alcoholism = os.path.join(
+        path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
+        "table_linear_hormones_alcoholism.tsv"
     )
 
     # Organize code interpretations.
-    table_sex_age_menopause_hormones = pandas.read_csv(
-        path_table_sex_age_menopause_hormones,
+    table_linear_hormones_sex_age_menopause = pandas.read_csv(
+        path_table_linear_hormones_sex_age_menopause,
         sep="\t",
         header=0,
         dtype={
@@ -194,15 +198,36 @@ def read_source_cohort_model_reference(
             "independence": "string",
         },
     )
-    table_sex_age_menopause_hormones.reset_index(
+    table_linear_hormones_sex_age_menopause.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
 
+    table_linear_hormones_alcoholism = pandas.read_csv(
+        path_table_linear_hormones_alcoholism,
+        sep="\t",
+        header=0,
+        dtype={
+            "cohort": "string",
+            "model": "string",
+            "dependence": "string",
+            "independence": "string",
+        },
+    )
+    table_linear_hormones_alcoholism.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+
+
     # Compile and return information.
     return {
-        "table_sex_age_menopause_hormones": table_sex_age_menopause_hormones,
+        "table_linear_hormones_sex_age_menopause": (
+            table_linear_hormones_sex_age_menopause
+        ),
+        "table_linear_hormones_alcoholism": table_linear_hormones_alcoholism,
     }
 
 
@@ -225,19 +250,19 @@ def define_model_dependence_records_hormones():
 
     records = [
         {"dependence": "vitamin_d_log", "model": "complex"},
-        {"dependence": "vitamin_d_log", "model": "simple"},
+        #{"dependence": "vitamin_d_log", "model": "simple"},
         {"dependence": "vitamin_d_imputation_log", "model": "complex"},
         {"dependence": "albumin", "model": "complex"},
-        {"dependence": "albumin", "model": "alternate_one"},
-        {"dependence": "albumin", "model": "simple"},
+        #{"dependence": "albumin", "model": "alternate_one"},
+        #{"dependence": "albumin", "model": "simple"},
         {"dependence": "albumin_imputation", "model": "complex"},
         {"dependence": "steroid_globulin_log", "model": "complex"},
-        {"dependence": "steroid_globulin_log", "model": "simple"},
+        {#"dependence": "steroid_globulin_log", "model": "simple"},
         {"dependence": "steroid_globulin_imputation_log", "model": "complex"},
         {"dependence": "oestradiol_log", "model": "complex"},
-        {"dependence": "oestradiol_log", "model": "alternate_one"},
-        {"dependence": "oestradiol_log", "model": "alternate_two"},
-        {"dependence": "oestradiol_log", "model": "simple"},
+        #{"dependence": "oestradiol_log", "model": "alternate_one"},
+        #{"dependence": "oestradiol_log", "model": "alternate_two"},
+        #{"dependence": "oestradiol_log", "model": "simple"},
         {"dependence": "oestradiol_imputation", "model": "complex"},
         {"dependence": "oestradiol_bioavailable_log", "model": "complex"},
         {
@@ -247,7 +272,7 @@ def define_model_dependence_records_hormones():
         {"dependence": "oestradiol_free_log", "model": "complex"},
         {"dependence": "oestradiol_free_imputation", "model": "complex"},
         {"dependence": "testosterone_log", "model": "complex"},
-        {"dependence": "testosterone_log", "model": "simple"},
+        #{"dependence": "testosterone_log", "model": "simple"},
         {"dependence": "testosterone_imputation", "model": "complex"},
         {"dependence": "testosterone_bioavailable_log", "model": "complex"},
         {
@@ -328,6 +353,72 @@ def drive_regressions_female_cohorts_models_hormones(
     return pail
 
 
+def drive_linear_regressions_hormones_alcoholism(
+    table=None,
+    table_cohort_model=None,
+    report=None,
+):
+    """
+    Organize regressions.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_cohort_model (object): Pandas data frame of cohorts, models,
+            dependent variables, and independent variables for regression
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information from regressions
+
+    """
+
+    # Define relevant cohorts.
+    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+        table=table
+    )
+    cohorts_relevant = [
+        "female", "female_premenopause", "female_perimenopause",
+        "female_postmenopause",
+        "male", "male_age_low", "male_age_middle", "male_age_high",
+    ]
+    cohorts_records = list(filter(
+        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
+        cohorts_records
+    ))
+
+    # Define relevant dependent variables.
+    records_models = define_model_dependence_records_hormones()
+    # Iterate across cohorts.
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
+        menstruation = cohort_record["menstruation"]
+        table_cohort = cohort_record["table"]
+        # Iterate across outcomes (dependent variables).
+        for record_model in records_models:
+            # Define cohort-specific ordinal representation.
+            dependence_ordinal = str(
+                str(record_model["dependence"]) + "_" + str(cohort) + "_order"
+            )
+            pail_regression = (
+                pro_regression.drive_cohort_model_linear_regression(
+                    table=table_cohort,
+                    table_cohort_model=table_cohort_model,
+                    cohort=cohort,
+                    model=record_model["model"],
+                    dependence=record_model["dependence"],
+                    report=report,
+
+            ))
+            pass
+        pass
+
+    # Compile information.
+    pail = dict()
+    # Return information.
+    return pail
 
 
 ###############################################################################
@@ -373,11 +464,22 @@ def execute_procedure(
     )
 
     # Drive regressions.
-    pail_female = drive_regressions_female_cohorts_models_hormones(
-        table=source["table_phenotypes"],
-        table_cohort_model=source_reference["table_sex_age_menopause_hormones"],
-        report=True
-    )
+    if False:
+        pail_female = drive_regressions_female_cohorts_models_hormones(
+            table=source["table_phenotypes"],
+            table_cohort_model=(
+                source_reference["table_linear_hormones_sex_age_menopause"]
+            ),
+            report=True
+        )
+    if True:
+        pail_alcohol = drive_linear_regressions_hormones_alcoholism(
+            table=source["table_phenotypes"],
+            table_cohort_model=(
+                source_reference["table_linear_hormones_alcoholism"]
+            ),
+            report=True
+        )
 
 
 
