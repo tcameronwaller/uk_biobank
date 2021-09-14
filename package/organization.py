@@ -7619,23 +7619,23 @@ def organize_alcohol_consumption_variables(
 # Alcohol AUDIT questionnaire
 
 
-# TODO: TCW 3 August 2021
-# TODO: this code block of AUDIT-C and AUDIT-P looks pretty good... but good idea to double check.
-
 def interpret_alcohol_audit_one(
     value=None,
 ):
     """
     Intepret UK Biobank's coding for AUDIT questionnaire question 1.
 
-    "audit_1", field "20414": "Frequency of drinking alcohol"
-    UK Biobank data coding "521" for variable field "20414".
-    "never": 0
-    "monthly or less": 1
-    "two to four times a month": 2
-    "two to three times a week": 3
-    "four or more times a week": 4
-    "prefer not to answer": -818
+    AUDIT 1
+    Note: "Question asked: 'How often do you have a drink containing alcohol?'"
+
+    Data-Field "20414": "Frequency of drinking alcohol"
+    UK Biobank data-coding "521" for data-field "20414".
+    0: "never"
+    1: "monthly or less"
+    2: "two to four times a month"
+    3: "two to three times a week"
+    4: "four or more times a week"
+    -818: "prefer not to answer"
 
     Accommodate inexact float values.
 
@@ -7652,29 +7652,35 @@ def interpret_alcohol_audit_one(
     # Determine whether the variable has a valid (non-missing) value.
     if (
         (not pandas.isna(value)) and
-        (-0.5 <= value and value < 4.5)
+        (-818.5 <= value and value < 4.5)
     ):
         # The variable has a valid value.
         if (-0.5 <= value and value < 0.5):
-            # "never"
-            value_clean = 0
+            # 0: "never"
+            interpretation = 0
         elif (0.5 <= value and value < 1.5):
-            # "monthly or less"
-            value_clean = 1
+            # 1: "monthly or less"
+            interpretation = 1
         elif (1.5 <= value and value < 2.5):
-            # "two to four times a month"
-            value_clean = 2
+            # 2: "two to four times a month"
+            interpretation = 2
         elif (2.5 <= value and value < 3.5):
-            # "two to three times a week"
-            value_clean = 3
+            # 3: "two to three times a week"
+            interpretation = 3
         elif (3.5 <= value and value < 4.5):
-            # "four or more times a week"
-            value_clean = 4
+            # 4: "four or more times a week"
+            interpretation = 4
+        elif (-818.5 <= value and value < -817.5):
+            # -818: "prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
     else:
         # "prefer not to answer" or null
-        value_clean = float("nan")
+        interpretation = float("nan")
     # Return information.
-    return value_clean
+    return interpretation
 
 
 def interpret_alcohol_audit_two_to_eight(
@@ -7683,22 +7689,54 @@ def interpret_alcohol_audit_two_to_eight(
     """
     Intepret UK Biobank's coding for AUDIT questionnaire questions 2 to 8.
 
-    UK Biobank data coding "522" for variable field "20403".
-    "one or two": 1
-    "three or four": 2
-    "five or six": 3
-    "seven, eight, or nine": 4
-    "ten or more": 5
-    "prefer not to answer": -818
+    AUDIT 2
+    Note (20403): "Question asked: 'In the next two questions, a "drink" is
+    defined as one unit of alcohol. How many drinks containing alcohol do you
+    have on a typical day when you are drinking?'"
 
-    UK Biobank data coding "523" for variable fields "20416", "20413", "20407",
+    UK Biobank data-coding "522" for data-field "20403".
+    1: "one or two"
+    2: "three or four"
+    3: "five or six"
+    4: "seven, eight, or nine"
+    5: "ten or more"
+    -818: "prefer not to answer"
+
+    AUDIT 3
+    Note (20416): "Question asked: 'In the next two questions, a "drink" is
+    defined as one unit of alcohol. How often do you have six or more drinks on
+    one occasion?'"
+
+    AUDIT 4
+    Note (20413): "Question asked: 'How often during the last year have you
+    found that you were not able to stop drinking once you had started?'"
+
+    AUDIT 5
+    Note (20407): "Question asked: 'How often during the last year have you
+    failed to do what was normally expected from you because of drinking?'"
+
+    AUDIT 6
+    Note (20412): "Question asked: 'How often during the last year have you
+    needed a first drink in the morning to get yourself going after a heavy
+    drinking session?'"
+
+    AUDIT 7
+    Note (20409): "Question asked: 'How often during the last year have you had
+    a feeling of guilt or remorse after drinking?'"
+
+    AUDIT 8
+    Note (20408): "Question asked: 'How often during the last year have you been
+    unable to remember what happened the night before because you had been
+    drinking?'"
+
+    UK Biobank data-coding "523" for data-fields "20416", "20413", "20407",
     "20412", "20409", and "20408".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
+    1: "never"
+    2: "less than monthly"
+    3: "monthly"
+    4: "weekly"
+    5: "daily or almost daily"
+    -818: "prefer not to answer"
 
     Notice that UK Biobank encodes these variables from 1 to 5; however, AUDIT
     encodes these from 0 to 4. Adjust the values accordingly.
@@ -7718,34 +7756,40 @@ def interpret_alcohol_audit_two_to_eight(
     # Determine whether the variable has a valid (non-missing) value.
     if (
         (not pandas.isna(value)) and
-        (0.5 <= value and value < 5.5)
+        (-818.5 <= value and value < 5.5)
     ):
         # The variable has a valid value.
         if (0.5 <= value and value < 1.5):
-            # code "522": "one or two"
-            # code "523": "never"
-            value_clean = 0
+            # 1: "one or two" (code "522")
+            # 1: "never" (code "523")
+            interpretation = 0
         elif (1.5 <= value and value < 2.5):
-            # code "522": "three or four"
-            # code "523": "less than monthly"
-            value_clean = 1
+            # 2: "three or four" (code "522")
+            # 2: "less than monthly" (code "523")
+            interpretation = 1
         elif (2.5 <= value and value < 3.5):
-            # code "522": "five or six"
-            # code "523": "monthly"
-            value_clean = 2
+            # 3: "five or six" (code "522")
+            # 3: "monthly" (code "523")
+            interpretation = 2
         elif (3.5 <= value and value < 4.5):
-            # code "522": "seven, eight, or nine"
-            # code "523": "weekly"
-            value_clean = 3
+            # 4: "seven, eight, or nine" (code "522")
+            # 4: "weekly" (code "523")
+            interpretation = 3
         elif (4.5 <= value and value < 5.5):
-            # code "522": "ten or more"
-            # code "523": "daily or almost daily"
-            value_clean = 4
+            # 5: "ten or more" (code "522")
+            # 5: "daily or almost daily" (code "523")
+            interpretation = 4
+        elif (-818.5 <= value and value < -817.5):
+            # -818: "prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
     else:
         # "prefer not to answer" or null
-        value_clean = float("nan")
+        interpretation = float("nan")
     # Return information.
-    return value_clean
+    return interpretation
 
 
 def interpret_alcohol_audit_nine_ten(
@@ -7754,11 +7798,20 @@ def interpret_alcohol_audit_nine_ten(
     """
     Intepret UK Biobank's coding for AUDIT questionnaire questions 9 and 10.
 
-    UK Biobank data coding "524" for variable fields "20411", and "20405".
-    "no": 0
-    "yes, but not in the last year": 1
-    "yes, during the last year": 2
-    "prefer not to answer": -818
+    AUDIT 9
+    Note (20411): "Question asked: 'Have you or someone else been injured as a
+    result of your drinking?'"
+
+    AUDIT 10
+    Note (20405): "Question asked: 'Has a relative or friend or a doctor or
+    another health worker been concerned about your drinking or suggested you
+    cut down?'"
+
+    UK Biobank data-coding "524" for data-fields "20411", and "20405".
+    0: "no"
+    1: "yes, but not in the last year"
+    2: "yes, during the last year"
+    -818: "prefer not to answer"
 
     Notice that UK Biobank encodes these variables as 0, 1, or 2; however,
     AUDIT encodes these as 0, 2, or 4. Adjust the values accordingly.
@@ -7778,23 +7831,29 @@ def interpret_alcohol_audit_nine_ten(
     # Determine whether the variable has a valid (non-missing) value.
     if (
         (not pandas.isna(value)) and
-        (-0.5 <= value and value < 2.5)
+        (-818.5 <= value and value < 2.5)
     ):
         # The variable has a valid value.
         if (-0.5 <= value and value < 0.5):
-            # code "524": "no"
-            value_clean = 0
+            # 0: "no"
+            interpretation = 0
         elif (0.5 <= value and value < 1.5):
-            # code "524": "yes, but not in the last year"
-            value_clean = 2
+            # 1: "yes, but not in the last year"
+            interpretation = 2
         elif (1.5 <= value and value < 2.5):
-            # code "524": "yes, during the last year"
-            value_clean = 4
+            # 2: "yes, during the last year"
+            interpretation = 4
+        elif (-818.5 <= value and value < -817.5):
+            # -818: "prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
     else:
         # "prefer not to answer" or null
-        value_clean = float("nan")
+        interpretation = float("nan")
     # Return information.
-    return value_clean
+    return interpretation
 
 
 def determine_alcohol_auditc_score(
@@ -7834,9 +7893,9 @@ def determine_alcohol_auditc_score(
     )
     # Integrate information from multiple variables.
     if (
-        (not math.isnan(audit_1_clean)) and
-        (not math.isnan(audit_2_clean)) and
-        (not math.isnan(audit_3_clean))
+        (not pandas.isna(audit_1_clean)) and
+        (not pandas.isna(audit_2_clean)) and
+        (not pandas.isna(audit_3_clean))
     ):
         auditc_score = (audit_1_clean + audit_2_clean + audit_3_clean)
     else:
@@ -7851,35 +7910,6 @@ def organize_alcohol_auditc_variables(
 ):
     """
     Organizes information about alcohol AUDIT-C questionnaire.
-
-    "audit_1", field "20414": "Frequency of drinking alcohol"
-    UK Biobank data coding "521" for variable field "20414".
-    "never": 0
-    "monthly or less": 1
-    "two to four times a month": 2
-    "two to three times a week": 3
-    "four or more times a week": 4
-    "prefer not to answer": -818
-
-    "audit_2", field "20403": "Amount of alcohol drunk on a typical drinking
-    day"
-    UK Biobank data coding "522" for variable field "20403".
-    "one or two": 1
-    "three or four": 2
-    "five or six": 3
-    "seven, eight, or nine": 4
-    "ten or more": 5
-    "prefer not to answer": -818
-
-    "audit_3", field "20416": "Frequency of consuming six or more units of
-    alcohol"
-    UK Biobank data coding "523" for variable field "20416".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
 
     The official AUDIT-C questionnaire scores each question on 0 to 4 points.
     https://cde.drugabuse.gov/instrument/f229c68a-67ce-9a58-e040-bb89ad432be4
@@ -8008,13 +8038,13 @@ def determine_alcohol_auditp_score(
 
     # Integrate information from multiple variables.
     if (
-        (not math.isnan(audit_4_clean)) and
-        (not math.isnan(audit_5_clean)) and
-        (not math.isnan(audit_6_clean)) and
-        (not math.isnan(audit_7_clean)) and
-        (not math.isnan(audit_8_clean)) and
-        (not math.isnan(audit_9_clean)) and
-        (not math.isnan(audit_10_clean))
+        (not pandas.isna(audit_4_clean)) and
+        (not pandas.isna(audit_5_clean)) and
+        (not pandas.isna(audit_6_clean)) and
+        (not pandas.isna(audit_7_clean)) and
+        (not pandas.isna(audit_8_clean)) and
+        (not pandas.isna(audit_9_clean)) and
+        (not pandas.isna(audit_10_clean))
     ):
         auditp_score = (
             audit_4_clean + audit_5_clean + audit_6_clean + audit_7_clean +
@@ -8032,72 +8062,6 @@ def organize_alcohol_auditp_variables(
 ):
     """
     Organizes information about alcohol AUDIT-P questionnaire.
-
-    "audit_4", field "20413": "Frequency of inability to cease drinking in last
-    year"
-    UK Biobank data coding "523" for variable field "20413".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
-
-    "audit_5", field "20407": "Frequency of failure to fulfil normal
-    expectations due to drinking alcohol in last year"
-    UK Biobank data coding "523" for variable field "20407".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
-
-    "audit_6", field "20412": "Frequency of needing morning drink of alcohol
-    after heavy drinking session in last year"
-    UK Biobank data coding "523" for variable field "20412".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
-
-    "audit_7", field "20409": "Frequency of feeling guilt or remorse after
-    drinking alcohol in last year"
-    UK Biobank data coding "523" for variable field "20409".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
-
-    "audit_8", field "20408": "Frequency of memory loss due to drinking alcohol
-    in last year"
-    UK Biobank data coding "523" for variable field "20408".
-    "never": 1
-    "less than monthly": 2
-    "monthly": 3
-    "weekly": 4
-    "daily or almost daily": 5
-    "prefer not to answer": -818
-
-    "audit_9", field "20411": "Ever been injured or injured someone else
-    through drinking alcohol"
-    UK Biobank data coding "524" for variable field "20411".
-    "no": 0
-    "yes, but not in the last year": 1
-    "yes, during the last year": 2
-    "prefer not to answer": -818
-
-    "audit_10", field "20405": "Ever had known person concerned about, or
-    recommend reduction of, alcohol consumption"
-    UK Biobank data coding "524" for variable field "20405".
-    "no": 0
-    "yes, but not in the last year": 1
-    "yes, during the last year": 2
-    "prefer not to answer": -818
 
     The official AUDIT questionnaire scores questions 1-8 on 0 to 4 points and
     questions 9-10 on 0, 2, or 4 points.
@@ -8193,8 +8157,8 @@ def determine_alcohol_audit_score(
 
     # Integrate information from multiple variables.
     if (
-        (not math.isnan(alcohol_auditc)) and
-        (not math.isnan(alcohol_auditp))
+        (not pandas.isna(alcohol_auditc)) and
+        (not pandas.isna(alcohol_auditp))
     ):
         audit_score = (alcohol_auditc + alcohol_auditp)
     else:
@@ -8287,21 +8251,16 @@ def organize_alcohol_audit_questionnaire_variables(
     )
     # Organize information about alcohol AUDIT.
     pail_auditp = organize_alcohol_auditp_variables(
-        table=pail_auditc["table_clean"],
+        table=pail_auditc["table"],
         report=report,
     )
     # Organize information about alcohol AUDIT.
     pail_audit = organize_alcohol_audit_variables(
-        table=pail_auditp["table_clean"],
+        table=pail_auditp["table"],
         report=report,
     )
-    # Collect information.
-    pail = dict()
-    pail["auditc"] = pail_auditc
-    pail["auditp"] = pail_auditp
-    pail["audit"] = pail_audit
     # Return information.
-    return pail
+    return pail_audit
 
 
 ##########
@@ -8624,6 +8583,15 @@ def organize_alcoholism_diagnosis_variables(
 
 ##########
 # Alcoholism cases and controls
+
+# TODO: TCW 13 September 2021
+# TODO: only persons who have EVER consumed alcohol should be either cases or controls
+# TODO: "alcohol_ever"
+
+# TODO: TCW 13 September 2021
+# TODO: define combination variable for cases by any of the 5 definitions
+# TODO: controls should exclude any of those 5 definitions
+# TODO: so any EVER consumer who isn't one of those 5-def combo cases is a control
 
 # TODO: change alcohol_none to True/False/None like the diagnosis flags
 def determine_control_alcoholism(
@@ -10112,17 +10080,19 @@ def execute_alcohol(
         table=table,
         report=False,
     )
-    #print(pail_alcohol_consumption["quantity"]["table_clean"])
+    #print(pail_alcohol_consumption["table_report"])
+
+    # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
+    # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
+    # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
+    pail_audit = organize_alcohol_audit_questionnaire_variables(
+        table=pail_alcohol_consumption["table"],
+        report=False,
+    )
+    #print(pail_audit["table_report"])
+
 
     if False:
-        # Organize Alchol Use Disorders Identification Test (AUDIT) questionnaire
-        # variables, including separate scores for AUDIT-Consumption (AUDIT-C) and
-        # AUDIT-Problem (AUDIT-P) portions of the questionnaire.
-        pail_audit = organize_alcohol_audit_questionnaire_variables(
-            table=pail_alcohol_consumption["quantity"]["table_clean"],
-            report=False,
-        )
-        #print(pail_audit["audit"]["table_clean"])
 
         # Organize International Classification of Disease (ICD) ICD9 and ICD10
         # codes for diagnoses relevant to alcoholism.
@@ -10147,9 +10117,9 @@ def execute_alcohol(
         utility.print_terminal_partition(level=2)
         print("report: execute_alcohol()")
         utility.print_terminal_partition(level=3)
-        print(pail_alcohol_consumption["table_report"])
+        print(pail_audit["audit"]["table_report"])
     # Return information.
-    return pail_alcohol_consumption
+    return pail_audit
 
 
 
