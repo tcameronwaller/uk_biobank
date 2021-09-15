@@ -602,11 +602,11 @@ def organize_cohorts_phenotypes_hormones_missingness(
     table = table.copy(deep=True)
     # Define hormones.
     hormones = list()
+    hormones.append("vitamin_d")
     hormones.append("albumin")
     hormones.append("steroid_globulin")
-    hormones.append("testosterone")
     hormones.append("oestradiol")
-    hormones.append("vitamin_d")
+    hormones.append("testosterone")
     # Define cohorts for description.
     pail_phenotypes = ukb_strat.stratify_cohorts_models_phenotypes_sets(
         table=table,
@@ -1149,16 +1149,16 @@ def execute_describe_cohorts_models_phenotypes(
         # Read source information from file.
         table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
             path_dock=path_dock,
-            report=False,
+            report=report,
         )
         # Prepare table to summarize phenotype variables across cohorts and models
         # for genetic analyses.
         if (set == "sex_hormones"):
             pail_genotypes = (
-                ukb_strat.stratify_cohorts_genotypes_set_sex_hormones(
+                ukb_strat.stratify_genotype_cohorts_linear_set_sex_hormones(
                     table=table,
                     table_kinship_pairs=table_kinship_pairs,
-                    report=False,
+                    report=report,
             ))
         elif (set == "bipolar_disorder_body"):
             pail_genotypes = (
