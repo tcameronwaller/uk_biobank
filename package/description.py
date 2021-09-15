@@ -441,10 +441,12 @@ def organize_report_cohort_model_variables_summaries_record(
         pass
     # Collect information for cohort-specific ordinal representations of
     # hormones.
-    record = organize_report_variables_summaries_record_hormone_cohort_ordinal(
-        record=record,
-        table=table,
-    )
+    if False:
+        record = (
+            organize_report_variables_summaries_record_hormone_cohort_ordinal(
+                record=record,
+                table=table,
+        ))
     # Return information.
     return record
 
