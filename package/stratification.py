@@ -3300,16 +3300,6 @@ def stratify_cohorts_models_phenotypes_sets(
     )
     records.extend(records_novel)
 
-    records_novel = (
-        stratify_set_alcohol_sex_menopause_age(
-            alcohol_variable="alcohol_ever",
-            alcohol_value=0,
-            cohort_suffix="_alcohol_never",
-            table=table,
-        )
-    )
-    records.extend(records_novel)
-
     # name: "alcoholism_control_case_any"
     # NA: missing value indicates neither control nor case
     # 0: control
