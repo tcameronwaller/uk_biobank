@@ -541,21 +541,30 @@ def organize_cohort_hormone_missingness_record(
     count_both = table_both.shape[0]
 
     # Calculate percentages.
-    percentage_measurement_valid = round(
-        ((count_measurement_valid / count_cohort_total) * 100), 3
-    )
-    percentage_measurement_missing = round(
-        ((count_measurement_missing / count_cohort_total) * 100), 3
-    )
-    percentage_missingness_range = round(
-        ((count_missingness_range / count_measurement_missing) * 100), 3
-    )
-    percentage_reportability_limit = round(
-        ((count_reportability_limit / count_measurement_missing) * 100), 3
-    )
-    percentage_both = round(
-        ((count_both / count_measurement_missing) * 100), 3
-    )
+    if (count_cohort_total > 0):
+        percentage_measurement_valid = round(
+            ((count_measurement_valid / count_cohort_total) * 100), 3
+        )
+        percentage_measurement_missing = round(
+            ((count_measurement_missing / count_cohort_total) * 100), 3
+        )
+    else:
+        percentage_measurement_valid = float("nan")
+        percentage_measurement_missing = float("nan")
+    if (count_measurement_missing > 0):
+        percentage_missingness_range = round(
+            ((count_missingness_range / count_measurement_missing) * 100), 3
+        )
+        percentage_reportability_limit = round(
+            ((count_reportability_limit / count_measurement_missing) * 100), 3
+        )
+        percentage_both = round(
+            ((count_both / count_measurement_missing) * 100), 3
+        )
+    else:
+        percentage_missingness_range = float("nan")
+        percentage_reportability_limit = float("nan")
+        percentage_both = float("nan")
 
     # Collect information for record.
     record["count_cohort_samples"] = count_cohort_total
