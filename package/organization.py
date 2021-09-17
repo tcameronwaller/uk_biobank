@@ -9470,6 +9470,24 @@ def organize_alcoholism_case_control_definitions(
             ),
         axis="columns", # apply function to each row
     )
+    table["alcoholism_control_case_1"] = table.apply(
+        lambda row:
+            determine_alcoholism_control_case(
+                alcoholism_control=row["alcoholism_control"],
+                alcoholism_case=row["alcoholism_case_1"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["alcoholism_control_case_2"] = table.apply(
+        lambda row:
+            determine_alcoholism_control_case(
+                alcoholism_control=row["alcoholism_control"],
+                alcoholism_case=row["alcoholism_case_2"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
+
 
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
@@ -9493,6 +9511,8 @@ def organize_alcoholism_case_control_definitions(
             "alcoholism_control",
             "alcoholism_case_any",
             "alcoholism_control_case_any",
+            "alcoholism_control_case_1",
+            "alcoholism_control_case_2",
         ])
     ]
     # Report.
