@@ -66,6 +66,7 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
+
 ##########
 # Read
 
@@ -3289,6 +3290,26 @@ def stratify_cohorts_models_phenotypes_sets(
     )
     records.extend(records_novel)
 
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcohol_ever",
+            alcohol_value=1,
+            cohort_suffix="_alcohol_ever",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcohol_ever",
+            alcohol_value=0,
+            cohort_suffix="_alcohol_never",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
     # name: "alcoholism_control_case_any"
     # NA: missing value indicates neither control nor case
     # 0: control
@@ -3297,7 +3318,7 @@ def stratify_cohorts_models_phenotypes_sets(
         stratify_set_alcohol_sex_menopause_age(
             alcohol_variable="alcoholism_control_case_any",
             alcohol_value=0,
-            cohort_suffix="_alcoholism_control",
+            cohort_suffix="_alcoholism_any_control",
             table=table,
         )
     )
@@ -3307,11 +3328,53 @@ def stratify_cohorts_models_phenotypes_sets(
         stratify_set_alcohol_sex_menopause_age(
             alcohol_variable="alcoholism_control_case_any",
             alcohol_value=1,
-            cohort_suffix="_alcoholism_case",
+            cohort_suffix="_alcoholism_any_case",
             table=table,
         )
     )
     records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcoholism_control_case_1",
+            alcohol_value=0,
+            cohort_suffix="_alcoholism_1_control",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcoholism_control_case_1",
+            alcohol_value=1,
+            cohort_suffix="_alcoholism_1_case",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcoholism_control_case_2",
+            alcohol_value=0,
+            cohort_suffix="_alcoholism_2_control",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_set_alcohol_sex_menopause_age(
+            alcohol_variable="alcoholism_control_case_2",
+            alcohol_value=1,
+            cohort_suffix="_alcoholism_2_case",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    ##########
 
     records_novel = (
         stratify_set_secondary_menopause(
