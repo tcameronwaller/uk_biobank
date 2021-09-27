@@ -436,7 +436,7 @@ def drive_linear_regressions_hormones_alcoholism(
     #cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
     #    table=table
     #)
-    records_novel = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
         table=table,
     )
 
