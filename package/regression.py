@@ -445,10 +445,10 @@ def drive_linear_regressions_hormones_alcoholism(
         "female_premenopause",
         "female_perimenopause",
         "female_postmenopause",
-        "male",
-        "male_age_low",
-        "male_age_middle",
-        "male_age_high",
+        #"male",
+        #"male_age_low",
+        #"male_age_middle",
+        #"male_age_high",
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
