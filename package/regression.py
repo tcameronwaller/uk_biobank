@@ -467,6 +467,8 @@ def drive_linear_regressions_hormones_alcoholism(
         cohort = cohort_record["cohort"]
         menstruation = cohort_record["menstruation"]
         table_cohort = cohort_record["table"]
+        utility.print_terminal_partition(level=2)
+        print(table_cohort)
         # Iterate across outcomes (dependent variables).
         for record_model in records_models:
             # Define cohort-specific ordinal representation.
