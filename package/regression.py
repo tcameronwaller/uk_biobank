@@ -436,24 +436,19 @@ def drive_linear_regressions_hormones_alcoholism(
     #cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
     #    table=table
     #)
-    cohorts_records = (
-        ukb_strat.stratify_set_alcohol_sex_menopause_age(
-            alcohol_variable="alcohol_ever",
-            alcohol_value=1,
-            cohort_suffix="_alcohol_ever",
-            table=table,
-        )
+    records_novel = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+        table=table,
     )
 
     cohorts_relevant = [
-        "female_alcohol_ever",
-        "female_premenopause_alcohol_ever",
-        "female_perimenopause_alcohol_ever",
-        "female_postmenopause_alcohol_ever",
-        "male_alcohol_ever",
-        "male_age_low_alcohol_ever",
-        "male_age_middle_alcohol_ever",
-        "male_age_high_alcohol_ever",
+        "female",
+        "female_premenopause",
+        "female_perimenopause",
+        "female_postmenopause",
+        "male",
+        "male_age_low",
+        "male_age_middle",
+        "male_age_high",
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
@@ -468,6 +463,7 @@ def drive_linear_regressions_hormones_alcoholism(
         menstruation = cohort_record["menstruation"]
         table_cohort = cohort_record["table"]
         utility.print_terminal_partition(level=2)
+        print(cohort)
         print(table_cohort)
         # Iterate across outcomes (dependent variables).
         for record_model in records_models:
