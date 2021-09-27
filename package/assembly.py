@@ -685,7 +685,10 @@ def simplify_field_instances_array_row(
                 fields.append(key)
                 value = record[key]
                 if (not pandas.isna(value)):
-                    values.append(value)
+                    if (value not in values):
+                        # Only collect unique values.
+                        values.append(value)
+                        pass
                     pass
                 pass
             pass
@@ -695,13 +698,9 @@ def simplify_field_instances_array_row(
         utility.print_terminal_partition(level=4)
         print("matching fields to " + str(field) + " :")
         print(fields)
-    # Collect unique values.
-    values_unique = utility.collect_unique_elements(
-        elements=values,
-    )
     # Combine values with text delimiter.
-    if len(values_unique) > 0:
-        text_array = delimiter.join(values_unique)
+    if len(values) > 0:
+        text_array = delimiter.join(values)
     else:
         text_array = ""
     # Return information.
