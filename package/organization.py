@@ -8731,7 +8731,7 @@ def determine_alcoholism_control(
             match_diagnosis = False
     else:
         # Missing information.
-        # Missing information in diagnostic variables would disqualify control.
+        # Missing information in diagnostic variables does disqualify control.
         # But diagnostic variables do not have missing values.
         match_diagnosis = False
 
@@ -8774,6 +8774,10 @@ def determine_alcoholism_case_one(
 ):
     """
     Organizes information about alcoholism cases and controls.
+
+    Alcoholism case definition one:
+    - current or previous alcohol consumption ("ever")
+    - ICD diagnostic group A
 
     arguments:
         alcohol_ever (float): binary logical representation of whether person
@@ -8840,6 +8844,10 @@ def determine_alcoholism_case_two(
 ):
     """
     Organizes information about alcoholism cases and controls.
+
+    Alcoholism case definition two:
+    - current or previous alcohol consumption ("ever")
+    - ICD diagnostic group A, B, C, or D
 
     arguments:
         alcohol_ever (float): binary logical representation of whether person
@@ -8920,6 +8928,10 @@ def determine_alcoholism_case_three(
     """
     Organizes information about alcoholism cases and controls.
 
+    Alcoholism case definition three:
+    - current or previous alcohol consumption ("ever")
+    - AUDIT-C beyond case threshold
+
     arguments:
         alcohol_ever (float): binary logical representation of whether person
             ever consumed alcohol (current or previous)
@@ -8984,6 +8996,10 @@ def determine_alcoholism_case_four(
     """
     Organizes information about alcoholism cases and controls.
 
+    Alcoholism case definition four:
+    - current or previous alcohol consumption ("ever")
+    - AUDIT-P beyond case threshold
+
     arguments:
         alcohol_ever (float): binary logical representation of whether person
             ever consumed alcohol (current or previous)
@@ -9047,6 +9063,10 @@ def determine_alcoholism_case_five(
 ):
     """
     Organizes information about alcoholism cases and controls.
+
+    Alcoholism case definition five:
+    - current or previous alcohol consumption ("ever")
+    - AUDIT beyond case threshold
 
     arguments:
         alcohol_ever (float): binary logical representation of whether person
@@ -9544,7 +9564,7 @@ def organize_alcoholism_case_control_definitions(
 # Scrap now...
 
 
-def translate_alcohol_none_auditc(
+def scrap_translate_alcohol_none_auditc(
     frequency=None,
 ):
     """
@@ -9591,7 +9611,7 @@ def translate_alcohol_none_auditc(
     return alcohol_none_auditc
 
 
-def determine_auditc_questionnaire_alcoholism_score(
+def scrap_determine_auditc_questionnaire_alcoholism_score(
     frequency=None,
     quantity=None,
     binge=None,
@@ -9667,7 +9687,7 @@ def determine_auditc_questionnaire_alcoholism_score(
     return score
 
 
-def organize_auditc_questionnaire_alcoholism_variables(
+def scrap_organize_auditc_questionnaire_alcoholism_variables(
     table=None,
     report=None,
 ):
