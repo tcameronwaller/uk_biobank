@@ -280,42 +280,64 @@ def define_model_dependence_records_hormones():
     """
 
     records = [
-        {"dependence": "vitamin_d_log", "model": "complex"},
-        {"dependence": "vitamin_d_log", "model": "unadjust"},
-        {"dependence": "vitamin_d_imputation_log", "model": "complex"},
+
         {"dependence": "albumin", "model": "complex"},
-        #{"dependence": "albumin", "model": "alternate_one"},
         {"dependence": "albumin", "model": "unadjust"},
         {"dependence": "albumin_imputation", "model": "complex"},
+        {"dependence": "albumin_imputation", "model": "unadjust"},
+
         {"dependence": "steroid_globulin_log", "model": "complex"},
         {"dependence": "steroid_globulin_log", "model": "unadjust"},
         {"dependence": "steroid_globulin_imputation_log", "model": "complex"},
+        {"dependence": "steroid_globulin_imputation_log", "model": "unadjust"},
+
         {"dependence": "oestradiol_log", "model": "complex"},
-        #{"dependence": "oestradiol_log", "model": "alternate_one"},
-        #{"dependence": "oestradiol_log", "model": "alternate_two"},
         {"dependence": "oestradiol_log", "model": "unadjust"},
         {"dependence": "oestradiol_imputation", "model": "complex"},
+        {"dependence": "oestradiol_imputation", "model": "unadjust"},
+
         {"dependence": "oestradiol_bioavailable_log", "model": "complex"},
         {"dependence": "oestradiol_bioavailable_log", "model": "unadjust"},
         {
             "dependence": "oestradiol_bioavailable_imputation",
             "model": "complex"
         },
+        {
+            "dependence": "oestradiol_bioavailable_imputation",
+            "model": "unadjust"
+        },
+
         {"dependence": "oestradiol_free_log", "model": "complex"},
         {"dependence": "oestradiol_free_log", "model": "unadjust"},
         {"dependence": "oestradiol_free_imputation", "model": "complex"},
+        {"dependence": "oestradiol_free_imputation", "model": "unadjust"},
+
         {"dependence": "testosterone_log", "model": "complex"},
         {"dependence": "testosterone_log", "model": "unadjust"},
         {"dependence": "testosterone_imputation", "model": "complex"},
+        {"dependence": "testosterone_imputation", "model": "unadjust"},
+
         {"dependence": "testosterone_bioavailable_log", "model": "complex"},
         {"dependence": "testosterone_bioavailable_log", "model": "unadjust"},
         {
             "dependence": "testosterone_bioavailable_imputation",
             "model": "complex"
         },
+        {
+            "dependence": "testosterone_bioavailable_imputation",
+            "model": "unadjust"
+        },
+
         {"dependence": "testosterone_free_log", "model": "complex"},
         {"dependence": "testosterone_free_log", "model": "unadjust"},
         {"dependence": "testosterone_free_imputation", "model": "complex"},
+        {"dependence": "testosterone_free_imputation", "model": "unadjust"},
+
+        {"dependence": "vitamin_d_log", "model": "complex"},
+        {"dependence": "vitamin_d_log", "model": "unadjust"},
+        {"dependence": "vitamin_d_imputation_log", "model": "complex"},
+        {"dependence": "vitamin_d_imputation_log", "model": "unadjust"},
+
     ]
     return records
 
@@ -468,6 +490,121 @@ def drive_linear_regressions_hormones_alcoholism(
     pail = dict()
     # Return information.
     return pail
+
+
+def organize_regressions_site_month(
+    table=None,
+    report=None,
+):
+    """
+    Organize regressions.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information from regressions
+
+    """
+
+    # Define relevant cohorts.
+    cohorts_records = ukb_strat.stratify_set_primary_sex_menopause_age(
+        table=table
+    )
+    cohorts_relevant = [
+        "female-premenopause", "female-perimenopause", "female-postmenopause",
+        "male", "male-younger", "male-older"
+    ]
+    cohorts_records = list(filter(
+        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
+        cohorts_records
+    ))
+
+    # TODO: TCW 19 August 2021
+    # TODO: eventually... I will need cohort-specific models...
+
+    # Define outcome dependent variables.
+    hormones = [
+        "vitamin_d", "albumin", "steroid_globulin",
+        "oestradiol", "testosterone",
+    ]
+    # Define predictor independent variables.
+    predictors_region = ["assessment_region",]
+    predictors_season = ["assessment_season",]
+    predictors_site_components = [
+        "site-component_1", "site-component_2", "site-component_3",
+        "site-component_4", "site-component_5", "site-component_6",
+        "site-component_7", "site-component_8", "site-component_9",
+        "site-component_10", "site-component_11", "site-component_12",
+        "site-component_13", "site-component_14", "site-component_15",
+        "site-component_16", "site-component_17", "site-component_18",
+        "site-component_19", "site-component_20",
+    ]
+    predictors_month_components = [
+        "month-component_1", "month-component_2", "month-component_3",
+        "month-component_4", "month-component_5", "month-component_6",
+        "month-component_7", "month-component_8", "month-component_9",
+        "month-component_10",
+    ]
+    predictors_month_indicators = [
+        "month-indicator_January", "month-indicator_February",
+        "month-indicator_March", #"month-indicator_April",
+        "month-indicator_May", "month-indicator_June",
+        "month-indicator_July", "month-indicator_August",
+        "month-indicator_September", "month-indicator_October",
+        "month-indicator_November", "month-indicator_December",
+    ]
+
+    # Iterate across cohorts.
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
+        menstruation = cohort_record["menstruation"]
+        table_cohort = cohort_record["table"]
+        # Iterate across outcomes (dependent variables).
+        for hormone in hormones:
+            # Define cohort-specific ordinal representation.
+            hormone_ordinal = str(str(hormone) + "_" + str(cohort) + "_order")
+
+            # Specify outcome and predictors.
+
+            #outcome = hormone
+            outcome = hormone_ordinal
+
+            #predictors = predictors_month_components
+            #predictors = predictors_site_components
+            predictors = predictors_region
+            #predictors = predictors_season
+
+
+            # Report.
+            if report:
+                utility.print_terminal_partition(level=3)
+                print("report: ")
+                print("organize_cohorts_models_phenotypes_regressions()")
+                utility.print_terminal_partition(level=5)
+                print("cohort: " + str(cohort))
+                print("outcome: " + str(outcome))
+                utility.print_terminal_partition(level=5)
+            pail_regression = regression.regress_linear_ordinary_least_squares(
+                dependence=outcome, # parameter
+                independence=predictors, # parameter
+                threshold_samples=100,
+                table=table_cohort,
+                report=report,
+            )
+            pass
+        pass
+
+    # Compile information.
+    pail = dict()
+    # Return information.
+    return pail
+
+
 
 
 ###############################################################################
