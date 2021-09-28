@@ -445,16 +445,18 @@ def drive_linear_regressions_hormones_alcoholism(
         "female_premenopause",
         "female_perimenopause",
         "female_postmenopause",
-        #"male",
-        #"male_age_low",
-        #"male_age_middle",
-        #"male_age_high",
+        "male",
+        "male_age_low",
+        "male_age_middle",
+        "male_age_high",
     ]
     cohorts_records = list(filter(
         lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
         cohorts_records
     ))
 
+    # Collect summary records for each regression.
+    records = list()
     # Define relevant dependent variables.
     records_models = define_model_dependence_records_hormones()
     # Iterate across cohorts.
@@ -468,6 +470,18 @@ def drive_linear_regressions_hormones_alcoholism(
             print(table_cohort)
         # Iterate across outcomes (dependent variables).
         for record_model in records_models:
+            dependence = record_model["dependence"]
+            model = record_model["model"]
+            # Organize record.
+            record = dict()
+            record["cohort"] = cohort
+            record["dependence"] = dependence
+            record["model"] = model
+            record["name"] = str(
+                record["cohort"] + "_" +
+                record["dependence"] + "_" +
+                record["model"]
+            )
             # Define cohort-specific ordinal representation.
             #dependence_ordinal = str(
             #    str(record_model["dependence"]) + "_" + str(cohort) + "_order"
@@ -477,16 +491,31 @@ def drive_linear_regressions_hormones_alcoholism(
                     table=table_cohort,
                     table_cohort_model=table_cohort_model,
                     cohort=cohort,
-                    model=record_model["model"],
-                    dependence=record_model["dependence"],
+                    model=model,
+                    dependence=dependence,
                     report=report,
 
             ))
+            record.update(pail_regression["summary"])
+            # Collect records.
+            records.append(record)
             pass
         pass
 
+    # Organize table.
+    table_regressions_raw = pandas.DataFrame(data=records)
+    table_regressions = pro_regression.organize_table_regression_summaries(
+        independence=["alcoholism_control_case_1"],
+        table=table_regressions_raw,
+        report=report,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(table_regressions)
     # Compile information.
     pail = dict()
+    pail["table"] = table_regressions
     # Return information.
     return pail
 
@@ -604,6 +633,93 @@ def organize_regressions_site_month(
     return pail
 
 
+##########
+# Write
+
+
+def write_product_table(
+    name=None,
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        name (str): base name for file
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_parent, str(name + ".tsv")
+    )
+    # Write information to file.
+    information.to_csv(
+        path_or_buf=path_table,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product_tables(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    for name in information.keys():
+        write_product_table(
+            name=name,
+            information=information[name],
+            path_parent=path_parent,
+        )
+    pass
+
+
+def write_product(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Export information.
+    write_product_tables(
+        information=information["tables"],
+        path_parent=paths["regression"],
+    )
+    pass
 
 
 ###############################################################################
@@ -666,8 +782,17 @@ def execute_procedure(
             report=True
         )
 
-
-
+    # Collect information.
+    information = dict()
+    information["tables"] = dict()
+    information["tables"]["table_regressions_alcoholism_1"] = (
+        pail_alcohol["table"]
+    )
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
     pass
 
 
