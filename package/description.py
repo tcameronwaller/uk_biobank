@@ -275,11 +275,8 @@ def organize_text_report_phenotype_correlations(
     return report_text
 
 
-# TODO: TCW 18 August 2021
-# TODO: include in this summary record the counts of a cohort's persons with
-# TODO: each ordinal value of hormones
-# TODO: some cohorts will have all missing values...
-
+# TODO: TCW 30 September 2021
+# TODO: this function has problems...
 def organize_report_variables_summaries_record_hormone_cohort_ordinal(
     record=None,
     table=None,
@@ -403,6 +400,7 @@ def organize_report_cohort_model_variables_summaries_record(
         count = float("nan")
         mean = float("nan")
         standard_error = float("nan")
+        interval_95 = float("nan")
         confidence_95_low = float("nan")
         confidence_95_high = float("nan")
         median = float("nan")
@@ -419,8 +417,9 @@ def organize_report_cohort_model_variables_summaries_record(
                 # values in array.
                 mean = numpy.nanmean(array)
                 standard_error = scipy.stats.sem(array)
-                confidence_95_low = (mean - (1.96 * standard_error))
-                confidence_95_high = (mean + (1.96 * standard_error))
+                interval_95 = (1.96 * standard_error)
+                confidence_95_low = (mean - interval_95)
+                confidence_95_high = (mean + interval_95)
                 median = numpy.nanmedian(array)
                 standard_deviation = numpy.nanstd(array)
                 minimum = numpy.nanmin(array)
@@ -429,16 +428,23 @@ def organize_report_cohort_model_variables_summaries_record(
             pass
         # Collect information for record.
         record[str(column + "_count")] = str(count)
-        record[str(column + "_mean")] = str(round(mean, 3))
-        record[str(column + "_stderr")] = str(round(standard_error, 3))
+        record[str(column + "_mean")] = str(round(mean, 7))
+        record[str(column + "_stderr")] = str(round(standard_error, 7))
+        record[str(column + "_interval_95")] = str(round(interval_95, 7))
+        record[str(column + "_confidence_95_low")] = str(round(
+            confidence_95_low, 7
+        ))
+        record[str(column + "_confidence_95_high")] = str(round(
+            confidence_95_high, 7
+        ))
         record[str(column + "_confidence_95")] = str(
             str(round(confidence_95_low, 3)) + " ... " +
             str(round(confidence_95_high, 3))
         )
-        record[str(column + "_median")] = str(round(median, 3))
-        record[str(column + "_stdev")] = str(round(standard_deviation, 3))
-        record[str(column + "_min")] = str(round(minimum, 3))
-        record[str(column + "_max")] = str(round(maximum, 3))
+        record[str(column + "_median")] = str(round(median, 7))
+        record[str(column + "_stdev")] = str(round(standard_deviation, 7))
+        record[str(column + "_min")] = str(round(minimum, 7))
+        record[str(column + "_max")] = str(round(maximum, 7))
         pass
     # Collect information for cohort-specific ordinal representations of
     # hormones.
