@@ -542,24 +542,20 @@ def organize_cohort_model_variables_summary_long_records(
                 pass
             pass
         # Collect information for record.
-        record[str(column + "_count")] = str(count)
-        record[str(column + "_mean")] = str(round(mean, 7))
-        record[str(column + "_stderr")] = str(round(standard_error, 7))
-        record[str(column + "_interval_95")] = str(round(interval_95, 7))
-        record[str(column + "_confidence_95_low")] = str(round(
-            confidence_95_low, 7
-        ))
-        record[str(column + "_confidence_95_high")] = str(round(
-            confidence_95_high, 7
-        ))
-        record[str(column + "_confidence_95")] = str(
+        record[str("count")] = str(count)
+        record[str("mean")] = str(round(mean, 7))
+        record[str("standard_error")] = str(round(standard_error, 7))
+        record[str("interval_95")] = str(round(interval_95, 7))
+        record[str("confidence_95_low")] = str(round(confidence_95_low, 7))
+        record[str("confidence_95_high")] = str(round(confidence_95_high, 7))
+        record[str("range_confidence_95")] = str(
             str(round(confidence_95_low, 3)) + " ... " +
             str(round(confidence_95_high, 3))
         )
-        record[str(column + "_median")] = str(round(median, 7))
-        record[str(column + "_stdev")] = str(round(standard_deviation, 7))
-        record[str(column + "_min")] = str(round(minimum, 7))
-        record[str(column + "_max")] = str(round(maximum, 7))
+        record[str("median")] = str(round(median, 7))
+        record[str("standard_deviation")] = str(round(standard_deviation, 7))
+        record[str("minimum")] = str(round(minimum, 7))
+        record[str("maximum")] = str(round(maximum, 7))
 
         records.append(record)
         pass
