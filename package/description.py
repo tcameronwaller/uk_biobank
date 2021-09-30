@@ -484,7 +484,7 @@ def organize_cohort_model_variables_summary_long_records(
     """
 
     # Collect information for general columns.
-    phenotype = [
+    phenotypes = [
         "age", "body",
         "menstruation_days", "menstruation_days_threshold",
         "albumin", "albumin_imputation",
