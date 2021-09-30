@@ -347,7 +347,8 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
     return record
 
 
-def organize_report_cohort_model_variables_summaries_record(
+
+def organize_cohort_model_variables_summary_wide_record(
     name=None,
     cohort_model=None,
     category=None,
@@ -457,6 +458,113 @@ def organize_report_cohort_model_variables_summaries_record(
     # Return information.
     return record
 
+
+def organize_cohort_model_variables_summary_long_records(
+    name=None,
+    cohort_model=None,
+    category=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        name (str): name for cohort, model, and phenotype
+        cohort_model (str): name for cohort and model
+        category (str): name of category for cohort and model to facilitate
+            table sorts and comparisons
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<dict>): information for summary table record on cohort
+
+    """
+
+    # Collect information for general columns.
+    phenotype = [
+        "age", "body",
+        "menstruation_days", "menstruation_days_threshold",
+        "albumin", "albumin_imputation",
+        "steroid_globulin", "steroid_globulin_imputation",
+        "oestradiol", "oestradiol_imputation",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+        "oestradiol_free", "oestradiol_free_imputation",
+        "testosterone", "testosterone_imputation",
+        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
+        "testosterone_free", "testosterone_free_imputation",
+        "vitamin_d", "vitamin_d_imputation",
+    ]
+
+    records = list()
+
+    # Iterate on relevant columns.
+    # Collect information for record.
+    for phenotype in phenotypes:
+        # Collect information for cohort.
+        record = dict()
+        record["name"] = str(name)
+        record["cohort_model"] = str(cohort_model)
+        record["category"] = str(category)
+        record["cohort_count"] = int(table.shape[0])
+        record["phenotype"] = phenotype
+
+        # Initialize missing values.
+        count = float("nan")
+        mean = float("nan")
+        standard_error = float("nan")
+        interval_95 = float("nan")
+        confidence_95_low = float("nan")
+        confidence_95_high = float("nan")
+        median = float("nan")
+        standard_deviation = float("nan")
+        minimum = float("nan")
+        maximum = float("nan")
+        # Determine whether table has the column.
+        if (phenotype in table.columns.to_list()):
+            array = copy.deepcopy(table[phenotype].dropna().to_numpy())
+            # Determine count of valid values.
+            count = int(array.size)
+            if (count > 10):
+                # Determine mean, median, standard deviation, and standard error of
+                # values in array.
+                mean = numpy.nanmean(array)
+                standard_error = scipy.stats.sem(array)
+                interval_95 = (1.96 * standard_error)
+                confidence_95_low = (mean - interval_95)
+                confidence_95_high = (mean + interval_95)
+                median = numpy.nanmedian(array)
+                standard_deviation = numpy.nanstd(array)
+                minimum = numpy.nanmin(array)
+                maximum = numpy.nanmax(array)
+                pass
+            pass
+        # Collect information for record.
+        record[str(column + "_count")] = str(count)
+        record[str(column + "_mean")] = str(round(mean, 7))
+        record[str(column + "_stderr")] = str(round(standard_error, 7))
+        record[str(column + "_interval_95")] = str(round(interval_95, 7))
+        record[str(column + "_confidence_95_low")] = str(round(
+            confidence_95_low, 7
+        ))
+        record[str(column + "_confidence_95_high")] = str(round(
+            confidence_95_high, 7
+        ))
+        record[str(column + "_confidence_95")] = str(
+            str(round(confidence_95_low, 3)) + " ... " +
+            str(round(confidence_95_high, 3))
+        )
+        record[str(column + "_median")] = str(round(median, 7))
+        record[str(column + "_stdev")] = str(round(standard_deviation, 7))
+        record[str(column + "_min")] = str(round(minimum, 7))
+        record[str(column + "_max")] = str(round(maximum, 7))
+
+        records.append(record)
+        pass
+    # Return information.
+    return records
 
 
 # TODO: TCW 30 July 2021
@@ -1151,13 +1259,13 @@ def execute_describe_cohorts_models_phenotypes(
     # Collect summary records and construct table.
     records = list()
     for collection in pail_phenotypes:
-        record = organize_report_cohort_model_variables_summaries_record(
+        records_cohort = organize_cohort_model_variables_summary_long_records(
             name=collection["name"],
             cohort_model=collection["cohort_model"],
             category=collection["category"],
             table=collection["table"],
         )
-        records.append(record)
+        records.extend(records_cohort)
     # Organize table.
     table_phenotypes = pandas.DataFrame(data=records)
 
@@ -1191,7 +1299,7 @@ def execute_describe_cohorts_models_phenotypes(
         # Collect summary records and construct table.
         records = list()
         for collection in pail_genotypes:
-            record = organize_report_cohort_model_variables_summaries_record(
+            record = organize_cohort_model_variables_summary_wide_record(
                 name=collection["name"],
                 cohort_model=collection["cohort_model"],
                 category=collection["category"],
