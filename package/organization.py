@@ -263,6 +263,7 @@ def read_source_fields_codes_interpretations(
     }
 
 
+
 ##########
 # Genotype
 
@@ -6505,6 +6506,61 @@ def interpret_import_bipolar_disorder(
     return value
 
 
+def organize_psychotropic_drug_class_categories(
+    classes=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes categories for classes of psychotropic drugs (psychoactive
+    medications).
+
+    arguments:
+        classes (list<str>): names of table columns for classes of psychotropic
+            drugs
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Interpret missingness and reportability explanation variables for
+    # hormones.
+    table = determine_hormones_missingness_beyond_detection_range(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+    table = determine_hormones_reportability_detection_limit(
+        hormone_fields=hormone_fields,
+        table=table,
+    )
+    # Impute missing values.
+    hormones = list()
+    for record in hormone_fields:
+        hormones.append(record["name"])
+    table = determine_hormones_binary_detection(
+        hormones=hormones,
+        table=table,
+        report=report,
+    )
+    table = impute_missing_hormones_detection_limit(
+        hormones=hormones,
+        table=table,
+        report=report,
+    )
+    # Return information.
+    return table
+
+
 def organize_psychology_variables(
     table=None,
     report=None,
@@ -6556,6 +6612,27 @@ def organize_psychology_variables(
             ),
         axis="columns", # apply function to each row
     )
+
+    # Determine categorical classes of psychotropic drugs (medications).
+    # Define names of classes of psychotropic drugs as defined by Brandon J.
+    # Coombes.
+    drug_classes = [
+        "antipsychotics",
+        "antidepressants",
+        "sleepmeds",
+        "opioids",
+        "buprenorphine",
+        "methadone",
+        "lamotrigine",
+        "lithium",
+        "valproic_acid",
+    ]
+    table = organize_psychotropic_drug_class_categories(
+        classes=drug_classes,
+        table=table,
+        report=report,
+    )
+
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.

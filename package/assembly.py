@@ -39,7 +39,11 @@ import time
 
 import numpy
 import pandas
+pandas.options.mode.chained_assignment = None # default = "warn"
+
 import scipy.stats
+import scipy.linalg
+import statsmodels.multivariate.pca
 
 # Custom
 import promiscuity.utility as utility
