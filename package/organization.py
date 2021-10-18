@@ -6439,6 +6439,30 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 ##########
 # Psychological variables
 
+# TODO: TCW 14 October 2021
+# TODO: 1. I need to "import and interpret" medication class variables from Brandon J. Coombes
+# TODO: 2. I need to define categorical dummy variables for the medication classes
+# TODO: 3. I need to test those categorical dummy variables in phenotypic regressions
+
+#    table = create_reduce_categorical_variable_indicators(
+#        table=table,
+#        index="eid",
+#        column="assessment_site",
+#        prefix="site",
+#        separator="_",
+#        report=True,
+#    )
+
+#    pail_indicator = create_categorical_variable_indicators(
+#        table=table,
+#        index=index,
+#        column=column,
+#        prefix=str(prefix + "-" + "indicator"),
+#        separator=separator,
+#        report=report,
+#    )
+
+
 
 def interpret_import_bipolar_disorder(
     import_bipolar_disorder=None,

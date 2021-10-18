@@ -726,6 +726,13 @@ def write_product(
 # Procedure
 
 
+# TODO: TCW 30 September 2021
+# TODO: create dictionary...
+# TODO: keys are NAMES of phenotypes, values are SORT ORDER of those phenotypes
+# TODO: include these sort order values in the table
+
+
+
 def execute_procedure(
     path_dock=None,
 ):

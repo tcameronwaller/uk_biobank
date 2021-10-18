@@ -459,6 +459,11 @@ def organize_cohort_model_variables_summary_wide_record(
     return record
 
 
+# TODO: TCW 30 September 2021
+# TODO: create dictionary...
+# TODO: keys are NAMES of phenotypes, values are SORT ORDER of those phenotypes
+# TODO: include these sort order values in the table
+
 def organize_cohort_model_variables_summary_long_records(
     name=None,
     cohort_model=None,
