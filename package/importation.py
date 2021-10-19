@@ -75,13 +75,13 @@ def initialize_directories(
     paths = dict()
     # Define paths to directories.
     paths["dock"] = path_dock
-    paths["merge_import"] = os.path.join(path_dock, "merge_import")
+    paths["importation"] = os.path.join(path_dock, "importation")
     # Remove previous files to avoid version or batch confusion.
     if restore:
-        utility.remove_directory(path=paths["merge_import"])
+        utility.remove_directory(path=paths["importation"])
     # Initialize directories.
     utility.create_directories(
-        path=paths["merge_import"]
+        path=paths["importation"]
     )
     # Return information.
     return paths
@@ -310,7 +310,7 @@ def merge_table_variables_identifiers(
 # Write
 
 
-def write_product_merge_import(
+def write_product_importation(
     information=None,
     path_parent=None,
 ):
@@ -365,9 +365,9 @@ def write_product(
     """
 
     # Organization procedure main information.
-    write_product_merge_import(
-        information=information["merge_import"],
-        path_parent=paths["merge_import"],
+    write_product_importation(
+        information=information["importation"],
+        path_parent=paths["importation"],
     )
     pass
 
@@ -425,8 +425,8 @@ def execute_procedure(
     # Collect information.
     information = dict()
 
-    information["merge_import"] = dict()
-    information["merge_import"]["table_phenotypes"] = table_merge
+    information["importation"] = dict()
+    information["importation"]["table_phenotypes"] = table_merge
     # Write product information to file.
     write_product(
         paths=paths,
