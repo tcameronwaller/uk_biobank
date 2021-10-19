@@ -148,7 +148,12 @@ def read_organize_uk_biobank_import_table(
     ]
     # Append prefix to names of columns.
     table_import = table_import.add_prefix("import_")
-
+    translations = dict()
+    translations["import_eid"] = "eid"
+    table_import.rename(
+        columns=translations,
+        inplace=True,
+    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -273,7 +278,7 @@ def merge_table_variables_identifiers(
     table_import.dropna(
         axis="index",
         how="any",
-        subset=["import_eid"],
+        subset=["eid"],
         inplace=True,
     )
     # Organize data.
@@ -285,9 +290,9 @@ def merge_table_variables_identifiers(
         inplace=True
     )
 
-    table_import["import_eid"].astype("string")
+    table_import["eid"].astype("string")
     table_import.set_index(
-        "import_eid",
+        "eid",
         append=False,
         drop=True,
         inplace=True
@@ -299,7 +304,7 @@ def merge_table_variables_identifiers(
         table_main, # left table
         table_import, # right table
         left_on="eid",
-        right_on="import_eid",
+        right_on="eid",
         left_index=False,
         right_index=False,
         how="left", # keep only keys from left table
