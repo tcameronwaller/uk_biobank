@@ -47,12 +47,6 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
-# TODO: TCW 18 October 2021
-# TODO: remove most of the old code that's now in the "assembly" module...
-
-
-
-# TODO: read in "table_kinship_pairs"
 
 ##########
 # Initialization
@@ -100,10 +94,6 @@ def initialize_directories(
 # TODO: Currently need to update the name of import table file every accession date
 
 
-# TODO: TCW 18 October 2021
-# TODO: append a prefix to all imported column names...
-
-
 def read_organize_uk_biobank_import_table(
     path_dock=None,
     report=None,
@@ -111,11 +101,8 @@ def read_organize_uk_biobank_import_table(
     """
     Reads and organizes source information from file.
 
-    Notice that Pandas does not accommodate missing values within series of
-    integer variable types.
-
-    The UK Biobank "eid" designates unique persons in the cohort.
-    The UK Biobank "IID" matches persons to their genotype information.
+    Import table includes variables extracted, interpreted, and derived on
+    other analytical pipelines.
 
     arguments:
         path_dock (str): path to dock directory for source and product
@@ -155,6 +142,8 @@ def read_organize_uk_biobank_import_table(
             "buprenorphine", "methadone", "lamotrigine", "lithium", "valproic_acid",
         ])
     ]
+    # Append prefix to names of columns.
+    table_import.add_prefix("import_")
 
     # Report.
     if report:
@@ -264,7 +253,7 @@ def merge_table_variables_identifiers(
     table_import.dropna(
         axis="index",
         how="any",
-        subset=["eid"],
+        subset=["import_eid"],
         inplace=True,
     )
     # Organize data.
@@ -287,41 +276,25 @@ def merge_table_variables_identifiers(
         inplace=True,
         drop=False,
     )
-    table_import["eid"].astype("string")
+    table_import["import_eid"].astype("string")
     table_import.set_index(
-        "eid",
+        "import_eid",
         append=False,
         drop=True,
         inplace=True
     )
 
-    # TODO: TCW 18 October 2021
-    # TODO: keep only records from the "main" table...
-
-
-
     # Merge data tables using database-style join.
     # Alternative is to use DataFrame.join().
-    table_merge = table_identifier_pairs.merge(
-        table_ukb_41826,
-        how="outer",
+    table_merge = pandas.merge(
+        table_main, # left table
+        table_import, # right table
         left_on="eid",
-        right_on="eid",
-        suffixes=("_pairs", "_41826"),
-    )
-    table_merge = table_merge.merge(
-        table_ukb_43878,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_41826", "_43878"),
-    )
-    table_merge = table_merge.merge(
-        table_import,
-        how="outer",
-        left_on="eid",
-        right_on="eid",
-        suffixes=("_merge", "_import"),
+        right_on="import_eid",
+        left_index=False,
+        right_index=False,
+        how="left", # keep only keys from left table
+        suffixes=("_main", "_import"),
     )
     # Remove excess columns.
 
@@ -331,6 +304,72 @@ def merge_table_variables_identifiers(
         print(table_merge)
     # Return information.
     return table_merge
+
+
+##########
+# Write
+
+
+def write_product_merge_import(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+            raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_parent, "table_phenotypes.pickle"
+    )
+    path_table_phenotypes_text = os.path.join(
+        path_parent, "table_phenotypes.tsv"
+    )
+    # Write information to file.
+    information["table_phenotypes"].to_pickle(
+        path_table_phenotypes
+    )
+    information["table_phenotypes"].to_csv(
+        path_or_buf=path_table_phenotypes_text,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Organization procedure main information.
+    write_product_merge_import(
+        information=information["merge_import"],
+        path_parent=paths["merge_import"],
+    )
+    pass
 
 
 ###############################################################################
@@ -382,4 +421,19 @@ def execute_procedure(
         report=True,
     )
 
+    # Write out raw tables for inspection.
+    # Collect information.
+    information = dict()
+
+    information["merge_import"] = dict()
+    information["merge_import"]["table_phenotypes"] = table_merge
+    # Write product information to file.
+    write_product(
+        paths=paths,
+        information=information
+    )
     pass
+
+
+
+#
