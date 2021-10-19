@@ -147,7 +147,7 @@ def read_organize_uk_biobank_import_table(
         ])
     ]
     # Append prefix to names of columns.
-    table_import.add_prefix("import_")
+    table_import = table_import.add_prefix("import_")
 
     # Report.
     if report:
@@ -244,15 +244,31 @@ def merge_table_variables_identifiers(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
+        print("report: merge_table_variables_identifiers()")
+        utility.print_terminal_partition(level=4)
+        print("main table")
         print(table_main)
-        utility.print_terminal_partition(level=2)
+        utility.print_terminal_partition(level=4)
+        print("import table")
         print(table_import)
+
+
     # Remove rows with null values of merge identifier.
+    table_main.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
     table_main.dropna(
         axis="index",
         how="any",
         subset=["eid"],
         inplace=True,
+    )
+    table_import.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
     )
     table_import.dropna(
         axis="index",
@@ -261,12 +277,6 @@ def merge_table_variables_identifiers(
         inplace=True,
     )
     # Organize data.
-
-    table_main.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
     table_main["eid"].astype("string")
     table_main.set_index(
         "eid",
@@ -275,11 +285,6 @@ def merge_table_variables_identifiers(
         inplace=True
     )
 
-    table_import.reset_index(
-        level=None,
-        inplace=True,
-        drop=False,
-    )
     table_import["import_eid"].astype("string")
     table_import.set_index(
         "import_eid",
@@ -428,7 +433,6 @@ def execute_procedure(
     # Write out raw tables for inspection.
     # Collect information.
     information = dict()
-
     information["importation"] = dict()
     information["importation"]["table_phenotypes"] = table_merge
     # Write product information to file.
