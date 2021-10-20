@@ -6744,7 +6744,8 @@ def organize_psychology_variables(
     # Convert variable types.
     columns_type = [
         "neuroticism",
-        "bipolar.cc",
+        "import_bipolar.cc",
+        "import_icd_bipolar",
     ]
     table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
@@ -6815,8 +6816,9 @@ def organize_psychology_variables(
     table_clean.drop(
         labels=[
             #"20127-0.0",
-            "icd_bipolar", "bipolar.diag2", "Smithbipolar", "SmithMood",
-            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
+            "import_icd_bipolar", "import_bipolar.diag2", "import_Smithbipolar",
+            "import_SmithMood", "import_MHQ.bipolar.Definition",
+            "import_bipolar", "import_bipolar.cc",
         ],
         axis="columns",
         inplace=True
