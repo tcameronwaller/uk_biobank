@@ -6503,6 +6503,48 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 #    )
 
 
+
+def translate_import_bipolar_disorder_boolean(
+    import_bipolar_disorder=None,
+):
+    """
+    Intepret import variable for bipolar disorder cases and controls.
+
+    Accommodate inexact float values.
+
+    arguments:
+        import_bipolar_disorder (str or bool): import variable definition
+            indicator of bipolar disorder case or control status from Brandon J.
+            Coombes
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(import_bipolar_disorder))
+    ):
+        # The variable has a valid value.
+        if (str(import_bipolar_disorder) == "FALSE"):
+            # 0: "control"
+            value = 0
+        elif (str(import_bipolar_disorder) == "TRUE"):
+            # 1: "case"
+            value = 1
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def interpret_import_bipolar_disorder_case(
     import_bipolar_disorder=None,
 ):
@@ -6744,8 +6786,8 @@ def organize_psychology_variables(
     # Convert variable types.
     columns_type = [
         "neuroticism",
-        "import_bipolar.cc",
-        "import_icd_bipolar",
+        #"import_bipolar.cc",
+        #"import_icd_bipolar",
     ]
     table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
@@ -6759,6 +6801,14 @@ def organize_psychology_variables(
     # Determine whether persons qualify as cases or controls for bipolar
     # disorder.
     # Import definitions from Brandon J. Coombes.
+
+    table["import_icd_bipolar_binary"] = table.apply(
+        lambda row:
+            translate_import_bipolar_disorder_boolean(
+                import_bipolar_disorder=row["import_icd_bipolar"],
+            ),
+        axis="columns", # apply function to each row
+    )
     table["bipolar_case_loose"] = table.apply(
         lambda row:
             interpret_import_bipolar_disorder_case(
@@ -6769,7 +6819,7 @@ def organize_psychology_variables(
     table["bipolar_case_strict"] = table.apply(
         lambda row:
             interpret_import_bipolar_disorder_case(
-                import_bipolar_disorder=row["import_icd_bipolar"],
+                import_bipolar_disorder=row["import_icd_bipolar_binary"],
             ),
         axis="columns", # apply function to each row
     )
@@ -6777,7 +6827,7 @@ def organize_psychology_variables(
         lambda row:
             interpret_import_bipolar_disorder_control(
                 import_bipolar_loose=row["import_bipolar.cc"],
-                import_bipolar_strict=row["import_icd_bipolar"],
+                import_bipolar_strict=row["import_icd_bipolar_binary"],
             ),
         axis="columns", # apply function to each row
     )
