@@ -464,6 +464,7 @@ def organize_cohort_model_variables_summary_wide_record(
 # TODO: keys are NAMES of phenotypes, values are SORT ORDER of those phenotypes
 # TODO: include these sort order values in the table
 
+
 def organize_cohort_model_variables_summary_long_records(
     name=None,
     cohort_model=None,
@@ -1205,7 +1206,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
 # TODO: also write out "print" reports to text files for Chi-square tests and correlations
 
 
-# TODO: I think 
+# TODO: I think
 
 def execute_describe_cohorts_models_phenotypes(
     table=None,

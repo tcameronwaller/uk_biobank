@@ -6564,6 +6564,8 @@ def interpret_import_bipolar_disorder_case(
 
     """
 
+    #import_bipolar_disorder = float(import_bipolar_disorder)
+
     # Interpret field code.
     if (
         (not pandas.isna(import_bipolar_disorder)) and
@@ -6809,6 +6811,16 @@ def organize_psychology_variables(
             ),
         axis="columns", # apply function to each row
     )
+    # Convert variable types.
+    columns_type = [
+        "import_bipolar.cc",
+        "import_icd_bipolar_binary",
+    ]
+    table = utility.convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+
     table["bipolar_case_loose"] = table.apply(
         lambda row:
             interpret_import_bipolar_disorder_case(
