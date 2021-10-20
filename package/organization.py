@@ -120,6 +120,7 @@ def initialize_directories(
 
 
 def read_source(
+    source=None,
     path_dock=None,
     report=None,
 ):
@@ -130,6 +131,8 @@ def read_source(
     integer variable types.
 
     arguments:
+        source (str): name of directory for source table, either "importation"
+            or "assembly"
         path_dock (str): path to dock directory for source and product
             directories and files
         report (bool): whether to print reports
@@ -142,9 +145,14 @@ def read_source(
     """
 
     # Specify directories and files.
-    path_table_phenotypes = os.path.join(
-        path_dock, "assembly", "table_phenotypes.pickle"
-    )
+    if (str(source) == "importation"):
+        path_table_phenotypes = os.path.join(
+            path_dock, "importation", "table_phenotypes.pickle"
+        )
+    elif (str(source) == "assembly"):
+        path_table_phenotypes = os.path.join(
+            path_dock, "assembly", "table_phenotypes.pickle"
+        )
 
     # Read information from file.
     table_phenotypes = pandas.read_pickle(
@@ -198,6 +206,10 @@ def read_source_fields_codes_interpretations(
     path_table_field_55 = os.path.join(
         path_dock, "parameters", "uk_biobank",
         "table_ukbiobank_field_55_code_interpretation.tsv"
+    )
+    path_table_drug_class = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_drug_class_translation.tsv"
     )
 
     # Organize code interpretations.
@@ -256,10 +268,37 @@ def read_source_fields_codes_interpretations(
         orient="index",
     )
 
+    table_drug_class = pandas.read_csv(
+        path_table_drug_class,
+        sep="\t",
+        header=0,
+        dtype={
+            "original": "string",
+            "novel": "string",
+        },
+    )
+    table_drug_class.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_drug_class.set_index(
+        "original",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    drug_class_translations = table_drug_class.to_dict(
+        orient="index",
+    )
+
+
+
     # Compile and return information.
     return {
         "field_54": field_54_codes_interpretations,
         "field_55": field_55_codes_interpretations,
+        "drug_class": drug_class_translations,
     }
 
 
@@ -6440,7 +6479,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 ##########
 # Psychological variables
 
-# TODO: TCW 14 October 2021
+# TODO: TCW 20 October 2021
 # TODO: 1. I need to "import and interpret" medication class variables from Brandon J. Coombes
 # TODO: 2. I need to define categorical dummy variables for the medication classes
 # TODO: 3. I need to test those categorical dummy variables in phenotypic regressions
@@ -6464,8 +6503,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 #    )
 
 
-
-def interpret_import_bipolar_disorder(
+def interpret_import_bipolar_disorder_case(
     import_bipolar_disorder=None,
 ):
     """
@@ -6474,8 +6512,8 @@ def interpret_import_bipolar_disorder(
     Accommodate inexact float values.
 
     arguments:
-        import_bipolar_disorder (float): import variable "bipolar.cc" from
-            variable definitions by Brandon J. Coombes
+        import_bipolar_disorder (float): import variable definition indicator of
+            bipolar disorder case or control status from Brandon J. Coombes
 
     raises:
 
@@ -6506,8 +6544,69 @@ def interpret_import_bipolar_disorder(
     return value
 
 
+def interpret_import_bipolar_disorder_control(
+    import_bipolar_loose=None,
+    import_bipolar_strict=None,
+):
+    """
+    Intepret import variable for bipolar disorder cases and controls.
+
+    Accommodate inexact float values.
+
+    arguments:
+        import_bipolar_loose (float): import loose variable definition indicator
+            of bipolar disorder case or control status from Brandon J. Coombes
+        import_bipolar_strict (float): import strict variable definition
+            indicator of bipolar disorder case or control status from Brandon J.
+            Coombes
+
+    raises:
+
+    returns:
+        (bool): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (
+            (not pandas.isna(import_bipolar_loose)) and
+            (-0.5 <= import_bipolar_loose and import_bipolar_loose < 1.5)
+        ) and
+        (
+            (not pandas.isna(import_bipolar_strict)) and
+            (-0.5 <= import_bipolar_strict and import_bipolar_strict < 1.5)
+        )
+    ):
+        # Require both loose and strict definitions to be non-missing and have
+        # interpretable values.
+        # The variable has a valid value.
+        if (
+            (-0.5 <= import_bipolar_loose and import_bipolar_loose < 0.5) and
+            (-0.5 <= import_bipolar_strict and import_bipolar_strict < 0.5)
+        ):
+            # Both definitions designate as "control".
+            # 0: "control"
+            value = 1
+        elif (
+            (0.5 <= import_bipolar_loose and import_bipolar_loose < 1.5) or
+            (0.5 <= import_bipolar_strict and import_bipolar_strict < 1.5)
+        ):
+            # Both definitions designate as "case".
+            # 1: "case"
+            value = 0
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def organize_psychotropic_drug_class_categories(
-    classes=None,
+    drug_classes=None,
     table=None,
     report=None,
 ):
@@ -6516,8 +6615,8 @@ def organize_psychotropic_drug_class_categories(
     medications).
 
     arguments:
-        classes (list<str>): names of table columns for classes of psychotropic
-            drugs
+        drug_classes (dict<dict<string>>): translations for names of drug
+            classes
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
         report (bool): whether to print reports
@@ -6533,36 +6632,81 @@ def organize_psychotropic_drug_class_categories(
     # Copy information in table.
     table = table.copy(deep=True)
 
-    # Interpret missingness and reportability explanation variables for
-    # hormones.
-    table = determine_hormones_missingness_beyond_detection_range(
-        hormone_fields=hormone_fields,
-        table=table,
-    )
-    table = determine_hormones_reportability_detection_limit(
-        hormone_fields=hormone_fields,
-        table=table,
-    )
     # Impute missing values.
     hormones = list()
-    for record in hormone_fields:
-        hormones.append(record["name"])
-    table = determine_hormones_binary_detection(
-        hormones=hormones,
-        table=table,
-        report=report,
-    )
-    table = impute_missing_hormones_detection_limit(
-        hormones=hormones,
-        table=table,
-        report=report,
-    )
+    for drug_class_import in drug_classes.keys():
+        drug_class = drug_classes[drug_class_import]
+        # Interpret drug class encoding and translate name.
+        table[drug_class] = table.apply(
+            lambda row:
+                interpret_import_drug_class(
+                    code=row[drug_class_import],
+                ),
+            axis="columns", # apply function to each row
+        )
     # Return information.
     return table
 
 
+def determine_bipolar_disorder_control_case(
+    control=None,
+    case=None,
+):
+    """
+    Determines whether person qualifies as a control or case for Bipolar
+    Disorder.
+
+    NA: missing value indicates neither control nor case
+    0: control
+    1: case
+
+    arguments:
+        control (float): binary logical representation of control status
+        case (float): binary logical representation of case status
+
+    raises:
+
+    returns:
+        (float): binary logical representation of Bipolar Disorder control or
+            case status
+
+    """
+
+    # Integrate information from all criteria.
+    if (
+        (
+            (not pandas.isna(control)) and
+            (control == 1)
+        ) and
+        (
+            (pandas.isna(case)) or
+            (case == 0)
+        )
+    ):
+        # Person qualifies as a control.
+        value = 0
+    elif (
+        (
+            (not pandas.isna(case)) and
+            (case == 1)
+        ) and
+        (
+            (pandas.isna(control)) or
+            (control == 0)
+        )
+    ):
+        # Person qualifies as a case.
+        value = 1
+    else:
+        # Missing information.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 def organize_psychology_variables(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -6571,6 +6715,8 @@ def organize_psychology_variables(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -6582,6 +6728,12 @@ def organize_psychology_variables(
 
     # Copy data.
     table = table.copy(deep=True)
+
+    # Read reference table of interpretations of variable codes.
+    source = read_source_fields_codes_interpretations(
+        path_dock=path_dock,
+    )
+
     # Translate column names.
     translations = dict()
     translations["20127-0.0"] = "neuroticism"
@@ -6605,34 +6757,57 @@ def organize_psychology_variables(
     )
     # Determine whether persons qualify as cases or controls for bipolar
     # disorder.
-    table["bipolar_disorder"] = table.apply(
+    # Import definitions from Brandon J. Coombes.
+    table["bipolar_case_loose"] = table.apply(
         lambda row:
-            interpret_import_bipolar_disorder(
-                import_bipolar_disorder=row["bipolar.cc"],
+            interpret_import_bipolar_disorder_case(
+                import_bipolar_disorder=row["import_bipolar.cc"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["bipolar_case_strict"] = table.apply(
+        lambda row:
+            interpret_import_bipolar_disorder_case(
+                import_bipolar_disorder=row["import_icd_bipolar"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["bipolar_control"] = table.apply(
+        lambda row:
+            interpret_import_bipolar_disorder_control(
+                import_bipolar_loose=row["import_bipolar.cc"],
+                import_bipolar_strict=row["import_icd_bipolar"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Organize case-control variables.
+    table["bipolar_control_case_loose"] = table.apply(
+        lambda row:
+            determine_bipolar_disorder_control_case(
+                control=row["bipolar_control"],
+                case=row["bipolar_case_loose"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["bipolar_control_case_strict"] = table.apply(
+        lambda row:
+            determine_bipolar_disorder_control_case(
+                control=row["bipolar_control"],
+                case=row["bipolar_case_strict"],
             ),
         axis="columns", # apply function to each row
     )
 
+
     # Determine categorical classes of psychotropic drugs (medications).
     # Define names of classes of psychotropic drugs as defined by Brandon J.
     # Coombes.
-    drug_classes = [
-        "antipsychotics",
-        "antidepressants",
-        "sleepmeds",
-        "opioids",
-        "buprenorphine",
-        "methadone",
-        "lamotrigine",
-        "lithium",
-        "valproic_acid",
-    ]
-    table = organize_psychotropic_drug_class_categories(
-        classes=drug_classes,
-        table=table,
-        report=report,
-    )
-
+    if False:
+        table = organize_psychotropic_drug_class_categories(
+            drug_classes=source["drug_class"],
+            table=table,
+            report=report,
+        )
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -6662,30 +6837,46 @@ def organize_psychology_variables(
         # Column name translations.
         utility.print_terminal_partition(level=2)
         print("report: organize_neuroticism_variables()")
-        utility.print_terminal_partition(level=3)
-        print("translations of general attribute column names...")
-        for old in translations.keys():
-            print("   " + old + ": " + translations[old])
-        utility.print_terminal_partition(level=3)
-        print(table_report)
-        utility.print_terminal_partition(level=3)
-        # Variable types.
-        utility.print_terminal_partition(level=2)
-        print("After type conversion")
-        print(table_report.dtypes)
-        utility.print_terminal_partition(level=3)
+
+        count_bipolar_control_loose = int(
+            table.loc[
+                (
+                    (table["bipolar_control_case_loose"] == 0)
+                ), :
+            ].shape[0]
+        )
+        count_bipolar_case_loose = int(
+            table.loc[
+                (
+                    (table["bipolar_control_case_loose"] == 1)
+                ), :
+            ].shape[0]
+        )
+        count_bipolar_control_strict = int(
+            table.loc[
+                (
+                    (table["bipolar_control_case_strict"] == 0)
+                ), :
+            ].shape[0]
+        )
+        count_bipolar_case_strict = int(
+            table.loc[
+                (
+                    (table["bipolar_control_case_strict"] == 1)
+                ), :
+            ].shape[0]
+        )
         # Categorical ancestry and ethnicity.
         utility.print_terminal_partition(level=2)
         print("Bipolar Disorder cases and controls")
-        table_cases = table.loc[
-            (table["bipolar_disorder"] == 1), :
-        ]
-        table_controls = table.loc[
-            (table["bipolar_disorder"] == 0), :
-        ]
-        print("bipolar disorder cases: " + str(table_cases.shape[0]))
-        print("bipolar disorder controls: " + str(table_controls.shape[0]))
-
+        utility.print_terminal_partition(level=5)
+        print("Loose definition")
+        print("controls: " + str(count_bipolar_control_loose))
+        print("cases: " + str(count_bipolar_case_loose))
+        utility.print_terminal_partition(level=5)
+        print("Strict definition")
+        print("controls: " + str(count_bipolar_control_strict))
+        print("cases: " + str(count_bipolar_case_strict))
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -9609,7 +9800,6 @@ def organize_alcoholism_case_control_definitions(
     )
 
 
-
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
     table_clean.drop(
@@ -9653,6 +9843,8 @@ def organize_alcoholism_case_control_definitions(
     pail["table_report"] = table_report
     # Return information.
     return pail
+
+
 
 
 ##########
@@ -10127,6 +10319,7 @@ def execute_female_menstruation(
 
 def execute_psychology_psychiatry(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -10135,6 +10328,8 @@ def execute_psychology_psychiatry(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -10148,6 +10343,7 @@ def execute_psychology_psychiatry(
     # Organize information about neuroticism.
     pail_psychology = organize_psychology_variables(
         table=table,
+        path_dock=path_dock,
         report=report,
     )
     # Report.
