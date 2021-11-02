@@ -1148,7 +1148,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 ],
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
-                table=table_cohort,
+                table=table,
         ))
         if (cohort_order):
             record["table"][phenotype_response_name] = (
@@ -1622,7 +1622,7 @@ def stratify_genotype_cohorts_set_reference_population(
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
-            table=table_cohort,
+            table=table,
     ))
     records.append(record)
 
@@ -1657,7 +1657,7 @@ def stratify_genotype_cohorts_set_reference_population(
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
-            table=table_cohort,
+            table=table,
     ))
     records.append(record)
 
@@ -1692,7 +1692,7 @@ def stratify_genotype_cohorts_set_reference_population(
             ],
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
-            table=table_cohort,
+            table=table,
     ))
     records.append(record)
 
