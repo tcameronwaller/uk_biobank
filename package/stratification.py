@@ -118,7 +118,9 @@ def filter_kinship_pairs_by_threshold_relevance(
     report=None,
 ):
     """
-    Selects records by sex and by sex-specific criteria and variables.
+    Filters kinship pairs of related persons by a threshold on the kinship
+    coefficient and by genotype identifiers for persons who are relevant to a
+    specific cohort table.
 
     arguments:
         name (str): unique name for the relevant cohort, model, and phenotype
@@ -245,7 +247,7 @@ def filter_persons_ukbiobank_by_kinship(
     report=None,
 ):
     """
-    Selects records by sex and by sex-specific criteria and variables.
+    Selects records of persons who are unrelated.
 
     arguments:
         name (str): unique name for the relevant cohort, model, and phenotype
