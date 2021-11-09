@@ -834,7 +834,7 @@ def execute_procedure(
 
     # Drive regressions.
     if True:
-        pail_bipolar = drive_linear_regressions_hormones_bipolar_disorder(
+        pail_regression = drive_linear_regressions_hormones_bipolar_disorder(
             table=source["table_phenotypes"],
             table_cohort_model=(
                 source_reference["table_linear_hormones_bipolar_loose"]
@@ -842,7 +842,7 @@ def execute_procedure(
             report=True
         )
     if False:
-        pail_female = drive_regressions_female_cohorts_models_hormones(
+        pail_regression = drive_regressions_female_cohorts_models_hormones(
             table=source["table_phenotypes"],
             table_cohort_model=(
                 source_reference["table_linear_hormones_sex_age_menopause"]
@@ -850,7 +850,7 @@ def execute_procedure(
             report=True
         )
     if False:
-        pail_alcohol = drive_linear_regressions_hormones_alcoholism(
+        pail_regression = drive_linear_regressions_hormones_alcoholism(
             table=source["table_phenotypes"],
             table_cohort_model=(
                 source_reference["table_linear_hormones_alcoholism_1"]
@@ -862,7 +862,7 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
     information["tables"]["table_regressions_bipolar_loose"] = (
-        pail_alcohol["table"]
+        pail_regression["table"]
     )
     # Write product information to file.
     write_product(
