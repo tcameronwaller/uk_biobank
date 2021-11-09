@@ -176,96 +176,55 @@ def read_source_cohort_model_reference(
 
     """
 
-    # Specify directories and files.
-    path_table_linear_hormones_sex_age_menopause = os.path.join(
-        path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
-        "table_linear_hormones_sex_age_menopause.tsv"
-    )
-    path_table_linear_hormones_alcoholism_any = os.path.join(
-        path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
-        "table_linear_hormones_alcoholism_any.tsv"
-    )
-    path_table_linear_hormones_alcoholism_1 = os.path.join(
-        path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
-        "table_linear_hormones_alcoholism_1.tsv"
-    )
-
-    # Organize code interpretations.
-
-    # TODO: TCW 17 September 2021
-    # TODOD: FOR LOOP!!!
-
-    table_linear_hormones_sex_age_menopause = pandas.read_csv(
-        path_table_linear_hormones_sex_age_menopause,
-        sep="\t",
-        header=0,
-        dtype={
-            "cohort": "string",
-            "model": "string",
-            "dependence": "string",
-            "independence": "string",
-        },
-    )
-    table_linear_hormones_sex_age_menopause.reset_index(
-        level=None,
-        inplace=True,
-        drop=True,
-    )
-
-    table_linear_hormones_alcoholism_any = pandas.read_csv(
-        path_table_linear_hormones_alcoholism_any,
-        sep="\t",
-        header=0,
-        dtype={
-            "cohort": "string",
-            "model": "string",
-            "dependence": "string",
-            "independence": "string",
-        },
-    )
-    table_linear_hormones_alcoholism_any.reset_index(
-        level=None,
-        inplace=True,
-        drop=True,
-    )
-
-    table_linear_hormones_alcoholism_1 = pandas.read_csv(
-        path_table_linear_hormones_alcoholism_1,
-        sep="\t",
-        header=0,
-        dtype={
-            "cohort": "string",
-            "model": "string",
-            "dependence": "string",
-            "independence": "string",
-        },
-    )
-    table_linear_hormones_alcoholism_1.reset_index(
-        level=None,
-        inplace=True,
-        drop=True,
-    )
-
-
-    # Compile and return information.
-    return {
-        "table_linear_hormones_sex_age_menopause": (
-            table_linear_hormones_sex_age_menopause
-        ),
-        "table_linear_hormones_alcoholism_any": (
-            table_linear_hormones_alcoholism_any
-        ),
-        "table_linear_hormones_alcoholism_1": (
-            table_linear_hormones_alcoholism_1
-        ),
-
-    }
+    # Collect tables.
+    pail = dict()
+    # Iterate on tables.
+    file_names = [
+        "table_linear_hormones_sex_age_menopause.tsv",
+        "table_linear_hormones_alcoholism_any.tsv",
+        "table_linear_hormones_alcoholism_1.tsv",
+        "table_linear_hormones_bipolar_loose.tsv",
+    ]
+    for file_name in file_names:
+        # Determine table name.
+        name = file_name.replace(".tsv", "")
+        # Specify directories and files.
+        path_table = os.path.join(
+            path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
+            file_name,
+        )
+        # Read information from file.
+        table = pandas.read_csv(
+            path_table,
+            sep="\t",
+            header=0,
+            dtype={
+                "cohort": "string",
+                "model": "string",
+                "dependence": "string",
+                "independence": "string",
+            },
+        )
+        table.reset_index(
+            level=None,
+            inplace=True,
+            drop=True,
+        )
+        # Collect table.
+        pail[name] = table.copy(deep=True)
+        pass
+    # Return information.
+    return pail
 
 
 ##########
 # Need a coherent name for this section...
 
 
+# TODO: TCW 9 November 2021
+# TODO: this structure seems quite inefficient to me...
+# TODO: It might be more efficient to define these "dependent" variables and
+# TODO: regression models of interest in a separate table?
 def define_model_dependence_records_hormones():
     """
     Define records for regression model and dependent variables.
@@ -519,6 +478,115 @@ def drive_linear_regressions_hormones_alcoholism(
     # Return information.
     return pail
 
+# TODO: TCW 9 November 2021
+# TODO: this function is ALMOST identical to "drive_linear_regressions_hormones_alcoholism"
+# TODO: consolidate these functions by passing an argument for the main independent
+# TODO: variable of interest
+def drive_linear_regressions_hormones_bipolar_disorder(
+    table=None,
+    table_cohort_model=None,
+    report=None,
+):
+    """
+    Organize regressions.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_cohort_model (object): Pandas data frame of cohorts, models,
+            dependent variables, and independent variables for regression
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information from regressions
+
+    """
+
+    # Define relevant cohorts.
+    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+        table=table,
+    )
+    cohorts_relevant = [
+        "female",
+        "female_premenopause",
+        "female_perimenopause",
+        "female_postmenopause",
+        "male",
+        "male_age_low",
+        "male_age_middle",
+        "male_age_high",
+    ]
+    cohorts_records = list(filter(
+        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
+        cohorts_records
+    ))
+
+    # Collect summary records for each regression.
+    records = list()
+    # Define relevant dependent variables.
+    records_models = define_model_dependence_records_hormones()
+    # Iterate across cohorts.
+    for cohort_record in cohorts_records:
+        cohort = cohort_record["cohort"]
+        menstruation = cohort_record["menstruation"]
+        table_cohort = cohort_record["table"]
+        if report:
+            utility.print_terminal_partition(level=2)
+            print(cohort)
+            print(table_cohort)
+        # Iterate across outcomes (dependent variables).
+        for record_model in records_models:
+            dependence = record_model["dependence"]
+            model = record_model["model"]
+            # Organize record.
+            record = dict()
+            record["cohort"] = cohort
+            record["dependence"] = dependence
+            record["model"] = model
+            record["name"] = str(
+                record["cohort"] + "_" +
+                record["dependence"] + "_" +
+                record["model"]
+            )
+            # Define cohort-specific ordinal representation.
+            #dependence_ordinal = str(
+            #    str(record_model["dependence"]) + "_" + str(cohort) + "_order"
+            #)
+            pail_regression = (
+                pro_regression.drive_cohort_model_linear_regression(
+                    table=table_cohort,
+                    table_cohort_model=table_cohort_model,
+                    cohort=cohort,
+                    model=model,
+                    dependence=dependence,
+                    report=report,
+
+            ))
+            record.update(pail_regression["summary"])
+            # Collect records.
+            records.append(record)
+            pass
+        pass
+
+    # Organize table.
+    table_regressions_raw = pandas.DataFrame(data=records)
+    table_regressions = pro_regression.organize_table_regression_summaries(
+        independence=["bipolar_control_case_loose"],
+        table=table_regressions_raw,
+        report=report,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print(table_regressions)
+    # Compile information.
+    pail = dict()
+    pail["table"] = table_regressions
+    # Return information.
+    return pail
+
 
 def organize_regressions_site_month(
     table=None,
@@ -726,13 +794,6 @@ def write_product(
 # Procedure
 
 
-# TODO: TCW 30 September 2021
-# TODO: create dictionary...
-# TODO: keys are NAMES of phenotypes, values are SORT ORDER of those phenotypes
-# TODO: include these sort order values in the table
-
-
-
 def execute_procedure(
     path_dock=None,
 ):
@@ -772,6 +833,14 @@ def execute_procedure(
     )
 
     # Drive regressions.
+    if True:
+        pail_bipolar = drive_linear_regressions_hormones_bipolar_disorder(
+            table=source["table_phenotypes"],
+            table_cohort_model=(
+                source_reference["table_linear_hormones_bipolar_loose"]
+            ),
+            report=True
+        )
     if False:
         pail_female = drive_regressions_female_cohorts_models_hormones(
             table=source["table_phenotypes"],
@@ -780,7 +849,7 @@ def execute_procedure(
             ),
             report=True
         )
-    if True:
+    if False:
         pail_alcohol = drive_linear_regressions_hormones_alcoholism(
             table=source["table_phenotypes"],
             table_cohort_model=(
@@ -792,7 +861,7 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["tables"] = dict()
-    information["tables"]["table_regressions_alcoholism_1"] = (
+    information["tables"]["table_regressions_bipolar_loose"] = (
         pail_alcohol["table"]
     )
     # Write product information to file.

@@ -108,9 +108,9 @@ def initialize_directories(
     utility.create_directories(
         path=paths["organization"]
     )
-    utility.create_directories(
-        path=paths["cohorts_models"]
-    )
+    #utility.create_directories(
+    #    path=paths["cohorts_models"]
+    #)
     # Return information.
     return paths
 
