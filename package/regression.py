@@ -184,6 +184,7 @@ def read_source_cohort_model_reference(
         "table_linear_hormones_alcoholism_any.tsv",
         "table_linear_hormones_alcoholism_1.tsv",
         "table_linear_hormones_bipolar_loose.tsv",
+        "table_linear_hormones_bipolar_strict.tsv",
     ]
     for file_name in file_names:
         # Determine table name.
@@ -482,9 +483,11 @@ def drive_linear_regressions_hormones_alcoholism(
 # TODO: this function is ALMOST identical to "drive_linear_regressions_hormones_alcoholism"
 # TODO: consolidate these functions by passing an argument for the main independent
 # TODO: variable of interest
-def drive_linear_regressions_hormones_bipolar_disorder(
+
+def drive_linear_regressions_cohorts_models_dependences(
     table=None,
     table_cohort_model=None,
+    independences_summary=None,
     report=None,
 ):
     """
@@ -495,6 +498,8 @@ def drive_linear_regressions_hormones_bipolar_disorder(
             Biobank cohort
         table_cohort_model (object): Pandas data frame of cohorts, models,
             dependent variables, and independent variables for regression
+        independences_summary (list<str>): names of independent variables for
+            which to include statistics in the summary table
         report (bool): whether to print reports
 
     raises:
@@ -834,11 +839,20 @@ def execute_procedure(
 
     # Drive regressions.
     if True:
-        pail_regression = drive_linear_regressions_hormones_bipolar_disorder(
+        pail_bip_loose = drive_linear_regressions_cohorts_models_dependences(
             table=source["table_phenotypes"],
             table_cohort_model=(
                 source_reference["table_linear_hormones_bipolar_loose"]
             ),
+            independences_summary=["bipolar_control_case_loose"],
+            report=True
+        )
+        pail_bip_strict = drive_linear_regressions_cohorts_models_dependences(
+            table=source["table_phenotypes"],
+            table_cohort_model=(
+                source_reference["table_linear_hormones_bipolar_strict"]
+            ),
+            independences_summary=["bipolar_control_case_strict"],
             report=True
         )
     if False:
@@ -855,6 +869,7 @@ def execute_procedure(
             table_cohort_model=(
                 source_reference["table_linear_hormones_alcoholism_1"]
             ),
+            independences_summary=["alcoholism_control_case_1"],
             report=True
         )
 
@@ -862,7 +877,10 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
     information["tables"]["table_regressions_bipolar_loose"] = (
-        pail_regression["table"]
+        pail_bip_loose["table"]
+    )
+    information["tables"]["table_regressions_bipolar_strict"] = (
+        pail_bip_strict["table"]
     )
     # Write product information to file.
     write_product(
