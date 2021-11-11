@@ -578,7 +578,7 @@ def drive_linear_regressions_cohorts_models_dependences(
     # Organize table.
     table_regressions_raw = pandas.DataFrame(data=records)
     table_regressions = pro_regression.organize_table_regression_summaries(
-        independence=["bipolar_control_case_loose"],
+        independence=independences_summary,
         table=table_regressions_raw,
         report=report,
     )
