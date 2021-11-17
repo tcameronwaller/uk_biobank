@@ -553,7 +553,8 @@ def organize_phenotype_covariate_table_plink_format(
     table = table.copy(deep=True)
     # Translate binary phenotype variables.
     for boolean_phenotype in boolean_phenotypes:
-        table[boolean_phenotype] = table.apply(
+        name_plink = str(boolean_phenotype + "_plink")
+        table[name_plink] = table.apply(
             lambda row:
                 translate_boolean_phenotype_plink(
                     boolean_value=row[boolean_phenotype],
@@ -563,7 +564,8 @@ def organize_phenotype_covariate_table_plink_format(
         pass
     # Translate binary phenotype variables.
     for binary_phenotype in binary_phenotypes:
-        table[binary_phenotype] = table.apply(
+        name_plink = str(binary_phenotype + "_plink")
+        table[name_plink] = table.apply(
             lambda row:
                 translate_binary_phenotype_plink(
                     binary_value=row[binary_phenotype],
@@ -2093,6 +2095,150 @@ def stratify_genotype_cohorts_linear_set_bipolar_body(
         utility.print_terminal_partition(level=2)
         function_name = str(
             "select_organize_cohorts_models_genotypes_analyses_set_bipolar_body"
+        )
+        print(
+            "report: " + function_name
+        )
+        for record in records:
+            utility.print_terminal_partition(level=5)
+            print(record["name"])
+            print(
+                "Count records: " + str(record["table"].shape[0])
+            )
+    # Return information.
+    return records
+
+
+def select_organize_cohorts_variables_by_bipolar(
+    phenotype_response=None,
+    table_kinship_pairs=None,
+    table=None,
+):
+    """
+    Organizes tables for specific cohorts and model covariates for genetic
+    analyses.
+
+    arguments:
+        phenotype_response (str): name of table's column for phenotype response
+            (outcome) variable
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Collect records of information about each cohort, model, and phenotype.
+    # Select and organize variables across cohorts.
+    records = list()
+
+    # Cohort: all ancestries
+    record = dict()
+    record["category"] = "general"
+    record["cohort"] = "all"
+    record["cohort_model"] = "all"
+    record["phenotype_response"] = phenotype_response
+    record["name"] = str(
+        "all_" + phenotype_response
+    )
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            name=record["name"],
+            white_british=[0, 1,],
+            case_control=phenotype_response,
+            case_control_values=[0, 1,],
+            variables=[
+                "eid", "IID",
+                #"white_british",
+                "sex", "sex_text", "age",
+                "body", "body_log",
+            ],
+            prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
+
+    # Cohort: "White British" ancestry
+    record = dict()
+    record["category"] = "general"
+    record["cohort"] = "white"
+    record["cohort_model"] = "white"
+    record["phenotype_response"] = phenotype_response
+    record["name"] = str(
+        "white_" + phenotype_response
+    )
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            name=record["name"],
+            white_british=[1,],
+            case_control=phenotype_response,
+            case_control_values=[0, 1,],
+            variables=[
+                "eid", "IID",
+                "white_british",
+                "sex", "sex_text", "age",
+                "body", "body_log",
+            ],
+            prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
+
+    # Return information.
+    return records
+
+
+def stratify_genotype_cohorts_logistic_set_bipolar_body(
+    table=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts and model covariates for genetic
+    analyses.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    records = list()
+    # Select and organize variables across cohorts.
+    phenotypes = [
+        "bipolar_control_case_loose",
+        "bipolar_control_case_strict",
+    ]
+    for phenotype in phenotypes:
+        records_phenotype = select_organize_cohorts_variables_by_bipolar(
+            phenotype_response=phenotype,
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+        )
+        records.extend(records_phenotype)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "stratify_genotype_cohorts_logistic_set_bipolar_body"
         )
         print(
             "report: " + function_name
@@ -3730,6 +3876,25 @@ def execute_stratify_genotype_cohorts_plink_format_set(
                     boolean_phenotypes=[],
                     binary_phenotypes=[],
                     continuous_variables=[record["phenotype_response"]],
+                    remove_null_records=False,
+                    table=record["table"],
+            ))
+            pass
+    elif (set == "bipolar_body_logistic"):
+        records = (
+            stratify_genotype_cohorts_logistic_set_bipolar_body(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
+        # Translate variable encodings and table format for analysis in PLINK2.
+        pail = dict()
+        for record in records:
+            pail[record["name_table"]] = (
+                organize_phenotype_covariate_table_plink_format(
+                    boolean_phenotypes=[],
+                    binary_phenotypes=[record["phenotype_response"]],
+                    continuous_variables=[],
                     remove_null_records=False,
                     table=record["table"],
             ))
