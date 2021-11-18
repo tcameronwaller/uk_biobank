@@ -122,6 +122,13 @@ def describe_report_table_kinship_pairs(
     ]
     count_pairs_above = table_above.shape[0]
 
+    # Summarize values of the Kinship Coefficient that are positive.
+    array_positive = copy.deepcopy(
+        table_positive["Kinship"].dropna().to_numpy()
+    )
+    median_positive = numpy.nanmedian(array_positive)
+    minimum_positive = numpy.nanmin(array_positive)
+    maximum_positive = numpy.nanmax(array_positive)
 
     # Print report.
     utility.print_terminal_partition(level=2)
@@ -130,10 +137,15 @@ def describe_report_table_kinship_pairs(
         "read_source_table_kinship_pairs()"
     )
     utility.print_terminal_partition(level=5)
-    print("... kinship coefficients ...")
+    print("... kinship coefficients across total pairs ...")
     print("median kinship coefficient: " + str(median))
     print("minimum kinship coefficient: " + str(minimum))
     print("maximum kinship coefficient: " + str(maximum))
+    utility.print_terminal_partition(level=5)
+    print("... kinship coefficients across pairs with kinship >= 0 ...")
+    print("median kinship coefficient: " + str(median_positive))
+    print("minimum kinship coefficient: " + str(minimum_positive))
+    print("maximum kinship coefficient: " + str(maximum_positive))
     utility.print_terminal_partition(level=5)
     print("... kinship pairs ...")
     print("total pairs: " + str(count_pairs_total))
