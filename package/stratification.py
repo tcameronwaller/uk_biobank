@@ -440,7 +440,8 @@ def translate_boolean_phenotype_plink(
             value = 2
     else:
         # null
-        value = float("nan")
+        #value = -9
+        value = "nan"
     # Return information.
     return value
 
@@ -501,7 +502,8 @@ def translate_binary_phenotype_plink(
             value = 2
     else:
         # null
-        value = -9
+        #value = -9
+        value = "nan"
     # Return information.
     return value
 
