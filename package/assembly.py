@@ -1133,7 +1133,7 @@ def write_product_assembly(
         path_or_buf=path_table_kinship_pairs_text,
         sep="\t",
         header=True,
-        index=True,
+        index=False,
     )
     pass
 
