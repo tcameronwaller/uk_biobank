@@ -71,6 +71,83 @@ import promiscuity.utility as utility
 # Read
 
 
+def describe_report_table_kinship_pairs(
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+):
+    """
+    Describes a table of kinship between pairs of persons.
+
+    arguments:
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    # Summarize values of the Kinship Coefficient.
+    array_kinship = copy.deepcopy(
+        table_kinship_pairs["Kinship"].dropna().to_numpy()
+    )
+    median = numpy.nanmedian(array_kinship)
+    minimum = numpy.nanmin(array_kinship)
+    maximum = numpy.nanmax(array_kinship)
+    # Summarize pairs for different filters on Kinship Coefficient.
+    count_pairs_total = copy.deepcopy(table_kinship_pairs.shape[0])
+
+    table_negative = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < 0), :
+    ]
+    count_pairs_negative = table_negative.shape[0]
+
+    table_positive = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] >= 0), :
+    ]
+    count_pairs_positive = table_positive.shape[0]
+
+    table_below = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < threshold_kinship), :
+    ]
+    count_pairs_below = table_below.shape[0]
+
+
+    table_above = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] >= threshold_kinship), :
+    ]
+    count_pairs_above = table_above.shape[0]
+
+
+    # Print report.
+    utility.print_terminal_partition(level=2)
+    print(
+        "report: " +
+        "read_source_table_kinship_pairs()"
+    )
+    utility.print_terminal_partition(level=5)
+    print("... kinship coefficients ...")
+    print("median kinship coefficient: " + str(median))
+    print("minimum kinship coefficient: " + str(minimum))
+    print("maximum kinship coefficient: " + str(maximum))
+    utility.print_terminal_partition(level=5)
+    print("... kinship pairs ...")
+    print("total pairs: " + str(count_pairs_total))
+    print("pairs with kinship < 0: " + str(count_pairs_negative))
+    print("pairs with kinship >= 0: " + str(count_pairs_positive))
+    utility.print_terminal_partition(level=5)
+    print("Kinship Coefficient threshold: " + str(threshold_kinship))
+    print("pairs with kinship < threshold: " + str(count_pairs_below))
+    print("pairs with kinship >= threshold: " + str(count_pairs_above))
+
+    pass
+
+
+
 def read_source_table_kinship_pairs(
     path_dock=None,
     report=None,
@@ -102,6 +179,20 @@ def read_source_table_kinship_pairs(
     table_kinship_pairs = pandas.read_pickle(
         path_table_kinship_pairs
     )
+
+    # Report.
+    if report:
+        # Print report.
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "read_source_table_kinship_pairs()"
+        )
+        describe_report_table_kinship_pairs(
+            threshold_kinship=0.1,
+            table_kinship_pairs=table_kinship_pairs,
+        )
+        pass
     # Return information.
     return table_kinship_pairs
 
@@ -222,6 +313,10 @@ def filter_kinship_pairs_by_threshold_relevance(
     )
     # Report.
     if report:
+        # Summarize the Kinship Pairs in the kinship table.
+
+
+
         # Determine count of persons relevant to the analysis-specific cohort
         # who belong to kinship pairs beyond threshold.
         genotypes_kinship = copy.deepcopy(
