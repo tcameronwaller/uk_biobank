@@ -272,13 +272,14 @@ def filter_kinship_pairs_by_threshold_relevance(
     )
     # Filter kinship pairs to exclude persons with kinship below threshold.
     # These pairs do not have strong enough relation for further consideration.
-    count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
     table_kinship_pairs_below = table_kinship_pairs.loc[
         (table_kinship_pairs["Kinship"] < threshold_kinship), :
     ]
     table_kinship_pairs_above = table_kinship_pairs.loc[
         (table_kinship_pairs["Kinship"] >= threshold_kinship), :
     ]
+
+    count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
     count_pairs_kinship_below = copy.deepcopy(
         table_kinship_pairs_below.shape[0]
     )
@@ -327,8 +328,6 @@ def filter_kinship_pairs_by_threshold_relevance(
     if report:
         # Summarize the Kinship Pairs in the kinship table.
 
-
-
         # Determine count of persons relevant to the analysis-specific cohort
         # who belong to kinship pairs beyond threshold.
         genotypes_kinship = copy.deepcopy(
@@ -348,7 +347,7 @@ def filter_kinship_pairs_by_threshold_relevance(
         #    list_minor=genotypes_kinship_unique,
         #    list_major=genotypes_relevant,
         #)
-        count_genotypes_relevant = len(genotypes_relevant)
+        count_genotypes_relevant = len(list(genotypes_relevant_set))
         count_genotypes_relevant_kinship = len(genotypes_common)
         percentage = round(
             ((
@@ -388,8 +387,10 @@ def filter_kinship_pairs_by_threshold_relevance(
 
 
 # TODO: TCW 17 November 2021
-# TODO: this function ought to accept a list of "priority" persons to keep
-# TODO: if a "family" cluster includes any "priority" persons, then pick one of them
+# TODO: this function ought to accept a list of "priority" persons ("IID") to keep
+# TODO: if a "family" cluster includes any "priority" persons, then pick one of them at random
+# TODO: else pick a representative at random from the "family" cluster
+
 
 def filter_persons_ukbiobank_by_kinship(
     name=None,
@@ -459,6 +460,8 @@ def filter_persons_ukbiobank_by_kinship(
     # Exclude all related persons from the cohort, with the exception of a
     # single representative from each family (connected component of the kinship
     # pair network).
+    # Collect genotype identifiers for all persons with relatedness kinship
+    # greater than or equal to threshold.
     genotypes_kinship = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
     genotypes_kinship_second = copy.deepcopy(
         table_kinship_pairs["ID2"].to_list()
@@ -467,6 +470,8 @@ def filter_persons_ukbiobank_by_kinship(
     genotypes_kinship_unique = list(set(genotypes_kinship))
     genotypes_kinship_unique = list(map(str, genotypes_kinship_unique))
     count_kinship_unique = len(genotypes_kinship_unique)
+    # Remove representative nodes (one representative from each family cluster)
+    # from the list of related genotypes for exclusion from cohort.
     genotypes_kinship_exclusion = list(filter(
         lambda value: (value not in representative_nodes),
         genotypes_kinship_unique
@@ -1090,7 +1095,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
         threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table_collection,
-        report=False,
+        report=True,
     )
     # Organize table.
     table_unrelated.reset_index(
