@@ -631,6 +631,8 @@ def filter_table_phenotype_persons_by_kinship(
             (table[priority_variable].isin(priority_values)), :
         ]
         persons_priority = copy.deepcopy(table_priority["IID"].to_list())
+    else:
+        persons_priority = []
         pass
     # Select unrelated persons to keep in the cohort table.
     persons_keep = filter_cohort_relevance_persons_by_priority_kinship(
