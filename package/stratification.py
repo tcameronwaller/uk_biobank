@@ -517,20 +517,17 @@ def filter_cohort_relevance_persons_by_priority_kinship(
     # 1. remove "persons_represent" from "persons_kin"
     # 2. remove "persons_kin" from "persons_relevance"
 
-    # persons_exclusion = list(set(persons_kin) - set(persons_represent))
-    # persons_keep = list(set(persons_relevance) - set(persons_exclusion))
-
-    # Remove "persons_represent" from "persons_kin".
-    #persons_exclusion = list(filter(
-    #    lambda value: (value not in persons_represent),
-    #    persons_kin
-    #))
-    persons_exclusion = list(set(persons_kin) - set(persons_represent))
-    # Remove "persons_exclusion" from "persons_relevance".
+    # Computation note:
+    # At this scale, computing a set difference is much more efficient than
+    # applying an filter across elements in two lists.
     #persons_keep = list(filter(
     #    lambda value: (value not in persons_exclusion),
     #    persons_relevance
     #))
+
+    # Remove "persons_represent" from "persons_kin".
+    persons_exclusion = list(set(persons_kin) - set(persons_represent))
+    # Remove "persons_exclusion" from "persons_relevance".
     persons_keep = list(set(persons_relevance) - set(persons_exclusion))
 
     # Report.
@@ -1269,6 +1266,8 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
 
 def select_records_by_ancestry_case_control_valid_variables_values(
     name=None,
+    priority_values=None,
+    priority_variable=None,
     white_british=None,
     case_control=None,
     case_control_values=None,
@@ -1282,6 +1281,10 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 
     arguments:
         name (str): unique name for the relevant cohort, model, and phenotype
+        priority_values (list<int>): which values of "priority_variable" to use
+            to select priority persons for kinship filter
+        priority_variable (list<str>): name of column for variable to consider
+            to select priority persons for kinship filter
         white_british (list<int>): which values of white british categorical
             ancestry variable to include
         case_control (str): name of column for relevant case control definition
@@ -1342,10 +1345,12 @@ def select_records_by_ancestry_case_control_valid_variables_values(
     # Filter by kinship relatedness.
     table_unrelated = filter_table_phenotype_persons_by_kinship(
         name=name,
+        priority_values=priority_values,
+        priority_variable=priority_variable,
         threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table,
-        report=False,
+        report=True,
     )
     # Organize table.
     table_unrelated.reset_index(
@@ -1361,6 +1366,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
     )
     # Return information.
     return table_unrelated
+
 
 
 ##########
@@ -2472,6 +2478,11 @@ def stratify_genotype_cohorts_linear_set_bipolar_body(
     return records
 
 
+# TODO: TCW 21 November 2021
+# TODO: Consider how to clean up the differences and similarities between
+# TODO: "stratify_genotype_cohorts_logistic_set_bipolar_body()" and
+# TODO: "stratify_genotype_cohorts_linear_set_bipolar_body()"
+
 def select_organize_cohorts_variables_by_bipolar(
     phenotype_response=None,
     table_kinship_pairs=None,
@@ -2530,6 +2541,7 @@ def select_organize_cohorts_variables_by_bipolar(
     records.append(record)
 
     # Cohort: "White British" ancestry
+    # Note: Without priority for Bipolar Disorder cases in Kinship Filter
     record = dict()
     record["category"] = "general"
     record["cohort"] = "white"
@@ -2542,6 +2554,40 @@ def select_organize_cohorts_variables_by_bipolar(
     record["table"] = (
         select_records_by_ancestry_case_control_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
+            white_british=[1,],
+            case_control=phenotype_response,
+            case_control_values=[0, 1,],
+            variables=[
+                "eid", "IID",
+                "white_british",
+                "sex", "sex_text", "age",
+                "body", "body_log",
+                phenotype_response,
+            ],
+            prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+    ))
+    records.append(record)
+
+    # Cohort: "White British" ancestry
+    # Note: With priority for Bipolar Disorder cases in Kinship Filter
+    record = dict()
+    record["category"] = "general"
+    record["cohort"] = "white"
+    record["cohort_model"] = "white"
+    record["phenotype_response"] = phenotype_response
+    record["name"] = str(
+        "white_" + phenotype_response + "_priority_case"
+    )
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_case_control_valid_variables_values(
+            name=record["name"],
+            priority_values=[1,],
+            priority_variable=phenotype_response,
             white_british=[1,],
             case_control=phenotype_response,
             case_control_values=[0, 1,],
