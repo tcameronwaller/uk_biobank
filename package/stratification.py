@@ -517,16 +517,21 @@ def filter_cohort_relevance_persons_by_priority_kinship(
     # 1. remove "persons_represent" from "persons_kin"
     # 2. remove "persons_kin" from "persons_relevance"
 
+    # persons_exclusion = list(set(persons_kin) - set(persons_represent))
+    # persons_keep = list(set(persons_relevance) - set(persons_exclusion))
+
     # Remove "persons_represent" from "persons_kin".
-    persons_exclusion = list(filter(
-        lambda value: (value not in persons_represent),
-        persons_kin
-    ))
+    #persons_exclusion = list(filter(
+    #    lambda value: (value not in persons_represent),
+    #    persons_kin
+    #))
+    persons_exclusion = list(set(persons_kin) - set(persons_represent))
     # Remove "persons_exclusion" from "persons_relevance".
-    persons_keep = list(filter(
-        lambda value: (value not in persons_exclusion),
-        persons_relevance
-    ))
+    #persons_keep = list(filter(
+    #    lambda value: (value not in persons_exclusion),
+    #    persons_relevance
+    #))
+    persons_keep = list(set(persons_relevance) - set(persons_exclusion))
 
     # Report.
     if report:
