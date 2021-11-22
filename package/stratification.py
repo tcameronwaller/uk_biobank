@@ -681,6 +681,44 @@ def filter_table_phenotype_persons_by_kinship(
     return table
 
 
+
+def report_kinship_filter_priority_selection(
+    name=None,
+    priority_values=None,
+    priority_variable=None,
+    table_simple=None,
+    table_priority=None,
+    report=None,
+):
+    """
+    Selects records of persons who are unrelated.
+
+    arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
+        priority_values (list<int>): which values of "priority_variable" to use
+            to select priority persons for kinship filter
+        priority_variable (list<str>): name of column for variable to consider
+            to select priority persons for kinship filter
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        table (object): Pandas data frame of values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    pass
+
+
+
+
+
 ##########
 # Format adjustment for PLINK2
 
