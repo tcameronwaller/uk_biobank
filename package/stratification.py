@@ -329,8 +329,8 @@ def filter_kinship_pairs_by_threshold_relevance(
             table_kinship_pairs_relevance["ID2"].to_list()
         )
         persons_kin.extend(persons_kin_second)
-        persons_kin = list(set(persons_kin)) # unique
         persons_kin = list(map(str, persons_kin)) # string
+        persons_kin = list(set(persons_kin)) # unique
         count_persons_kin_relevance = len(persons_kin)
         # Report.
         utility.print_terminal_partition(level=3)
@@ -490,8 +490,8 @@ def filter_cohort_relevance_persons_by_priority_kinship(
     persons_kin = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
     persons_kin_second = copy.deepcopy(table_kinship_pairs["ID2"].to_list())
     persons_kin.extend(persons_kin_second)
-    persons_kin = list(set(persons_kin)) # unique
     persons_kin = list(map(str, persons_kin)) # string
+    persons_kin = list(set(persons_kin)) # unique
     # Select priority representative persons from connected components
     # (families) in kinship network.
     persons_represent = select_kinship_network_component_representatives(
@@ -681,17 +681,21 @@ def filter_table_phenotype_persons_by_kinship(
     return table
 
 
-
 def report_kinship_filter_priority_selection(
     name=None,
     priority_values=None,
     priority_variable=None,
+    table_full=None,
     table_simple=None,
     table_priority=None,
     report=None,
 ):
     """
-    Selects records of persons who are unrelated.
+    Reports counts of records for priority persons in cohort tables after
+    Kinship Filter for genetic analyses.
+
+    Counts are specific to the "IID" identifier to represent records that match to
+    genotypes.
 
     arguments:
         name (str): unique name for the relevant cohort, model, and phenotype
@@ -713,9 +717,73 @@ def report_kinship_filter_priority_selection(
 
     """
 
+    # Report.
+    if report:
+        # Report.
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "report_kinship_filter_priority_selection()"
+        )
+        utility.print_terminal_partition(level=3)
+        print(name)
+        pass
+    # Copy information.
+    table_full = table_full.copy(deep=True)
+    table_simple = table_simple.copy(deep=True)
+    table_priority = table_priority.copy(deep=True)
+    # Organize tables.
+    records = list()
+    record = {
+        "table": table_full,
+        "description": "full phenotype table before Kinship Filter",
+    }
+    records.append(record)
+    record = {
+        "table": table_simple,
+        "description": "table after Kinship Filter without priority",
+    }
+    records.append(record)
+    record = {
+        "table": table_priority,
+        "description": "table after Kinship Filter with priority",
+    }
+    records.append(record)
+    # Collect information for tables.
+    for record in records:
+        # Remove any table rows for records with null values in genotype
+        # identifier ("IID") or priority variable.
+        table_valid = record["table"].dropna(
+            axis="index",
+            how="any",
+            subset=["IID", priority_variable],
+            inplace=False,
+        )
+        # Select table rows for records representing priority persons.
+        table_preference = table_valid.loc[
+            (table_valid[priority_variable].isin(priority_values)), :
+        ]
+        # Extract identifiers of genotypes for priority persons.
+        genotypes = copy.deepcopy(
+            table_preference["IID"].to_list()
+        )
+        genotypes = list(map(str, genotypes)) # string
+        genotypes = list(set(genotypes)) # unique
+        # Count genotypes.
+        count_genotypes_priority = len(genotypes_priority)
+        # Report.
+        if report:
+            # Report.
+            utility.print_terminal_partition(level=4)
+            print(record["description"])
+            utility.print_terminal_partition(level=5)
+            print(
+                "Count of priority genotypes in table: " +
+                str(count_genotypes_priority)
+            )
+            pass
+        pass
     pass
-
-
 
 
 
@@ -2549,34 +2617,37 @@ def select_organize_cohorts_variables_by_bipolar(
     # Select and organize variables across cohorts.
     records = list()
 
-    # Cohort: all ancestries
-    record = dict()
-    record["category"] = "general"
-    record["cohort"] = "all"
-    record["cohort_model"] = "all"
-    record["phenotype_response"] = phenotype_response
-    record["name"] = str(
-        "all_" + phenotype_response
-    )
-    record["name_table"] = str("table_" + record["name"])
-    record["table"] = (
-        select_records_by_ancestry_case_control_valid_variables_values(
-            name=record["name"],
-            white_british=[0, 1,],
-            case_control=phenotype_response,
-            case_control_values=[0, 1,],
-            variables=[
-                "eid", "IID",
-                #"white_british",
-                "sex", "sex_text", "age",
-                "body", "body_log",
-                phenotype_response,
-            ],
-            prefixes=["genotype_pc_",],
-            table_kinship_pairs=table_kinship_pairs,
-            table=table,
-    ))
-    records.append(record)
+    if False:
+        # Cohort: all ancestries
+        record = dict()
+        record["category"] = "general"
+        record["cohort"] = "all"
+        record["cohort_model"] = "all"
+        record["phenotype_response"] = phenotype_response
+        record["name"] = str(
+            "all_" + phenotype_response
+        )
+        record["name_table"] = str("table_" + record["name"])
+        record["table"] = (
+            select_records_by_ancestry_case_control_valid_variables_values(
+                name=record["name"],
+                priority_values=[],
+                priority_variable=None,
+                white_british=[0, 1,],
+                case_control=phenotype_response,
+                case_control_values=[0, 1,],
+                variables=[
+                    "eid", "IID",
+                    #"white_british",
+                    "sex", "sex_text", "age",
+                    "body", "body_log",
+                    phenotype_response,
+                ],
+                prefixes=["genotype_pc_",],
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+        ))
+        records.append(record)
 
     # Cohort: "White British" ancestry
     # Note: Without priority for Bipolar Disorder cases in Kinship Filter
