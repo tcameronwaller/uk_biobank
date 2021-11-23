@@ -770,7 +770,7 @@ def report_kinship_filter_priority_selection(
         genotypes = list(map(str, genotypes)) # string
         genotypes = list(set(genotypes)) # unique
         # Count genotypes.
-        count_genotypes_priority = len(genotypes_priority)
+        count_genotypes_priority = len(genotypes)
         # Report.
         if report:
             # Report.
