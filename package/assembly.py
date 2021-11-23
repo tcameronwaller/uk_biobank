@@ -1245,7 +1245,7 @@ def execute_procedure(
     # Drop any records (persons) with null values across all variables.
     table_valid = drop_null_records_all_variables(
         table=table_exclusion,
-        columns_any=["31-0.0"], # "IID"
+        columns_any=["31-0.0"], # "31-0.0": sex
         report=True,
     )
 
@@ -1275,3 +1275,9 @@ def execute_procedure(
         information=information
     )
     pass
+
+
+
+
+
+#
