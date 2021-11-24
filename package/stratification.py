@@ -1256,6 +1256,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     male_prefixes=None,
     table_kinship_pairs=None,
     table=None,
+    report=None,
 ):
     """
     Selects records by sex and by sex-specific criteria and variables.
@@ -1289,6 +1290,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
         table_kinship_pairs (object): Pandas data frame of kinship coefficients
             across pairs of persons
         table (object): Pandas data frame of values
+        report (bool): whether to print reports
 
     raises:
 
@@ -1347,7 +1349,7 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
         threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table_collection,
-        report=True,
+        report=report,
     )
     # Organize table.
     table_unrelated.reset_index(
@@ -2056,6 +2058,7 @@ def stratify_genotype_cohorts_set_reference_population(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2093,9 +2096,47 @@ def stratify_genotype_cohorts_set_reference_population(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
+    # Cohort: "White British" ancestry, unrelated, females and males together
+    record = dict()
+    record["category"] = "white_unrelated_female_male"
+    record["cohort"] = "white_unrelated_female_male"
+    record["cohort_model"] = "white_unrelated_female_male_priority_male"
+    record["phenotype_response"] = "age"
+    record["name"] = str(record["cohort_model"])
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=["male",],
+            priority_variable="sex_text",
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,1,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "sex", "sex_text", "age",
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "sex", "sex_text", "age",
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    records.append(record)
 
     # Cohort: "White British" ancestry, unrelated, females
     record = dict()
@@ -2108,6 +2149,8 @@ def stratify_genotype_cohorts_set_reference_population(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,1,],
@@ -2129,6 +2172,7 @@ def stratify_genotype_cohorts_set_reference_population(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2143,6 +2187,8 @@ def stratify_genotype_cohorts_set_reference_population(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,1,],
@@ -2164,6 +2210,7 @@ def stratify_genotype_cohorts_set_reference_population(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
