@@ -4390,7 +4390,7 @@ def stratify_cohorts_models_phenotypes_sets(
 # Write
 
 
-def write_product_cohort_model_table(
+def write_genotype_product_cohort_model_table(
     name=None,
     information=None,
     path_parent=None,
