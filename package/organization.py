@@ -1266,6 +1266,12 @@ def determine_biological_sex_consensus(
     Determine consensus sex (biological sex, not social gender).
     Prioritize interpretation of the genetic sex variable.
 
+    Code is same as UK Biobank for data-field 31 and data-field 22001.
+    0: "Female"
+    1: "Male"
+
+    Conceptually, this code matches the presence of the Y chromosome.
+
     arguments:
         field_31 (float): UK Biobank field 31, person's self-reported sex
         field_22001 (float): UK Biobank field 22001, genetic sex
@@ -4045,10 +4051,10 @@ def interpret_menstruation_days(
     # Interpret field code.
     if (
         (not pandas.isna(field_3700)) and
-        (-3.5 <= field_3700 and field_3700 < 1000)
+        (-3.5 <= field_3700 and field_3700 < 400)
     ):
         # The variable has a valid value.
-        if (0 <= field_3700 and field_3700 < 1000):
+        if (0 <= field_3700 and field_3700 < 400):
             # The variable has a valid value for days.
             value = float(field_3700)
         elif (-1.5 <= field_3700 and field_3700 < -0.5):
