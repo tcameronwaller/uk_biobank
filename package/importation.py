@@ -95,7 +95,7 @@ def initialize_directories(
 # Read
 
 # TODO: TCW 18 October 2021
-# TODO: Currently need to update the name of import table file every accession date
+# TODO: Currently need to update the name of import table file for each accession date
 
 
 def read_organize_uk_biobank_import_table(
