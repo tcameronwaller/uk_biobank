@@ -1376,6 +1376,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
     prefixes=None,
     table_kinship_pairs=None,
     table=None,
+    report=None,
 ):
     """
     Selects records for females and males without sex-specific criteria.
@@ -1399,6 +1400,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
             across pairs of persons
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -1423,7 +1425,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
         prefixes=prefixes,
         table=table,
         drop_columns=True,
-        report=False,
+        report=report,
     )
     # Determine whether to filter by white british categorical ancestry.
     if (
@@ -1451,7 +1453,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
         threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
         table_kinship_pairs=table_kinship_pairs,
         table=table,
-        report=True,
+        report=report,
     )
     # Organize table.
     table_unrelated.reset_index(
@@ -2342,6 +2344,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
     case_control=None,
     table_kinship_pairs=None,
     table=None,
+    report=None,
 ):
     """
     Organizes tables for specific cohorts and model covariates for genetic
@@ -2354,6 +2357,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
             across pairs of persons in UK Biobank cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -2383,7 +2387,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
         record["category"] = "general"
         record["cohort"] = "all_bipolar_control"
         record["cohort_model"] = "all_bipolar_control"
-        record["phenotype_response"] = phenotype_response
+        record["phenotype_response"] = "body"
         record["name"] = str(
             "all_" + case_control_abbreviation + "_control"
         )
@@ -2406,6 +2410,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
                 prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
+                report=report,
         ))
         records.append(record)
         pass
@@ -2415,7 +2420,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
     record["category"] = "general"
     record["cohort"] = "white_bipolar_control"
     record["cohort_model"] = "white_bipolar_control"
-    record["phenotype_response"] = phenotype_response
+    record["phenotype_response"] = "body"
     record["name"] = str(
         "white_" + case_control_abbreviation + "_control_body"
     )
@@ -2438,6 +2443,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
             prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2469,6 +2475,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
             prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2511,6 +2518,7 @@ def stratify_genotype_cohorts_linear_set_bipolar_body(
             case_control=phenotype,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
         )
         records.extend(records_phenotype)
     # Report.
@@ -2536,6 +2544,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
     case_control=None,
     table_kinship_pairs=None,
     table=None,
+    report=None,
 ):
     """
     Organizes tables for specific cohorts and model covariates for genetic
@@ -2548,6 +2557,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
             across pairs of persons in UK Biobank cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -2589,6 +2599,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
                 prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
+                report=report,
         ))
         records.append(record)
         pass
@@ -2622,6 +2633,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
             prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2654,6 +2666,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
             prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     records.append(record)
 
@@ -2696,6 +2709,7 @@ def stratify_genotype_cohorts_logistic_set_bipolar_body(
             case_control=phenotype,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
         )
         records.extend(records_phenotype)
     # Report.
