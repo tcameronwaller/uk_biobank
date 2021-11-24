@@ -483,7 +483,7 @@ def interpret_ancestry_white_british(
 
     Data-Field "22006": "Genetic ethnic grouping"
     UK Biobank data coding "1002" for variable field "22006".
-    "Caucasian": 1
+    1: "Caucasian"
 
     Accommodate inexact float values.
 
