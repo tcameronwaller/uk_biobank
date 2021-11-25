@@ -1481,12 +1481,14 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # TODO: the cohort-specific ordinal representations of hormones are too complex
 # TODO: if used at all, these should be limited to a separate function in only a few cohorts...
 
+
 def stratify_genotype_cohorts_by_phenotype_response(
     phenotype_response=None,
     type_response=None,
     cohort_order=None,
     table_kinship_pairs=None,
     table=None,
+    report=None,
 ):
     """
     Organizes tables for specific cohorts, phenotypes, and model covariates
@@ -1509,6 +1511,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             across pairs of persons in UK Biobank cohort
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -1554,6 +1557,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
         record["table"] = (
             select_records_by_ancestry_sex_specific_valid_variables_values(
                 name=record["name"],
+                priority_values=[],
+                priority_variable=None,
                 white_british=[1,],
                 female=True,
                 female_pregnancy=[0,],
@@ -1582,6 +1587,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
+                report=report,
         ))
         if (cohort_order):
             record["table"][phenotype_response_name] = (
@@ -1610,6 +1616,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -1631,6 +1639,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=[],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1659,6 +1668,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -1683,6 +1694,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=[],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1711,6 +1723,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -1735,6 +1749,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=[],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1763,6 +1778,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=True,
             female_pregnancy=[0,],
@@ -1785,6 +1802,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=[],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1813,6 +1831,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -1834,6 +1854,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1862,6 +1883,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -1883,6 +1906,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1910,6 +1934,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -1931,6 +1957,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -1960,6 +1987,8 @@ def stratify_genotype_cohorts_by_phenotype_response(
     record["table"] = (
         select_records_by_ancestry_sex_specific_valid_variables_values(
             name=record["name"],
+            priority_values=[],
+            priority_variable=None,
             white_british=[1,],
             female=False,
             female_pregnancy=[0,],
@@ -1981,6 +2010,7 @@ def stratify_genotype_cohorts_by_phenotype_response(
             male_prefixes=["genotype_pc_",],
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
     ))
     if (cohort_order):
         record["table"][phenotype_response_name] = (
@@ -2271,6 +2301,7 @@ def stratify_genotype_cohorts_linear_set_sex_hormones(
             cohort_order=True,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
         )
         records.extend(records_hormone)
         pass
@@ -2303,6 +2334,7 @@ def stratify_genotype_cohorts_linear_set_sex_hormones(
             cohort_order=False,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
         )
         records.extend(records_hormone)
     # Report.
@@ -2364,6 +2396,7 @@ def stratify_genotype_cohorts_logistic_set_sex_hormones(
             cohort_order=False,
             table_kinship_pairs=table_kinship_pairs,
             table=table,
+            report=report,
         )
         records.extend(records_phenotype)
     # Report.
