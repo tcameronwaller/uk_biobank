@@ -911,6 +911,11 @@ def translate_binary_phenotype_plink(
 # TODO: It bothers me that "boolean_phenotypes", "binary_phenotypes", and "continuous_variables"
 # TODO: are inconsistent and not very specific... maybe just use "variables" for all of these?
 
+# TODO: TCW 29 November 2021
+# TODO: Need to translate encoding of sex for PLINK2
+# TODO: introduce "SEX" column and place in proper order relative to "IID" and "FID"
+# TODO: https://www.cog-genomics.org/plink/2.0/formats
+
 def organize_phenotype_covariate_table_plink_format(
     boolean_phenotypes=None,
     binary_phenotypes=None,
@@ -930,6 +935,30 @@ def organize_phenotype_covariate_table_plink_format(
 
     3. Sort column sequence.
     PLINK requires FID and IID columns to come first.
+
+    https://www.cog-genomics.org/plink/2.0/formats
+    Section: ".cov (covariate table)"
+        "
+        Produced by --write-covar, --make-[b]pgen/--make-bed, and --export when
+        covariates have been loaded/specified. Valid input for --covar.
+
+        A text file with a header line, and one line per sample with the
+            following columns:
+
+        Header Column set Contents
+        FID maybefid, fid Family ID
+        IID (required) Individual ID
+        SID maybesid, sid Source ID
+        PAT maybe parents, parents Paternal individual ID
+        MAT maybe parents, parents Maternal individual ID
+        SEX sex Sex (1 = male, 2 = female, 'NA' = unknown)
+        PHENO1 pheno1 All-missing phenotype column, if none loaded
+        <Pheno name>, ... pheno1, phenos Phenotype value(s) (only first if just
+            'pheno1')
+        <Covar name>, ... (required) Covariate values
+
+        (Note that --covar can also be used with files lacking a header row.)
+    "
 
     arguments:
         boolean_phenotypes (list<str>): names of columns with discrete boolean
@@ -2355,6 +2384,9 @@ def stratify_genotype_cohorts_linear_set_sex_hormones(
     # Return information.
     return records
 
+
+# TODO: TCW 1 December 2021
+# TODO: I need a separate stratification function for the logistic phenotypes... maybe?
 
 def stratify_genotype_cohorts_logistic_set_sex_hormones(
     table=None,

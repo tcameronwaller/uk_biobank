@@ -76,11 +76,11 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["stratification"] = os.path.join(
-        path_dock, "stratification_2021-10-21"
+        path_dock, "stratification_2021-11-24"
     )
     paths["heritability"] = os.path.join(path_dock, "heritability")
     paths["genetic_correlation"] = os.path.join(
-        path_dock, "genetic_correlation"
+        path_dock, "genetic_correlation_body_bipolar_loose"
     )
 
     paths["collection"] = os.path.join(path_dock, "collection")
