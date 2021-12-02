@@ -80,7 +80,7 @@ def initialize_directories(
     )
     paths["heritability"] = os.path.join(path_dock, "heritability")
     paths["genetic_correlation"] = os.path.join(
-        path_dock, "genetic_correlation_body_bipolar_loose"
+        path_dock, "genetic_correlation_body_bipolar_strict"
     )
 
     paths["collection"] = os.path.join(path_dock, "collection")
