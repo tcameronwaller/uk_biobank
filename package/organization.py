@@ -2012,6 +2012,12 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
+# TODO: TCW 3 December 2021
+# TODO: "sex_text"
+# TODO: "sex_y"
+# TODO: "sex_x"
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
