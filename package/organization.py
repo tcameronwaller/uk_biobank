@@ -2016,6 +2016,7 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
 # TODO: "sex_text"
 # TODO: "sex_y"
 # TODO: "sex_x"
+# TODO: in documentation "reserve column name SEX for PLINK2 format"
 
 
 def organize_assessment_basis_variables(

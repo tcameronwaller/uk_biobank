@@ -580,6 +580,120 @@ def filter_cohort_relevance_persons_by_priority_kinship(
     return persons_keep
 
 
+def test_persons_relevance_maximal_kinship(
+    persons_relevance=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Filters kinship pairs of related persons by genotype identifiers for persons
+    who are relevant to a specific cohort table. Returns the maximal value of
+    kinship coefficient between any pairs of these persons.
+
+    arguments:
+        persons_relevance (list<str>): identifiers of persons who, on basis of
+            phenotypes and other filters, are relevant to a genetic analysis
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (float): maximal value of Kinship Coefficient between pairs of persons
+            who are relevant to analysis cohort
+
+    """
+
+    # Copy information.
+    persons_relevance = copy.deepcopy(persons_relevance)
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    # Filter kinship pairs to exclude any redundant pairs.
+    table_kinship_pairs.drop_duplicates(
+        subset=["ID1", "ID2",],
+        keep="first",
+        inplace=True,
+    )
+    # Filter kinship pairs to exclude persons who are not in the
+    # analysis-specific cohort table.
+    # Consider both persons from each kinship pair.
+    table_kinship_pairs.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs.set_index(
+        "ID1",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs.loc[
+        table_kinship_pairs.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs_relevance.set_index(
+        "ID2",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs_relevance.loc[
+        table_kinship_pairs_relevance.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Extract values of kinship coefficient.
+    array_kinship = copy.deepcopy(
+        table_kinship_pairs_relevance["Kinship"].dropna().to_numpy()
+    )
+    maximum_kinship = numpy.nanmax(array_kinship)
+    # Report.
+    if report:
+        # Organization information.
+        count_pairs_relevance = copy.deepcopy(
+            table_kinship_pairs_relevance.shape[0]
+        )
+        persons_kin = copy.deepcopy(
+            table_kinship_pairs_relevance["ID1"].to_list()
+        )
+        persons_kin_second = copy.deepcopy(
+            table_kinship_pairs_relevance["ID2"].to_list()
+        )
+        persons_kin.extend(persons_kin_second)
+        persons_kin = list(map(str, persons_kin)) # string
+        persons_kin = list(set(persons_kin)) # unique
+        count_persons_kin_relevance = len(persons_kin)
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "test_persons_relevance_maximal_kinship()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... kinship pairs ...")
+        print(
+            "pairs relevant to analysis cohort: " + str(count_pairs_relevance)
+        )
+        print("... persons ...")
+        print(
+            "relevant persons with kinship: " +
+            str(count_persons_kin_relevance)
+        )
+        utility.print_terminal_partition(level=5)
+        print("... maximal value of kinship coefficient in cohort ...")
+        print("maximal kinship: " + str(maximum_kinship))
+    # Return information.
+    return maximum_kinship
+
+
 def filter_table_phenotype_persons_by_kinship(
     name=None,
     priority_values=None,
@@ -676,6 +790,13 @@ def filter_table_phenotype_persons_by_kinship(
         )
         utility.print_terminal_partition(level=5)
         print("count_persons_keep: " + str(count_persons_keep))
+        # Test kinship filter.
+        persons_test = copy.deepcopy(table["IID"].to_list())
+        kinship_maximum = test_persons_relevance_maximal_kinship(
+            persons_relevance=persons_test,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+        )
         pass
     # Return information.
     return table
@@ -1509,6 +1630,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # TODO: TCW 24 November 2021
 # TODO: the cohort-specific ordinal representations of hormones are too complex
 # TODO: if used at all, these should be limited to a separate function in only a few cohorts...
+# TODO: Simplify the driver function and remove the cohort-specific ordinal cohorts
 
 
 def stratify_genotype_cohorts_by_phenotype_response(
