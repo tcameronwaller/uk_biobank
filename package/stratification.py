@@ -105,10 +105,10 @@ def initialize_directories(
         path_dock, "stratification", "hormones_logistic"
     )
     paths["bipolar_body_linear"] = os.path.join(
-        path_dock, "stratification", "bipolar_body_linear"
+        path_dock, "stratification", "body_bipolar_linear"
     )
     paths["bipolar_body_logistic"] = os.path.join(
-        path_dock, "stratification", "bipolar_body_logistic"
+        path_dock, "stratification", "body_bipolar_logistic"
     )
 
     # Remove previous files to avoid version or batch confusion.
@@ -128,10 +128,10 @@ def initialize_directories(
         path=paths["hormones_logistic"]
     )
     utility.create_directories(
-        path=paths["bipolar_body_linear"]
+        path=paths["body_bipolar_linear"]
     )
     utility.create_directories(
-        path=paths["bipolar_body_logistic"]
+        path=paths["body_bipolar_logistic"]
     )
 
     # Return information.
@@ -2946,25 +2946,25 @@ def stratify_genotype_cohorts_linear_set_hormones_proteins(
     records = list()
     # Select and organize variables across cohorts.
     dependences = [
-        "vitamin_d", #"vitamin_d_log",
-        "vitamin_d_imputation", #"vitamin_d_imputation_log",
-        "albumin", #"albumin_log",
-        "albumin_imputation", #"albumin_imputation_log",
-        #"steroid_globulin", #"steroid_globulin_log",
-        #"steroid_globulin_imputation", #"steroid_globulin_imputation_log",
-        "oestradiol", #"oestradiol_log",
-        "oestradiol_imputation", #"oestradiol_imputation_log",
-        "oestradiol_bioavailable", #"oestradiol_bioavailable_log",
-        "oestradiol_bioavailable_imputation",
+        #"vitamin_d", "vitamin_d_log",
+        #"vitamin_d_imputation", "vitamin_d_imputation_log",
+        #"albumin", "albumin_log",
+        #"albumin_imputation", "albumin_imputation_log",
+        "steroid_globulin", #"steroid_globulin_log",
+        "steroid_globulin_imputation", #"steroid_globulin_imputation_log",
+        #"oestradiol", "oestradiol_log",
+        #"oestradiol_imputation", "oestradiol_imputation_log",
+        #"oestradiol_bioavailable", "oestradiol_bioavailable_log",
+        #"oestradiol_bioavailable_imputation",
         #"oestradiol_bioavailable_imputation_log",
-        "oestradiol_free", #"oestradiol_free_log",
-        "oestradiol_free_imputation", #"oestradiol_free_imputation_log",
-        #"testosterone", #"testosterone_log",
-        #"testosterone_imputation", #"testosterone_imputation_log",
-        #"testosterone_bioavailable", #"testosterone_bioavailable_log",
+        #"oestradiol_free", "oestradiol_free_log",
+        #"oestradiol_free_imputation", "oestradiol_free_imputation_log",
+        "testosterone", #"testosterone_log",
+        "testosterone_imputation", #"testosterone_imputation_log",
+        "testosterone_bioavailable", #"testosterone_bioavailable_log",
         #"testosterone_bioavailable_imputation",
         #"testosterone_bioavailable_imputation_log",
-        #"testosterone_free", #"testosterone_free_log",
+        "testosterone_free", #"testosterone_free_log",
         #"testosterone_free_imputation", #"testosterone_free_imputation_log",
     ]
     for dependence in dependences:
@@ -5234,12 +5234,12 @@ def write_genotype_product(
         path_parent=paths["hormones_logistic"],
     )
     write_genotype_product_cohorts_models(
-        information=information["bipolar_body_linear"],
-        path_parent=paths["bipolar_body_linear"],
+        information=information["body_bipolar_linear"],
+        path_parent=paths["body_bipolar_linear"],
     )
     write_genotype_product_cohorts_models(
-        information=information["bipolar_body_logistic"],
-        path_parent=paths["bipolar_body_logistic"],
+        information=information["body_bipolar_logistic"],
+        path_parent=paths["body_bipolar_logistic"],
     )
     pass
 
