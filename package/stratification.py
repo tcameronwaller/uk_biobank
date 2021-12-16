@@ -2952,7 +2952,7 @@ def stratify_genotype_cohorts_linear_set_hormones_proteins(
         "testosterone_free", "testosterone_free_log",
         "testosterone_free_imputation", "testosterone_free_imputation_log",
     ]
-    for dependence in depedences:
+    for dependence in dependences:
         records_hormone = (
             stratify_genotype_cohorts_hormones_by_sex_menopause_age(
                 dependence=dependence,
