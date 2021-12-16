@@ -955,14 +955,24 @@ def report_kinship_filter_priority_selection(
         table_preference = table_valid.loc[
             (table_valid[priority_variable].isin(priority_values)), :
         ]
+        table_not_preference = table_valid.loc[
+            (~table_valid[priority_variable].isin(priority_values)), :
+        ]
         # Extract identifiers of genotypes for priority persons.
-        genotypes = copy.deepcopy(
+        genotypes_preference = copy.deepcopy(
             table_preference["IID"].to_list()
         )
-        genotypes = list(map(str, genotypes)) # string
-        genotypes = list(set(genotypes)) # unique
+        genotypes_preference = list(map(str, genotypes_preference)) # string
+        genotypes_preference = list(set(genotypes_preference)) # unique
+        genotypes_not_preference = copy.deepcopy(
+            table_not_preference["IID"].to_list()
+        )
+        genotypes_not_preference = list(map(str, genotypes_not_preference)) # string
+        genotypes_not_preference = list(set(genotypes_not_preference)) # unique
+
         # Count genotypes.
-        count_genotypes_priority = len(genotypes)
+        count_genotypes_priority = len(genotypes_preference)
+        count_genotypes_not_priority = len(genotypes_not_preference)
         # Report.
         if report:
             # Report.
@@ -972,6 +982,10 @@ def report_kinship_filter_priority_selection(
             print(
                 "Count of priority genotypes in table: " +
                 str(count_genotypes_priority)
+            )
+            print(
+                "Count of not priority genotypes in table: " +
+                str(count_genotypes_not_priority)
             )
             pass
         pass
