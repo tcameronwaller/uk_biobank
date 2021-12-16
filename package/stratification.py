@@ -2616,25 +2616,26 @@ def stratify_genotype_cohorts_hormones_by_sex_menopause_age(
     ))
     records.extend(records_novel)
 
-    # Cohorts with females in different stages before or after menopause.
-    records_novel = (
-        stratify_genotype_cohorts_hormones_by_female_menopause(
-            dependence=dependence,
-            table_kinship_pairs=table_kinship_pairs,
-            table=table,
-            report=report,
-    ))
-    records.extend(records_novel)
+    if False:
+        # Cohorts with females in different stages before or after menopause.
+        records_novel = (
+            stratify_genotype_cohorts_hormones_by_female_menopause(
+                dependence=dependence,
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=report,
+        ))
+        records.extend(records_novel)
 
-    # Cohorts with males in different tertiles by age.
-    records_novel = (
-        stratify_genotype_cohorts_hormones_by_male_age(
-            dependence=dependence,
-            table_kinship_pairs=table_kinship_pairs,
-            table=table,
-            report=report,
-    ))
-    records.extend(records_novel)
+        # Cohorts with males in different tertiles by age.
+        records_novel = (
+            stratify_genotype_cohorts_hormones_by_male_age(
+                dependence=dependence,
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=report,
+        ))
+        records.extend(records_novel)
 
     # Return information.
     return records
@@ -2931,26 +2932,26 @@ def stratify_genotype_cohorts_linear_set_hormones_proteins(
     records = list()
     # Select and organize variables across cohorts.
     dependences = [
-        "vitamin_d", "vitamin_d_log",
-        "vitamin_d_imputation", "vitamin_d_imputation_log",
-        "albumin", "albumin_log",
-        "albumin_imputation", "albumin_imputation_log",
-        "steroid_globulin", "steroid_globulin_log",
-        "steroid_globulin_imputation", "steroid_globulin_imputation_log",
-        "oestradiol", "oestradiol_log",
-        "oestradiol_imputation", "oestradiol_imputation_log",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_log",
+        "vitamin_d", #"vitamin_d_log",
+        "vitamin_d_imputation", #"vitamin_d_imputation_log",
+        "albumin", #"albumin_log",
+        "albumin_imputation", #"albumin_imputation_log",
+        "steroid_globulin", #"steroid_globulin_log",
+        "steroid_globulin_imputation", #"steroid_globulin_imputation_log",
+        "oestradiol", #"oestradiol_log",
+        "oestradiol_imputation", #"oestradiol_imputation_log",
+        "oestradiol_bioavailable", #"oestradiol_bioavailable_log",
         "oestradiol_bioavailable_imputation",
-        "oestradiol_bioavailable_imputation_log",
-        "oestradiol_free", "oestradiol_free_log",
-        "oestradiol_free_imputation", "oestradiol_free_imputation_log",
-        "testosterone", "testosterone_log",
-        "testosterone_imputation", "testosterone_imputation_log",
-        "testosterone_bioavailable", "testosterone_bioavailable_log",
+        #"oestradiol_bioavailable_imputation_log",
+        "oestradiol_free", #"oestradiol_free_log",
+        "oestradiol_free_imputation", #"oestradiol_free_imputation_log",
+        "testosterone", #"testosterone_log",
+        "testosterone_imputation", #"testosterone_imputation_log",
+        "testosterone_bioavailable", #"testosterone_bioavailable_log",
         "testosterone_bioavailable_imputation",
-        "testosterone_bioavailable_imputation_log",
-        "testosterone_free", "testosterone_free_log",
-        "testosterone_free_imputation", "testosterone_free_imputation_log",
+        #"testosterone_bioavailable_imputation_log",
+        "testosterone_free", #"testosterone_free_log",
+        "testosterone_free_imputation", #"testosterone_free_imputation_log",
     ]
     for dependence in dependences:
         records_hormone = (
