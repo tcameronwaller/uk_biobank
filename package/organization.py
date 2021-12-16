@@ -1258,19 +1258,22 @@ def determine_assessment_month_season(
     return value
 
 
-def determine_biological_sex_consensus(
+def determine_consensus_biological_sex_y(
     field_31=None,
     field_22001=None,
 ):
     """
     Determine consensus sex (biological sex, not social gender).
-    Prioritize interpretation of the genetic sex variable.
+    Prioritize interpretation of the genetic sex variable and use self report to
+    fill in missing values.
+
+    Use a logical binary encoding for presence of Y chromosome.
+    0 : female (false, XX)
+    1 : male (true, XY)
 
     Code is same as UK Biobank for data-field 31 and data-field 22001.
     0: "Female"
     1: "Male"
-
-    Conceptually, this code matches the presence of the Y chromosome.
 
     arguments:
         field_31 (float): UK Biobank field 31, person's self-reported sex
@@ -1283,11 +1286,11 @@ def determine_biological_sex_consensus(
 
     """
 
-    # Interpret days since previous menstruation.
+    # Interpret self report of biological sex.
     sex_self_report = interpret_sex_self_report(
         field_31=field_31,
     )
-    # Interpret whether person was experiencing menstruation period currently.
+    # Interpret genetic biological sex.
     sex_genetic = interpret_sex_genetic(
         field_22001=field_22001,
     )
@@ -1309,14 +1312,58 @@ def determine_biological_sex_consensus(
     return value
 
 
-def determine_sex_text(
-    sex=None,
+def determine_biological_sex_x(
+    sex_y=None,
+):
+    """
+    Determine biological sex, using an integer encoding for the count of X
+    chromosomes.
+    2 : female (XX)
+    1 : male (XY)
+
+    arguments:
+        sex_y (float): sex as logical presence of Y chromosome
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(sex_y)) and
+        ((sex_y == 0) or (sex_y == 1))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (sex_y == 0):
+            # sex_y: 0, "female"
+            # sex_x: 2, "female"
+            interpretation = 2
+        elif (sex_y == 1):
+            # sex_y: 1, "male"
+            # sex_x: 1, "male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return information.
+    return interpretation
+
+
+def determine_biological_sex_text(
+    sex_y=None,
 ):
     """
     Translate binary representation of sex to textual representation.
 
     arguments:
-        sex (float): binary representation of person's sex
+        sex_y (float): sex as logical presence of Y chromosome
 
     raises:
 
@@ -1327,19 +1374,19 @@ def determine_sex_text(
 
     # Determine whether the variable has a valid (non-missing) value.
     if (
-        (not pandas.isna(sex)) and
-        (
-            (sex == 0) or
-            (sex == 1)
-        )
+        (not pandas.isna(sex_y)) and
+        ((sex_y == 0) or (sex_y == 1))
     ):
         # The variable has a valid value.
-        if (sex == 0):
-            # "female"
+        if (sex_y == 0):
+            # sex_y: 0, "female"
             sex_text = "female"
-        elif (sex == 1):
-            # "male"
+        elif (sex_y == 1):
+            # sex_y: 1, "male"
             sex_text = "male"
+        else:
+            # Uninterpretable value
+            sex_text = "nan"
     else:
         # null
         sex_text = "nan"
@@ -2012,13 +2059,6 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
-# TODO: TCW 3 December 2021
-# TODO: "sex_text"
-# TODO: "sex_y"
-# TODO: "sex_x"
-# TODO: in documentation "reserve column name SEX for PLINK2 format"
-
-
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
@@ -2111,19 +2151,29 @@ def organize_assessment_basis_variables(
     )
 
     # Determine sex consensus between self-report and genotypic sex.
-    table["sex"] = table.apply(
+    # Reserve the variable names "sex" or "SEX" for recognition in PLINK2.
+    # Use logical binary representation of presence of Y chromosome.
+    table["sex_y"] = table.apply(
         lambda row:
-            determine_biological_sex_consensus(
+            determine_consensus_biological_sex_y(
                 field_31=row["31-0.0"],
                 field_22001=row["22001-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Use integer representation of count of X chromosomes.
+    table["sex_x"] = table.apply(
+        lambda row:
+            determine_biological_sex_x(
+                sex_y=row["sex_y"],
             ),
         axis="columns", # apply function to each row
     )
     # Determine text representation of person's sex.
     table["sex_text"] = table.apply(
         lambda row:
-            determine_sex_text(
-                sex=row["sex"],
+            determine_biological_sex_text(
+                sex_y=row["sex_y"],
             ),
         axis="columns", # apply function to each row
     )
@@ -2178,7 +2228,7 @@ def organize_assessment_basis_variables(
         "IID",
         "assessment_site", "assessment_region",
         "assessment_month", "assessment_month_order", "assessment_season",
-        "sex", "sex_text",
+        "sex_y", "sex_x", "sex_text",
         "age", "age_grade_female", "age_grade_male",
         "body", "body_grade_female", "body_grade_male", "body_log",
     ]
@@ -6649,7 +6699,7 @@ def interpret_import_bipolar_disorder_control(
             (0.5 <= import_bipolar_loose and import_bipolar_loose < 1.5) or
             (0.5 <= import_bipolar_strict and import_bipolar_strict < 1.5)
         ):
-            # Both definitions designate as "case".
+            # One or two definitions designate as "case".
             # 1: "case"
             value = 0
         else:
@@ -9692,7 +9742,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                     hormone="None... not specific",
                     variables_names_valid=[
                         "eid", "IID",
-                        "sex", "sex_text", "age", "body",
+                        "sex_y", "sex_x", "sex_text", "age", "body",
                         "alcohol_none",
                         alcoholism,
                     ],
@@ -9708,7 +9758,7 @@ def organize_report_cohorts_by_sex_alcoholism_split_hormone(
                         hormone=hormone,
                         variables_names_valid=[
                             "eid", "IID",
-                            "sex", "sex_text", "age", "body",
+                            "sex_y", "sex_x", "sex_text", "age", "body",
                             "alcohol_none",
                             alcoholism,
                             hormone,
@@ -10239,7 +10289,7 @@ def organize_hormone_female_export_table(
         columns_export = [
             #"eid",
             "IID",
-            "sex", "sex_text", "age", "body", "body_log",
+            "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
             "pregnancy",
             "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
             "menopause_binary", "menopause_ordinal",
