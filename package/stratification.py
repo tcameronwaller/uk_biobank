@@ -104,10 +104,10 @@ def initialize_directories(
     paths["hormones_logistic"] = os.path.join(
         path_dock, "stratification", "hormones_logistic"
     )
-    paths["bipolar_body_linear"] = os.path.join(
+    paths["body_bipolar_linear"] = os.path.join(
         path_dock, "stratification", "body_bipolar_linear"
     )
-    paths["bipolar_body_logistic"] = os.path.join(
+    paths["body_bipolar_logistic"] = os.path.join(
         path_dock, "stratification", "body_bipolar_logistic"
     )
 
