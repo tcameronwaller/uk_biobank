@@ -181,6 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         "table_linear_hormones_sex_age_menopause.tsv",
+        "table_linear_vitamin-d_sex_age_body.tsv",
         "table_linear_hormones_alcoholism_any.tsv",
         "table_linear_hormones_alcoholism_1.tsv",
         "table_linear_hormones_bipolar_loose.tsv",
@@ -300,6 +301,9 @@ def define_model_dependence_records_hormones():
 
     ]
     return records
+
+
+
 
 
 def drive_regressions_female_cohorts_models_hormones(
@@ -514,6 +518,7 @@ def drive_linear_regressions_cohorts_models_dependences(
         table=table,
     )
     cohorts_relevant = [
+        "female_male",
         "female",
         "female_premenopause",
         "female_perimenopause",
@@ -837,8 +842,12 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
+    # table_linear_vitamin-d_sex_age_body
+
     # Drive regressions.
     if True:
+        pass
+    if False:
         pail_bip_loose = drive_linear_regressions_cohorts_models_dependences(
             table=source["table_phenotypes"],
             table_cohort_model=(

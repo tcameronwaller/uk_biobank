@@ -3282,6 +3282,14 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
 
     """
 
+    # Organize concise name for phenotype response variable.
+    if "loose" in case_control:
+        case_control_abbreviation = "bipolar_loose"
+    elif "strict" in case_control:
+        case_control_abbreviation = "bipolar_strict"
+    else:
+        case_control_abbreviation = "unknown"
+
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
@@ -3294,7 +3302,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
         record["cohort_model"] = "all"
         record["dependence"] = case_control
         record["name"] = str(
-            "all_" + case_control
+            "all_" + case_control_abbreviation
         )
         record["name_table"] = str("table_" + record["name"])
         record["table"] = (
@@ -3328,7 +3336,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
     record["cohort_model"] = "white"
     record["dependence"] = case_control
     record["name"] = str(
-        "white_" + case_control
+        "white_" + case_control_abbreviation
     )
     record["name_table"] = str("table_" + record["name"])
     record["table"] = (
@@ -3362,7 +3370,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
     record["cohort_model"] = "white"
     record["dependence"] = case_control
     record["name"] = str(
-        "white_" + case_control + "_priority_case"
+        "white_" + case_control_abbreviation + "_priority_case"
     )
     record["name_table"] = str("table_" + record["name"])
     record["table"] = (
@@ -3652,6 +3660,17 @@ def stratify_set_primary_sex_age_body_menopause(
     table = table.copy(deep=True)
     # Collect records of information about each cohort and model.
     records = list()
+
+
+    record = dict()
+    record["name"] = "female_male"
+    record["cohort"] = "female_male"
+    record["cohort_model"] = "female_male"
+    record["category"] = "sex_together"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table
+    records.append(record)
 
     # Sex
 
