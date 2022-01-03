@@ -2320,8 +2320,7 @@ def report_genotype_arrays_batches(
     print("genotype array: Axiom")
     utility.print_terminal_partition(level=4)
     table_axiom = table.loc[
-        (
-            (table["genotype_array_axiom"] == 1), :
+        (table["genotype_array_axiom"] == 1), :
     ]
     count_axiom = copy_deepcopy(table_axiom.shape[0])
     print("records in genotype array: " + str(count_axiom))
@@ -2329,8 +2328,7 @@ def report_genotype_arrays_batches(
     print("genotype array: BiLEVE")
     utility.print_terminal_partition(level=4)
     table_bileve = table.loc[
-        (
-            (table["genotype_array_axiom"] == 0), :
+        (table["genotype_array_axiom"] == 0), :
     ]
     count_bileve = copy_deepcopy(table_bileve.shape[0])
     print("records in genotype array: " + str(count_bileve))
@@ -2344,8 +2342,7 @@ def report_genotype_arrays_batches(
             print("genotype batch: " + str(batch))
             utility.print_terminal_partition(level=5)
             table_batch = table.loc[
-                (
-                    (table["genotype_batch"] == batch), :
+                (table["genotype_batch"] == batch), :
             ]
             count_batch = copy_deepcopy(table_batch.shape[0])
             print("records in genotype batch: " + str(count_batch))
