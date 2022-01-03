@@ -124,7 +124,7 @@ def read_organize_uk_biobank_import_table(
     # Specify directories and files.
     path_table_import = os.path.join(
         path_dock, "access", "ukbiobank_import",
-        "waller_import_20211123.derived.csv.gz"
+        "waller_import_20220103.derived.csv.gz"
     )
     # Read information from file.
     table_import = pandas.read_csv(
@@ -140,10 +140,13 @@ def read_organize_uk_biobank_import_table(
     table_import = table_import.loc[
         :, table_import.columns.isin([
             "eid",
-            "icd_bipolar", "bipolar.diag2", "Smithbipolar", "SmithMood",
-            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc",
-            "antipsychotics", "antidepressants", "sleepmeds", "opioids",
-            "buprenorphine", "methadone", "lamotrigine", "lithium", "valproic_acid",
+            "icd_bipolar", "bipolar.diag2", "Smithbipolar",
+            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc", "icd_bipolar.cc",
+            "icd_dep", "icd_recdep", "broad_depression", "probable_mdd",
+            "dep.diag", "SmithMood",
+            #"antipsychotics", "antidepressants", "sleepmeds", "opioids",
+            #"buprenorphine", "methadone", "lamotrigine", "lithium",
+            #"valproic_acid",
         ])
     ]
     # Append prefix to names of columns.
@@ -388,9 +391,6 @@ def write_product(
 
 ###############################################################################
 # Procedure
-
-
-# TODO: new parameter for whether to read in and merge the import table...
 
 
 def execute_procedure(
