@@ -2334,7 +2334,7 @@ def report_genotype_arrays_batches(
     print("records in genotype array: " + str(count_bileve))
 
     # Extract unique batch identifiers.
-    if True:
+    if False:
         batches = list(set(table["genotype_batch"].to_list()))
         batches = list(filter(
             lambda batch: (batch != "nan"),

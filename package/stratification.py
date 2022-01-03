@@ -3059,12 +3059,6 @@ def stratify_genotype_cohorts_logistic_set_hormones_proteins(
     return records
 
 
-# TODO: TCW 30 December 2021
-# TODO: need to include variables for "assessment center" and "genotype batch"
-# TODO: probably individual variable names in addition to "prefixes"
-
-
-
 def stratify_linear_set_bipolar_body_by_bipolar(
     case_control=None,
     table_kinship_pairs=None,
@@ -3128,6 +3122,9 @@ def stratify_linear_set_bipolar_body_by_bipolar(
                 variables=[
                     "eid", "IID",
                     #"white_british",
+                    "54-0.0", "assessment_site",
+                    "22000-0.0",
+                    "genotype_array", "genotype_array_axiom", "genotype_batch",
                     "sex_y", "sex_x", "sex_text", "age",
                     "body", "body_log",
                     case_control,
@@ -3161,6 +3158,9 @@ def stratify_linear_set_bipolar_body_by_bipolar(
             variables=[
                 "eid", "IID",
                 "white_british",
+                "54-0.0", "assessment_site",
+                "22000-0.0",
+                "genotype_array", "genotype_array_axiom", "genotype_batch",
                 "sex_y", "sex_x", "sex_text", "age",
                 "body", "body_log",
                 case_control,
@@ -3193,6 +3193,9 @@ def stratify_linear_set_bipolar_body_by_bipolar(
             variables=[
                 "eid", "IID",
                 "white_british",
+                "54-0.0", "assessment_site",
+                "22000-0.0",
+                "genotype_array", "genotype_array_axiom", "genotype_batch",
                 "sex_y", "sex_x", "sex_text", "age",
                 "body", "body_log",
                 case_control,
@@ -3325,6 +3328,9 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
                 variables=[
                     "eid", "IID",
                     #"white_british",
+                    "54-0.0", "assessment_site",
+                    "22000-0.0",
+                    "genotype_array", "genotype_array_axiom", "genotype_batch",
                     "sex_y", "sex_x", "sex_text", "age",
                     "body", "body_log",
                     case_control,
@@ -3359,6 +3365,9 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
             variables=[
                 "eid", "IID",
                 "white_british",
+                "54-0.0", "assessment_site",
+                "22000-0.0",
+                "genotype_array", "genotype_array_axiom", "genotype_batch",
                 "sex_y", "sex_x", "sex_text", "age",
                 "body", "body_log",
                 case_control,
@@ -3393,6 +3402,9 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
             variables=[
                 "eid", "IID",
                 "white_british",
+                "54-0.0", "assessment_site",
+                "22000-0.0",
+                "genotype_array", "genotype_array_axiom", "genotype_batch",
                 "sex_y", "sex_x", "sex_text", "age",
                 "body", "body_log",
                 case_control,
