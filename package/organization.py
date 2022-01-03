@@ -2334,18 +2334,21 @@ def report_genotype_arrays_batches(
     print("records in genotype array: " + str(count_bileve))
 
     # Extract unique batch identifiers.
-    batches = list(set(table["genotype_batch"].to_list()))
-    # Iterate on batches.
-    for batch in batches:
-        if (not pandas.isna(batch)):
-            utility.print_terminal_partition(level=5)
-            print("genotype batch: " + str(batch))
-            utility.print_terminal_partition(level=5)
-            table_batch = table.loc[
-                (table["genotype_batch"] == batch), :
-            ]
-            count_batch = copy.deepcopy(table_batch.shape[0])
-            print("records in genotype batch: " + str(count_batch))
+    if True:
+        batches = list(set(table["genotype_batch"].to_list()))
+        batches_sort = sorted(batches, reverse=False)
+        # Iterate on batches.
+        for batch in batches_sort:
+            if (not pandas.isna(batch)):
+                utility.print_terminal_partition(level=5)
+                print("genotype batch: " + str(batch))
+                utility.print_terminal_partition(level=5)
+                table_batch = table.loc[
+                    (table["genotype_batch"] == batch), :
+                ]
+                count_batch = copy.deepcopy(table_batch.shape[0])
+                print("records in genotype batch: " + str(count_batch))
+                pass
             pass
         pass
     pass
