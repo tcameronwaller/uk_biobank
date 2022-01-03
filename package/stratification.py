@@ -1175,8 +1175,11 @@ def organize_phenotype_covariate_table_plink_format(
     Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
     columns in the sample table.
 
-    3. Sort column sequence.
-    PLINK requires FID and IID columns to come first.
+    3. If "SID", "PAT", and "MAT" are irrelevant, then omit these columns.
+    PLINK2 throws an error if these columns exist with empty values.
+
+    4. Sort column sequence.
+    PLINK2 requires FID and IID columns to come first.
 
     https://www.cog-genomics.org/plink/2.0/formats#cov
     Section: ".cov (covariate table)"
@@ -1292,9 +1295,9 @@ def organize_phenotype_covariate_table_plink_format(
     # Introduce family identifier.
     table["FID"] = table["IID"]
     # Introduce other PLINK2 columns.
-    table["SID"] = ""
-    table["PAT"] = ""
-    table["MAT"] = ""
+    #table["SID"] = ""
+    #table["PAT"] = ""
+    #table["MAT"] = ""
     columns_special = [
         "eid", "SEX", "MAT", "PAT", "SID", "IID", "FID",
     ]
@@ -1306,9 +1309,9 @@ def organize_phenotype_covariate_table_plink_format(
     ))
     columns_sequence.insert(0, "eid") # column 7
     columns_sequence.insert(0, "SEX") # column 6
-    columns_sequence.insert(0, "MAT") # column 5
-    columns_sequence.insert(0, "PAT") # column 4
-    columns_sequence.insert(0, "SID") # column 3
+    #columns_sequence.insert(0, "MAT") # column 5
+    #columns_sequence.insert(0, "PAT") # column 4
+    #columns_sequence.insert(0, "SID") # column 3
     columns_sequence.insert(0, "IID") # column 2
     columns_sequence.insert(0, "FID") # column 1
     table_columns = table.loc[
@@ -3054,6 +3057,12 @@ def stratify_genotype_cohorts_logistic_set_hormones_proteins(
             )
     # Return information.
     return records
+
+
+# TODO: TCW 30 December 2021
+# TODO: need to include variables for "assessment center" and "genotype batch"
+# TODO: probably individual variable names in addition to "prefixes"
+
 
 
 def stratify_linear_set_bipolar_body_by_bipolar(

@@ -207,12 +207,19 @@ def read_source_fields_codes_interpretations(
         path_dock, "parameters", "uk_biobank",
         "table_ukbiobank_field_55_code_interpretation.tsv"
     )
+    path_table_field_22000 = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_field_22000_code_interpretation.tsv"
+    )
+
     path_table_drug_class = os.path.join(
         path_dock, "parameters", "uk_biobank",
         "table_ukbiobank_drug_class_translation.tsv"
     )
 
     # Organize code interpretations.
+
+    # Data-field 54.
     table_field_54 = pandas.read_csv(
         path_table_field_54,
         sep="\t",
@@ -241,6 +248,7 @@ def read_source_fields_codes_interpretations(
         orient="index",
     )
 
+    # Data-field 55.
     table_field_55 = pandas.read_csv(
         path_table_field_55,
         sep="\t",
@@ -268,6 +276,37 @@ def read_source_fields_codes_interpretations(
         orient="index",
     )
 
+    # Data-field 22000.
+    table_field_22000 = pandas.read_csv(
+        path_table_field_22000,
+        sep="\t",
+        header=0,
+        dtype={
+            "code": "string",
+            "array": "string",
+            "interpretation": "string",
+            "coding": "string",
+            "meaning": "string",
+            "node_id": "string",
+            "parent_id": "string",
+        },
+    )
+    table_field_22000.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_field_22000.set_index(
+        "code",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    field_22000_codes_interpretations = table_field_22000.to_dict(
+        orient="index",
+    )
+
+    # Drug classes.
     table_drug_class = pandas.read_csv(
         path_table_drug_class,
         sep="\t",
@@ -292,15 +331,13 @@ def read_source_fields_codes_interpretations(
         orient="index",
     )
 
-
-
     # Compile and return information.
     return {
         "field_54": field_54_codes_interpretations,
         "field_55": field_55_codes_interpretations,
+        "field_22000": field_22000_codes_interpretations,
         "drug_class": drug_class_translations,
     }
-
 
 
 ##########
@@ -1117,6 +1154,106 @@ def interpret_body_mass_index(
     return interpretation
 
 
+def interpret_genotype_batch(
+    field_22000=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field 22000.
+
+    Data-Field "22000": "Genotype measurement batch"
+    UK Biobank data-coding "22000" for data-field "22000".
+
+    11 genotype batches correspond to "BiLEVE" genotype array.
+    95 genotype batches correspond to "Axiom" genotype array.
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_22000 (float): UK Biobank field 22000, genotype batch
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_22000)) and
+        (-12 <= field_22000 and field_22000 < 2001)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_22000 = copy.deepcopy(field_22000)
+        field_22000_string = str(int(field_22000))
+        if (field_22000_string in codes_interpretations.keys()):
+            interpretation = (
+                codes_interpretations[field_22000_string]["interpretation"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing or uninterpretable value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
+def interpret_genotype_array(
+    field_22000=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field 22000.
+
+    Data-Field "22000": "Genotype measurement batch"
+    UK Biobank data-coding "22000" for data-field "22000".
+
+    11 genotype batches correspond to "BiLEVE" genotype array.
+    95 genotype batches correspond to "Axiom" genotype array.
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_22000 (float): UK Biobank field 22000, genotype batch
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_22000)) and
+        (-12 <= field_22000 and field_22000 < 2001)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_22000 = copy.deepcopy(field_22000)
+        field_22000_string = str(int(field_22000))
+        if (field_22000_string in codes_interpretations.keys()):
+            interpretation = (
+                codes_interpretations[field_22000_string]["array"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing or uninterpretable value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
 def determine_assessment_site_category(
     field_54=None,
     codes_interpretations=None,
@@ -1256,6 +1393,104 @@ def determine_assessment_month_season(
     )
     # Return information.
     return value
+
+
+def determine_genotype_batch(
+    field_22000=None,
+    codes_interpretations=None,
+):
+    """
+    Determine genotype batch.
+
+    arguments:
+        field_22000 (float): UK Biobank field 22000, genotype batch
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_genotype_batch(
+        field_22000=field_22000,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_genotype_array(
+    field_22000=None,
+    codes_interpretations=None,
+):
+    """
+    Determine genotype array.
+
+    arguments:
+        field_22000 (float): UK Biobank field 22000, genotype batch
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_genotype_array(
+        field_22000=field_22000,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_genotype_array_axiom_logical_binary(
+    genotype_array=None,
+):
+    """
+    Determine whether genotype array was "Axiom" or "BiLEVE".
+
+    1: "Axiom"
+    0: "BiLEVE"
+
+    arguments:
+        genotype_array (str): name of genotype array, either "axiom" or "bileve"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(genotype_array)) and
+        ((genotype_array == "axiom") or (genotype_array == "bileve"))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (genotype_array == "axiom"):
+            interpretation = 1
+        elif (genotype_array == "bileve"):
+            interpretation = 0
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return information.
+    return interpretation
 
 
 def determine_consensus_biological_sex_y(
@@ -2059,6 +2294,66 @@ def define_ordinal_stratifications_by_sex_continuous_variables(
     return table_collection
 
 
+def report_genotype_arrays_batches(
+    table=None,
+):
+    """
+    Report counts of genotypes in each genotype array and genotype batch.
+
+    arguments:
+        table (object): Pandas data frame of features (columns) across
+            observations (rows)
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Report.
+    utility.print_terminal_partition(level=3)
+    print("report_genotype_arrays_batches")
+    # Summarize genotype arrays.
+    utility.print_terminal_partition(level=4)
+    print("genotype array: Axiom")
+    utility.print_terminal_partition(level=4)
+    table_axiom = table.loc[
+        (
+            (table["genotype_array_axiom"] == 1), :
+    ]
+    count_axiom = copy_deepcopy(table_axiom.shape[0])
+    print("records in genotype array: " + str(count_axiom))
+    utility.print_terminal_partition(level=4)
+    print("genotype array: BiLEVE")
+    utility.print_terminal_partition(level=4)
+    table_bileve = table.loc[
+        (
+            (table["genotype_array_axiom"] == 0), :
+    ]
+    count_bileve = copy_deepcopy(table_bileve.shape[0])
+    print("records in genotype array: " + str(count_bileve))
+
+    # Extract unique batch identifiers.
+    batches = list(set(table["genotype_batch"].to_list()))
+    # Iterate on batches.
+    for batch in batches:
+        if (not pandas.isna(batch)):
+            utility.print_terminal_partition(level=5)
+            print("genotype batch: " + str(batch))
+            utility.print_terminal_partition(level=5)
+            table_batch = table.loc[
+                (
+                    (table["genotype_batch"] == batch), :
+            ]
+            count_batch = copy_deepcopy(table_batch.shape[0])
+            print("records in genotype batch: " + str(count_batch))
+            pass
+        pass
+    pass
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
@@ -2209,12 +2504,37 @@ def organize_assessment_basis_variables(
         table=table,
     )
 
+    # Genotype arrays and batches.
+    table["genotype_batch"] = table.apply(
+        lambda row:
+            determine_genotype_batch(
+                field_22000=row["22000-0.0"],
+                codes_interpretations=source["field_22000"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["genotype_array"] = table.apply(
+        lambda row:
+            determine_genotype_array(
+                field_22000=row["22000-0.0"],
+                codes_interpretations=source["field_22000"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["genotype_array_axiom"] = table.apply(
+        lambda row:
+            determine_genotype_array_axiom_logical_binary(
+                genotype_array=row["genotype_array"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
     table_clean = table.copy(deep=True)
     table_clean.drop(
         labels=[
-            "31-0.0", "50-0.0", "54-0.0", "55-0.0",
+            "31-0.0", "50-0.0", "54-0.0", "55-0.0", "22000-0.0",
             "21001-0.0", "21002-0.0", "21022-0.0", "22001-0.0",
             "23104-0.0",
         ],
@@ -2243,6 +2563,8 @@ def organize_assessment_basis_variables(
         utility.print_terminal_partition(level=3)
         print(table_report)
         utility.print_terminal_partition(level=3)
+        # Genotype arrays and batches.
+        report_genotype_arrays_batches(table=table)
         # Variable types.
         utility.print_terminal_partition(level=2)
         print("After type conversion")
