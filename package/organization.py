@@ -2322,7 +2322,7 @@ def report_genotype_arrays_batches(
     table_axiom = table.loc[
         (table["genotype_array_axiom"] == 1), :
     ]
-    count_axiom = copy_deepcopy(table_axiom.shape[0])
+    count_axiom = copy.deepcopy(table_axiom.shape[0])
     print("records in genotype array: " + str(count_axiom))
     utility.print_terminal_partition(level=4)
     print("genotype array: BiLEVE")
@@ -2330,7 +2330,7 @@ def report_genotype_arrays_batches(
     table_bileve = table.loc[
         (table["genotype_array_axiom"] == 0), :
     ]
-    count_bileve = copy_deepcopy(table_bileve.shape[0])
+    count_bileve = copy.deepcopy(table_bileve.shape[0])
     print("records in genotype array: " + str(count_bileve))
 
     # Extract unique batch identifiers.
@@ -2344,7 +2344,7 @@ def report_genotype_arrays_batches(
             table_batch = table.loc[
                 (table["genotype_batch"] == batch), :
             ]
-            count_batch = copy_deepcopy(table_batch.shape[0])
+            count_batch = copy.deepcopy(table_batch.shape[0])
             print("records in genotype batch: " + str(count_batch))
             pass
         pass
