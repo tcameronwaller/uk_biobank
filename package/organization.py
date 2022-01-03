@@ -2332,7 +2332,6 @@ def report_genotype_arrays_batches(
     ]
     count_bileve = copy.deepcopy(table_bileve.shape[0])
     print("records in genotype array: " + str(count_bileve))
-    utility.print_terminal_partition(level=4)
 
     # Extract unique batch identifiers.
     if True:
@@ -2342,6 +2341,10 @@ def report_genotype_arrays_batches(
             batches
         ))
         batches_sort = sorted(batches, reverse=False)
+        count_batches = len(batches_sort)
+        utility.print_terminal_partition(level=4)
+        print("count of genotype batches : " + str(count_batches))
+        utility.print_terminal_partition(level=4)
         # Iterate on batches.
         for batch in batches_sort:
             if (not pandas.isna(batch)):
