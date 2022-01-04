@@ -7001,6 +7001,8 @@ def translate_import_bipolar_disorder_boolean(
     return value
 
 
+
+
 def interpret_import_bipolar_disorder_case(
     import_bipolar_disorder=None,
 ):
@@ -7258,23 +7260,15 @@ def organize_psychology_variables(
     # Determine whether persons qualify as cases or controls for bipolar
     # disorder.
     # Import definitions from Brandon J. Coombes.
-    table["import_icd_bipolar_binary"] = table.apply(
-        lambda row:
-            translate_import_bipolar_disorder_boolean(
-                import_bipolar_disorder=row["import_icd_bipolar"],
-            ),
-        axis="columns", # apply function to each row
-    )
     # Convert variable types.
     columns_type = [
         "import_bipolar.cc",
-        "import_icd_bipolar_binary",
+        "import_icd_bipolar.cc",
     ]
     table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
         table=table,
     )
-
     table["bipolar_case_loose"] = table.apply(
         lambda row:
             interpret_import_bipolar_disorder_case(
@@ -7285,7 +7279,7 @@ def organize_psychology_variables(
     table["bipolar_case_strict"] = table.apply(
         lambda row:
             interpret_import_bipolar_disorder_case(
-                import_bipolar_disorder=row["import_icd_bipolar_binary"],
+                import_bipolar_disorder=row["import_icd_bipolar.cc"],
             ),
         axis="columns", # apply function to each row
     )
