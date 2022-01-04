@@ -6957,6 +6957,44 @@ def determine_neuroticism(
     return value
 
 
+def translate_import_binary_to_boolean(
+    import_binary=None,
+):
+    """
+    Translate Boolean import variable to binary.
+
+    arguments:
+        import_boolean (str or bool): import Boolean variable
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(import_binary)) and
+        (-0.5 <= float(import_binary) and float(import_binary) < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= float(import_binary) and float(import_binary) < 0.5):
+            # 0: "control"
+            value = "FALSE"
+        elif (0.5 <= float(import_binary) and float(import_binary) < 1.5):
+            # 1: "case"
+            value = "TRUE"
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 def translate_import_boolean_to_binary(
     import_boolean=None,
 ):
@@ -7289,11 +7327,24 @@ def organize_psychology_variables(
         columns=["neuroticism"],
         table=table,
     )
+
+
+    # "import_bipolar.cc", "import_icd_bipolar.cc",
+
     # Import case definitions from Brandon J. Coombes for Bipolar Disorder and
     # Major Depressive Disorder.
+    # Convert format of variable so that it is consistent with the others.
+    table["import_icd_bipolar.cc_boolean"] = table.apply(
+        lambda row:
+            translate_import_binary_to_boolean(
+                import_binary=row["import_bipolar.cc"],
+            ),
+        axis="columns", # apply function to each row
+    )
     columns_import = [
         "import_broad_depression", "import_probable_mdd",
-        "import_bipolar", "import_icd_bipolar",
+        #"import_bipolar", "import_icd_bipolar",
+        "import_bipolar.cc", "import_icd_bipolar.cc",
     ]
     table = import_disorder_case_definitions(
         columns_import=columns_import,
@@ -7303,8 +7354,8 @@ def organize_psychology_variables(
     translations = dict()
     translations["import_broad_depression_read"] = "depression_case_loose"
     translations["import_probable_mdd_read"] = "depression_case_strict"
-    translations["import_bipolar_read"] = "bipolar_case_loose"
-    translations["import_icd_bipolar_read"] = "bipolar_case_strict"
+    translations["import_bipolar.cc_read"] = "bipolar_case_loose"
+    translations["import_icd_bipolar.cc_read"] = "bipolar_case_strict"
     table.rename(
         columns=translations,
         inplace=True,

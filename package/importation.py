@@ -141,7 +141,7 @@ def read_organize_uk_biobank_import_table(
         :, table_import.columns.isin([
             "eid",
             #"bipolar.diag2", "Smithbipolar", "MHQ.bipolar.Definition",
-            #"bipolar.cc", "icd_bipolar.cc",
+            "bipolar.cc", "icd_bipolar.cc",
             "icd_bipolar", "bipolar",
             #"icd_dep", "icd_recdep", "dep.diag", "SmithMood",
             "broad_depression", "probable_mdd",
