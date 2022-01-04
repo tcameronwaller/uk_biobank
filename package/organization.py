@@ -7016,7 +7016,7 @@ def translate_import_boolean_to_binary(
     if (
         (not pandas.isna(import_boolean))
         (str(import_boolean) != "<NA>") and
-        (str(import_boolean) == "TRUE") or (str(import_binary) == "FALSE")
+        (str(import_boolean) == "TRUE") or (str(import_boolean) == "FALSE")
     ):
         # The variable has a valid value.
         if (str(import_boolean) == "FALSE"):
