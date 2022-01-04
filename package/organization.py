@@ -6896,7 +6896,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 #    )
 
 
-
 def interpret_neuroticism(
     field_20127=None,
 ):

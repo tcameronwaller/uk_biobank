@@ -3108,7 +3108,7 @@ def stratify_linear_set_bipolar_body_by_bipolar(
         record["cohort_model"] = "all_bipolar_control"
         record["dependence"] = "body"
         record["name"] = str(
-            "all_" + case_control_abbreviation + "_control"
+            "all_" + case_control_abbreviation + "_control_body"
         )
         record["name_table"] = str("table_" + record["name"])
         record["table"] = (
@@ -3314,7 +3314,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
         record["cohort_model"] = "all"
         record["dependence"] = case_control
         record["name"] = str(
-            "all_" + case_control_abbreviation
+            "all_" + case_control_abbreviation + "_control_case"
         )
         record["name_table"] = str("table_" + record["name"])
         record["table"] = (
@@ -3351,7 +3351,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
     record["cohort_model"] = "white"
     record["dependence"] = case_control
     record["name"] = str(
-        "white_" + case_control_abbreviation
+        "white_" + case_control_abbreviation + "_control_case"
     )
     record["name_table"] = str("table_" + record["name"])
     record["table"] = (
@@ -3388,7 +3388,7 @@ def stratify_logistic_set_bipolar_body_by_bipolar(
     record["cohort_model"] = "white"
     record["dependence"] = case_control
     record["name"] = str(
-        "white_" + case_control_abbreviation + "_priority_case"
+        "white_" + case_control_abbreviation + "_control_case_priority_case"
     )
     record["name_table"] = str("table_" + record["name"])
     record["table"] = (
