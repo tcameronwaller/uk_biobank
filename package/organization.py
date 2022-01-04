@@ -6897,6 +6897,69 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 
 
 
+def interpret_neuroticism(
+    field_20127=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 20127.
+
+    Accommodate inexact float values.
+
+    Note:
+
+    arguments:
+        field_20127 (float): UK Biobank field 20127, neuroticism
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_20127)) and
+        (0 <= field_20127 and field_20127 < 13)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        interpretation = float(field_20127)
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def determine_neuroticism(
+    field_20127=None,
+):
+    """
+    Determine neuroticism score.
+
+    arguments:
+        field_20127 (float): UK Biobank field 20127, neuroticism
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_neuroticism(
+        field_20127=field_20127,
+    )
+    # Return information.
+    return value
+
+
+
+
+
 def translate_import_bipolar_disorder_boolean(
     import_bipolar_disorder=None,
 ):
@@ -7141,6 +7204,10 @@ def determine_bipolar_disorder_control_case(
     return value
 
 
+# TODO: TCW 3 January 2022
+# TODO: derive "broad" and "probable" depression from Coombes' variables...
+
+
 def organize_psychology_variables(
     table=None,
     path_dock=None,
@@ -7171,32 +7238,26 @@ def organize_psychology_variables(
         path_dock=path_dock,
     )
 
-    # Translate column names.
-    translations = dict()
-    translations["20127-0.0"] = "neuroticism"
-    table.rename(
-        columns=translations,
-        inplace=True,
-    )
-    # Convert variable types.
-    columns_type = [
-        "neuroticism",
-        #"import_bipolar.cc",
-        #"import_icd_bipolar",
-    ]
-    table = utility.convert_table_columns_variables_types_float(
-        columns=columns_type,
-        table=table,
+    # Neuroticism score.
+    table["neuroticism"] = table.apply(
+        lambda row:
+            determine_neuroticism(
+                field_20127=row["20127-0.0"],
+            ),
+        axis="columns", # apply function to each row
     )
     # Transform variables' values to normalize distributions.
     table = utility.transform_normalize_table_continuous_ratio_variables(
         columns=["neuroticism"],
         table=table,
     )
+
+    # TODO: TCW 3 January 2022
+    # TODO: switch to use Coombes' variable "icd_bipolar.cc"
+
     # Determine whether persons qualify as cases or controls for bipolar
     # disorder.
     # Import definitions from Brandon J. Coombes.
-
     table["import_icd_bipolar_binary"] = table.apply(
         lambda row:
             translate_import_bipolar_disorder_boolean(
@@ -7253,6 +7314,9 @@ def organize_psychology_variables(
             ),
         axis="columns", # apply function to each row
     )
+
+
+    # "icd_dep", "icd_recdep", "broad_depression", "probable_mdd",
 
 
     # Determine categorical classes of psychotropic drugs (medications).
