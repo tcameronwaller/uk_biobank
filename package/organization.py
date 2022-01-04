@@ -2436,23 +2436,23 @@ def organize_assessment_basis_variables(
     )
 
     # Create binary indicators of categories and reduce their dimensionality.
-    table = create_reduce_categorical_variable_indicators(
-        table=table,
-        index="eid",
-        column="assessment_site",
-        prefix="site",
-        separator="_",
-        report=True,
-    )
-    table = create_reduce_categorical_variable_indicators(
-        table=table,
-        index="eid",
-        column="assessment_month",
-        prefix="month",
-        separator="_",
-        report=True,
-    )
-
+    if False:
+        table = create_reduce_categorical_variable_indicators(
+            table=table,
+            index="eid",
+            column="assessment_site",
+            prefix="site",
+            separator="_",
+            report=True,
+        )
+        table = create_reduce_categorical_variable_indicators(
+            table=table,
+            index="eid",
+            column="assessment_month",
+            prefix="month",
+            separator="_",
+            report=True,
+        )
     # Determine sex consensus between self-report and genotypic sex.
     # Reserve the variable names "sex" or "SEX" for recognition in PLINK2.
     # Use logical binary representation of presence of Y chromosome.
