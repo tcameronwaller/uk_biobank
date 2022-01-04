@@ -140,10 +140,11 @@ def read_organize_uk_biobank_import_table(
     table_import = table_import.loc[
         :, table_import.columns.isin([
             "eid",
-            "icd_bipolar", "bipolar.diag2", "Smithbipolar",
-            "MHQ.bipolar.Definition", "bipolar", "bipolar.cc", "icd_bipolar.cc",
-            "icd_dep", "icd_recdep", "broad_depression", "probable_mdd",
-            "dep.diag", "SmithMood",
+            #"bipolar.diag2", "Smithbipolar", "MHQ.bipolar.Definition",
+            #"bipolar.cc", "icd_bipolar.cc",
+            "icd_bipolar", "bipolar",
+            #"icd_dep", "icd_recdep", "dep.diag", "SmithMood",
+            "broad_depression", "probable_mdd",
             #"antipsychotics", "antidepressants", "sleepmeds", "opioids",
             #"buprenorphine", "methadone", "lamotrigine", "lithium",
             #"valproic_acid",

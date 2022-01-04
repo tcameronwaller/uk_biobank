@@ -6957,38 +6957,31 @@ def determine_neuroticism(
     return value
 
 
-
-
-
-def translate_import_bipolar_disorder_boolean(
-    import_bipolar_disorder=None,
+def translate_import_boolean_to_binary(
+    import_boolean=None,
 ):
     """
-    Intepret import variable for bipolar disorder cases and controls.
-
-    Accommodate inexact float values.
+    Translate Boolean import variable to binary.
 
     arguments:
-        import_bipolar_disorder (str or bool): import variable definition
-            indicator of bipolar disorder case or control status from Brandon J.
-            Coombes
+        import_boolean (str or bool): import Boolean variable
 
     raises:
 
     returns:
-        (bool): interpretation value
+        (float): interpretation value
 
     """
 
     # Interpret field code.
     if (
-        (not pandas.isna(import_bipolar_disorder))
+        (not pandas.isna(import_boolean))
     ):
         # The variable has a valid value.
-        if (str(import_bipolar_disorder) == "FALSE"):
+        if (str(import_boolean) == "FALSE"):
             # 0: "control"
             value = 0
-        elif (str(import_bipolar_disorder) == "TRUE"):
+        elif (str(import_boolean) == "TRUE"):
             # 1: "case"
             value = 1
         else:
@@ -7001,19 +6994,16 @@ def translate_import_bipolar_disorder_boolean(
     return value
 
 
-
-
-def interpret_import_bipolar_disorder_case(
-    import_bipolar_disorder=None,
+def interpret_import_binary_disorder_case(
+    import_binary_disorder=None,
 ):
     """
-    Intepret import variable for bipolar disorder cases and controls.
+    Intepret import binary variable for case definition.
 
     Accommodate inexact float values.
 
     arguments:
-        import_bipolar_disorder (float): import variable definition indicator of
-            bipolar disorder case or control status from Brandon J. Coombes
+        import_binary_disorder (float): import binary variable case definition
 
     raises:
 
@@ -7026,14 +7016,14 @@ def interpret_import_bipolar_disorder_case(
 
     # Interpret field code.
     if (
-        (not pandas.isna(import_bipolar_disorder)) and
-        (-0.5 <= import_bipolar_disorder and import_bipolar_disorder < 1.5)
+        (not pandas.isna(import_binary_disorder)) and
+        (-0.5 <= import_binary_disorder and import_binary_disorder < 1.5)
     ):
         # The variable has a valid value.
-        if (-0.5 <= import_bipolar_disorder and import_bipolar_disorder < 0.5):
+        if (-0.5 <= import_binary_disorder and import_binary_disorder < 0.5):
             # 0: "control"
             value = 0
-        elif (0.5 <= import_bipolar_disorder and import_bipolar_disorder < 1.5):
+        elif (0.5 <= import_binary_disorder and import_binary_disorder < 1.5):
             # 1: "case"
             value = 1
         else:
@@ -7259,11 +7249,20 @@ def organize_psychology_variables(
 
     # Determine whether persons qualify as cases or controls for bipolar
     # disorder.
+    # Convert Boolean variables to binary.
+    table["import_icd_bipolar.cc_binary"] = table.apply(
+        lambda row:
+            translate_import_boolean_to_binary(
+                import_boolean=row["import_icd_bipolar.cc"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Import definitions from Brandon J. Coombes.
     # Convert variable types.
     columns_type = [
         "import_bipolar.cc",
-        "import_icd_bipolar.cc",
+        "import_icd_bipolar.cc_binary",
     ]
     table = utility.convert_table_columns_variables_types_float(
         columns=columns_type,
@@ -7271,15 +7270,15 @@ def organize_psychology_variables(
     )
     table["bipolar_case_loose"] = table.apply(
         lambda row:
-            interpret_import_bipolar_disorder_case(
-                import_bipolar_disorder=row["import_bipolar.cc"],
+            interpret_import_binary_disorder_case(
+                import_binary_disorder=row["import_bipolar.cc"],
             ),
         axis="columns", # apply function to each row
     )
     table["bipolar_case_strict"] = table.apply(
         lambda row:
-            interpret_import_bipolar_disorder_case(
-                import_bipolar_disorder=row["import_icd_bipolar.cc"],
+            interpret_import_binary_disorder_case(
+                import_binary_disorder=row["import_icd_bipolar.cc_binary"],
             ),
         axis="columns", # apply function to each row
     )
