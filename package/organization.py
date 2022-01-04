@@ -7343,7 +7343,7 @@ def organize_psychology_variables(
     )
     columns_import = [
         "import_broad_depression", "import_probable_mdd",
-        #"import_bipolar", "import_icd_bipolar",
+        "import_bipolar", "import_icd_bipolar",
         "import_bipolar.cc_boolean", "import_icd_bipolar.cc",
     ]
     table = import_disorder_case_definitions(
@@ -7354,8 +7354,12 @@ def organize_psychology_variables(
     translations = dict()
     translations["import_broad_depression_read"] = "depression_case_loose"
     translations["import_probable_mdd_read"] = "depression_case_strict"
-    translations["import_bipolar.cc_boolean_read"] = "bipolar_case_loose"
-    translations["import_icd_bipolar.cc_read"] = "bipolar_case_strict"
+    translations["import_bipolar_read"] = "bipolar_case_loose"
+    translations["import_icd_bipolar_read"] = "bipolar_case_strict"
+
+    #translations["import_bipolar.cc_boolean_read"] = "bipolar_case_loose"
+    #translations["import_icd_bipolar.cc_read"] = "bipolar_case_strict"
+
     table.rename(
         columns=translations,
         inplace=True,
