@@ -7358,7 +7358,6 @@ def organize_psychology_variables(
     ###translations["import_icd_bipolar_read"] = "bipolar_case_strict"
     translations["import_bipolar.cc_boolean_read"] = "bipolar_case_loose"
     translations["import_icd_bipolar.cc_read"] = "bipolar_case_strict"
-
     table.rename(
         columns=translations,
         inplace=True,
