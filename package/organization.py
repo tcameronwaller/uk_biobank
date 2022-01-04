@@ -7014,7 +7014,7 @@ def translate_import_boolean_to_binary(
 
     # Interpret field code.
     if (
-        (not pandas.isna(import_boolean))
+        (not pandas.isna(import_boolean)) and
         (str(import_boolean) != "<NA>") and
         ((str(import_boolean) == "TRUE") or (str(import_boolean) == "FALSE"))
     ):
