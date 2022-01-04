@@ -6920,7 +6920,7 @@ def interpret_neuroticism(
     # Interpret field code.
     if (
         (not pandas.isna(field_20127)) and
-        (0 <= field_20127 and field_20127 < 13)
+        (0 <= float(field_20127) and float(field_20127) < 13)
     ):
         # The variable has a valid value.
         # Interpret the value.
