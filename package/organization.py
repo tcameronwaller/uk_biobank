@@ -7000,6 +7000,9 @@ def interpret_import_binary_disorder_case(
     """
     Intepret import binary variable for case definition.
 
+    1: case
+    0: not case
+
     Accommodate inexact float values.
 
     arguments:
@@ -7036,21 +7039,69 @@ def interpret_import_binary_disorder_case(
     return value
 
 
-def interpret_import_bipolar_disorder_control(
-    import_bipolar_loose=None,
-    import_bipolar_strict=None,
+def import_disorder_case_definitions(
+    columns_import=None,
+    table=None,
 ):
     """
-    Intepret import variable for bipolar disorder cases and controls.
-
-    Accommodate inexact float values.
+    Organizes imputation of missing measurements for hormones.
 
     arguments:
-        import_bipolar_loose (float): import loose variable definition indicator
-            of bipolar disorder case or control status from Brandon J. Coombes
-        import_bipolar_strict (float): import strict variable definition
-            indicator of bipolar disorder case or control status from Brandon J.
-            Coombes
+        columns_import (list<dict>): names of import columns for Boolean
+            disorder case definitions
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Translate import Boolean columns to binary.
+    for column_import in columns_import:
+        # Organize variable names.
+        name_binary = str(column_import + "_binary")
+        name_read = str(column_import + "_read")
+        # Convert Boolean variables to binary.
+        table[name_binary] = table.apply(
+            lambda row:
+                translate_import_boolean_to_binary(
+                    import_boolean=row[column_import],
+                ),
+            axis="columns", # apply function to each row
+        )
+        # Interpret case definition.
+        table[name_read] = table.apply(
+            lambda row:
+                interpret_import_binary_disorder_case(
+                    import_binary_disorder=row[name_binary],
+                ),
+            axis="columns", # apply function to each row
+        )
+        pass
+    # Return information.
+    return table
+
+
+def determine_loose_strict_disorder_control(
+    case_loose=None,
+    case_strict=None,
+):
+    """
+    Determine controls who are cases neither by loose nor strict definitions.
+
+    1: control
+    0: not control
+
+    arguments:
+        case_loose (float): loose case definition
+        case_strict (float): strict case definition
 
     raises:
 
@@ -7062,30 +7113,30 @@ def interpret_import_bipolar_disorder_control(
     # Interpret field code.
     if (
         (
-            (not pandas.isna(import_bipolar_loose)) and
-            (-0.5 <= import_bipolar_loose and import_bipolar_loose < 1.5)
+            (not pandas.isna(case_loose)) and
+            ((case_loose == 0) or (case_loose == 1))
         ) and
         (
-            (not pandas.isna(import_bipolar_strict)) and
-            (-0.5 <= import_bipolar_strict and import_bipolar_strict < 1.5)
+            (not pandas.isna(case_strict)) and
+            ((case_strict == 0) or (case_strict == 1))
         )
     ):
         # Require both loose and strict definitions to be non-missing and have
         # interpretable values.
         # The variable has a valid value.
         if (
-            (-0.5 <= import_bipolar_loose and import_bipolar_loose < 0.5) and
-            (-0.5 <= import_bipolar_strict and import_bipolar_strict < 0.5)
+            (case_loose == 0) and
+            (case_strict == 0)
         ):
-            # Both definitions designate as "control".
-            # 0: "control"
+            # Both definitions designate as "not case".
+            # Control.
             value = 1
         elif (
-            (0.5 <= import_bipolar_loose and import_bipolar_loose < 1.5) or
-            (0.5 <= import_bipolar_strict and import_bipolar_strict < 1.5)
+            (case_loose == 1) or
+            (case_strict == 1)
         ):
             # One or two definitions designate as "case".
-            # 1: "case"
+            # Not control.
             value = 0
         else:
             # uninterpretable
@@ -7140,13 +7191,12 @@ def organize_psychotropic_drug_class_categories(
     return table
 
 
-def determine_bipolar_disorder_control_case(
+def determine_disorder_control_case_combination(
     control=None,
     case=None,
 ):
     """
-    Determines whether person qualifies as a control or case for Bipolar
-    Disorder.
+    Determines whether person qualifies as a control or case for a disorder.
 
     NA: missing value indicates neither control nor case
     0: control
@@ -7175,7 +7225,7 @@ def determine_bipolar_disorder_control_case(
             (case == 0)
         )
     ):
-        # Person qualifies as a control.
+        # Control.
         value = 0
     elif (
         (
@@ -7187,17 +7237,13 @@ def determine_bipolar_disorder_control_case(
             (control == 0)
         )
     ):
-        # Person qualifies as a case.
+        # Case.
         value = 1
     else:
         # Missing information.
         value = float("nan")
     # Return information.
     return value
-
-
-# TODO: TCW 3 January 2022
-# TODO: derive "broad" and "probable" depression from Coombes' variables...
 
 
 def organize_psychology_variables(
@@ -7243,57 +7289,65 @@ def organize_psychology_variables(
         columns=["neuroticism"],
         table=table,
     )
-
-    # TODO: TCW 3 January 2022
-    # TODO: switch to use Coombes' variable "icd_bipolar.cc"
-
-    # Determine whether persons qualify as cases or controls for bipolar
-    # disorder.
-    # Convert Boolean variables to binary.
-    table["import_icd_bipolar.cc_binary"] = table.apply(
-        lambda row:
-            translate_import_boolean_to_binary(
-                import_boolean=row["import_icd_bipolar.cc"],
-            ),
-        axis="columns", # apply function to each row
-    )
-
-    # Import definitions from Brandon J. Coombes.
-    # Convert variable types.
-    columns_type = [
-        "import_bipolar.cc",
-        "import_icd_bipolar.cc_binary",
+    # Import case definitions from Brandon J. Coombes for Bipolar Disorder and
+    # Major Depressive Disorder.
+    columns_import = [
+        "import_broad_depression", "import_probable_mdd",
+        "import_bipolar", "import_icd_bipolar",
     ]
-    table = utility.convert_table_columns_variables_types_float(
-        columns=columns_type,
+    table = import_disorder_case_definitions(
+        columns_import=columns_import,
         table=table,
     )
-    table["bipolar_case_loose"] = table.apply(
-        lambda row:
-            interpret_import_binary_disorder_case(
-                import_binary_disorder=row["import_bipolar.cc"],
-            ),
-        axis="columns", # apply function to each row
+    # Translate column names.
+    translations = dict()
+    translations["import_broad_depression_read"] = "depression_case_loose"
+    translations["import_probable_mdd_read"] = "depression_case_strict"
+    translations["import_bipolar_read"] = "bipolar_case_loose"
+    translations["import_icd_bipolar_read"] = "bipolar_case_strict"
+    table.rename(
+        columns=translations,
+        inplace=True,
     )
-    table["bipolar_case_strict"] = table.apply(
+    # Determine controls for Major Depressive Disorder and Bipolar Disorder.
+    table["depression_control"] = table.apply(
         lambda row:
-            interpret_import_binary_disorder_case(
-                import_binary_disorder=row["import_icd_bipolar.cc_binary"],
+            determine_loose_strict_disorder_control(
+                case_loose=row["depression_case_loose"],
+                case_strict=row["depression_case_strict"],
             ),
         axis="columns", # apply function to each row
     )
     table["bipolar_control"] = table.apply(
         lambda row:
-            interpret_import_bipolar_disorder_control(
-                import_bipolar_loose=row["import_bipolar.cc"],
-                import_bipolar_strict=row["import_icd_bipolar_binary"],
+            determine_loose_strict_disorder_control(
+                case_loose=row["bipolar_case_loose"],
+                case_strict=row["bipolar_case_strict"],
             ),
         axis="columns", # apply function to each row
     )
+
+
     # Organize case-control variables.
+    table["depression_control_case_loose"] = table.apply(
+        lambda row:
+            determine_disorder_control_case_combination(
+                control=row["depression_control"],
+                case=row["depression_case_loose"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["depression_control_case_strict"] = table.apply(
+        lambda row:
+            determine_disorder_control_case_combination(
+                control=row["depression_control"],
+                case=row["depression_case_strict"],
+            ),
+        axis="columns", # apply function to each row
+    )
     table["bipolar_control_case_loose"] = table.apply(
         lambda row:
-            determine_bipolar_disorder_control_case(
+            determine_disorder_control_case_combination(
                 control=row["bipolar_control"],
                 case=row["bipolar_case_loose"],
             ),
@@ -7301,16 +7355,12 @@ def organize_psychology_variables(
     )
     table["bipolar_control_case_strict"] = table.apply(
         lambda row:
-            determine_bipolar_disorder_control_case(
+            determine_disorder_control_case_combination(
                 control=row["bipolar_control"],
                 case=row["bipolar_case_strict"],
             ),
         axis="columns", # apply function to each row
     )
-
-
-    # "icd_dep", "icd_recdep", "broad_depression", "probable_mdd",
-
 
     # Determine categorical classes of psychotropic drugs (medications).
     # Define names of classes of psychotropic drugs as defined by Brandon J.
@@ -7328,9 +7378,8 @@ def organize_psychology_variables(
     table_clean.drop(
         labels=[
             #"20127-0.0",
-            "import_icd_bipolar", "import_bipolar.diag2", "import_Smithbipolar",
-            "import_SmithMood", "import_MHQ.bipolar.Definition",
-            "import_bipolar", "import_bipolar.cc",
+            "import_broad_depression", "import_probable_mdd",
+            "import_bipolar", "import_icd_bipolar"
         ],
         axis="columns",
         inplace=True
@@ -7350,8 +7399,36 @@ def organize_psychology_variables(
     if report:
         # Column name translations.
         utility.print_terminal_partition(level=2)
-        print("report: organize_neuroticism_variables()")
+        print("report: organize_psychology_variables()")
 
+        count_depression_control_loose = int(
+            table.loc[
+                (
+                    (table["depression_control_case_loose"] == 0)
+                ), :
+            ].shape[0]
+        )
+        count_depression_case_loose = int(
+            table.loc[
+                (
+                    (table["depression_control_case_loose"] == 1)
+                ), :
+            ].shape[0]
+        )
+        count_depression_control_strict = int(
+            table.loc[
+                (
+                    (table["depression_control_case_strict"] == 0)
+                ), :
+            ].shape[0]
+        )
+        count_depression_case_strict = int(
+            table.loc[
+                (
+                    (table["depression_control_case_strict"] == 1)
+                ), :
+            ].shape[0]
+        )
         count_bipolar_control_loose = int(
             table.loc[
                 (
@@ -7381,6 +7458,16 @@ def organize_psychology_variables(
             ].shape[0]
         )
         # Categorical ancestry and ethnicity.
+        utility.print_terminal_partition(level=2)
+        print("Major Depressive Disorder cases and controls")
+        utility.print_terminal_partition(level=5)
+        print("Loose definition")
+        print("controls: " + str(count_depression_control_loose))
+        print("cases: " + str(count_depression_case_loose))
+        utility.print_terminal_partition(level=5)
+        print("Strict definition")
+        print("controls: " + str(count_depression_control_strict))
+        print("cases: " + str(count_depression_case_strict))
         utility.print_terminal_partition(level=2)
         print("Bipolar Disorder cases and controls")
         utility.print_terminal_partition(level=5)
