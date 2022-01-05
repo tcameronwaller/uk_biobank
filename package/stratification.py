@@ -3674,10 +3674,11 @@ def stratify_set_primary_sex_age_body_menopause(
     raises:
 
     returns:
+        (list<dict>): records with information about cohorts
 
     """
 
-    # Copy information.
+    # Copy information in table.
     table = table.copy(deep=True)
     # Collect records of information about each cohort and model.
     records = list()
@@ -5169,6 +5170,34 @@ def stratify_cohorts_models_phenotypes_sets(
 
     # Return information
     return records
+
+
+def organize_dictionary_entries_stratification_cohorts(
+    records=None,
+):
+    """
+    Organizes information about cohorts.
+
+    arguments:
+        records (list<dict>): records with information about cohorts
+
+    raises:
+
+    returns:
+        (dict<dict>): entries with information about cohorts
+
+    """
+
+    # Copy information.
+    records = copy.deepcopy(records)
+    # Organize dictionary entries for cohorts.
+    entries = dict()
+    for record in records:
+        entries[record["name"]] = record
+        pass
+    # Return information
+    return entries
+
 
 
 

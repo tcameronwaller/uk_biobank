@@ -180,12 +180,13 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_linear_hormones_sex_age_menopause.tsv",
+        #"table_linear_hormones_sex_age_menopause.tsv",
         "table_linear_vitamin-d_sex_age_body.tsv",
-        "table_linear_hormones_alcoholism_any.tsv",
-        "table_linear_hormones_alcoholism_1.tsv",
-        "table_linear_hormones_bipolar_loose.tsv",
-        "table_linear_hormones_bipolar_strict.tsv",
+        "table_linear_vitamin-d_depression_bipolar.tsv",
+        #"table_linear_hormones_alcoholism_any.tsv",
+        #"table_linear_hormones_alcoholism_1.tsv",
+        #"table_linear_hormones_bipolar_loose.tsv",
+        #"table_linear_hormones_bipolar_strict.tsv",
     ]
     for file_name in file_names:
         # Determine table name.
@@ -201,9 +202,13 @@ def read_source_cohort_model_reference(
             sep="\t",
             header=0,
             dtype={
+                "execution": "int",
                 "cohort": "string",
-                "model": "string",
+                "cohort_sort": "int",
                 "dependence": "string",
+                "dependence_sort": "int",
+                "model": "string",
+                "model_sort": "int",
                 "independence": "string",
             },
         )
@@ -222,6 +227,9 @@ def read_source_cohort_model_reference(
 ##########
 # Need a coherent name for this section...
 
+# TODO: TCW 5 January 2022
+# TODO: I introduced column "execution" to the cohort-dependence-model table to turn regressions "on" or "off"
+# TODO: need to implement code to read that "execution" and handle accordingly... probably just filter to "1"
 
 # TODO: TCW 9 November 2021
 # TODO: this structure seems quite inefficient to me...
@@ -483,15 +491,24 @@ def drive_linear_regressions_hormones_alcoholism(
     # Return information.
     return pail
 
+
+
+# TODO: 5 January 2022
+# TODO: ... make this function very versatile...
+# TODO: "filter_execution" Boolean whether to filter cohort-dep-model table first...
+# TODO: also.. only specification of relevant cohorts ought to come from the table...
+
 # TODO: TCW 9 November 2021
 # TODO: this function is ALMOST identical to "drive_linear_regressions_hormones_alcoholism"
 # TODO: consolidate these functions by passing an argument for the main independent
 # TODO: variable of interest
 
-def drive_linear_regressions_cohorts_models_dependences(
+
+def drive_linear_regressions_cohorts_dependences_models(
     table=None,
-    table_cohort_model=None,
+    table_cohorts_models=None,
     independences_summary=None,
+    filter_execution=None,
     report=None,
 ):
     """
@@ -500,10 +517,13 @@ def drive_linear_regressions_cohorts_models_dependences(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
-        table_cohort_model (object): Pandas data frame of cohorts, models,
-            dependent variables, and independent variables for regression
+        table_cohorts_models (object): Pandas data frame that specifies cohorts,
+            dependent variables, and independent variables (models) for
+            regression
         independences_summary (list<str>): names of independent variables for
             which to include statistics in the summary table
+        filter_execution (bool): whether to filter records in cohort-model table
+            by logical binary "execution" variable
         report (bool): whether to print reports
 
     raises:
@@ -513,75 +533,70 @@ def drive_linear_regressions_cohorts_models_dependences(
 
     """
 
-    # Define relevant cohorts.
-    cohorts_records = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+    # Filter relevant cohorts-dependences-models by "execution" flag.
+    if filter_execution:
+        table_cohorts_models = table_cohorts_models.loc[
+            (
+                (table_cohorts_models["execution"] == 1)
+            ), :
+        ]
+        pass
+    # Stratify phenotypes in cohorts.
+    records_cohorts = ukb_strat.stratify_set_primary_sex_age_body_menopause(
         table=table,
     )
-    cohorts_relevant = [
-        "female_male",
-        "female",
-        "female_premenopause",
-        "female_perimenopause",
-        "female_postmenopause",
-        "male",
-        "male_age_low",
-        "male_age_middle",
-        "male_age_high",
-    ]
-    cohorts_records = list(filter(
-        lambda cohort_record: (cohort_record["cohort"] in cohorts_relevant),
-        cohorts_records
+    entries_cohorts = (
+        ukb_strat.organize_dictionary_entries_stratification_cohorts(
+            records=records_cohorts,
     ))
+    # Iterate on records that specify cohors, dependent variables, and
+    # independent variables for regressions.
+    records_cohorts_models = table_cohorts_models.to_dict(
+        orient="records",
+    )
 
     # Collect summary records for each regression.
-    records = list()
-    # Define relevant dependent variables.
-    records_models = define_model_dependence_records_hormones()
+    records_regressions = list()
     # Iterate across cohorts.
-    for cohort_record in cohorts_records:
-        cohort = cohort_record["cohort"]
-        menstruation = cohort_record["menstruation"]
-        table_cohort = cohort_record["table"]
+    for record_cohort_model in records_cohorts_models:
+        cohort = record_cohort_model["cohort"]
+        dependence = record_cohort_model["dependence"]
+        model = record_cohort_model["model"]
+        table_cohort = entries_cohorts[cohort]["table"]
         if report:
             utility.print_terminal_partition(level=2)
-            print(cohort)
+            print("cohort: " + cohort)
+            print("dependent variable: " + dependence)
+            print("model: " + model)
             print(table_cohort)
-        # Iterate across outcomes (dependent variables).
-        for record_model in records_models:
-            dependence = record_model["dependence"]
-            model = record_model["model"]
-            # Organize record.
-            record = dict()
-            record["cohort"] = cohort
-            record["dependence"] = dependence
-            record["model"] = model
-            record["name"] = str(
-                record["cohort"] + "_" +
-                record["dependence"] + "_" +
-                record["model"]
-            )
-            # Define cohort-specific ordinal representation.
-            #dependence_ordinal = str(
-            #    str(record_model["dependence"]) + "_" + str(cohort) + "_order"
-            #)
-            pail_regression = (
-                pro_regression.drive_cohort_model_linear_regression(
-                    table=table_cohort,
-                    table_cohort_model=table_cohort_model,
-                    cohort=cohort,
-                    model=model,
-                    dependence=dependence,
-                    report=report,
+        # Organize record.
+        record = dict()
+        record["cohort"] = cohort
+        record["dependence"] = dependence
+        record["model"] = model
+        record["name"] = str(
+            record["cohort"] + "_" +
+            record["dependence"] + "_" +
+            record["model"]
+        )
+        # Drive regression.
+        pail_regression = (
+            pro_regression.drive_cohort_model_linear_regression(
+                table=table_cohort,
+                table_cohorts_models=table_cohorts_models,
+                cohort=cohort,
+                model=model,
+                dependence=dependence,
+                report=report,
 
-            ))
-            record.update(pail_regression["summary"])
-            # Collect records.
-            records.append(record)
-            pass
+        ))
+        record.update(pail_regression["summary"])
+        # Collect records.
+        records_regressions.append(record)
         pass
 
     # Organize table.
-    table_regressions_raw = pandas.DataFrame(data=records)
+    table_regressions_raw = pandas.DataFrame(data=records_regressions)
     table_regressions = pro_regression.organize_table_regression_summaries(
         independence=independences_summary,
         table=table_regressions_raw,
@@ -846,51 +861,30 @@ def execute_procedure(
 
     # Drive regressions.
     if True:
+        pail_vitamin_d_one = (
+            drive_linear_regressions_cohorts_dependences_models(
+                table=source["table_phenotypes"],
+                table_cohorts_models=(
+                    source_reference["table_linear_vitiamin-d_sex_age_body"]
+                ),
+                independences_summary=[
+                    "sex", "age", "body_log", "assessment_region",
+                    "assessment_season",
+                ],
+                filter_execution=True,
+                report=True,
+        ))
         pass
-    if False:
-        pail_bip_loose = drive_linear_regressions_cohorts_models_dependences(
-            table=source["table_phenotypes"],
-            table_cohort_model=(
-                source_reference["table_linear_hormones_bipolar_loose"]
-            ),
-            independences_summary=["bipolar_control_case_loose"],
-            report=True
-        )
-        pail_bip_strict = drive_linear_regressions_cohorts_models_dependences(
-            table=source["table_phenotypes"],
-            table_cohort_model=(
-                source_reference["table_linear_hormones_bipolar_strict"]
-            ),
-            independences_summary=["bipolar_control_case_strict"],
-            report=True
-        )
-    if False:
-        pail_regression = drive_regressions_female_cohorts_models_hormones(
-            table=source["table_phenotypes"],
-            table_cohort_model=(
-                source_reference["table_linear_hormones_sex_age_menopause"]
-            ),
-            report=True
-        )
-    if False:
-        pail_regression = drive_linear_regressions_hormones_alcoholism(
-            table=source["table_phenotypes"],
-            table_cohort_model=(
-                source_reference["table_linear_hormones_alcoholism_1"]
-            ),
-            independences_summary=["alcoholism_control_case_1"],
-            report=True
-        )
 
     # Collect information.
     information = dict()
     information["tables"] = dict()
-    information["tables"]["table_regressions_bipolar_loose"] = (
-        pail_bip_loose["table"]
+    information["tables"]["table_regressions_vitamin_d_sex_age_body"] = (
+        pail_vitamin_d_one["table"]
     )
-    information["tables"]["table_regressions_bipolar_strict"] = (
-        pail_bip_strict["table"]
-    )
+    #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
+    #    pail_vitamin_d_two["table"]
+    #)
     # Write product information to file.
     write_product(
         paths=paths,

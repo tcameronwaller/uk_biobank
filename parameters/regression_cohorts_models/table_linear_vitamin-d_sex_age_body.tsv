@@ -1,47 +1,23 @@
-cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence
-female_male	1	vitamin_d_log	1	one	1	sex;age;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_imputation_log	2	one	1	sex;age;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_log	1	two	2	age;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_imputation_log	2	two	2	age;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_log	1	three	3	sex;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_imputation_log	2	three	3	sex;body_log;assessment_region;assessment_season
-female_male	1	vitamin_d_log	1	four	4	sex;age;assessment_region;assessment_season
-female_male	1	vitamin_d_imputation_log	2	four	4	sex;age;assessment_region;assessment_season
-female_male	1	vitamin_d_log	1	five	5	sex;age;body;assessment_season
-female_male	1	vitamin_d_imputation_log	2	five	5	sex;age;body;assessment_season
-female_male	1	vitamin_d_log	1	six	6	sex;age;body_log;assessment_region
-female_male	1	vitamin_d_imputation_log	2	six	6	sex;age;body_log;assessment_region
-female_male	1	vitamin_d_log	1	seven	7	assessment_region;assessment_season
-female_male	1	vitamin_d_imputation_log	2	seven	7	assessment_region;assessment_season
-female	2	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-female	2	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-female	2	vitamin_d_log	1	two	2	assessment_region;assessment_season
-female	2	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-female_premenopause	3	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-female_premenopause	3	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-female_premenopause	3	vitamin_d_log	1	two	2	assessment_region;assessment_season
-female_premenopause	3	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-female_perimenopause	4	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-female_perimenopause	4	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-female_perimenopause	4	vitamin_d_log	1	two	2	assessment_region;assessment_season
-female_perimenopause	4	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-female_postmenopause	5	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-female_postmenopause	5	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-female_postmenopause	5	vitamin_d_log	1	two	2	assessment_region;assessment_season
-female_postmenopause	5	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-male	6	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-male	6	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-male	6	vitamin_d_log	1	two	2	assessment_region;assessment_season
-male	6	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-male_age_low	7	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-male_age_low	7	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-male_age_low	7	vitamin_d_log	1	two	2	assessment_region;assessment_season
-male_age_low	7	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-male_age_middle	8	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-male_age_middle	8	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-male_age_middle	8	vitamin_d_log	1	two	2	assessment_region;assessment_season
-male_age_middle	8	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
-male_age_high	9	vitamin_d_log	1	one	1	age;body_log;assessment_region;assessment_season
-male_age_high	9	vitamin_d_imputation_log	2	one	1	age;body_log;assessment_region;assessment_season
-male_age_high	9	vitamin_d_log	1	two	2	assessment_region;assessment_season
-male_age_high	9	vitamin_d_imputation_log	2	two	2	assessment_region;assessment_season
+execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence
+1	female_male	1	vitamin_d_log	1	1	1	sex;age;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	1	1	sex;age;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_log	1	2	2	age;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	2	2	age;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_log	1	3	3	sex;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	3	3	sex;body_log;assessment_region;assessment_season
+1	female_male	1	vitamin_d_log	1	4	4	sex;age;assessment_region;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	4	4	sex;age;assessment_region;assessment_season
+1	female_male	1	vitamin_d_log	1	5	5	sex;age;body;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	5	5	sex;age;body;assessment_season
+1	female_male	1	vitamin_d_log	1	6	6	sex;age;body_log;assessment_region
+1	female_male	1	vitamin_d_imputation_log	2	6	6	sex;age;body_log;assessment_region
+1	female_male	1	vitamin_d_log	1	7	7	assessment_region;assessment_season
+1	female_male	1	vitamin_d_imputation_log	2	7	7	assessment_region;assessment_season
+0	female	2	vitamin_d_log	1	1	1	age;body_log;assessment_region;assessment_season
+0	female	2	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_region;assessment_season
+0	female	2	vitamin_d_log	1	2	2	assessment_region;assessment_season
+0	female	2	vitamin_d_imputation_log	2	2	2	assessment_region;assessment_season
+0	male	6	vitamin_d_log	1	1	1	age;body_log;assessment_region;assessment_season
+0	male	6	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_region;assessment_season
+0	male	6	vitamin_d_log	1	2	2	assessment_region;assessment_season
+0	male	6	vitamin_d_imputation_log	2	2	2	assessment_region;assessment_season
