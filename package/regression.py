@@ -182,7 +182,7 @@ def read_source_cohort_model_reference(
     file_names = [
         #"table_linear_hormones_sex_age_menopause.tsv",
         "table_linear_vitamin-d_sex_age_body.tsv",
-        "table_linear_vitamin-d_depression_bipolar.tsv",
+        "table_linear_vitamin-d_depression_bipolar_alcohol.tsv",
         #"table_linear_hormones_alcoholism_any.tsv",
         #"table_linear_hormones_alcoholism_1.tsv",
         #"table_linear_hormones_bipolar_loose.tsv",
