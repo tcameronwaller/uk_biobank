@@ -875,12 +875,39 @@ def execute_procedure(
                 report=True,
         ))
         pass
+    if True:
+        pail_vitamin_d_two = (
+            drive_linear_regressions_cohorts_dependences_models(
+                table=source["table_phenotypes"],
+                table_cohorts_models=(
+                    source_reference["table_linear_vitamin_d_depression_bipolar_alcohol"]
+                ),
+                independences_summary=[
+                    "sex_y", "age", "body_log", "assessment_region",
+                    "assessment_season",
+                    "depression_control_case_loose",
+                    "depression_control_case_strict",
+                    "bipolar_control_case_loose",
+                    "bipolar_control_case_strict",
+                    "alcohol_frequency",
+                    "alcohol_current",
+                    "alcoholism_control_case_any",
+                    "alcoholism_control_case_1",
+                ],
+                filter_execution=True,
+                report=True,
+        ))
+        pass
+
 
     # Collect information.
     information = dict()
     information["tables"] = dict()
     information["tables"]["table_regressions_vitamin_d_sex_age_body"] = (
         pail_vitamin_d_one["table"]
+    )
+    information["tables"]["table_regressions_vitamin_d_depression_bipolar_alcohol"] = (
+        pail_vitamin_d_two["table"]
     )
     #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
     #    pail_vitamin_d_two["table"]
