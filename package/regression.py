@@ -865,7 +865,7 @@ def execute_procedure(
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_linear_vitiamin_d_sex_age_body"]
+                    source_reference["table_linear_vitamin_d_sex_age_body"]
                 ),
                 independences_summary=[
                     "sex", "age", "body_log", "assessment_region",
