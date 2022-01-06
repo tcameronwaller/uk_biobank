@@ -868,7 +868,7 @@ def execute_procedure(
                     source_reference["table_linear_vitamin_d_sex_age_body"]
                 ),
                 independences_summary=[
-                    "sex", "age", "body_log", "assessment_region",
+                    "sex_y", "age", "body_log", "assessment_region",
                     "assessment_season",
                 ],
                 filter_execution=True,
