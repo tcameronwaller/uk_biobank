@@ -340,6 +340,90 @@ def read_source_fields_codes_interpretations(
     }
 
 
+# read_source_medication_codes_classes
+
+
+def read_source_medication_codes_classes(
+    path_dock=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Medication codes for Anatomical Therapeutic Chemical (ATC) classes
+    (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Specify directories and files.
+    path_table_medications_atc_g03 = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_field_20003_atc_g03.tsv"
+    )
+    path_table_medications_atc_a11cc = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "table_ukbiobank_field_20003_atc_a11cc.tsv"
+    )
+    # Organize code interpretations.
+
+    # TODO: TCW, 11 January 2022
+    # TODO: probably just return lists of medication codes for each ATC class...
+
+    # Data-field 20003, ATC class G03.
+    table_atc_g03 = pandas.read_csv(
+        path_table_atc_g03,
+        sep="\t",
+        header=0,
+        dtype={
+            "code": "string",
+            "interpretation": "string",
+            "coding": "string",
+            "meaning": "string",
+            "region_name": "string",
+            "region": numpy.int32,
+        },
+    )
+    table_field_54.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_field_54.set_index(
+        "code",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    field_54_codes_interpretations = table_field_54.to_dict(
+        orient="index",
+    )
+
+    # Data-field 20003, ATC class A11CC.
+
+    # Compile and return information.
+    return {
+        "atc_g03": codes_atc_g03,
+        "atc_a11cc": codes_atc_a11cc,
+    }
+
+
+
+
+
 ##########
 # Genotype
 
@@ -2384,13 +2468,13 @@ def organize_assessment_basis_variables(
 
     """
 
-    # Copy information.
-    table = table.copy(deep=True)
-
     # Read reference table of interpretations of variable codes.
     source = read_source_fields_codes_interpretations(
         path_dock=path_dock,
     )
+
+    # Copy information.
+    table = table.copy(deep=True)
 
     # Determine assessment site.
     table["assessment_site"] = table.apply(
@@ -4154,11 +4238,63 @@ def organize_calculation_estimate_bioavailable_free_hormones(
     return table
 
 
+# Hormonal medications
+
+
+# TODO: TCW, 11 January 2022
+# TODO: introduce a new sub-driver for interpretation of medications that relate to hormones...
+
+def organize_hormonal_medications(
+    table=None,
+    path_dock=None,
+    report=None,
+):
+    """
+    Organizes interpretation of medications that alter hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # TODO: TCW, 11 January 2022
+    # TODO: read in the reference tables with relevant medication codes...
+
+    # Read reference table of interpretations of variable codes.
+    #source = read_source_fields_codes_interpretations(
+    #    path_dock=path_dock,
+    #)
+    source = read_source_medication_codes_classes(
+        path_dock=path_dock,
+    )
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # ...
+    # ...
+    # ...
+
+    # Return information.
+    return table
+
+
 # Main driver
 
 
 def organize_sex_hormone_variables(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -4167,6 +4303,8 @@ def organize_sex_hormone_variables(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -4235,6 +4373,14 @@ def organize_sex_hormone_variables(
     table = organize_calculation_estimate_bioavailable_free_hormones(
         factors_concentration=factors_concentration,
         table=table,
+        report=report,
+    )
+
+    ##########
+    # Determine use of medications that alter hormones.
+    table = organize_hormonal_medications(
+        table=table,
+        path_dock=path_dock,
         report=report,
     )
 
@@ -9319,6 +9465,10 @@ def parse_field_array_codes(
 # TODO: TCW 14 September 2021
 # TODO: I could possibly rewrite this more efficiently using "any()" and "filter()"
 
+# TODO: TCW, 11 January 2022
+# TODO: I'd like to follow this basic pattern of text array matching in interpretation
+# TODO: of medications
+
 def parse_interpret_match_diagnosis_codes(
     row=None,
     fields=None,
@@ -10901,6 +11051,7 @@ def execute_genotype_assessment_basis(
 
 def execute_sex_hormones(
     table=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -10909,6 +11060,8 @@ def execute_sex_hormones(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -10922,6 +11075,7 @@ def execute_sex_hormones(
     # Organize information about sex hormones.
     pail_hormone = organize_sex_hormone_variables(
         table=table,
+        path_dock=path_dock,
         report=report,
     )
     # Report.

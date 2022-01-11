@@ -653,11 +653,6 @@ def remove_table_irrelevant_field_instance_columns(
 # Organization
 
 
-# TODO: TCW 10 January 2022
-# TODO: use sets to make this more efficient
-# TODO: first collect ALL values... then use set to take unique.
-
-
 def simplify_field_values_array_row(
     row=None,
     field=None,
@@ -693,7 +688,7 @@ def simplify_field_values_array_row(
             key_field = key.split("-")[0].strip()
             if (str(field) == str(key_field)):
                 fields.append(key)
-                value = record[key]
+                value = str(record[key])
                 if (not pandas.isna(value)):
                     # Collect all values regardless of whether they are unique.
                     values.append(value)
@@ -1236,9 +1231,6 @@ def execute_procedure(
         table_ukb_47488=source["table_ukb_47488"],
         report=True,
     )
-
-    # TODO: consider passing a parameter with the names of array columns?
-
 
     # Simplify UK Biobank fields with multiple instances.
     # Reduce these multiple field instance columns to arrays.
