@@ -465,8 +465,8 @@ def determine_keep_column_field_instance(
         column_field = column.split("-")[0].strip()
         column_instance = column.split("-")[1].strip()
         # int(column_field)
-        instances_array = table_ukbiobank_variables.at[
-            int(column_field), "instances_array",
+        values_array = table_ukbiobank_variables.at[
+            int(column_field), "values_array",
         ]
         instances_keep_raw = table_ukbiobank_variables.at[
             int(column_field), "instances_keep",
@@ -478,10 +478,11 @@ def determine_keep_column_field_instance(
             (str(column_field) in ["31", "50", "22009"])
         ):
             utility.print_terminal_partition(level=4)
+            print("report from: determine_keep_column_field_instance()")
             print(column_field)
         # Determine whether to keep column for field's instance.
-        if not pandas.isna(instances_array):
-            if str(instances_array).strip().lower() == "yes":
+        if not pandas.isna(values_array):
+            if str(values_array).strip().lower() == "yes":
                 keep = True
         if not pandas.isna(instances_keep_raw):
             # Organize field instances to keep.
@@ -537,7 +538,7 @@ def determine_ukbiobank_field_instance_columns_keep(
     # Organize information.
     table_ukbiobank_variables = table_ukbiobank_variables.loc[
         :, table_ukbiobank_variables.columns.isin([
-            "field", "instances_array", "instances_keep"
+            "field", "values_array", "instances_keep"
         ])
     ]
     table_ukbiobank_variables["field"].astype("string")
@@ -652,7 +653,12 @@ def remove_table_irrelevant_field_instance_columns(
 # Organization
 
 
-def simplify_field_instances_array_row(
+# TODO: TCW 10 January 2022
+# TODO: use sets to make this more efficient
+# TODO: first collect ALL values... then use set to take unique.
+
+
+def simplify_field_values_array_row(
     row=None,
     field=None,
     delimiter=None,
@@ -689,29 +695,33 @@ def simplify_field_instances_array_row(
                 fields.append(key)
                 value = record[key]
                 if (not pandas.isna(value)):
-                    if (value not in values):
-                        # Only collect unique values.
-                        values.append(value)
-                        pass
+                    # Collect all values regardless of whether they are unique.
+                    values.append(value)
+                    #if (value not in values):
+                    #    # Only collect unique values.
+                    #    values.append(value)
+                    #    pass
                     pass
                 pass
             pass
         pass
+    # Select unique values.
+    values_unique = list(set(values)) # unique
     # Report.
     if report:
         utility.print_terminal_partition(level=4)
         print("matching fields to " + str(field) + " :")
         print(fields)
     # Combine values with text delimiter.
-    if len(values) > 0:
-        text_array = delimiter.join(values)
+    if len(values_unique) > 0:
+        text_array = delimiter.join(values_unique)
     else:
         text_array = ""
     # Return information.
     return text_array
 
 
-def simplify_field_instances_array_columns(
+def simplify_field_values_array_columns(
     table_ukbiobank_variables=None,
     table_ukb_raw=None,
     delimiter=None,
@@ -741,12 +751,20 @@ def simplify_field_instances_array_columns(
     # Organize information.
     table_variables["field"].astype("string")
     table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "type", "instances_array"])
+        :, table_variables.columns.isin(["field", "type", "values_array"])
     ]
-    table_variables = table_variables.loc[
-        ~pandas.isna(table_variables["instances_array"]), :
+    table_variables["values_array"] = table_variables.apply(
+        lambda row:
+            str(row["values_array"]).strip().lower(),
+        axis="columns", # apply across rows
+    )
+    table_variables_array = table_variables.loc[
+        (
+            ~pandas.isna(table_variables["values_array"]) &
+            (table_variables["values_array"] == "yes")
+        ), :
     ]
-    fields_array_instances = table_variables["field"].to_list()
+    fields_array_instances = table_variables_array["field"].to_list()
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -759,7 +777,7 @@ def simplify_field_instances_array_columns(
         column_new = str(str(field) + "_array")
         table_ukb[column_new] = table_ukb.apply(
             lambda row:
-                simplify_field_instances_array_row(
+                simplify_field_values_array_row(
                     row=row,
                     field=field,
                     delimiter=delimiter,
@@ -1218,9 +1236,13 @@ def execute_procedure(
         table_ukb_47488=source["table_ukb_47488"],
         report=True,
     )
+
+    # TODO: consider passing a parameter with the names of array columns?
+
+
     # Simplify UK Biobank fields with multiple instances.
     # Reduce these multiple field instance columns to arrays.
-    table_ukb_41826_simple = simplify_field_instances_array_columns(
+    table_ukb_41826_simple = simplify_field_values_array_columns(
         table_ukbiobank_variables=source["table_ukbiobank_variables"],
         table_ukb_raw=prune["table_ukb_41826"],
         delimiter=";",

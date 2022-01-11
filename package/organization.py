@@ -6872,6 +6872,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 ##########
 # Psychological variables
 
+
 # TODO: TCW 20 October 2021
 # TODO: 1. I need to "import and interpret" medication class variables from Brandon J. Coombes
 # TODO: 2. I need to define categorical dummy variables for the medication classes
