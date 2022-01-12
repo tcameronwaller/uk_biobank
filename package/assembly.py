@@ -724,10 +724,13 @@ def simplify_field_values_array_row(
             (len(str(record_column["field"])) > 0) and
             (str(field) == str(record_column["field"]))
         ):
-            value = str(record_row[column])
-            if (not pandas.isna(value)):
+            value = record_row[column]
+            if (
+                (not pandas.isna(value)) and
+                (str(value) != "<NA>")
+            ):
                 # Collect all values regardless of whether they are unique.
-                values.append(value)
+                values.append(str(value))
                 pass
             pass
         pass
