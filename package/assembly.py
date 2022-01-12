@@ -442,6 +442,9 @@ def parse_ukbiobank_raw_column_field_instance_array(
     """
     Parse the information in a raw column name.
 
+    Format: [field]-[instance].[array index]
+    Examples: "20002-3.33", "20003-3.47"
+
     arguments:
         name_column (str): raw name of column in data table from UK Biobank
 
@@ -469,19 +472,6 @@ def parse_ukbiobank_raw_column_field_instance_array(
         record["instance"] = ""
         record["array_index"] = ""
     return record
-
-
-
-# TODO: TCW, 11 January 2022
-# "20002-3.33"
-# "20003-3.47"
-# [field]-[instance].[array index]
-# TODO: also need to update coding in "table_ukbiobank_phenotype_variables.tsv"
-
-
-#        if not pandas.isna(values_array):
-#            if str(values_array).strip().lower() == "yes":
-#                keep = True
 
 
 def determine_keep_column_field_instance(
@@ -515,9 +505,9 @@ def determine_keep_column_field_instance(
         # Initialize flag.
         keep = False
         # Organize information.
-        values_array = table_ukbiobank_variables.at[
-            int(record["field"]), "array",
-        ]
+        #array_collection = table_ukbiobank_variables.at[
+        #    int(record["field"]), "array_collection",
+        #]
         instances_keep_raw = table_ukbiobank_variables.at[
             int(record["field"]), "instances_keep",
         ]
@@ -788,17 +778,17 @@ def simplify_field_values_array_columns(
     # Organize information.
     table_variables["field"].astype("string")
     table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "type", "array"])
+        :, table_variables.columns.isin(["field", "type", "array_collection"])
     ]
-    table_variables["array"] = table_variables.apply(
+    table_variables["array_collection"] = table_variables.apply(
         lambda row:
-            str(row["array"]).strip().lower(),
+            str(row["array_collection"]).strip().lower(),
         axis="columns", # apply across rows
     )
     table_variables_array = table_variables.loc[
         (
-            ~pandas.isna(table_variables["array"]) &
-            (table_variables["array"] == "yes")
+            ~pandas.isna(table_variables["array_collection"]) &
+            (table_variables["array_collection"] == "yes")
         ), :
     ]
     fields_array = table_variables_array["field"].to_list()
