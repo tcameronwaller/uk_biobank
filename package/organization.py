@@ -4385,12 +4385,16 @@ def organize_atc_class_medication_codes(
                 (table_codes["group_atc_appleby"] == atc_class)
             ), :
         ]
-        codes_class_wu = list(set(list(map(copy.deepcopy(
+        codes_class_wu = copy.deepcopy(
             table_class_wu["code_ukbiobank"].to_list()
-        )))))
-        codes_class_appleby = list(set(list(map(copy.deepcopy(
+        )
+        codes_class_wu = list(map(str, codes_class_wu)) # string
+        codes_class_wu = list(set(codes_class_wu)) # unique
+        codes_class_appleby = copy.deepcopy(
             table_class_appleby["code_ukbiobank"].to_list()
-        )))))
+        )
+        codes_class_appleby = list(map(str, codes_class_appleby)) # string
+        codes_class_appleby = list(set(codes_class_appleby)) # unique
         codes_class = copy.deepcopy(codes_class_wu)
         codes_class.extend(codes_class_appleby)
         codes_class = list(map(str, codes_class)) # string
@@ -4455,7 +4459,7 @@ def organize_hormonal_medications(
     """
 
     # Read reference table of interpretations of variable codes.
-    source = read_source_organize_medication_codes_classes(
+    source = read_source_medication_codes_classes(
         path_dock=path_dock,
     )
     table_medication_codes_classes = organize_medication_code_atc_class_table(
@@ -4463,9 +4467,10 @@ def organize_hormonal_medications(
         table_appleby=source["table_appleby"],
         report=report,
     )
-    record_medications = organize_atc_class_medication_codes(
+    medication_groups = organize_atc_class_medication_codes(
         atc_classes=["G03", "A11CC",],
         table_medication_codes_classes=table_medication_codes_classes,
+        report=report,
     )
 
     # Copy information in table.
@@ -4556,10 +4561,11 @@ def organize_sex_hormone_variables(
     # Define cohort-specific ordinal representations of hormones with
     # consideration of cohort-specific medians and reportabilities due to
     # detection limits.
-    table = organize_cohorts_specific_hormones_ordinal_representations(
-        table=table,
-        report=report,
-    )
+    if False:
+        table = organize_cohorts_specific_hormones_ordinal_representations(
+            table=table,
+            report=report,
+        )
 
     ##########
     # Calculate estimates of bioavailable and free hormones.
