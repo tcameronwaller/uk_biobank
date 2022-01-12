@@ -567,7 +567,7 @@ def determine_ukbiobank_field_instance_columns_keep(
     # Organize information.
     table_ukbiobank_variables = table_ukbiobank_variables.loc[
         :, table_ukbiobank_variables.columns.isin([
-            "field", "values_array", "instances_keep"
+            "field", "array_collection", "instances_keep"
         ])
     ]
     table_ukbiobank_variables["field"].astype("string")
