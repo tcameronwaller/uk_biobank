@@ -340,66 +340,6 @@ def read_source_fields_codes_interpretations(
     }
 
 
-def organize_medication_codes_classes(
-    table_wu=None,
-    table_appleby=None,
-):
-    """
-    Organizes information about medications in UK Biobank data-field "20003" and
-    their classes in the Anatomical Therapeutic Chemical (ATC) classification
-    system (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
-
-    arguments:
-        table_wu (object): path to dock directory for source and product
-            directories and files
-
-    raises:
-
-    returns:
-        (dict<list<str>>): medication codes in relevant ATC classes
-
-    """
-
-    # Organize table indices.
-    table_medications.reset_index(
-        level=None,
-        inplace=True,
-        drop=True,
-    )
-    # Merge tables.
-
-    # Filter tables by relevant ATC classes.
-
-    # TODO: need to filter at the START of each ATC code...
-
-    # ATC class G03
-    table_atc_g03 = table_medications.loc[
-        (
-            ~pandas.isna(table_medications["group_atc"]) &
-            (table_medications["group_atc"] == "g03")
-        ), :
-    ]
-    codes_atc_g03 = table_atc_g03["code_ukbiobank"].to_list()
-    # ATC class A11CC
-    table_atc_a11cc = table_medications.loc[
-        (
-            ~pandas.isna(table_medications["group_atc"]) &
-            (table_medications["group_atc"] == "a11cc")
-        ), :
-    ]
-    codes_atc_a11cc = table_atc_a11cc["code_ukbiobank"].to_list()
-
-
-
-
-    record = dict()
-
-    # Report.
-
-    return record
-
-
-
 def read_source_medication_codes_classes(
     path_dock=None,
 ):
@@ -450,6 +390,7 @@ def read_source_medication_codes_classes(
             "medication_name": "string",
             "medication_category": "string",
             "code_atc": "string",
+            "group_atc": "string",
         },
     )
     table_appleby = pandas.read_csv(
@@ -460,16 +401,14 @@ def read_source_medication_codes_classes(
             "code_ukbiobank": "string",
             "medication_name": "string",
             "code_atc": "string",
+            "group_atc": "string",
         },
     )
     # Compile and return information.
     return {
-        "codes_atc_g03": codes_atc_g03,
-        "codes_atc_a11cc": codes_atc_a11cc,
+        "table_wu": table_wu,
+        "table_appleby": table_appleby,
     }
-
-
-
 
 
 ##########
@@ -4289,6 +4228,206 @@ def organize_calculation_estimate_bioavailable_free_hormones(
 # Hormonal medications
 
 
+def organize_medication_code_atc_class_table(
+    table_wu=None,
+    table_appleby=None,
+    report=None,
+):
+    """
+    Organizes information about medications in UK Biobank data-field "20003" and
+    their classes in the Anatomical Therapeutic Chemical (ATC) classification
+    system (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
+
+    arguments:
+        table_wu (object): Pandas data frame of medication codes in UK Biobank
+            data-field "20003" and their ATC classes from Wu et al, 2019
+        table_wu (object): Pandas data frame of medication codes in UK Biobank
+            data-field "20003" and their ATC classes from Appleby et al, 2019
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of medication codes in UK Biobank data-field
+            "20003" and their ATC classes
+
+    """
+
+    # Copy information in table.
+    table_wu = table_wu.copy(deep=True)
+    table_appleby = table_appleby.copy(deep=True)
+    # Select relevant columns.
+    columns_relevant = [
+        "code_ukbiobank",
+        "medication_name",
+        "medication_category",
+        "code_atc",
+        "group_atc",
+    ]
+    table_wu = table_wu.loc[
+        :, table_wu.columns.isin(columns_relevant)
+    ]
+    table_appleby = table_appleby.loc[
+        :, table_appleby.columns.isin(columns_relevant)
+    ]
+    # Organize table indices.
+    table_wu.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_wu["code_ukbiobank"].astype("string")
+    table_wu.dropna(
+        axis="index",
+        how="any",
+        subset=["code_ukbiobank"],
+        inplace=True,
+    )
+    table_wu.drop_duplicates(
+        subset=["code_ukbiobank",],
+        keep="first",
+        inplace=True,
+    )
+    table_wu.set_index(
+        "code_ukbiobank",
+        drop=True,
+        inplace=True,
+    )
+    table_appleby.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table_appleby["code_ukbiobank"].astype("string")
+    table_appleby.dropna(
+        axis="index",
+        how="any",
+        subset=["code_ukbiobank"],
+        inplace=True,
+    )
+    table_appleby.drop_duplicates(
+        subset=["code_ukbiobank",],
+        keep="first",
+        inplace=True,
+    )
+    table_appleby.set_index(
+        "code_ukbiobank",
+        drop=True,
+        inplace=True,
+    )
+    # Merge data tables using database-style join.
+    # Alternative is to use DataFrame.join().
+    table_merge = pandas.merge(
+        table_wu, # left table
+        table_appleby, # right table
+        left_on="code_ukbiobank",
+        right_on="code_ukbiobank",
+        left_index=False,
+        right_index=False,
+        how="outer", # keep keys from union of both tables
+        suffixes=("_wu", "_appleby"),
+    )
+    table_merge.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_medication_code_atc_class_table()")
+        utility.print_terminal_partition(level=3)
+        print(table_merge)
+    # Return information.
+    return table_merge
+
+
+def organize_atc_class_medication_codes(
+    atc_classes=None,
+    table_medication_codes_classes=None,
+    report=None,
+):
+    """
+    Organizes information about medications in UK Biobank data-field "20003" and
+    their classes in the Anatomical Therapeutic Chemical (ATC) classification
+    system (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
+
+    arguments:
+        atc_classes (list<str>): codes of relevant ATC classes
+        table_medication_codes_classes (object): Pandas data frame of medication
+            codes in UK Biobank data-field "20003" and their ATC classes
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<list<str>>): medication codes in relevant ATC classes
+
+    """
+
+    # Copy information in table.
+    table_codes = table_medication_codes_classes.copy(deep=True)
+    # Collect information.
+    pail = dict()
+    # Iterate on relevant ATC classes.
+    for atc_class in atc_classes:
+        # Filter tables by relevant ATC classes.
+        table_class_wu = table_codes.loc[
+            (
+                ~pandas.isna(table_codes["group_atc_wu"]) &
+                (table_codes["group_atc_wu"] == atc_class)
+            ), :
+        ]
+        table_class_appleby = table_codes.loc[
+            (
+                ~pandas.isna(table_codes["group_atc_appleby"]) &
+                (table_codes["group_atc_appleby"] == atc_class)
+            ), :
+        ]
+        codes_class_wu = list(set(list(map(copy.deepcopy(
+            table_class_wu["code_ukbiobank"].to_list()
+        )))))
+        codes_class_appleby = list(set(list(map(copy.deepcopy(
+            table_class_appleby["code_ukbiobank"].to_list()
+        )))))
+        codes_class = copy.deepcopy(codes_class_wu)
+        codes_class.extend(codes_class_appleby)
+        codes_class = list(map(str, codes_class)) # string
+        codes_class = list(set(codes_class)) # unique
+        # Collect information.
+        pail[atc_class] = dict()
+        pail[atc_class]["codes_class_wu"] = codes_class_wu
+        pail[atc_class]["codes_class_appleby"] = codes_class_appleby
+        pail[atc_class]["codes_class"] = codes_class
+        pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_atc_class_medication_codes()")
+        utility.print_terminal_partition(level=3)
+        for atc_class in pail.keys():
+            count_codes_class_wu = len(pail[atc_class]["codes_class_wu"])
+            count_codes_class_appleby = len(
+                pail[atc_class]["codes_class_appleby"]
+            )
+            count_codes_class = len(pail[atc_class]["codes_class"])
+            # Report.
+            utility.print_terminal_partition(level=5)
+            print("ATC class: " + str(atc_class))
+            print("medications from Wu, 2019: " + str(count_codes_class_wu))
+            print(
+                "medications from Appleby, 2019: " +
+                str(count_codes_class_appleby)
+            )
+            print("medications from consensus: " + str(count_codes_class))
+            pass
+        pass
+    # Return information.
+    return pail
+
+
 # TODO: TCW, 11 January 2022
 # TODO: introduce a new sub-driver for interpretation of medications that relate to hormones...
 
@@ -4319,6 +4458,16 @@ def organize_hormonal_medications(
     source = read_source_organize_medication_codes_classes(
         path_dock=path_dock,
     )
+    table_medication_codes_classes = organize_medication_code_atc_class_table(
+        table_wu=source["table_wu"],
+        table_appleby=source["table_appleby"],
+        report=report,
+    )
+    record_medications = organize_atc_class_medication_codes(
+        atc_classes=["G03", "A11CC",],
+        table_medication_codes_classes=table_medication_codes_classes,
+    )
+
     # Copy information in table.
     table = table.copy(deep=True)
 

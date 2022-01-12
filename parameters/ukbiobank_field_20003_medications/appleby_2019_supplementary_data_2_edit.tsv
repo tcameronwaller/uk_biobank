@@ -36,7 +36,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140879540	fluoxetine	N06A		1140879540	fluoxetine	N06A
 1140884516	thyroxine product	H03A		1140884516	thyroxine product	H03A
 1140864992	tramadol	N02A		1140864992	tramadol	N02A
-1140871050	calcichew d3 tablet	A11C		1140871050	calcichew d3 tablet	A11C
+1140871050	calcichew d3 tablet	A11C	A11CC	1140871050	calcichew d3 tablet	A11C
 1140888266	warfarin	B01A		1140888266	warfarin	B01A
 1140916356	losartan	C09D		1140916356	losartan	C09D
 1140874744	gliclazide	A10B		1140874744	gliclazide	A10B
@@ -44,7 +44,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140909786	beclometasone	R03B		1140909786	beclometasone	R03B
 1140888646	felodipine	C08C		1140888646	felodipine	C08C
 1140870422	folic acid product	B03B		1140870422	folic acid product	B03B
-1141164828	adcal-d3 1.5g/10micrograms chewable tablet	A11C		1141164828	adcal-d3 1.5g/10micrograms chewable tablet	A11C
+1141164828	adcal-d3 1.5g/10micrograms chewable tablet	A11C	A11CC	1141164828	adcal-d3 1.5g/10micrograms chewable tablet	A11C
 1141152998	irbesartan	C09D		1141152998	irbesartan	C09D
 1140888552	enalapril	C09B		1140888552	enalapril	C09B
 1140909708	furosemide	C03C		1140909708	furosemide	C03C
@@ -76,12 +76,12 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140888098	fluticasone	R01A		1140888098	fluticasone	R01A
 1140867878	sertraline	N06A		1140867878	sertraline	N06A
 1140916282	venlafaxine	N06A		1140916282	venlafaxine	N06A
-1140868408	premarin 625micrograms tablet	G03C		1140868408	premarin 625micrograms tablet	G03C
+1140868408	premarin 625micrograms tablet	G03C	G03	1140868408	premarin 625micrograms tablet	G03C
 1140876076	flixonase 50micrograms aqueous nasal spray	R01A		1140876076	flixonase 50micrograms aqueous nasal spray	R01A
 1140884654	beclomethasone	R01A		1140884654	beclomethasone	R01A
 1141167594	qvar 50 inhaler	R01A		1141167594	qvar 50 inhaler	R01A
 1140868550	finasteride	G04C		1140868550	finasteride	G04C
-1140870954	vitamin d product	A11C		1140870954	vitamin d product	A11C
+1140870954	vitamin d product	A11C	A11CC	1140870954	vitamin d product	A11C
 1140871112	vitamin e product	A11H		1140871112	vitamin e product	A11H
 1140866078	indapamide	C09B		1140866078	indapamide	C09B
 1140863144	zopiclone	N05C		1140863144	zopiclone	N05C
@@ -101,7 +101,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140862086	salamol 100micrograms inhaler	R03A		1140862086	salamol 100micrograms inhaler	R03A
 1140860834	glyceryl trinitrate	C01D		1140860834	glyceryl trinitrate	C01D
 1140883748	selenium product	D01A		1140883748	selenium product	D01A
-1140868472	vagifem 25mcg pessary	G03C		1140868472	vagifem 25mcg pessary	G03C
+1140868472	vagifem 25mcg pessary	G03C	G03	1140868472	vagifem 25mcg pessary	G03C
 1141152732	mirtazapine	N06A		1141152732	mirtazapine	N06A
 1140873548	oxytetracycline	J01A		1140873548	oxytetracycline	J01A
 1141146198	xalatan 0.005% eye drops	S01E		1141146198	xalatan 0.005% eye drops	S01E
@@ -116,7 +116,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 2038459814	digoxin	C01A		2038459814	digoxin	C01A
 1140862144	salmeterol	R03A		1140862144	salmeterol	R03A
 1141182628	tiotropium	R03B		1141182628	tiotropium	R03B
-1141182800	cerazette 75micrograms tablet	G03A		1141182800	cerazette 75micrograms tablet	G03A
+1141182800	cerazette 75micrograms tablet	G03A	G03	1141182800	cerazette 75micrograms tablet	G03A
 1140861088	nifedipine	C08C		1140861088	nifedipine	C08C
 1140879774	alfuzosin	G04C		1140879774	alfuzosin	G04C
 1140861090	adalat 5mg capsule	C08C		1140861090	adalat 5mg capsule	C08C
@@ -138,7 +138,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141157126	montelukast product	R03D		1141157126	montelukast product	R03D
 1141162764	tolterodine l-tartrate	G04B		1141162764	tolterodine l-tartrate	G04B
 1140861128	tildiem 60mg m/r tablet	C08D		1140861128	tildiem 60mg m/r tablet	C08D
-1141156644	elleste duet conti tablet	G03C		1141156644	elleste duet conti tablet	G03C
+1141156644	elleste duet conti tablet	G03C	G03	1141156644	elleste duet conti tablet	G03C
 1141168936	sildenafil	G04B		1141168936	sildenafil	G04B
 1141175684	risedronate sodium	M05B		1141175684	risedronate sodium	M05B
 1140866236	spironolactone	C03D		1140866236	spironolactone	C03D
@@ -146,7 +146,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140879818	metoprolol	C07F		1140879818	metoprolol	C07F
 1140909702	sulfasalazine	A07E		1140909702	sulfasalazine	A07E
 1140929012	pantoprazole	A02B		1140929012	pantoprazole	A02B
-1141181700	estradiol product	G03C		1141181700	estradiol product	G03C
+1141181700	estradiol product	G03C	G03	1141181700	estradiol product	G03C
 1141192740	ezetrol 10mg tablet	C10A		1141192740	ezetrol 10mg tablet	C10A
 1140874896	hydrocortisone	D07A		1140874896	hydrocortisone	D07A
 1140875990	hypromellose	B05X		1140875990	hypromellose	B05X
@@ -159,19 +159,19 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141180212	escitalopram	N06A		1141180212	escitalopram	N06A
 1140866116	frusemide	C03C		1140866116	frusemide	C03C
 1140923022	arimidex 1mg tablet	L02B		1140923022	arimidex 1mg tablet	L02B
-1140868482	tibolone	G03C		1140868482	tibolone	G03C
-1140923852	elleste-solo 1mg tablet	G03C		1140923852	elleste-solo 1mg tablet	G03C
+1140868482	tibolone	G03C	G03	1140868482	tibolone	G03C
+1140923852	elleste-solo 1mg tablet	G03C	G03	1140923852	elleste-solo 1mg tablet	G03C
 1141177532	nexium 20mg tablet	A02B		1141177532	nexium 20mg tablet	A02B
 1140888570	flecainide	C01B		1140888570	flecainide	C01B
 1140923670	gtn - glyceryl trinitrate	C01D		1140923670	gtn - glyceryl trinitrate	C01D
 1140864286	flixotide 25micrograms inhaler	R01A		1140864286	flixotide 25micrograms inhaler	R01A
 1140872200	epilim 100mg crushable tablet	N03A		1140872200	epilim 100mg crushable tablet	N03A
-1140921814	mirena 52mg intrauterine system	G03A		1140921814	mirena 52mg intrauterine system	G03A
+1140921814	mirena 52mg intrauterine system	G03A	G03	1140921814	mirena 52mg intrauterine system	G03A
 1140911658	imigran 50mg tablet	N02C		1140911658	imigran 50mg tablet	N02C
 1141166006	telmisartan	C09D		1141166006	telmisartan	C09D
 1140874790	betamethasone	S01B		1140874790	betamethasone	S01B
 1140884308	hydroxychloroquine	P01B		1140884308	hydroxychloroquine	P01B
-1140916790	evorel 25 patch	G03C		1140916790	evorel 25 patch	G03C
+1140916790	evorel 25 patch	G03C	G03	1140916790	evorel 25 patch	G03C
 2038459704	carbamazepine	N03A		2038459704	carbamazepine	N03A
 1141157486	salbutamol product	R03A		1141157486	salbutamol product	R03A
 1140862628	piriton 4mg tablet	R06A		1140862628	piriton 4mg tablet	R06A
@@ -180,33 +180,33 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141162824	detrusitol 1mg tablet	G04B		1141162824	detrusitol 1mg tablet	G04B
 1140882782	dermovate cream	D07A		1140882782	dermovate cream	D07A
 1140879854	sotalol	C07A		1140879854	sotalol	C07A
-1140926592	estraderm mx 25 patch	G03C		1140926592	estraderm mx 25 patch	G03C
+1140926592	estraderm mx 25 patch	G03C	G03	1140926592	estraderm mx 25 patch	G03C
 1140879792	terbutaline	R03C		1140879792	terbutaline	R03C
 1140883664	pizotifen	N02C		1140883664	pizotifen	N02C
 1140865350	fybogel mebeverine sachet	A03A		1140865350	fybogel mebeverine sachet	A03A
 1141177600	rosiglitazone	A10B		1141177600	rosiglitazone	A10B
 1140865580	asacol 400mg e/c tablet	A07E		1140865580	asacol 400mg e/c tablet	A07E
 1141182632	spiriva 18micrograms inhalation capsule	R03B		1141182632	spiriva 18micrograms inhalation capsule	R03B
-1140921822	mirena 20mcg/24hrs intrauterine system	G03A		1140921822	mirena 20mcg/24hrs intrauterine system	G03A
+1140921822	mirena 20mcg/24hrs intrauterine system	G03A	G03	1140921822	mirena 20mcg/24hrs intrauterine system	G03A
 1140865578	mesalazine	A07E		1140865578	mesalazine	A07E
 1140861954	fenofibrate	C10A		1140861954	fenofibrate	C10A
 1140888366	thiamine preparation	A11D		1140888366	thiamine preparation	A11D
 1140871266	arthrotec tablet	M01A		1140871266	arthrotec tablet	M01A
-1140869276	micronor tablet	G03A		1140869276	micronor tablet	G03A
+1140869276	micronor tablet	G03A	G03	1140869276	micronor tablet	G03A
 1140868170	prochlorperazine	N05A		1140868170	prochlorperazine	N05A
 1140879634	trazodone	N06A		1140879634	trazodone	N06A
 1140861832	tranexamic acid	B02A		1140861832	tranexamic acid	B02A
 1141188146	simvador 10mg tablet	C10B		1141188146	simvador 10mg tablet	C10B
 1141172924	desloratadine	R06A		1141172924	desloratadine	R06A
 1140867876	prozac 20mg capsule	N06A		1140867876	prozac 20mg capsule	N06A
-1140882946	livial 2.5mg tablet	G03C		1140882946	livial 2.5mg tablet	G03C
+1140882946	livial 2.5mg tablet	G03C	G03	1140882946	livial 2.5mg tablet	G03C
 1141187810	tadalafil	G04B		1141187810	tadalafil	G04B
 1141181868	omacor 1g capsule	C10A		1141181868	omacor 1g capsule	C10A
 1140882236	seroxat 20mg tablet	N06A		1140882236	seroxat 20mg tablet	N06A
 1140911682	selenium ace tablet	D01A		1140911682	selenium ace tablet	D01A
 1141168554	migraleve tablet	N02C		1141168554	migraleve tablet	N02C
 1140883468	clonidine	C02L		1140883468	clonidine	C02L
-1140868372	climaval 1mg tablet	G03C		1140868372	climaval 1mg tablet	G03C
+1140868372	climaval 1mg tablet	G03C	G03	1140868372	climaval 1mg tablet	G03C
 1140872290	lamotrigine	N03A		1140872290	lamotrigine	N03A
 1141176570	fosamax 5mg tablet	M05B		1141176570	fosamax 5mg tablet	M05B
 1141193282	olmesartan	C09D		1141193282	olmesartan	C09D
@@ -219,7 +219,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141168680	orlistat	A08A		1141168680	orlistat	A08A
 1140909874	vitamin b6 preparation	A11H		1140909874	vitamin b6 preparation	A11H
 1141172928	neoclarityn 5mg tablet	R06A		1141172928	neoclarityn 5mg tablet	R06A
-1141151718	evorel conti patch	G03C		1141151718	evorel conti patch	G03C
+1141151718	evorel conti patch	G03C	G03	1141151718	evorel conti patch	G03C
 1141179974	cozaar 25mg tablet	C09D		1141179974	cozaar 25mg tablet	C09D
 1141156846	amias 2mg tablet	C09C		1141156846	amias 2mg tablet	C09C
 1140875420	baclofen	M03B		1140875420	baclofen	M03B
@@ -242,7 +242,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140873394	doxycycline	J01A		1140873394	doxycycline	J01A
 1140861138	adizem-60 m/r tablet	C08D		1140861138	adizem-60 m/r tablet	C08D
 1141169520	cosopt 2%/0.5% eye drops	S01E		1141169520	cosopt 2%/0.5% eye drops	S01E
-1140870956	alfacalcidol	A11C		1140870956	alfacalcidol	A11C
+1140870956	alfacalcidol	A11C	A11CC	1140870956	alfacalcidol	A11C
 1140865752	ispaghula husk	A06A		1140865752	ispaghula husk	A06A
 1141180314	ibandronic acid	M05B		1141180314	ibandronic acid	M05B
 2038460076	phenytoin	N03A		2038460076	phenytoin	N03A
@@ -279,7 +279,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141145896	letrozole	L02B		1141145896	letrozole	L02B
 1140865426	cimetidine	A02B		1140865426	cimetidine	A02B
 1140867726	lofepramine	N06A		1140867726	lofepramine	N06A
-1140869034	ortho-gynest 500micrograms pessary	G03C		1140869034	ortho-gynest 500micrograms pessary	G03C
+1140869034	ortho-gynest 500micrograms pessary	G03C	G03	1140869034	ortho-gynest 500micrograms pessary	G03C
 1140875840	timolol 0.25% eye drops	S01E		1140875840	timolol 0.25% eye drops	S01E
 1140909578	losec 10mg capsule	A02B		1140909578	losec 10mg capsule	A02B
 1140882394	paracetamol + codeine	N02B		1140882394	paracetamol + codeine	N02B
@@ -288,7 +288,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141179920	lumigan 0.3mg/ml eye drops	S01E		1141179920	lumigan 0.3mg/ml eye drops	S01E
 1140926922	antihistamine 60mg tablet	R06A		1140926922	antihistamine 60mg tablet	R06A
 1140909368	carvedilol	C07A		1140909368	carvedilol	C07A
-1140869362	femulen tablet	G03D		1140869362	femulen tablet	G03D
+1140869362	femulen tablet	G03D	G03	1140869362	femulen tablet	G03D
 1140909766	multivitamins capsule	A11A		1140909766	multivitamins capsule	A11A
 1141185326	travatan 40micrograms/ml eye drops	S01E		1141185326	travatan 40micrograms/ml eye drops	S01E
 1140926780	adizem-xl plus m/r capsule	C08D		1140926780	adizem-xl plus m/r capsule	C08D
@@ -296,16 +296,16 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871188	etodolac	M01A		1140871188	etodolac	M01A
 1141157132	singulair 10mg tablet	R03D		1141157132	singulair 10mg tablet	R03D
 1140873608	erythromycin	D10A		1140873608	erythromycin	D10A
-1140869278	noriday tablet	G03A		1140869278	noriday tablet	G03A
+1140869278	noriday tablet	G03A	G03	1140869278	noriday tablet	G03A
 1141194386	telfast 30 tablet	R06A		1141194386	telfast 30 tablet	R06A
 1140911754	anadin tablet	M01A		1140911754	anadin tablet	M01A
 1140928274	ropinirole	N04B		1140928274	ropinirole	N04B
-1140857620	depo-provera 50mg/1ml injection	G03A		1140857620	depo-provera 50mg/1ml injection	G03A
+1140857620	depo-provera 50mg/1ml injection	G03A	G03	1140857620	depo-provera 50mg/1ml injection	G03A
 1141157294	hydrocortisone product	D07A		1141157294	hydrocortisone product	D07A
 1141179914	bimatoprost	S01E		1141179914	bimatoprost	S01E
 1140871472	naprosyn 250mg tablet	M01A		1140871472	naprosyn 250mg tablet	M01A
 1141195232	budesonide+formoterol	R01A		1141195232	budesonide+formoterol	R01A
-1140869036	ovestin 0.1% vaginal cream	G03C		1140869036	ovestin 0.1% vaginal cream	G03C
+1140869036	ovestin 0.1% vaginal cream	G03C	G03	1140869036	ovestin 0.1% vaginal cream	G03C
 1140871732	buprenorphine	N07B		1140871732	buprenorphine	N07B
 1141180342	beclometasone dipropionate+salbutamol	R01A		1141180342	beclometasone dipropionate+salbutamol	R01A
 1140923688	zoton 15mg capsule	A02B		1140923688	zoton 15mg capsule	A02B
@@ -317,7 +317,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141192414	crestor 10mg tablet	C10B		1141192414	crestor 10mg tablet	C10B
 1140879620	clomipramine	N06A		1140879620	clomipramine	N06A
 1140878036	diclofenac sodium+misoprostol	M01A		1140878036	diclofenac sodium+misoprostol	M01A
-1140868532	testosterone product	G03B		1140868532	testosterone product	G03B
+1140868532	testosterone product	G03B	G03	1140868532	testosterone product	G03B
 1140868364	prednisone	H02A		1140868364	prednisone	H02A
 1140867818	nortriptyline	N06A		1140867818	nortriptyline	N06A
 1140909482	opticrom allergy eye drops	R03A		1140909482	opticrom allergy eye drops	R03A
@@ -325,9 +325,9 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140865588	pentasa sr 250mg m/r tablet	A07E		1140865588	pentasa sr 250mg m/r tablet	A07E
 1140909936	indometacin	M01A		1140909936	indometacin	M01A
 1140865336	spasmonal 60mg capsule	A03A		1140865336	spasmonal 60mg capsule	A03A
-1141168574	raloxifene hydrochloride	G03X		1141168574	raloxifene hydrochloride	G03X
+1141168574	raloxifene hydrochloride	G03X	G03	1141168574	raloxifene hydrochloride	G03X
 1141152848	quetiapine	N05A		1141152848	quetiapine	N05A
-1141146612	calceos chewable tablet	A11C		1141146612	calceos chewable tablet	A11C
+1141146612	calceos chewable tablet	A11C	A11CC	1141146612	calceos chewable tablet	A11C
 1140868172	stemetil 5mg tablet	N05A		1140868172	stemetil 5mg tablet	N05A
 1141199858	cardioplen xl 5mg m/r tablet	C08C		1141199858	cardioplen xl 5mg m/r tablet	C08C
 1140882498	penicillin	J01C		1140882498	penicillin	J01C
@@ -353,7 +353,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140909790	chlorphenamine	R06A		1140909790	chlorphenamine	R06A
 1141171336	eprosartan	C09C		1141171336	eprosartan	C09C
 1140862944	carbocisteine	R05C		1140862944	carbocisteine	R05C
-1140868580	norethisterone	G03A		1140868580	norethisterone	G03A
+1140868580	norethisterone	G03A	G03	1140868580	norethisterone	G03A
 1140870196	zoladex 3.6mg implant	L02A		1140870196	zoladex 3.6mg implant	L02A
 1140865670	salazopyrin 500mg tablet	A07E		1140865670	salazopyrin 500mg tablet	A07E
 1141174032	doublebase gel	A06A		1141174032	doublebase gel	A06A
@@ -376,7 +376,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140882728	otomize ear spray	R01A		1140882728	otomize ear spray	R01A
 1140865564	imodium 2mg capsule	A07D		1140865564	imodium 2mg capsule	A07D
 1141176288	azopt 10mg/ml eye drops	S01E		1141176288	azopt 10mg/ml eye drops	S01E
-1140877630	calcium+ergocalciferol tablet	A11C		1140877630	calcium+ergocalciferol tablet	A11C
+1140877630	calcium+ergocalciferol tablet	A11C	A11CC	1140877630	calcium+ergocalciferol tablet	A11C
 1140888594	fluvastatin	C10A		1140888594	fluvastatin	C10A
 1140917034	airomir 100micrograms cfc-free inhaler	R03A		1140917034	airomir 100micrograms cfc-free inhaler	R03A
 1141167940	maxalt 5mg tablet	N02C		1141167940	maxalt 5mg tablet	N02C
@@ -384,8 +384,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140925978	mycophenolate	L04A		1140925978	mycophenolate	L04A
 1140862438	uniphyllin continus 200mg m/r tablet	R03D		1140862438	uniphyllin continus 200mg m/r tablet	R03D
 1141171496	trospium	A03D		1141171496	trospium	A03D
-1140884622	oestrogen product	G03C		1140884622	oestrogen product	G03C
-1141181594	estriol product	G03C		1141181594	estriol product	G03C
+1140884622	oestrogen product	G03C	G03	1140884622	oestrogen product	G03C
+1141181594	estriol product	G03C	G03	1141181594	estriol product	G03C
 1141164060	pramipexole	N04B		1141164060	pramipexole	N04B
 1141168322	plavix 75mg tablet	B01A		1141168322	plavix 75mg tablet	B01A
 1140888556	fosinopril	C09A		1140888556	fosinopril	C09A
@@ -413,10 +413,10 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141195044	hydroxycarbamide	L01X		1141195044	hydroxycarbamide	L01X
 1141189090	rosiglitazone 1mg / metformin 500mg tablet	A10B		1141189090	rosiglitazone 1mg / metformin 500mg tablet	A10B
 1141185316	travoprost	S01E		1141185316	travoprost	S01E
-1140923738	femseven 50 patch	G03C		1140923738	femseven 50 patch	G03C
+1140923738	femseven 50 patch	G03C	G03	1140923738	femseven 50 patch	G03C
 1140864734	combivent inhaler	R03A		1140864734	combivent inhaler	R03A
 1140883476	procyclidine	N04A		1140883476	procyclidine	N04A
-1140868460	progynova 1mg tablet	G03C		1140868460	progynova 1mg tablet	G03C
+1140868460	progynova 1mg tablet	G03C	G03	1140868460	progynova 1mg tablet	G03C
 1141153032	zanidip 10mg tablet	C08C		1141153032	zanidip 10mg tablet	C08C
 1141176284	brinzolamide	S01E		1141176284	brinzolamide	S01E
 1141194224	allergy relief antihistamine 4mg tablet	R06A		1141194224	allergy relief antihistamine 4mg tablet	R06A
@@ -425,7 +425,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141168108	isotard 25xl m/r tablet	C01D		1141168108	isotard 25xl m/r tablet	C01D
 1141188658	asacol mr 400mg e/c tablet	A07E		1141188658	asacol mr 400mg e/c tablet	A07E
 1141189094	avandamet 1mg / 500mg tablet	A10B		1141189094	avandamet 1mg / 500mg tablet	A10B
-1141193272	testogel 50mg gel 5g sachet	G03B		1141193272	testogel 50mg gel 5g sachet	G03B
+1141193272	testogel 50mg gel 5g sachet	G03B	G03	1141193272	testogel 50mg gel 5g sachet	G03B
 1140888512	amiloride	C03D		1140888512	amiloride	C03D
 1140881446	proctosedyl ointment	D07A		1140881446	proctosedyl ointment	D07A
 1140868080	cyclizine	R06A		1140868080	cyclizine	R06A
@@ -458,8 +458,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871666	piroxicam	M02A		1140871666	piroxicam	M02A
 1140911698	slozem 120mg m/r capsule	C08D		1140911698	slozem 120mg m/r capsule	C08D
 1140879628	dothiepin	N06A		1140879628	dothiepin	N06A
-1140868588	progesterone product	G03D		1140868588	progesterone product	G03D
-1141166200	implanon 68mg subdermal implant	G03A		1141166200	implanon 68mg subdermal implant	G03A
+1140868588	progesterone product	G03D	G03	1140868588	progesterone product	G03D
+1141166200	implanon 68mg subdermal implant	G03A	G03	1141166200	implanon 68mg subdermal implant	G03A
 1140879392	manevac granules	A06A		1140879392	manevac granules	A06A
 1140862952	mucodyne 375mg capsule	R05C		1140862952	mucodyne 375mg capsule	R05C
 1141200108	cymalon cranberry 1.5g/5ml liquid	B05C		1141200108	cymalon cranberry 1.5g/5ml liquid	B05C
@@ -477,7 +477,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140909954	acyclovir	D06B		1140909954	acyclovir	D06B
 1141190160	vascalpha 5mg m/r tablet	C08C		1141190160	vascalpha 5mg m/r tablet	C08C
 1141164872	sinemet-62.5 tablet	C01C		1141164872	sinemet-62.5 tablet	C01C
-1140928878	zumenon 1mg tablet	G03C		1140928878	zumenon 1mg tablet	G03C
+1140928878	zumenon 1mg tablet	G03C	G03	1140928878	zumenon 1mg tablet	G03C
 1140881320	magnesium carbonate	A06A		1140881320	magnesium carbonate	A06A
 1141166086	rennie duo oral suspension	A12A		1141166086	rennie duo oral suspension	A12A
 1141200072	lyrica 25mg capsule	N03A		1141200072	lyrica 25mg capsule	N03A
@@ -493,7 +493,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140865394	hyoscine butylbromide	A04A		1140865394	hyoscine butylbromide	A04A
 1141200708	strontium product	V10B		1141200708	strontium product	V10B
 1140922714	dorzolamide	S01E		1140922714	dorzolamide	S01E
-1140869370	norgeston tablet	G03A		1140869370	norgeston tablet	G03A
+1140869370	norgeston tablet	G03A	G03	1140869370	norgeston tablet	G03A
 1140861936	questran 4g/sachet powder	C10A		1140861936	questran 4g/sachet powder	C10A
 1141171940	keppra 250mg tablet	N03A		1141171940	keppra 250mg tablet	N03A
 1140871506	ketoprofen	M01A		1140871506	ketoprofen	M01A
@@ -504,7 +504,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141174508	reductil 10mg capsule	A08A		1141174508	reductil 10mg capsule	A08A
 1141172838	depakote 250mg e/c tablet	N03A		1141172838	depakote 250mg e/c tablet	N03A
 1140878172	tears naturale eye drops	S01K		1140878172	tears naturale eye drops	S01K
-1141168578	evista 60mg tablet	G03X		1141168578	evista 60mg tablet	G03X
+1141168578	evista 60mg tablet	G03X	G03	1141168578	evista 60mg tablet	G03X
 1140870512	cyanocobalamin product	B03B		1140870512	cyanocobalamin product	B03B
 2038460068	phenobarbitone	N03A		2038460068	phenobarbitone	N03A
 1141180662	zirtek allergy 10mg tablet	R06A		1141180662	zirtek allergy 10mg tablet	R06A
@@ -560,7 +560,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140864566	cabergoline	G02C		1140864566	cabergoline	G02C
 1141172728	almotriptan	N02C		1141172728	almotriptan	N02C
 1140872590	phenoxymethylpenicillin	J01C		1140872590	phenoxymethylpenicillin	J01C
-1140868456	oestradiol product	G03C		1140868456	oestradiol product	G03C
+1140868456	oestradiol product	G03C	G03	1140868456	oestradiol product	G03C
 1141194800	bendroflumethiazide+potassium 2.5mg/7.7mmol m/r tablet	C03A		1141194800	bendroflumethiazide+potassium 2.5mg/7.7mmol m/r tablet	C03A
 1141164616	protium 20mg e/c tablet	A02B		1141164616	protium 20mg e/c tablet	A02B
 1140888176	mometasone furoate 0.1% ointment	R01A		1140888176	mometasone furoate 0.1% ointment	R01A
@@ -582,16 +582,16 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141150754	alphagan 0.2% eye drops	S01E		1141150754	alphagan 0.2% eye drops	S01E
 1140853200	bromelains	M09A		1140853200	bromelains	M09A
 1140928384	ritonavir	J05A		1140928384	ritonavir	J05A
-1141191312	calfovit d3 powder for oral suspension	A11C		1141191312	calfovit d3 powder for oral suspension	A11C
+1141191312	calfovit d3 powder for oral suspension	A11C	A11CC	1141191312	calfovit d3 powder for oral suspension	A11C
 1141153236	oxis 6micrograms turbohaler	R03A		1141153236	oxis 6micrograms turbohaler	R03A
-1140868406	conjugated oestrogens	G03C		1140868406	conjugated oestrogens	G03C
+1140868406	conjugated oestrogens	G03C	G03	1140868406	conjugated oestrogens	G03C
 1140868120	trifluoperazine	N05A		1140868120	trifluoperazine	N05A
 1141157364	metronidazole product	P01A		1141157364	metronidazole product	P01A
 1140910884	dovonex scalp solution	D05A		1140910884	dovonex scalp solution	D05A
 1140862810	phenergan 10mg tablet	R06A		1140862810	phenergan 10mg tablet	R06A
 1140870932	ascorbic acid product	A11G		1140870932	ascorbic acid product	A11G
 1141180598	coversyl plus 4mg/1.25mg tablet	N02A		1141180598	coversyl plus 4mg/1.25mg tablet	N02A
-1141151368	sandrena 0.5mg gel	G03C		1141151368	sandrena 0.5mg gel	G03C
+1141151368	sandrena 0.5mg gel	G03C	G03	1141151368	sandrena 0.5mg gel	G03C
 1140888438	glucose product	V06D		1140888438	glucose product	V06D
 1140871138	vitamin k product	B02B		1140871138	vitamin k product	B02B
 1140865618	nizatidine	A02B		1140865618	nizatidine	A02B
@@ -635,7 +635,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140909354	motifene 75mg e/c+m/r capsule	M01A		1140909354	motifene 75mg e/c+m/r capsule	M01A
 1140877988	teoptic 1% eye drops	S01E		1140877988	teoptic 1% eye drops	S01E
 2038459888	cyclosporin	S01X		2038459888	cyclosporin	S01X
-1141152228	elleste-solo mx 40 patch	G03C		1141152228	elleste-solo mx 40 patch	G03C
+1141152228	elleste-solo mx 40 patch	G03C	G03	1141152228	elleste-solo mx 40 patch	G03C
 1140883478	pyridostigmine	N07A		1140883478	pyridostigmine	N07A
 1140863268	clobazam	N05B		1140863268	clobazam	N05B
 1140862016	ventodisks 200micrograms/blister disks+diskhaler	R03A		1140862016	ventodisks 200micrograms/blister disks+diskhaler	R03A
@@ -680,7 +680,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141173346	cortisone	S01B		1141173346	cortisone	S01B
 1140873288	cephalexin	J01D		1140873288	cephalexin	J01D
 1140867304	sulpiride	N05A		1140867304	sulpiride	N05A
-1141201718	nebido 1000mg/4ml solution for injection	G03B		1141201718	nebido 1000mg/4ml solution for injection	G03B
+1141201718	nebido 1000mg/4ml solution for injection	G03B	G03	1141201718	nebido 1000mg/4ml solution for injection	G03B
 1141153172	asmasal 100micrograms spacehaler	R03A		1141153172	asmasal 100micrograms spacehaler	R03A
 1141173814	zoledronic acid	M05B		1141173814	zoledronic acid	M05B
 1141171048	oxycontin 10mg m/r tablet	N02A		1141171048	oxycontin 10mg m/r tablet	N02A
@@ -701,14 +701,14 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140860470	methyldopa	C02A		1140860470	methyldopa	C02A
 1141195974	aripiprazole	N05A		1141195974	aripiprazole	N05A
 1141171344	teveten 300mg tablet	C09C		1141171344	teveten 300mg tablet	C09C
-1140909876	calciferol	A11C		1140909876	calciferol	A11C
+1140909876	calciferol	A11C	A11CC	1140909876	calciferol	A11C
 1140909844	ciclosporin	S01X		1140909844	ciclosporin	S01X
 1140874746	diamicron 80mg tablet	A10B		1140874746	diamicron 80mg tablet	A10B
-1140868508	cyclo-progynova 1mg tablet	G03C		1140868508	cyclo-progynova 1mg tablet	G03C
+1140868508	cyclo-progynova 1mg tablet	G03C	G03	1140868508	cyclo-progynova 1mg tablet	G03C
 1140867884	lustral 50mg tablet	N06A		1140867884	lustral 50mg tablet	N06A
 1140855562	benadryl 25mg capsule	R06A		1140855562	benadryl 25mg capsule	R06A
 1141172214	supralip 160mg m/r tablet	C10A		1141172214	supralip 160mg m/r tablet	C10A
-1141145880	cacit d3 granules	A11C		1141145880	cacit d3 granules	A11C
+1141145880	cacit d3 granules	A11C	A11CC	1141145880	cacit d3 granules	A11C
 1140927692	topamax 25mg tablet	N03A		1140927692	topamax 25mg tablet	N03A
 1140880466	amorolfine	D01A		1140880466	amorolfine	D01A
 1140879794	prazosin	C02L		1140879794	prazosin	C02L
@@ -735,18 +735,18 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140866460	half securon sr 120mg m/r tablet	C08D		1140866460	half securon sr 120mg m/r tablet	C08D
 1141171502	regurin 20mg tablet	A03D		1141171502	regurin 20mg tablet	A03D
 1140928142	lamivudine	J05A		1140928142	lamivudine	J05A
-1140923598	fematrix 40 patch	G03C		1140923598	fematrix 40 patch	G03C
+1140923598	fematrix 40 patch	G03C	G03	1140923598	fematrix 40 patch	G03C
 1140881448	scheriproct ointment	S01B		1140881448	scheriproct ointment	S01B
 1140874104	dapsone	D10A		1140874104	dapsone	D10A
 1140872134	mysoline 250mg tablet	N03A		1140872134	mysoline 250mg tablet	N03A
-1140869270	medroxyprogesterone	G03A		1140869270	medroxyprogesterone	G03A
+1140869270	medroxyprogesterone	G03A	G03	1140869270	medroxyprogesterone	G03A
 1141179982	betamethasone+calcipotriol	S01B		1141179982	betamethasone+calcipotriol	S01B
 1141178816	aranesp 10micrograms/0.4ml prefilled syringe	B03X		1141178816	aranesp 10micrograms/0.4ml prefilled syringe	B03X
 1140888676	naftidrofuryl	C04A		1140888676	naftidrofuryl	C04A
 1140884482	methadone	N02A		1140884482	methadone	N02A
 1140879502	olsalazine	A07E		1140879502	olsalazine	A07E
 1140875546	piroxicam 0.5% gel	M02A		1140875546	piroxicam 0.5% gel	M02A
-1140864232	provera 2.5mg tablet	G03A		1140864232	provera 2.5mg tablet	G03A
+1140864232	provera 2.5mg tablet	G03A	G03	1140864232	provera 2.5mg tablet	G03A
 1140863442	oxazepam	N05B		1140863442	oxazepam	N05B
 1140860532	minoxidil	C02D		1140860532	minoxidil	C02D
 1141152736	zispin 30mg tablet	N06A		1141152736	zispin 30mg tablet	N06A
@@ -789,7 +789,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140876088	sudafed 0.05% nasal spray	R06A		1140876088	sudafed 0.05% nasal spray	R06A
 1140872214	valproic acid	N03A		1140872214	valproic acid	N03A
 1141181562	benadryl one a day 10mg tablet	R06A		1141181562	benadryl one a day 10mg tablet	R06A
-1141174388	calcitriol	A11C		1141174388	calcitriol	A11C
+1141174388	calcitriol	A11C	A11CC	1141174388	calcitriol	A11C
 1140888770	epinephrine	S01E		1140888770	epinephrine	S01E
 1140884704	cortisone product	S01B		1140884704	cortisone product	S01B
 1140883028	predsol 0.5% eye/ear drops	R01A		1140883028	predsol 0.5% eye/ear drops	R01A
@@ -807,11 +807,11 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140863120	loprazolam	N05C		1140863120	loprazolam	N05C
 1141168714	propiverine hydrochloride	G04B		1141168714	propiverine hydrochloride	G04B
 1140921938	diethylamine salicylate 10% cream bp	N02B		1140921938	diethylamine salicylate 10% cream bp	N02B
-1140909878	vitamin d2	A11C		1140909878	vitamin d2	A11C
+1140909878	vitamin d2	A11C	A11CC	1140909878	vitamin d2	A11C
 1140882742	efcortelan 0.5% cream	D07A		1140882742	efcortelan 0.5% cream	D07A
 1140881442	anusol hc ointment	D07A		1140881442	anusol hc ointment	D07A
 1140878676	loceryl nail lacquer	D01A		1140878676	loceryl nail lacquer	D01A
-1140870958	one-alpha 250nanograms capsule	A11C		1140870958	one-alpha 250nanograms capsule	A11C
+1140870958	one-alpha 250nanograms capsule	A11C	A11CC	1140870958	one-alpha 250nanograms capsule	A11C
 1140869842	mercaptopurine	L01B		1140869842	mercaptopurine	L01B
 1140860418	propranolol hydrochloride+bendrofluazide 80mg/2.5mg capsule	C07A		1140860418	propranolol hydrochloride+bendrofluazide 80mg/2.5mg capsule	C07A
 1140857748	genotropin 12iu multidose injection	H01A		1140857748	genotropin 12iu multidose injection	H01A
@@ -841,7 +841,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140881026	meptazinol	N02A		1140881026	meptazinol	N02A
 1140878244	balneum bath oil	D02A		1140878244	balneum bath oil	D02A
 1140875540	ibuleve gel	M01A		1140875540	ibuleve gel	M01A
-1140868422	harmogen 1.5mg tablet	G03C		1140868422	harmogen 1.5mg tablet	G03C
+1140868422	harmogen 1.5mg tablet	G03C	G03	1140868422	harmogen 1.5mg tablet	G03C
 1140863176	lormetazepam	N05C		1140863176	lormetazepam	N05C
 1140861926	bezalip 200mg tablet	C10A		1140861926	bezalip 200mg tablet	C10A
 1141201834	cymbalta 30mg gastro-resistant capsule	N06A		1141201834	cymbalta 30mg gastro-resistant capsule	N06A
@@ -853,14 +853,14 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140872434	half-sinemet cr m/r tablet	C01C		1140872434	half-sinemet cr m/r tablet	C01C
 1140872236	neurontin 100mg capsule	N03A		1140872236	neurontin 100mg capsule	N03A
 1140867690	anafranil 10mg capsule	N06A		1140867690	anafranil 10mg capsule	N06A
-1140857912	desogestrel	G03A		1140857912	desogestrel	G03A
+1140857912	desogestrel	G03A	G03	1140857912	desogestrel	G03A
 1140857044	tetralysal 204mg capsule	J01A		1140857044	tetralysal 204mg capsule	J01A
 1140855694	oxygen gas	V03A		1140855694	oxygen gas	V03A
 1141152912	caverject 5micrograms injection (pdr for recon)+diluent	G04B		1141152912	caverject 5micrograms injection (pdr for recon)+diluent	G04B
 1140878048	otrivine-antistin eye drops	R06A		1140878048	otrivine-antistin eye drops	R06A
-1140876588	ergocalciferol product	A11C		1140876588	ergocalciferol product	A11C
+1140876588	ergocalciferol product	A11C	A11CC	1140876588	ergocalciferol product	A11C
 1141153080	nytol 25mg caplet	R06A		1141153080	nytol 25mg caplet	R06A
-1140917448	oestradiol 1.25g/dose gel	G03C		1140917448	oestradiol 1.25g/dose gel	G03C
+1140917448	oestradiol 1.25g/dose gel	G03C	G03	1140917448	oestradiol 1.25g/dose gel	G03C
 1140910824	ursodesoxycholic acid	A05A		1140910824	ursodesoxycholic acid	A05A
 1140910036	mtx - methotrexate	L01B		1140910036	mtx - methotrexate	L01B
 1140909706	chlortalidone	C03B		1140909706	chlortalidone	C03B
@@ -870,11 +870,11 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141173882	nateglinide	A10B		1141173882	nateglinide	A10B
 1141168718	detrunorm 15mg tablet	G04B		1141168718	detrunorm 15mg tablet	G04B
 1141165470	felodipine+ramipril	C08C		1141165470	felodipine+ramipril	C08C
-1140884634	cyproterone	G03H		1140884634	cyproterone	G03H
+1140884634	cyproterone	G03H	G03	1140884634	cyproterone	G03H
 1140882904	canesten hc cream	D07A		1140882904	canesten hc cream	D07A
 1140875974	locorten-vioform ear drops	D07A		1140875974	locorten-vioform ear drops	D07A
 1140859220	fusidic acid	D09A		1140859220	fusidic acid	D09A
-1140857690	oestradiol 25mg implant 36 week	G03C		1140857690	oestradiol 25mg implant 36 week	G03C
+1140857690	oestradiol 25mg implant 36 week	G03C	G03	1140857690	oestradiol 25mg implant 36 week	G03C
 1141192670	migard 2.5mg tablet	N02C		1141192670	migard 2.5mg tablet	N02C
 1141167844	dipyridamole+aspirin	B01A		1141167844	dipyridamole+aspirin	B01A
 1140926990	acamprosate calcium	N07B		1140926990	acamprosate calcium	N07B
@@ -889,7 +889,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140882396	paracetamol+dihydrocodeine tartrate	N02B		1140882396	paracetamol+dihydrocodeine tartrate	N02B
 1140875640	traxam gel	M02A		1140875640	traxam gel	M02A
 1140860332	sotalol hydrochloride+hydrochlorothiazide 80mg/12.5mg tablet	C07A		1140860332	sotalol hydrochloride+hydrochlorothiazide 80mg/12.5mg tablet	C07A
-1141181818	estradiol+norethisterone acetate 1mg/0.5mg tablet	G03C		1141181818	estradiol+norethisterone acetate 1mg/0.5mg tablet	G03C
+1141181818	estradiol+norethisterone acetate 1mg/0.5mg tablet	G03C	G03	1141181818	estradiol+norethisterone acetate 1mg/0.5mg tablet	G03C
 1140925986	cellcept 250mg capsule	L04A		1140925986	cellcept 250mg capsule	L04A
 1140884074	gentisone hc ear drops	S01B		1140884074	gentisone hc ear drops	S01B
 1140883480	propantheline	A03C		1140883480	propantheline	A03C
@@ -960,8 +960,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140875736	fucithalmic m/r eye drops	D09A		1140875736	fucithalmic m/r eye drops	D09A
 1140874346	miconazole	D01A		1140874346	miconazole	D01A
 1140868784	disodium pamidronate	M05B		1140868784	disodium pamidronate	M05B
-1140868496	duphaston 10mg tablet	G03D		1140868496	duphaston 10mg tablet	G03D
-1140868400	oestriol product	G03C		1140868400	oestriol product	G03C
+1140868496	duphaston 10mg tablet	G03D	G03	1140868496	duphaston 10mg tablet	G03D
+1140868400	oestriol product	G03C	G03	1140868400	oestriol product	G03C
 1140867456	modecate 12.5mg/0.5ml oily injection	N05A		1140867456	modecate 12.5mg/0.5ml oily injection	N05A
 1140865734	liquid paraffin	A06A		1140865734	liquid paraffin	A06A
 1140864916	stilnoct 5mg tablet	N05C		1140864916	stilnoct 5mg tablet	N05C
@@ -993,7 +993,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140926794	mobic 7.5mg tablet	M01A		1140926794	mobic 7.5mg tablet	M01A
 1140911830	durogesic 25micrograms/hour patch	N01A		1140911830	durogesic 25micrograms/hour patch	N01A
 1140911762	lemsip sachet	N02B		1140911762	lemsip sachet	N02B
-1140911708	estring 2mg(7.5micrograms/24hours) vaginal ring	G03C		1140911708	estring 2mg(7.5micrograms/24hours) vaginal ring	G03C
+1140911708	estring 2mg(7.5micrograms/24hours) vaginal ring	G03C	G03	1140911708	estring 2mg(7.5micrograms/24hours) vaginal ring	G03C
 1140882906	hydrocortisone+clotrimazole	D07A		1140882906	hydrocortisone+clotrimazole	D07A
 1140882478	zovirax 5% cream	D06B		1140882478	zovirax 5% cream	D06B
 1140880208	azelaic acid	D10A		1140880208	azelaic acid	D10A
@@ -1023,7 +1023,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140883560	orphenadrine	M03B		1140883560	orphenadrine	M03B
 1140875868	acetazolamide	S01E		1140875868	acetazolamide	S01E
 1140870410	ferrous gluc+folic acid+ascorbic acid 250mg/5mg/10mg tablet	B03A		1140870410	ferrous gluc+folic acid+ascorbic acid 250mg/5mg/10mg tablet	B03A
-1140868494	dydrogesterone	G03F		1140868494	dydrogesterone	G03F
+1140868494	dydrogesterone	G03F	G03	1140868494	dydrogesterone	G03F
 1140862532	intal 5mg inhaler	R03A		1140862532	intal 5mg inhaler	R03A
 1140860982	elantan 10 tablet	C01D		1140860982	elantan 10 tablet	C01D
 1141179066	pulvinal salbutamol 200mcg breath-act dry powder inhaler	R03A		1141179066	pulvinal salbutamol 200mcg breath-act dry powder inhaler	R03A
@@ -1033,7 +1033,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140923732	curatoderm 4micrograms/g ointment	D05A		1140923732	curatoderm 4micrograms/g ointment	D05A
 1140909890	sulfinpyrazone	M04A		1140909890	sulfinpyrazone	M04A
 1140884640	nerisone 0.1% cream	D07A		1140884640	nerisone 0.1% cream	D07A
-1140868536	restandol 40mg capsule	G03B		1140868536	restandol 40mg capsule	G03B
+1140868536	restandol 40mg capsule	G03B	G03	1140868536	restandol 40mg capsule	G03B
 1140865576	cholestyramine	C10A		1140865576	cholestyramine	C10A
 1140861698	sinthrome 1mg tablet	B01A		1140861698	sinthrome 1mg tablet	B01A
 1141185436	eletriptan	N02C		1141185436	eletriptan	N02C
@@ -1042,7 +1042,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141179886	propecia 1mg tablet	G04C		1141179886	propecia 1mg tablet	G04C
 1141179734	nyogel 0.1% liquid eye gel	S01E		1141179734	nyogel 0.1% liquid eye gel	S01E
 1141150866	maxolon 5mg tablet	A03F		1141150866	maxolon 5mg tablet	A03F
-1140928222	andropatch 2.5mg/24hours transdermal patch	G03B		1140928222	andropatch 2.5mg/24hours transdermal patch	G03B
+1140928222	andropatch 2.5mg/24hours transdermal patch	G03B	G03	1140928222	andropatch 2.5mg/24hours transdermal patch	G03B
 1140916270	liquid paraffin+white soft paraffin 50%/50% ointment	A06A		1140916270	liquid paraffin+white soft paraffin 50%/50% ointment	A06A
 1140910436	feso4 - ferrous sulphate	B03A		1140910436	feso4 - ferrous sulphate	B03A
 1140888818	mestinon 60mg tablet	N07A		1140888818	mestinon 60mg tablet	N07A
@@ -1054,7 +1054,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140878030	ibuprofen+codeine phosphate	M01A		1140878030	ibuprofen+codeine phosphate	M01A
 1140875454	robaxin 750mg tablet	M03B		1140875454	robaxin 750mg tablet	M03B
 1140872152	rivotril 500mcg tablet	N03A		1140872152	rivotril 500mcg tablet	N03A
-1140870980	calcitriol product	A11C		1140870980	calcitriol product	A11C
+1140870980	calcitriol product	A11C	A11CC	1140870980	calcitriol product	A11C
 1140868866	bromocriptine	G02C		1140868866	bromocriptine	G02C
 1140867494	camcolit 250 tablet	N05A		1140867494	camcolit 250 tablet	N05A
 1140862742	vallergan 10mg tablet	R06A		1140862742	vallergan 10mg tablet	R06A
@@ -1089,7 +1089,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140878510	alphosyl 2 in 1 shampoo	S01B		1140878510	alphosyl 2 in 1 shampoo	S01B
 1140877954	feldene 0.5% gel	M02A		1140877954	feldene 0.5% gel	M02A
 1140875696	lodoxamide	S01G		1140875696	lodoxamide	S01G
-1140869366	levonorgestrel	G03A		1140869366	levonorgestrel	G03A
+1140869366	levonorgestrel	G03A	G03	1140869366	levonorgestrel	G03A
 1140867758	surmontil 10mg tablet	N06A		1140867758	surmontil 10mg tablet	N06A
 1140862140	pulmadil 200micrograms inhaler	R03A		1140862140	pulmadil 200micrograms inhaler	R03A
 1140860882	cilazapril	C09B		1140860882	cilazapril	C09B
@@ -1111,7 +1111,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 2018961142	sodium chloride	B05X		2018961142	sodium chloride	B05X
 1141191010	sebomin mr 100mg m/r capsule	J01A		1141191010	sebomin mr 100mg m/r capsule	J01A
 1141187094	cabren 2.5mg m/r tablet	C08C		1141187094	cabren 2.5mg m/r tablet	C08C
-1141180580	progynova ts 50 50micrograms patch	G03C		1141180580	progynova ts 50 50micrograms patch	G03C
+1141180580	progynova ts 50 50micrograms patch	G03C	G03	1141180580	progynova ts 50 50micrograms patch	G03C
 1141175196	renagel 403mg capsule	V03A		1141175196	renagel 403mg capsule	V03A
 1140928290	physiotens 200micrograms tablet	C02A		1140928290	physiotens 200micrograms tablet	C02A
 1140927152	fenbid 5% gel	M01A		1140927152	fenbid 5% gel	M01A
@@ -1123,7 +1123,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140875766	fluorometholone	S01B		1140875766	fluorometholone	S01B
 1140874976	methylprednisolone	D07A		1140874976	methylprednisolone	D07A
 1140874776	propylthiouracil	H03B		1140874776	propylthiouracil	H03B
-1140868586	utovlan 5mg tablet	G03A		1140868586	utovlan 5mg tablet	G03A
+1140868586	utovlan 5mg tablet	G03A	G03	1140868586	utovlan 5mg tablet	G03A
 1140861856	gemfibrozil	C10A		1140861856	gemfibrozil	C10A
 1140860912	gopten 500micrograms capsule	C09A		1140860912	gopten 500micrograms capsule	C09A
 1140858448	neo-cytamen 250micrograms/1ml injection	B03B		1140858448	neo-cytamen 250micrograms/1ml injection	B03B
@@ -1143,7 +1143,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871638	napratec tablet combination pack	M01A		1140871638	napratec tablet combination pack	M01A
 1140860498	celectol 200mg tablet	C07A		1140860498	celectol 200mg tablet	C07A
 1141189066	solpadeine headache tablet	M01A		1141189066	solpadeine headache tablet	M01A
-1141181220	ethinylestradiol	G03A		1141181220	ethinylestradiol	G03A
+1141181220	ethinylestradiol	G03A	G03	1141181220	ethinylestradiol	G03A
 1141167976	zyprexa 2.5mg tablet	N05A		1141167976	zyprexa 2.5mg tablet	N05A
 1141162970	optilast 0.05% eye drops	R06A		1141162970	optilast 0.05% eye drops	R06A
 1140883914	flavoxate	G04B		1140883914	flavoxate	G04B
@@ -1182,7 +1182,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140927354	acular 0.5% ophthalmic solution	S01B		1140927354	acular 0.5% ophthalmic solution	S01B
 1140910382	cya - cyclosporin	S01X		1140910382	cya - cyclosporin	S01X
 1140888376	sodium chloride eye drops	B05X		1140888376	sodium chloride eye drops	B05X
-1140884706	megestrol	G03A		1140884706	megestrol	G03A
+1140884706	megestrol	G03A	G03	1140884706	megestrol	G03A
 1140884676	fluocinolone	D07A		1140884676	fluocinolone	D07A
 1140877894	oruvail gel	M01A		1140877894	oruvail gel	M01A
 1140874056	rifampicin	J04A		1140874056	rifampicin	J04A
@@ -1199,7 +1199,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141187336	elidel 1% cream	D11A		1141187336	elidel 1% cream	D11A
 1141171052	oxycontin 40mg m/r tablet	N02A		1141171052	oxycontin 40mg m/r tablet	N02A
 1141164836	eucerin 10% cream	D02A		1141164836	eucerin 10% cream	D02A
-1141157406	norethisterone product	G03A		1141157406	norethisterone product	G03A
+1141157406	norethisterone product	G03A	G03	1141157406	norethisterone product	G03A
 1140926994	campral ec 333mg e/c tablet	N07B		1140926994	campral ec 333mg e/c tablet	N07B
 1140921160	fersaday 304mg tablet	B03A		1140921160	fersaday 304mg tablet	B03A
 1140911832	durogesic 50micrograms/hour patch	N01A		1140911832	durogesic 50micrograms/hour patch	N01A
@@ -1233,7 +1233,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140872484	antabuse 200mg tablet	P03A		1140872484	antabuse 200mg tablet	P03A
 1140872440	symmetrel 100mg capsule	N04B		1140872440	symmetrel 100mg capsule	N04B
 1140872320	levodopa	N04B		1140872320	levodopa	N04B
-1140868968	danazol	G03X		1140868968	danazol	G03X
+1140868968	danazol	G03X	G03	1140868968	danazol	G03X
 1140865966	digoxin product	C01A		1140865966	digoxin product	C01A
 1140861702	phenindione	B01A		1140861702	phenindione	B01A
 1140861588	enoxaparin	B01A		1140861588	enoxaparin	B01A
@@ -1242,13 +1242,13 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141166858	chemydur 60xl m/r tablet	C01D		1141166858	chemydur 60xl m/r tablet	C01D
 1141164760	marevan 0.5mg tablet	B01A		1141164760	marevan 0.5mg tablet	B01A
 1141157496	diazepam product	N05B		1141157496	diazepam product	N05B
-1141157410	levonorgestrel product	G03A		1141157410	levonorgestrel product	G03A
+1141157410	levonorgestrel product	G03A	G03	1141157410	levonorgestrel product	G03A
 1140927940	tensipine mr 10 m/r tablet	C08C		1140927940	tensipine mr 10 m/r tablet	C08C
 1140927812	decongestant 0.05% nasal spray	R05C		1140927812	decongestant 0.05% nasal spray	R05C
 1140927544	glyceryl trinitrate patch	C01D		1140927544	glyceryl trinitrate patch	C01D
 1140921818	iopidine ophthalmic 0.5% intra-ocular solution	S01E		1140921818	iopidine ophthalmic 0.5% intra-ocular solution	S01E
 1140911834	durogesic 75micrograms/hour patch	N01A		1140911834	durogesic 75micrograms/hour patch	N01A
-1140910372	chloramiphene	G03G		1140910372	chloramiphene	G03G
+1140910372	chloramiphene	G03G	G03	1140910372	chloramiphene	G03G
 1140910368	paraffin-white soft	A06A		1140910368	paraffin-white soft	A06A
 1140909480	aspro clear maximum strength soluble tablet	N02B		1140909480	aspro clear maximum strength soluble tablet	N02B
 1140884558	ketorolac	S01B		1140884558	ketorolac	S01B
@@ -1291,15 +1291,15 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140868650	norditropin(epr) 12iu(4mg) injection (pdr for recon)+diluent	H01A		1140868650	norditropin(epr) 12iu(4mg) injection (pdr for recon)+diluent	H01A
 1140866356	burinex a tablet	C03C		1140866356	burinex a tablet	C03C
 1140865750	wheat fibre 80% powder	A06A		1140865750	wheat fibre 80% powder	A06A
-1140864172	norplant 38mg subdermal implant	G03A		1140864172	norplant 38mg subdermal implant	G03A
+1140864172	norplant 38mg subdermal implant	G03A	G03	1140864172	norplant 38mg subdermal implant	G03A
 1140861834	cyklokapron 500mg tablet	B02A		1140861834	cyklokapron 500mg tablet	B02A
 1140860304	beta-cardone 40mg tablet	C07A		1140860304	beta-cardone 40mg tablet	C07A
-1140857704	ovestin 250micrograms tablet	G03C		1140857704	ovestin 250micrograms tablet	G03C
+1140857704	ovestin 250micrograms tablet	G03C	G03	1140857704	ovestin 250micrograms tablet	G03C
 1141186288	clearsore aciclovir 5% cream	D06B		1141186288	clearsore aciclovir 5% cream	D06B
 1141181656	indometacin product	M01A		1141181656	indometacin product	M01A
 1141176854	bupropion	N06A		1141176854	bupropion	N06A
 1141173910	lopinavir+ritonavir	J05A		1141173910	lopinavir+ritonavir	J05A
-1141166196	etonogestrel	G03A		1141166196	etonogestrel	G03A
+1141166196	etonogestrel	G03A	G03	1141166196	etonogestrel	G03A
 1141157482	hyoscine product	A04A		1141157482	hyoscine product	A04A
 1141157394	goserelin product	L02A		1141157394	goserelin product	L02A
 1141153134	anadin ibuprofen 200mg tablet	M01A		1141153134	anadin ibuprofen 200mg tablet	M01A
@@ -1309,7 +1309,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140888590	colestipol	C10A		1140888590	colestipol	C10A
 1140884090	neomycin product	A07A		1140884090	neomycin product	A07A
 1140883076	micralax micro-enema	B05C		1140883076	micralax micro-enema	B05C
-1140882962	human menopausal gonadotrophins	G03G		1140882962	human menopausal gonadotrophins	G03G
+1140882962	human menopausal gonadotrophins	G03G	G03	1140882962	human menopausal gonadotrophins	G03G
 1140882820	calmurid hc cream	D07A		1140882820	calmurid hc cream	D07A
 1140881440	anugesic-hc cream	D07A		1140881440	anugesic-hc cream	D07A
 1140875870	diamox 250mg tablet	S01E		1140875870	diamox 250mg tablet	S01E
@@ -1320,7 +1320,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871782	mst continus 60mg m/r tablet	N02A		1140871782	mst continus 60mg m/r tablet	N02A
 1140871738	temgesic 400mcg sublingual tablet	N07B		1140871738	temgesic 400mcg sublingual tablet	N07B
 1140871616	surgam 200mg tablet	M01A		1140871616	surgam 200mg tablet	M01A
-1140870232	megace 40mg tablet	G03A		1140870232	megace 40mg tablet	G03A
+1140870232	megace 40mg tablet	G03A	G03	1140870232	megace 40mg tablet	G03A
 1140866612	arythmol 150mg tablet	C01B		1140866612	arythmol 150mg tablet	C01B
 1140865378	dicyclomine hydrochloride	A03A		1140865378	dicyclomine hydrochloride	A03A
 1140861434	praxilene 100mg capsule	C04A		1140861434	praxilene 100mg capsule	C04A
@@ -1360,7 +1360,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140864910	carace 10 plus tablet	C09B		1140864910	carace 10 plus tablet	C09B
 1140863070	actifed tablet	R06A		1140863070	actifed tablet	R06A
 1140860758	capoten 12.5mg tablet	C09A		1140860758	capoten 12.5mg tablet	C09A
-1141190580	conjugated oestrogens 0.3mg / medroxyprogesterone 1.5mg tab	G03A		1141190580	conjugated oestrogens 0.3mg / medroxyprogesterone 1.5mg tab	G03A
+1141190580	conjugated oestrogens 0.3mg / medroxyprogesterone 1.5mg tab	G03A	G03	1141190580	conjugated oestrogens 0.3mg / medroxyprogesterone 1.5mg tab	G03A
 1141189256	rebif 44micrograms/0.5ml prefilled syringe	L03A		1141189256	rebif 44micrograms/0.5ml prefilled syringe	L03A
 1141176278	ibugel forte 10% gel	M01A		1141176278	ibugel forte 10% gel	M01A
 1141170966	oxynorm 20mg capsule	N02A		1141170966	oxynorm 20mg capsule	N02A
@@ -1369,7 +1369,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141166528	vexol 1% eye drops	S01B		1141166528	vexol 1% eye drops	S01B
 1141166302	arava 10mg tablet	L04A		1141166302	arava 10mg tablet	L04A
 1141156738	paludrine tablet+avloclor tablet 100mg/250mg travel pack	P01B		1141156738	paludrine tablet+avloclor tablet 100mg/250mg travel pack	P01B
-1140923914	progynova ts 50micrograms patch	G03C		1140923914	progynova ts 50micrograms patch	G03C
+1140923914	progynova ts 50micrograms patch	G03C	G03	1140923914	progynova ts 50micrograms patch	G03C
 1140916894	valtrex 500mg tablet	J05A		1140916894	valtrex 500mg tablet	J05A
 1140911836	durogesic 100micrograms/hour patch	N01A		1140911836	durogesic 100micrograms/hour patch	N01A
 1140910522	paraffin liquid	A06A		1140910522	paraffin liquid	A06A
@@ -1446,7 +1446,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141188798	forsteo 250mcg/ml injection solution 3ml prefilled pen	H05A		1141188798	forsteo 250mcg/ml injection solution 3ml prefilled pen	H05A
 1141184608	vivabec 50micrograms nasal spray	R01A		1141184608	vivabec 50micrograms nasal spray	R01A
 1141181616	phenobarbital product	N03A		1141181616	phenobarbital product	N03A
-1141181218	ethinylestradiol product	G03C		1141181218	ethinylestradiol product	G03C
+1141181218	ethinylestradiol product	G03C	G03	1141181218	ethinylestradiol product	G03C
 1141181154	pletal 100mg tablet	B01A		1141181154	pletal 100mg tablet	B01A
 1141181112	feverfen 100mg/5ml s/f oral suspension	M01A		1141181112	feverfen 100mg/5ml s/f oral suspension	M01A
 1141180976	dexamfetamine	N06B		1141180976	dexamfetamine	N06B
@@ -1458,7 +1458,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141171482	reminyl 4mg tablet	N06D		1141171482	reminyl 4mg tablet	N06D
 1141171054	oxycontin 80mg m/r tablet	N02A		1141171054	oxycontin 80mg m/r tablet	N02A
 1141167814	imiquimod	D06B		1141167814	imiquimod	D06B
-1141152356	cyclogest 200mg pessary	G03D		1141152356	cyclogest 200mg pessary	G03D
+1141152356	cyclogest 200mg pessary	G03D	G03	1141152356	cyclogest 200mg pessary	G03D
 1141151848	emulsiderm emollient emulsion	A06A		1141151848	emulsiderm emollient emulsion	A06A
 1141151026	eurax hc cream	D07A		1141151026	eurax hc cream	D07A
 1140928276	humatrope(rbe) 18iu(6mg) inj cartridge(pdr for recon)+dil	H01A		1140928276	humatrope(rbe) 18iu(6mg) inj cartridge(pdr for recon)+dil	H01A
@@ -1530,7 +1530,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140869410	potassium bicarbonate+citric acid 1.39g/1.14g soluble tablet	A12B		1140869410	potassium bicarbonate+citric acid 1.39g/1.14g soluble tablet	A12B
 1140869396	cystrin 3mg tablet	G04B		1140869396	cystrin 3mg tablet	G04B
 1140868908	glucobay 50mg tablet	A10B		1140868908	glucobay 50mg tablet	A10B
-1140868446	ethinyloestradiol	G03C		1140868446	ethinyloestradiol	G03C
+1140868446	ethinyloestradiol	G03C	G03	1140868446	ethinyloestradiol	G03C
 1140866248	lasix 20mg tablet	C03C		1140866248	lasix 20mg tablet	C03C
 1140863350	librium 5mg tablet	N05B		1140863350	librium 5mg tablet	N05B
 1140863310	xanax 250mcg tablet	N05B		1140863310	xanax 250mcg tablet	N05B
@@ -1539,7 +1539,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140860220	slow-trasicor 160mg m/r tablet	C07A		1140860220	slow-trasicor 160mg m/r tablet	C07A
 1140854002	otrivine-antistin nose drops	R06A		1140854002	otrivine-antistin nose drops	R06A
 1141200090	eflornithine	P01C		1141200090	eflornithine	P01C
-1141192876	evra transdermal patch	G03A		1141192876	evra transdermal patch	G03A
+1141192876	evra transdermal patch	G03A	G03	1141192876	evra transdermal patch	G03A
 1141184388	periostat 20mg tablet	J01A		1141184388	periostat 20mg tablet	J01A
 1141179744	clarityn allergy 2% eye drops	R06A		1141179744	clarityn allergy 2% eye drops	R06A
 1141173786	starlix 60mg tablet	A10B		1141173786	starlix 60mg tablet	A10B
@@ -1561,7 +1561,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140911086	ibuspray topical spray	M01A		1140911086	ibuspray topical spray	M01A
 1140910596	6mp - mercaptopurine	L01B		1140910596	6mp - mercaptopurine	L01B
 1140910358	cpz - chlorpromazine	N05A		1140910358	cpz - chlorpromazine	N05A
-1140909906	estropipate	G03C		1140909906	estropipate	G03C
+1140909906	estropipate	G03C	G03	1140909906	estropipate	G03C
 1140909748	methenamine hippurate	J01X		1140909748	methenamine hippurate	J01X
 1140888772	acetaminophen	N02B		1140888772	acetaminophen	N02B
 1140888760	isdn - isosorbide dinitrate	C01D		1140888760	isdn - isosorbide dinitrate	C01D
@@ -1587,7 +1587,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140872748	ampicillin	J01C		1140872748	ampicillin	J01C
 1140872556	tetrabenazine	N07X		1140872556	tetrabenazine	N07X
 1140871614	tiaprofenic acid	M01A		1140871614	tiaprofenic acid	M01A
-1140870982	rocaltrol 250nanograms capsule	A11C		1140870982	rocaltrol 250nanograms capsule	A11C
+1140870982	rocaltrol 250nanograms capsule	A11C	A11CC	1140870982	rocaltrol 250nanograms capsule	A11C
 1140870574	calcium resonium powder	V03A		1140870574	calcium resonium powder	V03A
 1140870248	buserelin	L02A		1140870248	buserelin	L02A
 1140870170	nolvadex 10mg tablet	L02B		1140870170	nolvadex 10mg tablet	L02B
@@ -1611,7 +1611,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141184376	ranitil 150mg tablet	A02B		1141184376	ranitil 150mg tablet	A02B
 1141182086	sodium feredetate	B03A		1141182086	sodium feredetate	B03A
 1141180566	valganciclovir	J05A		1141180566	valganciclovir	J05A
-1141179822	ethinylestradiol+drospirenone 30micrograms/3mg tablet	G03C		1141179822	ethinylestradiol+drospirenone 30micrograms/3mg tablet	G03C
+1141179822	ethinylestradiol+drospirenone 30micrograms/3mg tablet	G03C	G03	1141179822	ethinylestradiol+drospirenone 30micrograms/3mg tablet	G03C
 1141179768	viread 245mg tablet	J05A		1141179768	viread 245mg tablet	J05A
 1141175212	trileptal 150 tablet	N03A		1141175212	trileptal 150 tablet	N03A
 1141170770	eucerin 10% lotion	D02A		1141170770	eucerin 10% lotion	D02A
@@ -1638,7 +1638,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140879844	phenylephrine	S01G		1140879844	phenylephrine	S01G
 1140878674	trosyl cream	D01A		1140878674	trosyl cream	D01A
 1140878564	isotrex gel	D10A		1140878564	isotrex gel	D10A
-1140877632	calciferol 250micrograms tablet	A11C		1140877632	calciferol 250micrograms tablet	A11C
+1140877632	calciferol 250micrograms tablet	A11C	A11CC	1140877632	calciferol 250micrograms tablet	A11C
 1140876452	dermacort cream	D07A		1140876452	dermacort cream	D07A
 1140876432	urea+lactic acid 10/5% cream	D02A		1140876432	urea+lactic acid 10/5% cream	D02A
 1140875508	neostigmine	N07A		1140875508	neostigmine	N07A
@@ -1671,12 +1671,12 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140854816	fluocinonide	D07A		1140854816	fluocinonide	D07A
 1140853854	gentamicin+hydrocortisone acetate 0.3%/1% ear drops	J01G		1140853854	gentamicin+hydrocortisone acetate 0.3%/1% ear drops	J01G
 1141201250	inspra 25mg tablet	C03D		1141201250	inspra 25mg tablet	C03D
-1141193316	femtab sequi tablet	G03C		1141193316	femtab sequi tablet	G03C
+1141193316	femtab sequi tablet	G03C	G03	1141193316	femtab sequi tablet	G03C
 1141191184	nylax with senna 7.5mg tablet	A06A		1141191184	nylax with senna 7.5mg tablet	A06A
 1141190482	fluconazole 150mg capsule + clotrimazole 2% cream	D01A		1141190482	fluconazole 150mg capsule + clotrimazole 2% cream	D01A
 1141186892	tamiflu 75mg capsule	J05A		1141186892	tamiflu 75mg capsule	J05A
 1141186674	bosentan	C02K		1141186674	bosentan	C02K
-1141182794	desogestrel product	G03A		1141182794	desogestrel product	G03A
+1141182794	desogestrel product	G03A	G03	1141182794	desogestrel product	G03A
 1141182732	memantine hydrochloride	N06D		1141182732	memantine hydrochloride	N06D
 1141182610	fluocinolone acetonide+clioquinol 0.025%/3% cream	D07A		1141182610	fluocinolone acetonide+clioquinol 0.025%/3% cream	D07A
 1141182596	voriconazole	J02A		1141182596	voriconazole	J02A
@@ -1686,7 +1686,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141175274	candiden 1% cream	D01A		1141175274	candiden 1% cream	D01A
 1141173034	xeloda 150mg tablet	L01B		1141173034	xeloda 150mg tablet	L01B
 1141167490	somatuline la 30mg injection (pdr)+diluent+syringe	H01C		1141167490	somatuline la 30mg injection (pdr)+diluent+syringe	H01C
-1141166354	testoderm 6mg/24hours transdermal patch	G03B		1141166354	testoderm 6mg/24hours transdermal patch	G03B
+1141166354	testoderm 6mg/24hours transdermal patch	G03B	G03	1141166354	testoderm 6mg/24hours transdermal patch	G03B
 1141165858	ziagen 300mg tablet	J05A		1141165858	ziagen 300mg tablet	J05A
 1141164248	subutex 8mg sublingual tablet	N07B		1141164248	subutex 8mg sublingual tablet	N07B
 1141162668	levofloxacin	J01M		1141162668	levofloxacin	J01M
@@ -1720,7 +1720,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140870294	feospan 150mg spansule	B03A		1140870294	feospan 150mg spansule	B03A
 1140869952	cyclosporin product	S01X		1140869952	cyclosporin product	S01X
 1140869482	urispas 200mg tablet	G04B		1140869482	urispas 200mg tablet	G04B
-1140869368	microval tablet	G03A		1140869368	microval tablet	G03A
+1140869368	microval tablet	G03A	G03	1140869368	microval tablet	G03A
 1140868824	ddavp 100micrograms tablet	H01B		1140868824	ddavp 100micrograms tablet	H01B
 1140867210	fentazin 2mg tablet	N05A		1140867210	fentazin 2mg tablet	N05A
 1140867134	pericyazine	N05A		1140867134	pericyazine	N05A
@@ -1743,7 +1743,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141192990	morphgesic sr 10mg m/r tablet	N02A		1141192990	morphgesic sr 10mg m/r tablet	N02A
 1141192782	hepsera 10mg tablet	J05A		1141192782	hepsera 10mg tablet	J05A
 1141192364	carmil xl 60mg m/r tablet	C01D		1141192364	carmil xl 60mg m/r tablet	C01D
-1141192344	cyproterone acetate+ethinylestradiol	G03H		1141192344	cyproterone acetate+ethinylestradiol	G03H
+1141192344	cyproterone acetate+ethinylestradiol	G03H	G03	1141192344	cyproterone acetate+ethinylestradiol	G03H
 1141190802	nutropinaq 10mg(30iu)/2ml injection cartridge	H01A		1141190802	nutropinaq 10mg(30iu)/2ml injection cartridge	H01A
 1141190736	faslodex 50mg/ml solution for injection 5ml p/f syringe	L02B		1141190736	faslodex 50mg/ml solution for injection 5ml p/f syringe	L02B
 1141189040	brolene cool eyes eye drops	S01K		1141189040	brolene cool eyes eye drops	S01K
@@ -1782,14 +1782,14 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140910866	carnitine products	A16A		1140910866	carnitine products	A16A
 1140910810	salazosulfapyridine	A07E		1140910810	salazosulfapyridine	A07E
 1140910608	methyl tyrosine	V09I		1140910608	methyl tyrosine	V09I
-1140909922	gnrh - gonadotrophin-releasing hormone product	G03G		1140909922	gnrh - gonadotrophin-releasing hormone product	G03G
+1140909922	gnrh - gonadotrophin-releasing hormone product	G03G	G03	1140909922	gnrh - gonadotrophin-releasing hormone product	G03G
 1140909776	etamsylate	B02B		1140909776	etamsylate	B02B
 1140888714	optimax 500mg tablet	N06A		1140888714	optimax 500mg tablet	N06A
 1140888596	preparation h ointment	N01B		1140888596	preparation h ointment	N01B
 1140888470	mexiletine	C01B		1140888470	mexiletine	C01B
 1140888358	inositol product	A11H		1140888358	inositol product	A11H
 1140888124	uniroid ointment	D07A		1140888124	uniroid ointment	D07A
-1140884638	clomiphene	G03G		1140884638	clomiphene	G03G
+1140884638	clomiphene	G03G	G03	1140884638	clomiphene	G03G
 1140884338	pentamidine	P01C		1140884338	pentamidine	P01C
 1140884136	topical miconazole	D01A		1140884136	topical miconazole	D01A
 1140884070	genticin 0.3% eye/ear drops	J01G		1140884070	genticin 0.3% eye/ear drops	J01G
@@ -1819,8 +1819,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140870926	benadon 20mg tablet	A11H		1140870926	benadon 20mg tablet	A11H
 1140870176	tamofen 10mg tablet	L02B		1140870176	tamofen 10mg tablet	L02B
 1140869594	chlorambucil	L01A		1140869594	chlorambucil	L01A
-1140868714	clomid 50mg tablet	G03G		1140868714	clomid 50mg tablet	G03G
-1140868590	cyclogest 200mg suppository	G03D		1140868590	cyclogest 200mg suppository	G03D
+1140868714	clomid 50mg tablet	G03G	G03	1140868714	clomid 50mg tablet	G03G
+1140868590	cyclogest 200mg suppository	G03D	G03	1140868590	cyclogest 200mg suppository	G03D
 1140867852	nardil 15mg tablet	N06A		1140867852	nardil 15mg tablet	N06A
 1140867398	fluphenazine decanoate	N05A		1140867398	fluphenazine decanoate	N05A
 1140867306	dolmatil 200mg tablet	N05A		1140867306	dolmatil 200mg tablet	N05A
@@ -1854,10 +1854,10 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141189132	levodopa+careldopa+entacapone	N04B		1141189132	levodopa+careldopa+entacapone	N04B
 1141186226	cetirocol 10mg tablet	R06A		1141186226	cetirocol 10mg tablet	R06A
 1141182708	ipocol 400mg e/c tablet	A07E		1141182708	ipocol 400mg e/c tablet	A07E
-1141179820	drospirenone	G03A		1141179820	drospirenone	G03A
+1141179820	drospirenone	G03A	G03	1141179820	drospirenone	G03A
 1141179760	zindaclin 1% gel	D10A		1141179760	zindaclin 1% gel	D10A
-1141177658	menopur 75iu injection (pdr for recon)+solvent	G03G		1141177658	menopur 75iu injection (pdr for recon)+solvent	G03G
-1141172714	climanor 5mg tablet	G03A		1141172714	climanor 5mg tablet	G03A
+1141177658	menopur 75iu injection (pdr for recon)+solvent	G03G	G03	1141177658	menopur 75iu injection (pdr for recon)+solvent	G03G
+1141172714	climanor 5mg tablet	G03A	G03	1141172714	climanor 5mg tablet	G03A
 1141172616	glatiramer	L03A		1141172616	glatiramer	L03A
 1141171410	sonata 5mg capsule	N05C		1141171410	sonata 5mg capsule	N05C
 1141170972	oxynorm 5mg/5ml liquid	N02A		1141170972	oxynorm 5mg/5ml liquid	N02A
@@ -1919,12 +1919,12 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140872596	floxapen 250mg capsule	J01C		1140872596	floxapen 250mg capsule	J01C
 1140872268	orlept 200mg e/c tablet	N03A		1140872268	orlept 200mg e/c tablet	N03A
 1140870274	flutamide	L02B		1140870274	flutamide	L02B
-1140870260	cyprostat 50mg tablet	G03H		1140870260	cyprostat 50mg tablet	G03H
+1140870260	cyprostat 50mg tablet	G03H	G03	1140870260	cyprostat 50mg tablet	G03H
 1140869480	urispas 100mg tablet	G04B		1140869480	urispas 100mg tablet	G04B
 1140869460	ubretid 5mg tablet	R03B		1140869460	ubretid 5mg tablet	R03B
 1140868646	humatrope(rbe) 4iu(1.3mg) injection (pdr for recon)+diluent	H01A		1140868646	humatrope(rbe) 4iu(1.3mg) injection (pdr for recon)+diluent	H01A
-1140868584	primolut-n 5mg tablet	G03A		1140868584	primolut-n 5mg tablet	G03A
-1140868526	mesterolone	G03B		1140868526	mesterolone	G03B
+1140868584	primolut-n 5mg tablet	G03A	G03	1140868584	primolut-n 5mg tablet	G03A
+1140868526	mesterolone	G03B	G03	1140868526	mesterolone	G03B
 1140868336	synflex 275mg tablet	M01A		1140868336	synflex 275mg tablet	M01A
 1140868112	nabilone	A04A		1140868112	nabilone	A04A
 1140867218	pimozide	N05A		1140867218	pimozide	N05A
@@ -1968,10 +1968,10 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141183960	tiloket 2.5% gel	M01A		1141183960	tiloket 2.5% gel	M01A
 1141181554	clioquinol+flumetasone pivalate 1%/0.02% ear drops	P01A		1141181554	clioquinol+flumetasone pivalate 1%/0.02% ear drops	P01A
 1141181506	pegasys 180micrograms/0.5ml injection prefilled syringe	L03A		1141181506	pegasys 180micrograms/0.5ml injection prefilled syringe	L03A
-1141181240	ethinylestradiol+levonorgestrel 30mcg/150mcg tablet	G03C		1141181240	ethinylestradiol+levonorgestrel 30mcg/150mcg tablet	G03C
-1141181124	etynodiol diacetate	G03D		1141181124	etynodiol diacetate	G03D
+1141181240	ethinylestradiol+levonorgestrel 30mcg/150mcg tablet	G03C	G03	1141181240	ethinylestradiol+levonorgestrel 30mcg/150mcg tablet	G03C
+1141181124	etynodiol diacetate	G03D	G03	1141181124	etynodiol diacetate	G03D
 1141181020	ciclosporin product	S01X		1141181020	ciclosporin product	S01X
-1141180944	clomifene	G03G		1141180944	clomifene	G03G
+1141180944	clomifene	G03G	G03	1141180944	clomifene	G03G
 1141179948	glycopyrrolate	A03A		1141179948	glycopyrrolate	A03A
 1141179924	lamisil at 1% spray	D01B		1141179924	lamisil at 1% spray	D01B
 1141179874	concerta xl 18mg m/r tablet	N06B		1141179874	concerta xl 18mg m/r tablet	N06B
@@ -1980,7 +1980,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141169714	zotepine	N05A		1141169714	zotepine	N05A
 1141168398	xepin 5% cream	N06A		1141168398	xepin 5% cream	N06A
 1141168372	zithromax 500mg tablet	J01F		1141168372	zithromax 500mg tablet	J01F
-1141168324	oestradiol+norethisterone acetate 1mg/0.5mg tablet	G03C		1141168324	oestradiol+norethisterone acetate 1mg/0.5mg tablet	G03C
+1141168324	oestradiol+norethisterone acetate 1mg/0.5mg tablet	G03C	G03	1141168324	oestradiol+norethisterone acetate 1mg/0.5mg tablet	G03C
 1141166768	lamivudine+zidovudine	J05A		1141166768	lamivudine+zidovudine	J05A
 1141166192	zeffix 100mg tablet	J05A		1141166192	zeffix 100mg tablet	J05A
 1141165526	sustiva 50mg capsule	J05A		1141165526	sustiva 50mg capsule	J05A
@@ -1988,14 +1988,14 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141164266	emadine 0.05% eye drops	S01G		1141164266	emadine 0.05% eye drops	S01G
 1141164260	emedastine	S01G		1141164260	emedastine	S01G
 1141164044	isosorbide mononitrate+aspirin	C01D		1141164044	isosorbide mononitrate+aspirin	C01D
-1141157404	ethinyloestradiol product	G03C		1141157404	ethinyloestradiol product	G03C
+1141157404	ethinyloestradiol product	G03C	G03	1141157404	ethinyloestradiol product	G03C
 1141157338	disulfiram product	P03A		1141157338	disulfiram product	P03A
 1141157186	disopyramide product	C01B		1141157186	disopyramide product	C01B
 1141157136	dilcardia sr 60mg m/r capsule	C08D		1141157136	dilcardia sr 60mg m/r capsule	C08D
 1141153422	zamadol sr 50mg m/r capsule	N02A		1141153422	zamadol sr 50mg m/r capsule	N02A
 1141152896	tolcapone	N04B		1141152896	tolcapone	N04B
 1141152242	zorac 0.05% aqueous gel	D05A		1141152242	zorac 0.05% aqueous gel	D05A
-1141152198	crinone 4% vaginal gel	G03D		1141152198	crinone 4% vaginal gel	G03D
+1141152198	crinone 4% vaginal gel	G03D	G03	1141152198	crinone 4% vaginal gel	G03D
 1141146128	atenolol+co-amilozide	C07A		1141146128	atenolol+co-amilozide	C07A
 1141146124	atenolol+chlorthalidone	C07A		1141146124	atenolol+chlorthalidone	C07A
 1140928242	proctocream hc cream	D07A		1140928242	proctocream hc cream	D07A
@@ -2075,8 +2075,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871012	potaba 500mg tablet	D11A		1140871012	potaba 500mg tablet	D11A
 1140871008	potassium aminobenzoate	R02A		1140871008	potassium aminobenzoate	R02A
 1140869844	puri-nethol 50mg tablet	L01B		1140869844	puri-nethol 50mg tablet	L01B
-1140869352	norinyl-1 tablet	G03C		1140869352	norinyl-1 tablet	G03C
-1140868534	primoteston depot 250mg/1ml oily injection	G03B		1140868534	primoteston depot 250mg/1ml oily injection	G03B
+1140869352	norinyl-1 tablet	G03C	G03	1140869352	norinyl-1 tablet	G03C
+1140868534	primoteston depot 250mg/1ml oily injection	G03B	G03	1140868534	primoteston depot 250mg/1ml oily injection	G03B
 1140867930	motival tablet	N06A		1140867930	motival tablet	N06A
 1140866516	cordarone x 100mg tablet	C01B		1140866516	cordarone x 100mg tablet	C01B
 1140866388	triamterene	C03D		1140866388	triamterene	C03D
@@ -2117,7 +2117,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141195074	amoxident 500mg capsule	J01C		1141195074	amoxident 500mg capsule	J01C
 1141195072	amoxident 250mg capsule	J01C		1141195072	amoxident 250mg capsule	J01C
 1141194804	nadolol+bendroflumethiazide 40mg/5mg tablet	C07A		1141194804	nadolol+bendroflumethiazide 40mg/5mg tablet	C07A
-1141193318	femtab continuous tablet	G03C		1141193318	femtab continuous tablet	G03C
+1141193318	femtab continuous tablet	G03C	G03	1141193318	femtab continuous tablet	G03C
 1141193056	dandrazol 2% shampoo	D01A		1141193056	dandrazol 2% shampoo	D01A
 1141192994	morphgesic sr 60mg m/r tablet	N02A		1141192994	morphgesic sr 60mg m/r tablet	N02A
 1141191740	copegus 200mg tablet	J05A		1141191740	copegus 200mg tablet	J05A
@@ -2137,7 +2137,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141182664	fluocinolone acetonide+clioquinol 0.025%/3% ointment	D07A		1141182664	fluocinolone acetonide+clioquinol 0.025%/3% ointment	D07A
 1141182094	feredetate na 27.5mg/5ml elixir	B03A		1141182094	feredetate na 27.5mg/5ml elixir	B03A
 1141181872	defanac 25mg e/c tablet	M01A		1141181872	defanac 25mg e/c tablet	M01A
-1141181298	ethinylestradiol+norethisterone acetate 20mcg/1mg tablet	G03C		1141181298	ethinylestradiol+norethisterone acetate 20mcg/1mg tablet	G03C
+1141181298	ethinylestradiol+norethisterone acetate 20mcg/1mg tablet	G03C	G03	1141181298	ethinylestradiol+norethisterone acetate 20mcg/1mg tablet	G03C
 1141179818	idrolax oral powder	A06A		1141179818	idrolax oral powder	A06A
 1141176970	dermalo bath emollient	A06A		1141176970	dermalo bath emollient	A06A
 1141176864	peginterferon alfa-2b	L03A		1141176864	peginterferon alfa-2b	L03A
@@ -2189,7 +2189,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140926848	moisture eyes eye drops	S01K		1140926848	moisture eyes eye drops	S01K
 1140923712	moexipril	C09A		1140923712	moexipril	C09A
 1140923684	ostram 1.2g/sachet powder	A12A		1140923684	ostram 1.2g/sachet powder	A12A
-1140923088	menorest 37.5micrograms patch	G03C		1140923088	menorest 37.5micrograms patch	G03C
+1140923088	menorest 37.5micrograms patch	G03C	G03	1140923088	menorest 37.5micrograms patch	G03C
 1140922640	zydol sr 200mg m/r tablet	N02A		1140922640	zydol sr 200mg m/r tablet	N02A
 1140922628	martindale methadone dtf 1mg/ml mixture	N02A		1140922628	martindale methadone dtf 1mg/ml mixture	N02A
 1140922134	zovirax 400mg dispersible tablet	D06B		1140922134	zovirax 400mg dispersible tablet	D06B
@@ -2203,10 +2203,10 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140910732	cromoglycic acid	R03A		1140910732	cromoglycic acid	R03A
 1140910606	alpha methyldopa	C02A		1140910606	alpha methyldopa	C02A
 1140910470	dioctyl sodium sulphosuccinate	A06A		1140910470	dioctyl sodium sulphosuccinate	A06A
-1140909920	gonadotrophin-releasing hormone product	G03G		1140909920	gonadotrophin-releasing hormone product	G03G
+1140909920	gonadotrophin-releasing hormone product	G03G	G03	1140909920	gonadotrophin-releasing hormone product	G03G
 1140888698	dimethicone	P03A		1140888698	dimethicone	P03A
 1140888350	menadiol	B02B		1140888350	menadiol	B02B
-1140884688	hydroxyprogesterone	G03D		1140884688	hydroxyprogesterone	G03D
+1140884688	hydroxyprogesterone	G03D	G03	1140884688	hydroxyprogesterone	G03D
 1140884660	fluclorolone	D07A		1140884660	fluclorolone	D07A
 1140884206	demeclocycline	D06A		1140884206	demeclocycline	D06A
 1140884118	achromycin 1% eye drops	D06A		1140884118	achromycin 1% eye drops	D06A
@@ -2301,17 +2301,17 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140871146	phytomenadione	B02B		1140871146	phytomenadione	B02B
 1140871100	azapropazone	M01A		1140871100	azapropazone	M01A
 1140871070	trientine dihydrochloride	A16A		1140871070	trientine dihydrochloride	A16A
-1140870976	alfa-d 250nanograms capsule	A11C		1140870976	alfa-d 250nanograms capsule	A11C
+1140870976	alfa-d 250nanograms capsule	A11C	A11CC	1140870976	alfa-d 250nanograms capsule	A11C
 1140870888	calcisorb 5g/sachet powder	V03A		1140870888	calcisorb 5g/sachet powder	V03A
 1140870330	slow-fe folic m/r tablet	B03A		1140870330	slow-fe folic m/r tablet	B03A
 1140870320	galfer fa capsule	B03A		1140870320	galfer fa capsule	B03A
-1140870070	stilboestrol	G03C		1140870070	stilboestrol	G03C
+1140870070	stilboestrol	G03C	G03	1140870070	stilboestrol	G03C
 1140869782	etoposide	L01C		1140869782	etoposide	L01C
 1140869774	fluoro-uracil 250mg capsule	L01B		1140869774	fluoro-uracil 250mg capsule	L01B
 1140869552	melphalan	L01A		1140869552	melphalan	L01A
 1140869228	nystan gel	G01A		1140869228	nystan gel	G01A
 1140868924	prostin e2 500micrograms tablet	G02A		1140868924	prostin e2 500micrograms tablet	G02A
-1140868524	androcur 50mg tablet	G03H		1140868524	androcur 50mg tablet	G03H
+1140868524	androcur 50mg tablet	G03H	G03	1140868524	androcur 50mg tablet	G03H
 1140868304	panadol 120mg/5ml baby+infant suspension	N02B		1140868304	panadol 120mg/5ml baby+infant suspension	N02B
 1140868186	vertigon 10mg spansule	N05A		1140868186	vertigon 10mg spansule	N05A
 1140868036	parmid 10mg tablet	A03F		1140868036	parmid 10mg tablet	A03F
@@ -2356,11 +2356,11 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140860764	captopril+hydrochlorothiazide 25mg/12.5mg tablet	C09A		1140860764	captopril+hydrochlorothiazide 25mg/12.5mg tablet	C09A
 1140860380	betim 10mg tablet	S01E		1140860380	betim 10mg tablet	S01E
 1140859058	chloramphenicol dtf 1% cream	D06A		1140859058	chloramphenicol dtf 1% cream	D06A
-1140858886	diane 2mg tablet	G03H		1140858886	diane 2mg tablet	G03H
+1140858886	diane 2mg tablet	G03H	G03	1140858886	diane 2mg tablet	G03H
 1140858294	bc-500 with iron tablet	B03A		1140858294	bc-500 with iron tablet	B03A
 1140858004	terodiline hydrochloride	G04B		1140858004	terodiline hydrochloride	G04B
 1140857774	thyrotrophin product	V04C		1140857774	thyrotrophin product	V04C
-1140857700	oestradiol 1mg/1ml injection	G03C		1140857700	oestradiol 1mg/1ml injection	G03C
+1140857700	oestradiol 1mg/1ml injection	G03C	G03	1140857700	oestradiol 1mg/1ml injection	G03C
 1140857494	glibornuride	A10B		1140857494	glibornuride	A10B
 1140857348	naxogin 500mg tablet	P01A		1140857348	naxogin 500mg tablet	P01A
 1140856722	depocillin 3g injection	J01C		1140856722	depocillin 3g injection	J01C
@@ -2384,7 +2384,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141195572	atazanavir 100mg capsule	J05A		1141195572	atazanavir 100mg capsule	J05A
 1141195466	entrolax 5mg e/c tablet	A06A		1141195466	entrolax 5mg e/c tablet	A06A
 1141195024	betanidine	C02C		1141195024	betanidine	C02C
-1141193320	femtab 1mg tablet	G03C		1141193320	femtab 1mg tablet	G03C
+1141193320	femtab 1mg tablet	G03C	G03	1141193320	femtab 1mg tablet	G03C
 1141193224	oxynorm 10mg/ml injection solution 2ml ampoule	N02A		1141193224	oxynorm 10mg/ml injection solution 2ml ampoule	N02A
 1141193110	dolasetron	A04A		1141193110	dolasetron	A04A
 1141193072	dandrazol antidandruff 2% shampoo	D01A		1141193072	dandrazol antidandruff 2% shampoo	D01A
@@ -2403,7 +2403,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141187440	amyben 100mg tablet	C01B		1141187440	amyben 100mg tablet	C01B
 1141187060	omeran 10mg e/c tablet	A02B		1141187060	omeran 10mg e/c tablet	A02B
 1141186640	vantage antihistamine 4mg tablet	R06A		1141186640	vantage antihistamine 4mg tablet	R06A
-1141186560	merional 75iu injection (pdr for recon)+solvent	G03G		1141186560	merional 75iu injection (pdr for recon)+solvent	G03G
+1141186560	merional 75iu injection (pdr for recon)+solvent	G03G	G03	1141186560	merional 75iu injection (pdr for recon)+solvent	G03G
 1141186084	targretin 75mg capsule	L01X		1141186084	targretin 75mg capsule	L01X
 1141185172	vivadone 10mg tablet	A03F		1141185172	vivadone 10mg tablet	A03F
 1141185124	ranflutin 20mg capsule	N06A		1141185124	ranflutin 20mg capsule	N06A
@@ -2412,7 +2412,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141184546	ibuprofen+pseudoephedrine hydrochloride	M01A		1141184546	ibuprofen+pseudoephedrine hydrochloride	M01A
 1141184226	lemsip pharmacy non-decongestant formula sachet powder	N02B		1141184226	lemsip pharmacy non-decongestant formula sachet powder	N02B
 1141183866	virgan 0.15% eye gel	J05A		1141183866	virgan 0.15% eye gel	J05A
-1141183438	menoring 50micrograms/24hours vaginal ring	G03C		1141183438	menoring 50micrograms/24hours vaginal ring	G03C
+1141183438	menoring 50micrograms/24hours vaginal ring	G03C	G03	1141183438	menoring 50micrograms/24hours vaginal ring	G03C
 1141182968	tensomex 100mg tablet	C07F		1141182968	tensomex 100mg tablet	C07F
 1141182792	ebixa 10mg tablet	N06D		1141182792	ebixa 10mg tablet	N06D
 1141182754	piroxicam-betadex	M02A		1141182754	piroxicam-betadex	M02A
@@ -2424,7 +2424,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141182068	sodium cromoglicate+isoprenaline sulphate	R03A		1141182068	sodium cromoglicate+isoprenaline sulphate	R03A
 1141181752	mandafen 400mg tablet	M01A		1141181752	mandafen 400mg tablet	M01A
 1141181610	hydrocortisone+pramocaine	D07A		1141181610	hydrocortisone+pramocaine	D07A
-1141181286	ethinylestradiol+desogestrel 20mcg/150mcg tablet	G03C		1141181286	ethinylestradiol+desogestrel 20mcg/150mcg tablet	G03C
+1141181286	ethinylestradiol+desogestrel 20mcg/150mcg tablet	G03C	G03	1141181286	ethinylestradiol+desogestrel 20mcg/150mcg tablet	G03C
 1141181060	dimeticone	P03A		1141181060	dimeticone	P03A
 1141181056	dimeticone 1000+cetrimide 10%/0.3% cream	P03A		1141181056	dimeticone 1000+cetrimide 10%/0.3% cream	P03A
 1141181008	colistimethate na 1million units inj (pdr for recon)	J01G		1141181008	colistimethate na 1million units inj (pdr for recon)	J01G
@@ -2447,7 +2447,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141173140	entrocalm 2mg capsule	A07D		1141173140	entrocalm 2mg capsule	A07D
 1141172954	linezolid	J01X		1141172954	linezolid	J01X
 1141172876	actiq 200micrograms lozenge	N01A		1141172876	actiq 200micrograms lozenge	N01A
-1141172722	levonelle 750micrograms tablet	G03A		1141172722	levonelle 750micrograms tablet	G03A
+1141172722	levonelle 750micrograms tablet	G03A	G03	1141172722	levonelle 750micrograms tablet	G03A
 1141172240	canesten 500mg pessary	D01A		1141172240	canesten 500mg pessary	D01A
 1141171730	deferiprone	V03A		1141171730	deferiprone	V03A
 1141171614	aknemycin plus solution	D10A		1141171614	aknemycin plus solution	D10A
@@ -2472,7 +2472,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141167174	tramazoline hydrochloride+dexamethasone isonicotinate	R01A		1141167174	tramazoline hydrochloride+dexamethasone isonicotinate	R01A
 1141166956	eryacne 2 topical gel	D10A		1141166956	eryacne 2 topical gel	D10A
 1141166888	cysteamine	S01X		1141166888	cysteamine	S01X
-1141166366	ethinyloestradiol+gestodene 20micrograms/75micrograms tablet	G03C		1141166366	ethinyloestradiol+gestodene 20micrograms/75micrograms tablet	G03C
+1141166366	ethinyloestradiol+gestodene 20micrograms/75micrograms tablet	G03C	G03	1141166366	ethinyloestradiol+gestodene 20micrograms/75micrograms tablet	G03C
 1141166306	arava 100mg tablet	L04A		1141166306	arava 100mg tablet	L04A
 1141165324	cetrotide 0.25mg injection (pdr for recon)+solvent	H01C		1141165324	cetrotide 0.25mg injection (pdr for recon)+solvent	H01C
 1141165318	cetrorelix	H01C		1141165318	cetrorelix	H01C
@@ -2492,7 +2492,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1141157342	temocillin product	J01C		1141157342	temocillin product	J01C
 1141157336	tetrabenazine product	N07X		1141157336	tetrabenazine product	N07X
 1141157322	terfenadine product	R06A		1141157322	terfenadine product	R06A
-1141157298	danazol product	G03X		1141157298	danazol product	G03X
+1141157298	danazol product	G03X	G03	1141157298	danazol product	G03X
 1141157278	mefloquine product	P01B		1141157278	mefloquine product	P01B
 1141157272	valaciclovir product	J05A		1141157272	valaciclovir product	J05A
 1141157268	ganciclovir product	J05A		1141157268	ganciclovir product	J05A
@@ -2575,14 +2575,14 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140910376	methylmorphine	N02A		1140910376	methylmorphine	N02A
 1140909966	placidex 120mg/5ml liquid	N02B		1140909966	placidex 120mg/5ml liquid	N02B
 1140909926	thyrotrophin-releasing hormone	V04C		1140909926	thyrotrophin-releasing hormone	V04C
-1140909924	lh-rh - gonadotrophin-releasing hormone	G03G		1140909924	lh-rh - gonadotrophin-releasing hormone	G03G
+1140909924	lh-rh - gonadotrophin-releasing hormone	G03G	G03	1140909924	lh-rh - gonadotrophin-releasing hormone	G03G
 1140909894	desoximetasone	D07A		1140909894	desoximetasone	D07A
 1140909892	eserine	V03A		1140909892	eserine	V03A
-1140909882	dihydroxycholecalciferol	A11C		1140909882	dihydroxycholecalciferol	A11C
+1140909882	dihydroxycholecalciferol	A11C	A11CC	1140909882	dihydroxycholecalciferol	A11C
 1140909818	benzatropine	N04A		1140909818	benzatropine	N04A
 1140909804	pipotiazine	N05A		1140909804	pipotiazine	N05A
 1140909742	iocare balanced salt solution	B05X		1140909742	iocare balanced salt solution	B05X
-1140909592	calcijex 1microgram/1ml injection	A11C		1140909592	calcijex 1microgram/1ml injection	A11C
+1140909592	calcijex 1microgram/1ml injection	A11C	A11CC	1140909592	calcijex 1microgram/1ml injection	A11C
 1140909488	avoca 75% applicator	D08A		1140909488	avoca 75% applicator	D08A
 1140909462	clariteyes eye drops	R03A		1140909462	clariteyes eye drops	R03A
 1140909454	benzamycin topical gel	D10A		1140909454	benzamycin topical gel	D10A
@@ -2770,8 +2770,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140869870	maxtrex 2.5mg tablet	L01B		1140869870	maxtrex 2.5mg tablet	L01B
 1140869424	sodium citrate 4g/sachet powder	B05C		1140869424	sodium citrate 4g/sachet powder	B05C
 1140869418	cymalon sachet	B05C		1140869418	cymalon sachet	B05C
-1140869328	ethinyloestradiol+norethisterone acetate 20mcg/1mg tablet	G03C		1140869328	ethinyloestradiol+norethisterone acetate 20mcg/1mg tablet	G03C
-1140869248	ethinyloestradiol+levonorgestrel 30mcg/150mcg tablet	G03C		1140869248	ethinyloestradiol+levonorgestrel 30mcg/150mcg tablet	G03C
+1140869328	ethinyloestradiol+norethisterone acetate 20mcg/1mg tablet	G03C	G03	1140869328	ethinyloestradiol+norethisterone acetate 20mcg/1mg tablet	G03C
+1140869248	ethinyloestradiol+levonorgestrel 30mcg/150mcg tablet	G03C	G03	1140869248	ethinyloestradiol+levonorgestrel 30mcg/150mcg tablet	G03C
 1140869226	nyspes pessary	G01A		1140869226	nyspes pessary	G01A
 1140869222	femeron cream	D01A		1140869222	femeron cream	D01A
 1140869208	gyno-daktarin 100mg pessary	D01A		1140869208	gyno-daktarin 100mg pessary	D01A
@@ -2785,8 +2785,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140868884	synarel 200micrograms nasal spray	H01C		1140868884	synarel 200micrograms nasal spray	H01C
 1140868842	vasopressin product	H01B		1140868842	vasopressin product	H01B
 1140868808	sermorelin	V04C		1140868808	sermorelin	V04C
-1140868716	serophene 50mg tablet	G03G		1140868716	serophene 50mg tablet	G03G
-1140868628	humegon 75iu injection (pdr for recon)+solvent	G03G		1140868628	humegon 75iu injection (pdr for recon)+solvent	G03G
+1140868716	serophene 50mg tablet	G03G	G03	1140868716	serophene 50mg tablet	G03G
+1140868628	humegon 75iu injection (pdr for recon)+solvent	G03G	G03	1140868628	humegon 75iu injection (pdr for recon)+solvent	G03G
 1140868282	aspirin+methocarbamol 325mg/400mg tablet	N02B		1140868282	aspirin+methocarbamol 325mg/400mg tablet	N02B
 1140868262	doloxene compound capsule	N02A		1140868262	doloxene compound capsule	N02A
 1140868190	proziere 5mg tablet	N05A		1140868190	proziere 5mg tablet	N05A
@@ -2826,7 +2826,7 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140865804	duphalac solution	A06A		1140865804	duphalac solution	A06A
 1140865374	ambutonium bromide	A07A		1140865374	ambutonium bromide	A07A
 1140865136	yohimbine/pemoline/methyltestosterone	G04B		1140865136	yohimbine/pemoline/methyltestosterone	G04B
-1140864922	orgafol 75iu injection (pdr for recon)+diluent	G03G		1140864922	orgafol 75iu injection (pdr for recon)+diluent	G03G
+1140864922	orgafol 75iu injection (pdr for recon)+diluent	G03G	G03	1140864922	orgafol 75iu injection (pdr for recon)+diluent	G03G
 1140864750	histafen 60mg tablet	R06A		1140864750	histafen 60mg tablet	R06A
 1140864480	rifabutin	J04A		1140864480	rifabutin	J04A
 1140864452	epimaz 100mg tablet	N03A		1140864452	epimaz 100mg tablet	N03A
@@ -2877,8 +2877,8 @@ code_ukbiobank	medication_name	code_atc	group_atc	UKBB_code	UKBB_description	ATC
 1140858084	cetiprin 100mg tablet	N05C		1140858084	cetiprin 100mg tablet	N05C
 1140858082	emepronium bromide	N05C		1140858082	emepronium bromide	N05C
 1140857760	calcitonin and salcatonin	H05B		1140857760	calcitonin and salcatonin	H05B
-1140857706	oestriol 250micrograms tablet	G03C		1140857706	oestriol 250micrograms tablet	G03C
-1140857656	methyltestosterone product	G03E		1140857656	methyltestosterone product	G03E
+1140857706	oestriol 250micrograms tablet	G03C	G03	1140857706	oestriol 250micrograms tablet	G03C
+1140857656	methyltestosterone product	G03E	G03	1140857656	methyltestosterone product	G03E
 1140857508	glucotard 5g/sachet mini-tablet	A10B		1140857508	glucotard 5g/sachet mini-tablet	A10B
 1140857336	temafloxacin	J01M		1140857336	temafloxacin	J01M
 1140857284	malarivon 80mg/5ml syrup	P01B		1140857284	malarivon 80mg/5ml syrup	P01B
