@@ -4339,6 +4339,7 @@ def organize_medication_code_atc_class_table(
         print("organize_medication_code_atc_class_table()")
         utility.print_terminal_partition(level=3)
         print(table_merge)
+        print(table_merge.columns.to_list())
     # Return information.
     return table_merge
 
@@ -4467,14 +4468,24 @@ def organize_hormonal_medications(
         table_appleby=source["table_appleby"],
         report=report,
     )
-    medication_groups = organize_atc_class_medication_codes(
+    medication_classes = organize_atc_class_medication_codes(
         atc_classes=["G03", "A11CC",],
         table_medication_codes_classes=table_medication_codes_classes,
         report=report,
     )
+    #pail["G03"]["codes_class"]
+    #pail["A11CC"]["codes_class"]
 
     # Copy information in table.
     table = table.copy(deep=True)
+
+    # TODO: TCW, 12 January 2022
+    # TODO: now follow the "if any codes in class-specific list" pattern to
+    # TODO: define new variables for "medication_sex_hormone" and "medication_vitamin_d"
+    # TODO: then summarize those variables in females and males separately
+
+
+
 
     # ...
     # ...
