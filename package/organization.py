@@ -4330,7 +4330,7 @@ def organize_medication_code_atc_class_table(
     table_merge.reset_index(
         level=None,
         inplace=True,
-        drop=True,
+        drop=False, # preserve index as a column
     )
     # Report.
     if report:
