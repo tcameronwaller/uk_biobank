@@ -436,6 +436,54 @@ def parse_field_instance_columns_to_keep(
     return instances
 
 
+def parse_ukbiobank_raw_column_field_instance_array(
+    name_column=None,
+):
+    """
+    Parse the information in a raw column name.
+
+    arguments:
+        name_column (str): raw name of column in data table from UK Biobank
+
+    raises:
+
+    returns:
+        (dict<str>): information from column name
+
+    """
+
+    record = dict()
+    if (
+        ("-" in name_column) and
+        ("." in name_column)
+    ):
+        record["field"] = str(name_column.split("-")[0].strip())
+        record["instance"] = str(
+            name_column.split("-")[1].split(".")[0].strip()
+        )
+        record["array_index"] = str(
+            name_column.split("-")[1].split(".")[1].strip()
+        )
+    else:
+        record["field"] = ""
+        record["instance"] = ""
+        record["array_index"] = ""
+    return record
+
+
+
+# TODO: TCW, 11 January 2022
+# "20002-3.33"
+# "20003-3.47"
+# [field]-[instance].[array index]
+# TODO: also need to update coding in "table_ukbiobank_phenotype_variables.tsv"
+
+
+#        if not pandas.isna(values_array):
+#            if str(values_array).strip().lower() == "yes":
+#                keep = True
+
+
 def determine_keep_column_field_instance(
     column=None,
     table_ukbiobank_variables=None,
@@ -457,53 +505,44 @@ def determine_keep_column_field_instance(
 
     """
 
-    # Determine whether column matches format of an original field instance.
-    if ("-" in column):
-        # Default value.
+    # Parse information in the column name.
+    record = parse_ukbiobank_raw_column_field_instance_array(
+        name_column=column,
+    )
+    # Determine whether column matches format of an original accession
+    # data-field.
+    if (len(str(record["field"])) > 0):
+        # Initialize flag.
         keep = False
         # Organize information.
-        column_field = column.split("-")[0].strip()
-        column_instance = column.split("-")[1].strip()
-        # int(column_field)
         values_array = table_ukbiobank_variables.at[
-            int(column_field), "values_array",
+            int(record["field"]), "array",
         ]
         instances_keep_raw = table_ukbiobank_variables.at[
-            int(column_field), "instances_keep",
+            int(record["field"]), "instances_keep",
         ]
-        # Report.
-        if (
-            report and
-            (len(str(column_field)) > 0) and
-            (str(column_field) in ["31", "50", "22009"])
-        ):
-            utility.print_terminal_partition(level=4)
-            print("report from: determine_keep_column_field_instance()")
-            print(column_field)
-        # Determine whether to keep column for field's instance.
-        if not pandas.isna(values_array):
-            if str(values_array).strip().lower() == "yes":
-                keep = True
+        # Determine which instances to keep.
         if not pandas.isna(instances_keep_raw):
             # Organize field instances to keep.
             instances_keep = parse_field_instance_columns_to_keep(
                 instances_raw=instances_keep_raw,
             )
-            # Report.
-            if (
-                report and
-                (len(str(column_field)) > 0) and
-                (str(column_field) in ["31", "50", "22009"])
-            ):
-                print(instances_keep_raw)
-                print(instances_keep)
-            if str(column_instance) in instances_keep:
+            # Determine whether to keep column on basis of instance.
+            if str(record["instance"]) in instances_keep:
                 keep = True
+                # Report.
+                if (
+                    report and
+                    (str(record["field"]) in ["31", "50", "22009"])
+                ):
+                    utility.print_terminal_partition(level=4)
+                    print("report from: determine_keep_column_field_instance()")
+                    print("keep column: " + str(column))
                 pass
             pass
         pass
     else:
-        # Column is not an original field instance.
+        # Column is not an original accession data-field.
         # Keep the column.
         keep = True
     # Return information.
@@ -656,6 +695,7 @@ def remove_table_irrelevant_field_instance_columns(
 def simplify_field_values_array_row(
     row=None,
     field=None,
+    columns_field=None,
     delimiter=None,
     report=None,
 ):
@@ -665,6 +705,7 @@ def simplify_field_values_array_row(
     arguments:
         row (object): Pandas data frame row
         field (str): identifier of UK Biobank field
+        columns_field (list<str>): names of columns that match the data-field
         delimiter (str): delimiter for string representation of array values
         report (bool): whether to print reports
 
@@ -678,40 +719,41 @@ def simplify_field_values_array_row(
     # Copy Pandas series for row.
     row = row.copy(deep=True)
     # Convert Pandas series row to dictionary.
-    record = row.to_dict()
+    record_row = row.to_dict()
     # Collect all non-missing values from the field's columns for instances.
     values = list()
-    fields = list()
-    for key in record.keys():
-        # Select original field-instance columns.
-        if ("-" in key):
-            key_field = key.split("-")[0].strip()
-            if (str(field) == str(key_field)):
-                fields.append(key)
-                value = str(record[key])
-                if (not pandas.isna(value)):
-                    # Collect all values regardless of whether they are unique.
-                    values.append(value)
-                    #if (value not in values):
-                    #    # Only collect unique values.
-                    #    values.append(value)
-                    #    pass
-                    pass
+    for column in columns_field:
+        # Parse information in the column name.
+        record_column = parse_ukbiobank_raw_column_field_instance_array(
+            name_column=column,
+        )
+        # Determine whether column matches format of an original accession
+        # data-field.
+        if (
+            (column in record_row.keys()) and
+            (len(str(record_column["field"])) > 0) and
+            (str(field) == str(record_column["field"]))
+        ):
+            value = str(record_row[column])
+            if (not pandas.isna(value)):
+                # Collect all values regardless of whether they are unique.
+                values.append(value)
                 pass
             pass
         pass
     # Select unique values.
     values_unique = list(set(values)) # unique
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=4)
-        print("matching fields to " + str(field) + " :")
-        print(fields)
     # Combine values with text delimiter.
     if len(values_unique) > 0:
         text_array = delimiter.join(values_unique)
     else:
         text_array = ""
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=4)
+        print("matching fields to " + str(field) + " :")
+        print(columns_field)
+        print("unique values: " + str(len(values_unique)))
     # Return information.
     return text_array
 
@@ -740,33 +782,52 @@ def simplify_field_values_array_columns(
 
     """
 
-    # Copy data.
+    # Copy and de-fragment information in table.
     table_ukb = table_ukb_raw.copy(deep=True)
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
     table_variables["field"].astype("string")
     table_variables = table_variables.loc[
-        :, table_variables.columns.isin(["field", "type", "values_array"])
+        :, table_variables.columns.isin(["field", "type", "array"])
     ]
-    table_variables["values_array"] = table_variables.apply(
+    table_variables["array"] = table_variables.apply(
         lambda row:
-            str(row["values_array"]).strip().lower(),
+            str(row["array"]).strip().lower(),
         axis="columns", # apply across rows
     )
     table_variables_array = table_variables.loc[
         (
-            ~pandas.isna(table_variables["values_array"]) &
-            (table_variables["values_array"] == "yes")
+            ~pandas.isna(table_variables["array"]) &
+            (table_variables["array"] == "yes")
         ), :
     ]
-    fields_array_instances = table_variables_array["field"].to_list()
+    fields_array = table_variables_array["field"].to_list()
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("fields to simplify: " + str(len(fields_array_instances)))
-        print(fields_array_instances)
+        print("fields for arrays to simplify: " + str(len(fields_array)))
+        print(fields_array)
     # Iterate on UK Biobank fields with array instances.
-    for field in fields_array_instances:
+    for field in fields_array:
+        # Copy and de-fragment information in table.
+        table_ukb = table_ukb.copy(deep=True)
+        # Find columns that match the data-field.
+        columns_field = list()
+        for column in table_ukb.columns.to_list():
+            # Parse information in the column name.
+            record = parse_ukbiobank_raw_column_field_instance_array(
+                name_column=column,
+            )
+            # Determine whether column matches format of an original accession
+            # data-field.
+            # Determine whether the column matches the data-field.
+            if (
+                (len(str(record["field"])) > 0) and
+                (str(field) == str(record["field"]))
+            ):
+                columns_field.append(column)
+                pass
+            pass
         # Create new column with text array of all non-missing values from the
         # field's original columns.
         column_new = str(str(field) + "_array")
@@ -775,32 +836,20 @@ def simplify_field_values_array_columns(
                 simplify_field_values_array_row(
                     row=row,
                     field=field,
+                    columns_field=columns_field,
                     delimiter=delimiter,
                     report=False,
                 ),
             axis="columns", # apply across rows
         )
-        # Collect original columns for the field's array instances.
-        columns_drop = list()
-        for column in table_ukb.columns.to_list():
-            # Select original field-instance columns.
-            if ("-" in column):
-                column_field = column.split("-")[0].strip()
-                if (str(field) == str(column_field)):
-                    # Column is an original instance of the field.
-                    # Only original instance columns have the "-" delimiter.
-                    columns_drop.append(column)
-                    pass
-                pass
-            pass
         # Report.
         if report:
             utility.print_terminal_partition(level=3)
             print("dropping columns for field: " + str(field))
-            print(columns_drop)
+            print(columns_field)
         # Drop columns.
         table_ukb.drop(
-            labels=columns_drop,
+            labels=columns_field,
             axis="columns",
             inplace=True
         )

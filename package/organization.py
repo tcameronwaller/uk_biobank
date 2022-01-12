@@ -340,23 +340,18 @@ def read_source_fields_codes_interpretations(
     }
 
 
-# read_source_medication_codes_classes
-
-
-def read_source_medication_codes_classes(
+def read_source_organize_medication_codes_classes(
     path_dock=None,
 ):
     """
     Reads and organizes source information from file.
 
-    Medication codes for Anatomical Therapeutic Chemical (ATC) classes
+    This function reads and organizes information from a table that is a
+    derivative of "Supplementary Data 1" from Yeda Wu et al, Nature
+    Communications, 2019 (PubMed: 31015401). This table matches medication codes
+    in UK Biobank data-field "20003" to medication classes in the Anatomical
+    Therapeutic Chemical (ATC) classification system
     (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
-
-    Notice that Pandas does not accommodate missing values within series of
-    integer variable types.
-
-    The UK Biobank "eid" designates unique persons in the cohort.
-    The UK Biobank "IID" matches persons to their genotype information.
 
     arguments:
         path_dock (str): path to dock directory for source and product
@@ -370,54 +365,50 @@ def read_source_medication_codes_classes(
     """
 
     # Specify directories and files.
-    path_table_medications_atc_g03 = os.path.join(
+    path_table_medications = os.path.join(
         path_dock, "parameters", "uk_biobank",
-        "table_ukbiobank_field_20003_atc_g03.tsv"
-    )
-    path_table_medications_atc_a11cc = os.path.join(
-        path_dock, "parameters", "uk_biobank",
-        "table_ukbiobank_field_20003_atc_a11cc.tsv"
+        "table_ukbiobank_field_20003_interpretation_atc_classes.tsv"
     )
     # Organize code interpretations.
 
-    # TODO: TCW, 11 January 2022
-    # TODO: probably just return lists of medication codes for each ATC class...
-
-    # Data-field 20003, ATC class G03.
-    table_atc_g03 = pandas.read_csv(
-        path_table_atc_g03,
+    # Data-field 20003, ATC classes.
+    table_medications = pandas.read_csv(
+        path_table_medications,
         sep="\t",
         header=0,
         dtype={
-            "code": "string",
-            "interpretation": "string",
-            "coding": "string",
-            "meaning": "string",
-            "region_name": "string",
-            "region": numpy.int32,
+            "code_ukbiobank": "string",
+            "medication_name": "string",
+            "medication_category": "string",
+            "code_atc": "string",
+            "group_atc": "string",
         },
     )
-    table_field_54.reset_index(
+    table_medications.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
-    table_field_54.set_index(
-        "code",
-        append=False,
-        drop=True,
-        inplace=True
-    )
-    field_54_codes_interpretations = table_field_54.to_dict(
-        orient="index",
-    )
-
-    # Data-field 20003, ATC class A11CC.
-
+    # ATC class G03
+    table_atc_g03 = table_medications.loc[
+        (
+            ~pandas.isna(table_medications["group_atc"]) &
+            (table_medications["group_atc"] == "g03")
+        ), :
+    ]
+    codes_atc_g03 = table_atc_g03["code_ukbiobank"].to_list()
+    # ATC class A11CC
+    table_atc_a11cc = table_medications.loc[
+        (
+            ~pandas.isna(table_medications["group_atc"]) &
+            (table_medications["group_atc"] == "a11cc")
+        ), :
+    ]
+    codes_atc_a11cc = table_atc_a11cc["code_ukbiobank"].to_list()
     # Compile and return information.
     return {
-        "atc_g03": codes_atc_g03,
-        "atc_a11cc": codes_atc_a11cc,
+        "codes_atc_g03": codes_atc_g03,
+        "codes_atc_a11cc": codes_atc_a11cc,
     }
 
 
@@ -4267,23 +4258,19 @@ def organize_hormonal_medications(
 
     """
 
-    # TODO: TCW, 11 January 2022
-    # TODO: read in the reference tables with relevant medication codes...
-
     # Read reference table of interpretations of variable codes.
-    #source = read_source_fields_codes_interpretations(
-    #    path_dock=path_dock,
-    #)
-    source = read_source_medication_codes_classes(
+    source = read_source_organize_medication_codes_classes(
         path_dock=path_dock,
     )
-
     # Copy information in table.
     table = table.copy(deep=True)
 
     # ...
     # ...
     # ...
+
+    # TODO: TCW, 11 January 2022
+    # TODO: report counts of females and males with medication codes in each ATC class
 
     # Return information.
     return table

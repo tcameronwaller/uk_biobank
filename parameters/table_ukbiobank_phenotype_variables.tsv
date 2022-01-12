@@ -1,106 +1,106 @@
-include	field	type	category	name	coverage	scale	ukb_description	ukb_category	values_array	instances_keep	note
-1	54	float32	center		502478		UK Biobank assessment centre	Reception		0.0;	
-1	55	float32	season		502464		Month of attending assessment centre	Reception		0.0;	
-1	22000	float32	genotype		488237		Genotype measurement batch	Genotyping process and sample QC		0.0;	
-1	22009	float32	genotype	genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC		0.0;0.1;0.2;0.3;0.4;0.5;0.6;0.7;0.8;0.9;0.10;0.11;0.12;0.13;0.14;0.15;0.16;0.17;0.18;0.19;0.20;	
-1	22006	float32	genotype		409594		Genetic ethnic grouping, “White British” and similar ancestry	Genotyping process and sample QC		0.0;	
-1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0.0;	
-1	31	float32	basis	sex	502492	nominal	Sex	Baseline characteristics		0.0;	
-1	22001	float32	basis	sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0.0;	
-1	21022	float32	basis	age	502492	ratio	Age at recruitment	Baseline characteristics		0.0;	
-1	21002	float32	basis	weight	499809	ratio	Weight	Body size measures		0.0;	
-1	50	float32	basis	height	500031	ratio	Standing height	Body size measures		0.0;	
-1	21001	float32	basis	body_mass_index	499494	ratio	Body mass index (BMI)	Body size measures		0.0;	
-1	23104	float32	basis	body_mass_index_impedance	493075	ratio	Body mass index (BMI)	Impedance measures		0.0;	
-1	30600	float32	hormone	albumin	432326	ratio	Albumin	Blood biochemistry		0.0;	greater coverage than albumin_urine
-1	30605	float32	hormone		65185		Albumin missing reason	Blood biochemistry processing		0.0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
-1	30606	float32	hormone		432314		Albumin reportability	Blood biochemistry processing		0.0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
-1	30830	float32	hormone	steroid_globulin	428164	ratio	SHBG	Blood biochemistry		0.0;	
-1	30835	float32	hormone		69580		SHBG missing reason	Blood biochemistry processing		0.0;	
-1	30836	float32	hormone		428865		SHBG reportability	Blood biochemistry processing		0.0;	
-1	30850	float32	hormone	testosterone	427051	ratio	Testosterone	Blood biochemistry		0.0;	
-1	30855	float32	hormone		69054		Testosterone missing reason	Blood biochemistry processing		0.0;	
-1	30856	float32	hormone		467001		Testosterone reportability	Blood biochemistry processing		0.0;	
-1	30800	float32	hormone	oestradiol	77713	ratio	Oestradiol	Blood biochemistry		0.0;	
-1	30805	float32	hormone		417410		Oestradiol missing reason	Blood biochemistry processing		0.0;	
-1	30806	float32	hormone		439765		Oestradiol reportability	Blood biochemistry processing		0.0;	
-1	30890	float32	hormone		449928		Vitamin D	Blood biochemistry		0.0;	
-1	30895	float32	hormone		45587		Vitamin D missing reason	Blood biochemistry processing		0.0;	
-1	30896	float32	hormone		452477		Vitamin D reportability	Blood biochemistry processing		0.0;	
-1	30750	float32	metabolism		467885		Glycated haemoglobin (HbA1c)	Blood biochemistry		0.0;	
-1	30740	float32	metabolism		431819		Glucose	Blood biochemistry		0.0;	
-1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry		0.0;	
-1	30760	float32	metabolism		432110		HDL cholesterol	Blood biochemistry		0.0;	
-1	30870	float32	metabolism		470449		Triglycerides	Blood biochemistry		0.0;	
-1	30630	float32	metabolism		429766		Apolipoprotein A	Blood biochemistry		0.0;	
-1	30640	float32	metabolism		468487		Apolipoprotein B	Blood biochemistry		0.0;	
-1	30790	float32	metabolism		377642		Lipoprotein A	Blood biochemistry		0.0;	
-1	30780	float32	metabolism		469981		LDL direct	Blood biochemistry		0.0;	
-1	30660	float32	metabolism		401005		Direct bilirubin	Blood biochemistry		0.0;	
-1	30840	float32	metabolism		468859		Total bilirubin	Blood biochemistry		0.0;	
-1	30720	float32	metabolism		470790		Cystatin C	Blood biochemistry		0.0;	
-1	30700	float32	metabolism		470596		Creatinine	Blood biochemistry		0.0;	
-1	30670	float32	metabolism		470511		Urea	Blood biochemistry		0.0;	
-1	30880	float32	metabolism		470270		Urate	Blood biochemistry		0.0;	
-1	30680	float32	metabolism		432165		Calcium	Blood biochemistry		0.0;	
-1	30810	float32	metabolism		431500		Phosphate	Blood biochemistry		0.0;	
-1	30860	float32	metabolism		431846		Total protein	Blood biochemistry		0.0;	
-1	30710	float32	metabolism		469830		C-reactive protein	Blood biochemistry		0.0;	
-1	30770	float32	metabolism		468358		IGF-1	Blood biochemistry		0.0;	
-1	30820	float32	metabolism		41986		Rheumatoid factor	Blood biochemistry		0.0;	
-1	2724	float32	female	menopause	272914	nominal	Had menopause	Female-specific factors		0.0;	hysterectomy mimics menopause
-1	3581	float32	female		173419		Age at menopause (last menstrual period)	Female-specific factors		0.0;	
-1	3591	float32	female	hysterectomy	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0.0;	hysterectomy mimics menopause
-1	2824	float32	female		51898		Age at hysterectomy	Female-specific factors		0.0;	
-1	2834	float32	female	oophorectomy	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	oophorectomy mimics menopause
-1	3882	float32	female		22526		Age at bilateral oophorectomy (both ovaries removed)	Female-specific factors		0.0;	
-1	3140	float32	female	pregnancy	272558	nominal	Pregnant	Female-specific factors		0.0;	
-1	3700	float32	female	menstruation	64174		Time since last menstrual period	Female-specific factors		0.0;	only for pre-menopausal females (field 2724)
-1	3710	float32	female		64164		Length of menstrual cycle	Female-specific factors		0.0;	
-1	3720	float32	female		76486		Menstruating today	Female-specific factors		0.0;	
-1	2714	float32	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0.0;	
-1	2814	float32	female		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	3536	float32	female		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	3546	float32	female		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0.0;	
-1	2784	float32	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0.0;	
-1	2794	float32	female		220791		Age started oral contraceptive pill	Female-specific factors		0.0;	
-1	2804	float32	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0.0;	
-1	1558	float32	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0.0;	translate to ordinal
-1	20117	float32	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0.0;	translate to ordinal
-1	3731	float32	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0.0;	translate to ordinal
-1	1628	float32	alcohol_consumption	alcohol_trend	460865	ordinal	Alcohol intake versus 10 years previously	Alcohol		0.0;	translate to ordinal
-1	1618	float32	alcohol_consumption	alcohol_meal	395083	nominal	Alcohol usually taken with meals	Alcohol		0.0;	translate to ordinal
-1	1588	float32	alcohol_consumption	alcohol_weekly_beer	349120	ratio	Average weekly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	1568	float32	alcohol_consumption	alcohol_weekly_wine_red	349121	ratio	Average weekly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	1578	float32	alcohol_consumption	alcohol_weekly_wine_white	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	1608	float32	alcohol_consumption	alcohol_weekly_port	349120	ratio	Average weekly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	1598	float32	alcohol_consumption	alcohol_weekly_liquor	349120	ratio	Average weekly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	5364	float32	alcohol_consumption	alcohol_weekly_other	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4429	float32	alcohol_consumption	alcohol_monthly_beer	52045	ratio	Average monthly beer plus cider intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4407	float32	alcohol_consumption	alcohol_monthly_wine_red	52045	ratio	Average monthly red wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4418	float32	alcohol_consumption	alcohol_monthly_wine_white	52045	ratio	Average monthly champagne plus white wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4451	float32	alcohol_consumption	alcohol_monthly_port	52045	ratio	Average monthly fortified wine intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4440	float32	alcohol_consumption	alcohol_monthly_liquor	52045	ratio	Average monthly spirits intake	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	4462	float32	alcohol_consumption	alcohol_monthly_other	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol		0.0;	calculate sum of total alcoholic drinks per week
-1	20414	string	alcohol_questionnaire	audit_c_1	157339	ordinal	Frequency of drinking alcohol	Alcohol use		0.0;	AUDIT-C question 1
-1	20403	string	alcohol_questionnaire	audit_c_2	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use		0.0;	AUDIT-C question 2
-1	20416	string	alcohol_questionnaire	audit_c_3	143658	ordinal	Frequency of consuming six of more units of alcohol	Alcohol use		0.0;	AUDIT-C question 3
-1	20413	string	alcohol_questionnaire	audit_4	85196	ordinal				0.0;	
-1	20407	string	alcohol_questionnaire	audit_5	85196	ordinal				0.0;	
-1	20412	string	alcohol_questionnaire	audit_6	85196	ordinal				0.0;	
-1	20409	string	alcohol_questionnaire	audit_7	85196	ordinal				0.0;	
-1	20408	string	alcohol_questionnaire	audit_8	85196	ordinal				0.0;	
-1	20411	string	alcohol_questionnaire	audit_9	157339	ordinal				0.0;	
-1	20405	string	alcohol_questionnaire	audit_10	157339	ordinal				0.0;	
-1	41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	41270	string	diagnosis	icd10_summary	410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	41202	string	diagnosis	icd10_primary	410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	41204	string	diagnosis	icd10_secondary	340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	null	parsing this data field takes a very long time
-1	20002	string	diagnosis	diagnosis_self	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	null	parsing this data field takes a very long time
-1	20003	string	medications	medications			Treatment/medication code	Medications	yes	0.0;	multiple instances of arrays
-1	20127	string	mental_health	neuroticism	401562	ordinal	Neuroticism score	Mental health		0.0;	derivation from Data-Fields: 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030
-1	20124	string	mental_health	depression_moderate	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0.0;	
-1	20125	string	mental_health	depression_severe	9398	nominal	Probable recurrent major depression (severe)	Mental health		0.0;	
-1	20126	string	mental_health	bipolar_or_depression	122973	nominal	Bipolar and major depression status	Mental health		0.0;	
+include	field	type	category	name	coverage	scale	ukb_description	ukb_category	array	instances_keep	note
+1	54	float32	center		502478		UK Biobank assessment centre	Reception		0;	
+1	55	float32	season		502464		Month of attending assessment centre	Reception		0;	
+1	22000	float32	genotype		488237		Genotype measurement batch	Genotyping process and sample QC		0;	
+1	22009	float32	genotype	genotype	488251	ratio	Genetic principal components	Genotyping process and sample QC	yes	0;	
+1	22006	float32	genotype		409594		Genetic ethnic grouping, “White British” and similar ancestry	Genotyping process and sample QC		0;	
+1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0;	
+1	31	float32	basis	sex	502492	nominal	Sex	Baseline characteristics		0;	
+1	22001	float32	basis	sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0;	
+1	21022	float32	basis	age	502492	ratio	Age at recruitment	Baseline characteristics		0;	
+1	21002	float32	basis	weight	499809	ratio	Weight	Body size measures		0;	
+1	50	float32	basis	height	500031	ratio	Standing height	Body size measures		0;	
+1	21001	float32	basis	body_mass_index	499494	ratio	Body mass index (BMI)	Body size measures		0;	
+1	23104	float32	basis	body_mass_index_impedance	493075	ratio	Body mass index (BMI)	Impedance measures		0;	
+1	30600	float32	hormone	albumin	432326	ratio	Albumin	Blood biochemistry		0;	greater coverage than albumin_urine
+1	30605	float32	hormone		65185		Albumin missing reason	Blood biochemistry processing		0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
+1	30606	float32	hormone		432314		Albumin reportability	Blood biochemistry processing		0;	https://biobank.ndph.ox.ac.uk/showcase/label.cgi?id=18518
+1	30830	float32	hormone	steroid_globulin	428164	ratio	SHBG	Blood biochemistry		0;	
+1	30835	float32	hormone		69580		SHBG missing reason	Blood biochemistry processing		0;	
+1	30836	float32	hormone		428865		SHBG reportability	Blood biochemistry processing		0;	
+1	30850	float32	hormone	testosterone	427051	ratio	Testosterone	Blood biochemistry		0;	
+1	30855	float32	hormone		69054		Testosterone missing reason	Blood biochemistry processing		0;	
+1	30856	float32	hormone		467001		Testosterone reportability	Blood biochemistry processing		0;	
+1	30800	float32	hormone	oestradiol	77713	ratio	Oestradiol	Blood biochemistry		0;	
+1	30805	float32	hormone		417410		Oestradiol missing reason	Blood biochemistry processing		0;	
+1	30806	float32	hormone		439765		Oestradiol reportability	Blood biochemistry processing		0;	
+1	30890	float32	hormone		449928		Vitamin D	Blood biochemistry		0;	
+1	30895	float32	hormone		45587		Vitamin D missing reason	Blood biochemistry processing		0;	
+1	30896	float32	hormone		452477		Vitamin D reportability	Blood biochemistry processing		0;	
+1	30750	float32	metabolism		467885		Glycated haemoglobin (HbA1c)	Blood biochemistry		0;	
+1	30740	float32	metabolism		431819		Glucose	Blood biochemistry		0;	
+1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry		0;	
+1	30760	float32	metabolism		432110		HDL cholesterol	Blood biochemistry		0;	
+1	30870	float32	metabolism		470449		Triglycerides	Blood biochemistry		0;	
+1	30630	float32	metabolism		429766		Apolipoprotein A	Blood biochemistry		0;	
+1	30640	float32	metabolism		468487		Apolipoprotein B	Blood biochemistry		0;	
+1	30790	float32	metabolism		377642		Lipoprotein A	Blood biochemistry		0;	
+1	30780	float32	metabolism		469981		LDL direct	Blood biochemistry		0;	
+1	30660	float32	metabolism		401005		Direct bilirubin	Blood biochemistry		0;	
+1	30840	float32	metabolism		468859		Total bilirubin	Blood biochemistry		0;	
+1	30720	float32	metabolism		470790		Cystatin C	Blood biochemistry		0;	
+1	30700	float32	metabolism		470596		Creatinine	Blood biochemistry		0;	
+1	30670	float32	metabolism		470511		Urea	Blood biochemistry		0;	
+1	30880	float32	metabolism		470270		Urate	Blood biochemistry		0;	
+1	30680	float32	metabolism		432165		Calcium	Blood biochemistry		0;	
+1	30810	float32	metabolism		431500		Phosphate	Blood biochemistry		0;	
+1	30860	float32	metabolism		431846		Total protein	Blood biochemistry		0;	
+1	30710	float32	metabolism		469830		C-reactive protein	Blood biochemistry		0;	
+1	30770	float32	metabolism		468358		IGF-1	Blood biochemistry		0;	
+1	30820	float32	metabolism		41986		Rheumatoid factor	Blood biochemistry		0;	
+1	2724	float32	female	menopause	272914	nominal	Had menopause	Female-specific factors		0;	hysterectomy mimics menopause
+1	3581	float32	female		173419		Age at menopause (last menstrual period)	Female-specific factors		0;	
+1	3591	float32	female	hysterectomy	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0;	hysterectomy mimics menopause
+1	2824	float32	female		51898		Age at hysterectomy	Female-specific factors		0;	
+1	2834	float32	female	oophorectomy	272911	nominal	Bilateral oophorectomy (both ovaries removed)	Female-specific factors		0;	oophorectomy mimics menopause
+1	3882	float32	female		22526		Age at bilateral oophorectomy (both ovaries removed)	Female-specific factors		0;	
+1	3140	float32	female	pregnancy	272558	nominal	Pregnant	Female-specific factors		0;	
+1	3700	float32	female	menstruation	64174		Time since last menstrual period	Female-specific factors		0;	only for pre-menopausal females (field 2724)
+1	3710	float32	female		64164		Length of menstrual cycle	Female-specific factors		0;	
+1	3720	float32	female		76486		Menstruating today	Female-specific factors		0;	
+1	2714	float32	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0;	
+1	2814	float32	female		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	3536	float32	female		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	3546	float32	female		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	2784	float32	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0;	
+1	2794	float32	female		220791		Age started oral contraceptive pill	Female-specific factors		0;	
+1	2804	float32	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0;	
+1	1558	float32	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0;	translate to ordinal
+1	20117	float32	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0;	translate to ordinal
+1	3731	float32	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0;	translate to ordinal
+1	1628	float32	alcohol_consumption	alcohol_trend	460865	ordinal	Alcohol intake versus 10 years previously	Alcohol		0;	translate to ordinal
+1	1618	float32	alcohol_consumption	alcohol_meal	395083	nominal	Alcohol usually taken with meals	Alcohol		0;	translate to ordinal
+1	1588	float32	alcohol_consumption	alcohol_weekly_beer	349120	ratio	Average weekly beer plus cider intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	1568	float32	alcohol_consumption	alcohol_weekly_wine_red	349121	ratio	Average weekly red wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	1578	float32	alcohol_consumption	alcohol_weekly_wine_white	349120	ratio	Average weekly champagne plus white wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	1608	float32	alcohol_consumption	alcohol_weekly_port	349120	ratio	Average weekly fortified wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	1598	float32	alcohol_consumption	alcohol_weekly_liquor	349120	ratio	Average weekly spirits intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	5364	float32	alcohol_consumption	alcohol_weekly_other	146883	ratio	Average weekly intake of other alcoholic drinks	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4429	float32	alcohol_consumption	alcohol_monthly_beer	52045	ratio	Average monthly beer plus cider intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4407	float32	alcohol_consumption	alcohol_monthly_wine_red	52045	ratio	Average monthly red wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4418	float32	alcohol_consumption	alcohol_monthly_wine_white	52045	ratio	Average monthly champagne plus white wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4451	float32	alcohol_consumption	alcohol_monthly_port	52045	ratio	Average monthly fortified wine intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4440	float32	alcohol_consumption	alcohol_monthly_liquor	52045	ratio	Average monthly spirits intake	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	4462	float32	alcohol_consumption	alcohol_monthly_other	52045	ratio	Average monthly intake of other alcoholic drinks	Alcohol		0;	calculate sum of total alcoholic drinks per week
+1	20414	string	alcohol_questionnaire	audit_c_1	157339	ordinal	Frequency of drinking alcohol	Alcohol use		0;	AUDIT-C question 1
+1	20403	string	alcohol_questionnaire	audit_c_2	143658	ordinal	Amount of alcohol drunk on a typical drinking day	Alcohol use		0;	AUDIT-C question 2
+1	20416	string	alcohol_questionnaire	audit_c_3	143658	ordinal	Frequency of consuming six of more units of alcohol	Alcohol use		0;	AUDIT-C question 3
+1	20413	string	alcohol_questionnaire	audit_4	85196	ordinal				0;	
+1	20407	string	alcohol_questionnaire	audit_5	85196	ordinal				0;	
+1	20412	string	alcohol_questionnaire	audit_6	85196	ordinal				0;	
+1	20409	string	alcohol_questionnaire	audit_7	85196	ordinal				0;	
+1	20408	string	alcohol_questionnaire	audit_8	85196	ordinal				0;	
+1	20411	string	alcohol_questionnaire	audit_9	157339	ordinal				0;	
+1	20405	string	alcohol_questionnaire	audit_10	157339	ordinal				0;	
+1	41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	41270	string	diagnosis	icd10_summary	410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	41202	string	diagnosis	icd10_primary	410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	41204	string	diagnosis	icd10_secondary	340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
+1	20002	string	diagnosis	diagnosis_self	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	0;1;2;3;	parsing this data field takes a very long time
+1	20003	string	medications	medications			Treatment/medication code	Medications	yes	0;	multiple instances of arrays
+1	20127	string	mental_health	neuroticism	401562	ordinal	Neuroticism score	Mental health		0;	derivation from Data-Fields: 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030
+1	20124	string	mental_health	depression_moderate	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0;	
+1	20125	string	mental_health	depression_severe	9398	nominal	Probable recurrent major depression (severe)	Mental health		0;	
+1	20126	string	mental_health	bipolar_or_depression	122973	nominal	Bipolar and major depression status	Mental health		0;	
