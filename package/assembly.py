@@ -802,8 +802,6 @@ def simplify_field_values_array_columns(
         print(fields_array)
     # Iterate on UK Biobank fields with array instances.
     for field in fields_array:
-        # Copy and de-fragment information in table.
-        table_ukb = table_ukb.copy(deep=True)
         # Find columns that match the data-field.
         columns_field = list()
         for column in table_ukb.columns.to_list():

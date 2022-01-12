@@ -340,55 +340,38 @@ def read_source_fields_codes_interpretations(
     }
 
 
-def read_source_organize_medication_codes_classes(
-    path_dock=None,
+def organize_medication_codes_classes(
+    table_wu=None,
+    table_appleby=None,
 ):
     """
-    Reads and organizes source information from file.
-
-    This function reads and organizes information from a table that is a
-    derivative of "Supplementary Data 1" from Yeda Wu et al, Nature
-    Communications, 2019 (PubMed: 31015401). This table matches medication codes
-    in UK Biobank data-field "20003" to medication classes in the Anatomical
-    Therapeutic Chemical (ATC) classification system
-    (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
+    Organizes information about medications in UK Biobank data-field "20003" and
+    their classes in the Anatomical Therapeutic Chemical (ATC) classification
+    system (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
 
     arguments:
-        path_dock (str): path to dock directory for source and product
+        table_wu (object): path to dock directory for source and product
             directories and files
 
     raises:
 
     returns:
-        (object): source information
+        (dict<list<str>>): medication codes in relevant ATC classes
 
     """
 
-    # Specify directories and files.
-    path_table_medications = os.path.join(
-        path_dock, "parameters", "uk_biobank",
-        "table_ukbiobank_field_20003_interpretation_atc_classes.tsv"
-    )
-    # Organize code interpretations.
-
-    # Data-field 20003, ATC classes.
-    table_medications = pandas.read_csv(
-        path_table_medications,
-        sep="\t",
-        header=0,
-        dtype={
-            "code_ukbiobank": "string",
-            "medication_name": "string",
-            "medication_category": "string",
-            "code_atc": "string",
-            "group_atc": "string",
-        },
-    )
+    # Organize table indices.
     table_medications.reset_index(
         level=None,
         inplace=True,
         drop=True,
     )
+    # Merge tables.
+
+    # Filter tables by relevant ATC classes.
+
+    # TODO: need to filter at the START of each ATC code...
+
     # ATC class G03
     table_atc_g03 = table_medications.loc[
         (
@@ -405,6 +388,80 @@ def read_source_organize_medication_codes_classes(
         ), :
     ]
     codes_atc_a11cc = table_atc_a11cc["code_ukbiobank"].to_list()
+
+
+
+
+    record = dict()
+
+    # Report.
+
+    return record
+
+
+
+def read_source_medication_codes_classes(
+    path_dock=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    This function reads and organizes information from tables that are
+    derivatives of the sources below.
+    1. "Supplementary Data 1" from Yeda Wu et al, Nature
+    Communications, 2019 (PubMed: 31015401).
+    2. "ATC Match List (Additional_file_2)" from Philip Duncan Appleby et al,
+    Research Square, 2019 (https://www.researchsquare.com/article/rs-9729/v1).
+
+    These tables match medication codes in UK Biobank data-field "20003" to
+    medication classes in the Anatomical Therapeutic Chemical (ATC)
+    classification system
+    (https://www.who.int/tools/atc-ddd-toolkit/atc-classification).
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Specify directories and files.
+    path_table_wu = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "ukbiobank_field_20003_medications",
+        "31015401_wu_2019_supplementary_data_1_edit.tsv"
+    )
+    path_table_appleby = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "ukbiobank_field_20003_medications",
+        "appleby_2019_supplementary_data_2_edit.tsv"
+    )
+    # Read information from file.
+    table_wu = pandas.read_csv(
+        path_table_wu,
+        sep="\t",
+        header=0,
+        dtype={
+            "code_ukbiobank": "string",
+            "medication_name": "string",
+            "medication_category": "string",
+            "code_atc": "string",
+        },
+    )
+    table_appleby = pandas.read_csv(
+        path_table_appleby,
+        sep="\t",
+        header=0,
+        dtype={
+            "code_ukbiobank": "string",
+            "medication_name": "string",
+            "code_atc": "string",
+        },
+    )
     # Compile and return information.
     return {
         "codes_atc_g03": codes_atc_g03,
