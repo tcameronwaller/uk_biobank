@@ -4433,8 +4433,63 @@ def organize_atc_class_medication_codes(
     return pail
 
 
-# TODO: TCW, 11 January 2022
-# TODO: introduce a new sub-driver for interpretation of medications that relate to hormones...
+def determine_medication_codes_match_class_group(
+    medication_codes_text=None,
+    delimiter=None,
+    class_group_name=None,
+    class_group_codes=None,
+    report=None,
+):
+    """
+    Determines whether any actual medication codes match a relevant class group
+    of medication codes.
+
+    Match uses "any" logic.
+
+    arguments:
+        medication_codes_text (str): textual representation of a list of
+            medication codes from UK Biobank data-field "20003"
+        delimiter (str): string delimiter between values in the textual
+            representation of a list of medication codes
+        class_group_name (str): name for the class group of medication codes
+        class_group_codes (list<str>): medication codes that belong to a
+            relevant class group
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<list<str>>): medication codes in relevant ATC classes
+
+    """
+
+    # Determine whether any actual medication codes match the comparisons.
+    values_actual = utility.parse_text_list_values(
+        collection=medication_codes_text,
+        delimiter=delimiter,
+    )
+    match = utility.determine_any_actual_values_match_comparisons(
+        values_actual=values_actual,
+        values_comparison=class_group_codes,
+    )
+    # Determine logical binary representation of whether there was any match.
+    if (match):
+        interpretation = 1
+    else:
+        interpretation = 0
+        pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("determine_medication_codes_match_class_group()")
+        utility.print_terminal_partition(level=3)
+
+        # TODO: TCW, 12 January 2022
+        # TODO: now summarize the matches in females and males
+    # Return information.
+    return interpretation
+
 
 def organize_hormonal_medications(
     table=None,
@@ -4484,7 +4539,40 @@ def organize_hormonal_medications(
     # TODO: define new variables for "medication_sex_hormone" and "medication_vitamin_d"
     # TODO: then summarize those variables in females and males separately
 
+    table["medication_sex_hormone"] = table.apply(
+        lambda row:
+            determine_medication_codes_match_class_group(
+                medication_codes_text=row["20003_array"],
+                delimiter=";",
+                class_group_name="ATC class G03",
+                class_group_codes=pail["G03"]["codes_class"],
+                report=report,
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["medication_vitamin_d"] = table.apply(
+        lambda row:
+            determine_medication_codes_match_class_group(
+                medication_codes_text=row["20003_array"],
+                delimiter=";",
+                class_group_name="ATC class A11CC",
+                class_group_codes=pail["A11CC"]["codes_class"],
+                report=report,
+            ),
+        axis="columns", # apply function to each row
+    )
 
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_hormonal_medications()")
+        utility.print_terminal_partition(level=3)
+
+        # TODO: TCW, 12 January 2022
+        # TODO: now summarize the matches in females and males
+
+        pass
 
 
     # ...
@@ -4496,6 +4584,49 @@ def organize_hormonal_medications(
 
     # Return information.
     return table
+
+
+
+def parse_interpret_match_diagnosis_codes(
+    row=None,
+    fields=None,
+    codes_match=None,
+):
+    """
+    Parses and interprets ICD diagnosis codes.
+
+    Any match in either ICD9 or ICD10 codes suffices for a diagnostic match.
+
+    arguments:
+        row (object): Pandas series corresponding to a row of a Pandas data
+            frame
+        fields (list<str>): names of columns for UK Biobank fields for
+            diagnostic codes
+        codes_match (list<str>): codes corresponding to a diagnostic
+            group
+
+    raises:
+
+    returns:
+        (bool): whether values in the current row match the diagnostic group
+
+    """
+
+    matches = list()
+    for field in fields:
+        collection = row[field]
+        values_actual = utility.parse_text_list_values(
+            collection=collection,
+            delimiter=";",
+        )
+        match = utility.determine_any_actual_values_match_comparisons(
+            values_actual=values_actual,
+            values_comparison=codes_match,
+        )
+        matches.append(match)
+    return any(matches)
+
+
 
 
 # Main driver
@@ -9640,44 +9771,13 @@ def specify_self_alcoholism_diagnosis_codes():
     return codes
 
 
-def parse_field_array_codes(
-    collection=None,
-    delimiter=None,
-):
-    """
-    Parse the field's array codes.
-
-    arguments:
-        collection (str): raw string of field's array codes
-        delimiter (str): delimiter between codes
-
-    raises:
-
-    returns:
-        (list<str>): field's array codes
-
-    """
-
-    if (
-        (len(str(collection)) > 0) and (delimiter in str(collection))
-    ):
-        codes_raw = str(collection).split(delimiter)
-        codes = list()
-        for code_raw in codes_raw:
-            code = str(code_raw).strip()
-            if (len(code) > 0):
-                codes.append(str(code))
-            pass
-    else:
-        codes = list()
-    return codes
-
 # TODO: TCW 14 September 2021
 # TODO: I could possibly rewrite this more efficiently using "any()" and "filter()"
 
 # TODO: TCW, 11 January 2022
 # TODO: I'd like to follow this basic pattern of text array matching in interpretation
 # TODO: of medications
+
 
 def parse_interpret_match_diagnosis_codes(
     row=None,
@@ -9704,20 +9804,19 @@ def parse_interpret_match_diagnosis_codes(
 
     """
 
-    match = False
+    matches = list()
     for field in fields:
         collection = row[field]
-        codes = parse_field_array_codes(
+        values_actual = utility.parse_text_list_values(
             collection=collection,
             delimiter=";",
         )
-        if (len(codes) > 0):
-            for code in codes:
-                if (code in codes_match):
-                    match = True
-            pass
-        pass
-    return match
+        match = utility.determine_any_actual_values_match_comparisons(
+            values_actual=values_actual,
+            values_comparison=codes_match,
+        )
+        matches.append(match)
+    return any(matches)
 
 
 def determine_diagnosis_icd_alcoholism_group(
