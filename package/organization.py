@@ -4648,6 +4648,239 @@ def organize_hormonal_medications(
     return table
 
 
+# Combination of Hormonal Alteration
+
+
+def determine_sex_combination_alteration_sex_hormones(
+    sex_text=None,
+    female_oral_contraception=None,
+    female_hormone_therapy=None,
+    medication_sex_hormone=None,
+):
+    """
+    Organizes interpretation of medications that alter hormones.
+
+    arguments:
+        sex_text (str): textual representation of sex, 'female' or 'male'
+        female_oral_contraception (float): binary logical representation of
+            whether female person used oral contraception recently
+        female_hormone_therapy (float): binary logical representation of whether
+            female person used hormone replacement therapy recently
+        medication_sex_hormone (float): binary logical representation of whether
+            person used any medications that influence sex hormones
+
+    raises:
+
+    returns:
+        (float): binary logical representation of whether person used any
+            medications that influence sex hormones, including oral
+            contraception and other hormonal therapy in females
+
+    """
+
+    if (sex_text == "female"):
+        combination_1 = utility.determine_logical_or_combination_binary_missing(
+            first=female_oral_contraception,
+            second=female_hormone_therapy,
+            single_false_sufficient=True,
+        )
+        combination_2 = utility.determine_logical_or_combination_binary_missing(
+            first=combination_1,
+            second=medication_sex_hormone,
+            single_false_sufficient=True,
+        )
+        interpretation = combination_2
+    elif (sex_text == "male"):
+        interpretation = medication_sex_hormone
+    else:
+        # Interpretation is null without definition of sex.
+        interpretation = float("nan")
+        pass
+    # Return information.
+    return interpretation
+
+
+def report_combination_alteration_sex_hormones_by_sex(
+    female_oral_contraception=None,
+    female_hormone_therapy=None,
+    medication_sex_hormone=None,
+    alteration_sex_hormone=None,
+    table=None,
+):
+    """
+    Reports counts of persons with stratification by sex who used medications in
+    a specific class group.
+
+    arguments:
+        female_oral_contraception (str): name of column for binary logical
+            representation of whether female person used oral contraception
+            recently
+        female_hormone_therapy (str): name of column for binary logical
+            representation of whether female person used hormone replacement
+            therapy recently
+        medication_sex_hormone (str): name of column for binary logical
+            representation of whether person used any medications that influence
+            sex hormones
+        alteration_sex_hormone (str): name of column for binary logical
+            representation of whether person used any medications that influence
+            sex hormones, including oral contraception and other hormonal
+            therapy in females
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Sex total.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_male = table.loc[
+        (
+            (table["sex_text"] == "male")
+        ), :
+    ]
+    # Females.
+    table_female_contraception = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[female_oral_contraception] == 1)
+        ), :
+    ]
+    table_female_therapy = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[female_hormone_therapy] == 1)
+        ), :
+    ]
+    table_female_medication = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[medication_sex_hormone] == 1)
+        ), :
+    ]
+    table_female_alteration = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[alteration_sex_hormone] == 1)
+        ), :
+    ]
+    # Males.
+    table_male_medication = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[medication_sex_hormone] == 1)
+        ), :
+    ]
+    table_male_alteration = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[alteration_sex_hormone] == 1)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_male = table_male.shape[0]
+    count_female_contraception = table_female_contraception.shape[0]
+    count_female_therapy = table_female_therapy.shape[0]
+    count_female_medication = table_female_medication.shape[0]
+    count_female_alteration = table_female_alteration.shape[0]
+    count_male_medication = table_male_medication.shape[0]
+    count_male_alteration = table_male_alteration.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_combination_alteration_sex_hormones_by_sex()")
+    utility.print_terminal_partition(level=3)
+    utility.print_terminal_partition(level=4)
+    print("counts for: FEMALES")
+    utility.print_terminal_partition(level=5)
+    print("count of total: " + str(count_female))
+    print("count oral contraception: " + str(count_female_contraception))
+    print("count hormone therapy: " + str(count_female_therapy))
+    print("count medication: " + str(count_female_medication))
+    print("count alteration: " + str(count_female_alteration))
+    utility.print_terminal_partition(level=4)
+    print("counts for: MALES")
+    utility.print_terminal_partition(level=5)
+    print("count of total: " + str(count_male))
+    print("count medication: " + str(count_male_medication))
+    print("count alteration: " + str(count_male_alteration))
+    pass
+
+
+def organize_combination_alteration_sex_hormones(
+    table=None,
+    female_oral_contraception=None,
+    female_hormone_therapy=None,
+    medication_sex_hormone=None,
+    report=None,
+):
+    """
+    Organizes interpretation of medications that alter hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        female_oral_contraception (str): name of column for binary logical
+            representation of whether female person used oral contraception
+            recently
+        female_hormone_therapy (str): name of column for binary logical
+            representation of whether female person used hormone replacement
+            therapy recently
+        medication_sex_hormone (str): name of column for binary logical
+            representation of whether person used any medications that influence
+            sex hormones
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Determine whether persons used any medications or other therapeutic
+    # exposures that alter Sex Hormones.
+    table["alteration_sex_hormone"] = table.apply(
+        lambda row:
+            determine_sex_combination_alteration_sex_hormones(
+                sex_text=row["sex_text"],
+                female_oral_contraception=row[female_oral_contraception],
+                female_hormone_therapy=row[female_female_hormone_therapy],
+                medication_sex_hormone=row[medication_sex_hormone],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_hormonal_medications()")
+        utility.print_terminal_partition(level=3)
+        report_combination_alteration_sex_hormones_by_sex(
+            female_oral_contraception=female_oral_contraception,
+            female_hormone_therapy=female_hormone_therapy,
+            medication_sex_hormone=medication_sex_hormone,
+            alteration_sex_hormone="alteration_sex_hormone",
+            table=table,
+        )
+        pass
+    # Return information.
+    return table
+
+
 # Main driver
 
 
@@ -4743,6 +4976,18 @@ def organize_sex_hormone_variables(
         path_dock=path_dock,
         report=report,
     )
+
+    ##########
+    # Determine combination of exposures that alter sex hormones in females and
+    # males.
+    table = organize_combination_alteration_sex_hormones(
+        table=table,
+        female_oral_contraception="oral_contraception",
+        female_hormone_therapy="hormone_therapy",
+        medication_sex_hormone="medication_sex_hormone",
+        report=report,
+    )
+
 
     ##########
     # Transform variables' values to normalize distributions.
@@ -6863,6 +7108,10 @@ def determine_female_pregnancy(
     return value
 
 
+# TODO: TCW, 13 January 2022
+# TODO: need to include data-field "6153"
+
+
 def determine_female_oral_contraception(
     sex_text=None,
     age=None,
@@ -6909,6 +7158,9 @@ def determine_female_oral_contraception(
     return value
 
 
+# TODO: TCW, 13 January 2022
+# TODO: need to include data-field "6153"
+
 def determine_female_hormone_replacement_therapy(
     sex_text=None,
     age=None,
@@ -6952,46 +7204,6 @@ def determine_female_hormone_replacement_therapy(
     # Comparison.
     if (sex_text == "female"):
         value = therapy
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_female_any_hormone_alteration_medication(
-    sex_text=None,
-    oral_contraception=None,
-    hormone_therapy=None,
-):
-    """
-    Determine count of days since previous menstruation (menstrual period).
-
-    This function uses a specific definition of pregnancy that considers
-    menopause and does not include uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        oral_contraception (float): binary logical representation of whether
-            person used oral contraception recently
-        hormone_therapy (float): binary logical representation of whether
-            person used hormone replacement therapy recently
-
-    raises:
-
-    returns:
-        (float): binary logical representation of whether person used any
-            hormone-alteration medications recently
-
-    """
-
-    # Comparison.
-    if (sex_text == "female"):
-        value = utility.determine_logical_or_combination_binary_missing(
-            first=oral_contraception,
-            second=hormone_therapy,
-            single_false_sufficient=False,
-        )
     else:
         # This specific variable is undefined for males.
         value = float("nan")
@@ -7276,7 +7488,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply function to each row
     )
     # Determine whether person was using hormone replacement therapy recently.
-    table["hormone_replacement"] = table.apply(
+    table["hormone_therapy"] = table.apply(
         lambda row:
             determine_female_hormone_replacement_therapy(
                 sex_text=row["sex_text"],
@@ -7288,31 +7500,34 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply function to each row
     )
-    # Determine whether person was using any hormone-altering medications
-    # recently.
-    table["hormone_alteration"] = table.apply(
-        lambda row:
-            determine_female_any_hormone_alteration_medication(
-                sex_text=row["sex_text"],
-                oral_contraception=row["oral_contraception"],
-                hormone_therapy=row["hormone_replacement"],
-             ),
-        axis="columns", # apply function to each row
-    )
-    # Determine combination categories by menopause and hormone-atering therapy.
-    # Report on 28 April 2021.
-    # Category 1: 24158
-    # Category 2: 178007
-    # Category 3: 8438
-    # Category 4: 51786
-    table = (
-        utility.determine_binary_categorical_products_of_two_binary_variables(
-            table=table,
-            first="menopause_binary",
-            second="hormone_alteration",
-            prefix="menopause_hormone_category",
-            report=report,
-    ))
+
+    if False:
+        # Determine whether person was using any hormone-altering medications
+        # recently.
+        table["hormone_alteration"] = table.apply(
+            lambda row:
+                determine_female_any_hormone_alteration_medication(
+                    sex_text=row["sex_text"],
+                    oral_contraception=row["oral_contraception"],
+                    hormone_therapy=row["hormone_therapy"],
+                 ),
+            axis="columns", # apply function to each row
+        )
+        # Determine combination categories by menopause and hormone-atering therapy.
+        # Report on 28 April 2021.
+        # Category 1: 24158
+        # Category 2: 178007
+        # Category 3: 8438
+        # Category 4: 51786
+        table = (
+            utility.determine_binary_categorical_products_of_two_binary_variables(
+                table=table,
+                first="menopause_binary",
+                second="hormone_alteration",
+                prefix="menopause_hormone_category",
+                report=report,
+        ))
+        pass
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -7343,9 +7558,10 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "menstruation_phase",
         "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
-        "oral_contraception", "hormone_replacement", "hormone_alteration",
-        "menopause_hormone_category_1", "menopause_hormone_category_2",
-        "menopause_hormone_category_3", "menopause_hormone_category_4",
+        "oral_contraception", "hormone_replacement",
+        #"hormone_alteration",
+        #"menopause_hormone_category_1", "menopause_hormone_category_2",
+        #"menopause_hormone_category_3", "menopause_hormone_category_4",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
