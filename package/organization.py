@@ -4436,9 +4436,7 @@ def organize_atc_class_medication_codes(
 def determine_medication_codes_match_class_group(
     medication_codes_text=None,
     delimiter=None,
-    class_group_name=None,
     class_group_codes=None,
-    report=None,
 ):
     """
     Determines whether any actual medication codes match a relevant class group
@@ -4451,10 +4449,8 @@ def determine_medication_codes_match_class_group(
             medication codes from UK Biobank data-field "20003"
         delimiter (str): string delimiter between values in the textual
             representation of a list of medication codes
-        class_group_name (str): name for the class group of medication codes
         class_group_codes (list<str>): medication codes that belong to a
             relevant class group
-        report (bool): whether to print reports
 
     raises:
 
@@ -4478,17 +4474,98 @@ def determine_medication_codes_match_class_group(
     else:
         interpretation = 0
         pass
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: ")
-        print("determine_medication_codes_match_class_group()")
-        utility.print_terminal_partition(level=3)
-
-        # TODO: TCW, 12 January 2022
-        # TODO: now summarize the matches in females and males
     # Return information.
     return interpretation
+
+
+def report_medication_class_groups_by_sex(
+    medication_class_name=None,
+    medication_use_indicator=None,
+    table=None,
+):
+    """
+    Reports counts of persons with stratification by sex who used medications in
+    a specific class group.
+
+    arguments:
+        medication_class_name (str): name of medication class
+        medication_use_indicator (str): name of column in table for binary
+            logical indicator variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Sex total.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_male = table.loc[
+        (
+            (table["sex_text"] == "male")
+        ), :
+    ]
+    # Sex medication use.
+    table_female_medication_true = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[medication_use_indicator] == 1)
+        ), :
+    ]
+    table_female_medication_false = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[medication_use_indicator] == 0)
+        ), :
+    ]
+    table_male_medication_true = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[medication_use_indicator] == 1)
+        ), :
+    ]
+    table_male_medication_false = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[medication_use_indicator] == 0)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_male = table_male.shape[0]
+    count_female_true = table_female_medication_true.shape[0]
+    count_female_false = table_female_medication_false.shape[0]
+    count_male_true = table_male_medication_true.shape[0]
+    count_male_false = table_male_medication_false.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_medication_class_groups_by_sex()")
+    utility.print_terminal_partition(level=3)
+    print("Name of medication class: " + str(medication_class_name))
+    utility.print_terminal_partition(level=4)
+    print("counts for: FEMALES")
+    utility.print_terminal_partition(level=5)
+    print("count of total: " + str(count_female))
+    print("count who use medication class: " + str(count_female_true))
+    print("count who do not use medication class: " + str(count_female_false))
+    utility.print_terminal_partition(level=4)
+    print("counts for: MALES")
+    utility.print_terminal_partition(level=5)
+    print("count of total: " + str(count_male))
+    print("count who use medication class: " + str(count_male_true))
+    print("count who do not use medication class: " + str(count_male_false))
+    pass
+
 
 
 def organize_hormonal_medications(
@@ -4528,25 +4605,17 @@ def organize_hormonal_medications(
         table_medication_codes_classes=table_medication_codes_classes,
         report=report,
     )
-    #pail["G03"]["codes_class"]
-    #pail["A11CC"]["codes_class"]
 
     # Copy information in table.
     table = table.copy(deep=True)
-
-    # TODO: TCW, 12 January 2022
-    # TODO: now follow the "if any codes in class-specific list" pattern to
-    # TODO: define new variables for "medication_sex_hormone" and "medication_vitamin_d"
-    # TODO: then summarize those variables in females and males separately
-
+    # Determine whether persons used medications that alter either Sex Hormones
+    # or Vitamin D.
     table["medication_sex_hormone"] = table.apply(
         lambda row:
             determine_medication_codes_match_class_group(
                 medication_codes_text=row["20003_array"],
                 delimiter=";",
-                class_group_name="ATC class G03",
                 class_group_codes=pail["G03"]["codes_class"],
-                report=report,
             ),
         axis="columns", # apply function to each row
     )
@@ -4555,78 +4624,29 @@ def organize_hormonal_medications(
             determine_medication_codes_match_class_group(
                 medication_codes_text=row["20003_array"],
                 delimiter=";",
-                class_group_name="ATC class A11CC",
                 class_group_codes=pail["A11CC"]["codes_class"],
-                report=report,
             ),
         axis="columns", # apply function to each row
     )
-
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("report: ")
         print("organize_hormonal_medications()")
         utility.print_terminal_partition(level=3)
-
-        # TODO: TCW, 12 January 2022
-        # TODO: now summarize the matches in females and males
-
+        report_medication_class_groups_by_sex(
+            medication_class_name="ATC class G03",
+            medication_use_indicator="medication_sex_hormone",
+            table=table,
+        )
+        report_medication_class_groups_by_sex(
+            medication_class_name="ATC class A11CC",
+            medication_use_indicator="medication_vitamin_d",
+            table=table,
+        )
         pass
-
-
-    # ...
-    # ...
-    # ...
-
-    # TODO: TCW, 11 January 2022
-    # TODO: report counts of females and males with medication codes in each ATC class
-
     # Return information.
     return table
-
-
-
-def parse_interpret_match_diagnosis_codes(
-    row=None,
-    fields=None,
-    codes_match=None,
-):
-    """
-    Parses and interprets ICD diagnosis codes.
-
-    Any match in either ICD9 or ICD10 codes suffices for a diagnostic match.
-
-    arguments:
-        row (object): Pandas series corresponding to a row of a Pandas data
-            frame
-        fields (list<str>): names of columns for UK Biobank fields for
-            diagnostic codes
-        codes_match (list<str>): codes corresponding to a diagnostic
-            group
-
-    raises:
-
-    returns:
-        (bool): whether values in the current row match the diagnostic group
-
-    """
-
-    matches = list()
-    for field in fields:
-        collection = row[field]
-        values_actual = utility.parse_text_list_values(
-            collection=collection,
-            delimiter=";",
-        )
-        match = utility.determine_any_actual_values_match_comparisons(
-            values_actual=values_actual,
-            values_comparison=codes_match,
-        )
-        matches.append(match)
-    return any(matches)
-
-
 
 
 # Main driver
