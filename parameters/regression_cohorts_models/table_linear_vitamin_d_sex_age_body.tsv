@@ -19,7 +19,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	indepen
 1	female_male	1	vitamin_d_imputation_log	2	11		assessment_season	marginal model
 1	female_male	1	vitamin_d_imputation_log	2	12		assessment_region	marginal model
 1	female_male	1	vitamin_d_imputation_log	2	13		medication_vitamin_d	marginal model
-1	female	2	vitamin_d_log	1	1	1	menopause_ordinal;hormone_alteration;age;body_log;assessment_season;assessment_region	
-1	female	2	vitamin_d_imputation_log	2	1	1	menopause_ordinal;hormone_alteration;age;body_log;assessment_season;assessment_region	
-1	male	3	vitamin_d_log	1	1	1	age;body_log;assessment_season;assessment_region	
-1	male	3	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_season;assessment_region	
+0	female	2	vitamin_d_log	1	1	1	menopause_ordinal;hormone_alteration;age;body_log;assessment_season;assessment_region	
+0	female	2	vitamin_d_imputation_log	2	1	1	menopause_ordinal;hormone_alteration;age;body_log;assessment_season;assessment_region	
+0	male	3	vitamin_d_log	1	1	1	age;body_log;assessment_season;assessment_region	
+0	male	3	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_season;assessment_region	

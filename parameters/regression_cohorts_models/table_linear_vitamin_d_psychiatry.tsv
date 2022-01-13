@@ -19,7 +19,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	indepen
 1	female_male	1	vitamin_d_imputation_log	2	9	9	alcoholism_control_case_any;sex_y;age;body_log;assessment_region;assessment_season
 1	female_male	1	vitamin_d_log	1	10	10	alcoholism_control_case_1;sex_y;age;body_log;assessment_region;assessment_season
 1	female_male	1	vitamin_d_imputation_log	2	10	10	alcoholism_control_case_1;sex_y;age;body_log;assessment_region;assessment_season
-1	female	2	vitamin_d_log	1	1	1	neuroticism;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
-1	female	2	vitamin_d_imputation_log	2	1	1	neuroticism;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
-1	female	2	vitamin_d_log	1	2	2	neuroticism_log;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
-1	female	2	vitamin_d_imputation_log	2	2	2	neuroticism_log;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
+0	female	2	vitamin_d_log	1	1	1	neuroticism;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
+0	female	2	vitamin_d_imputation_log	2	1	1	neuroticism;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
+0	female	2	vitamin_d_log	1	2	2	neuroticism_log;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region
+0	female	2	vitamin_d_imputation_log	2	2	2	neuroticism_log;age;body_log;menopause_ordinal;hormone_alteration;assessment_season;assessment_region

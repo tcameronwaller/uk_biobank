@@ -7558,7 +7558,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "menstruation_phase",
         "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
-        "oral_contraception", "hormone_replacement",
+        "oral_contraception", "hormone_therapy",
         #"hormone_alteration",
         #"menopause_hormone_category_1", "menopause_hormone_category_2",
         #"menopause_hormone_category_3", "menopause_hormone_category_4",
