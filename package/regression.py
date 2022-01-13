@@ -868,8 +868,8 @@ def execute_procedure(
                     source_reference["table_linear_vitamin_d_sex_age_body"]
                 ),
                 independences_summary=[
-                    "sex_y", "age", "body_log", "assessment_region",
-                    "assessment_season",
+                    "sex_y", "age", "body_log", "assessment_season",
+                    "assessment_region", "medication_vitamin_d",
                 ],
                 filter_execution=True,
                 report=True,
@@ -883,8 +883,8 @@ def execute_procedure(
                     source_reference["table_linear_vitamin_d_psychiatry"]
                 ),
                 independences_summary=[
-                    "sex_y", "age", "body_log", "assessment_region",
-                    "assessment_season",
+                    "sex_y", "age", "body_log", "assessment_season",
+                    "assessment_region", "medication_vitamin_d",
                     "depression_control_case_loose",
                     "depression_control_case_strict",
                     "bipolar_control_case_loose",

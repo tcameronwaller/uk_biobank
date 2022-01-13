@@ -4858,7 +4858,7 @@ def organize_combination_alteration_sex_hormones(
             determine_sex_combination_alteration_sex_hormones(
                 sex_text=row["sex_text"],
                 female_oral_contraception=row[female_oral_contraception],
-                female_hormone_therapy=row[female_female_hormone_therapy],
+                female_hormone_therapy=row[female_hormone_therapy],
                 medication_sex_hormone=row[medication_sex_hormone],
             ),
         axis="columns", # apply function to each row
