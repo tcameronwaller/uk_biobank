@@ -4567,7 +4567,6 @@ def report_medication_class_groups_by_sex(
     pass
 
 
-
 def organize_hormonal_medications(
     table=None,
     path_dock=None,
@@ -4615,7 +4614,7 @@ def organize_hormonal_medications(
             determine_medication_codes_match_class_group(
                 medication_codes_text=row["20003_array"],
                 delimiter=";",
-                class_group_codes=pail["G03"]["codes_class"],
+                class_group_codes=medication_classes["G03"]["codes_class"],
             ),
         axis="columns", # apply function to each row
     )
@@ -4624,7 +4623,7 @@ def organize_hormonal_medications(
             determine_medication_codes_match_class_group(
                 medication_codes_text=row["20003_array"],
                 delimiter=";",
-                class_group_codes=pail["A11CC"]["codes_class"],
+                class_group_codes=medication_classes["A11CC"]["codes_class"],
             ),
         axis="columns", # apply function to each row
     )
