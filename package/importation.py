@@ -124,7 +124,7 @@ def read_organize_uk_biobank_import_table(
     # Specify directories and files.
     path_table_import = os.path.join(
         path_dock, "access", "ukbiobank_import",
-        "waller_import_20220111.derived.csv.gz"
+        "waller_import_20220114.derived.csv.gz"
     )
     # Read information from file.
     table_import = pandas.read_csv(

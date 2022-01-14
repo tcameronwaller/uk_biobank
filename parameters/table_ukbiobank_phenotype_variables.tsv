@@ -59,13 +59,13 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	3710	float32	female		64164		Length of menstrual cycle	Female-specific factors		0;	
 1	3720	float32	female		76486		Menstruating today	Female-specific factors		0;	
 1	2714	float32	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0;	
-1	2814	float32	female		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0;	
-1	3536	float32	female		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0;	
-1	3546	float32	female		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0;	
-1	2784	float32	female		272909		Ever taken oral contraceptive pill	Female-specific factors		0;	
-1	2794	float32	female		220791		Age started oral contraceptive pill	Female-specific factors		0;	
-1	2804	float32	female		220473		Age when last used oral contraceptive pill	Female-specific factors		0;	
-0	6153	float32	female		271284		Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones			0;	
+1	2814	float32	female_hormone_therapy		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	3536	float32	female_hormone_therapy		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	3546	float32	female_hormone_therapy		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0;	
+1	2784	float32	female_hormone_therapy		272909		Ever taken oral contraceptive pill	Female-specific factors		0;	
+1	2794	float32	female_hormone_therapy		220791		Age started oral contraceptive pill	Female-specific factors		0;	
+1	2804	float32	female_hormone_therapy		220473		Age when last used oral contraceptive pill	Female-specific factors		0;	
+1	6153	float32	female_hormone_therapy		271284		Medication for cholesterol, blood pressure, diabetes, or take exogenous hormones	Medication - Health and medical history	yes	0;	multiple instances of arrays (0, 1, 2, 3), but only consider initial assessment at blood draw
 1	1558	float32	alcohol_consumption	alcohol_frequency	501580	ordinal	Alcohol intake frequency	Alcohol		0;	translate to ordinal
 1	20117	float32	alcohol_consumption	alcohol_status	501580	ordinal	Alcohol drinker status	Alcohol		0;	translate to ordinal
 1	3731	float32	alcohol_consumption	alcohol_previous	42331	ordinal	Former alcohol drinker	Alcohol		0;	translate to ordinal
