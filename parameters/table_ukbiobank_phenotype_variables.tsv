@@ -93,13 +93,13 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	20408	string	alcohol_questionnaire	audit_8	85196	ordinal				0;	
 1	20411	string	alcohol_questionnaire	audit_9	157339	ordinal				0;	
 1	20405	string	alcohol_questionnaire	audit_10	157339	ordinal				0;	
-1	41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	41270	string	diagnosis	icd10_summary	410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	41202	string	diagnosis	icd10_primary	410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	41204	string	diagnosis	icd10_secondary	340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	0;	parsing this data field takes a very long time
-1	20002	string	diagnosis	diagnosis_self	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	0;1;2;3;	parsing this data field takes a very long time
+1	41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	0;	single instance; combination of fields “41203” and “41205”
+1	41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	0;	single instance; field “41281” indicates date of diagnosis
+1	41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	0;	single instance; field “41281” indicates date of diagnosis
+1	41270	string	diagnosis	icd10_summary	410309	nominal	Diagnoses - ICD10	Summary Diagnoses	yes	0;	single instance; combination of fields “41202” and “41204”
+1	41202	string	diagnosis	icd10_primary	410305	nominal	Diagnoses - main ICD10	Summary Diagnoses	yes	0;	single instance; field “41280” indicates date of diagnosis
+1	41204	string	diagnosis	icd10_secondary	340895	nominal	Diagnoses - secondary ICD10	Summary Diagnoses	yes	0;	single instance; field “41280” indicates date of diagnosis
+1	20002	string	diagnosis	diagnosis_self	385933	nominal	Non-cancer illness code, self-reported	Medical conditions	yes	0;1;2;3;	multiple instances of arrays (0, 1, 2, 3); keep all instances to match other diagnostic fields
 1	20003	string	medications	medications			Treatment/medication code	Medications	yes	0;	multiple instances of arrays (0, 1, 2, 3), but only consider initial assessment at blood draw
 1	20127	string	mental_health	neuroticism	401562	ordinal	Neuroticism score	Mental health		0;	derivation from Data-Fields: 1920, 1930, 1940, 1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030
 1	20124	string	mental_health	depression_moderate	15244	nominal	Probable recurrent major depression (moderate)	Mental health		0;	

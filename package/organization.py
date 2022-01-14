@@ -4433,40 +4433,43 @@ def organize_atc_class_medication_codes(
     return pail
 
 
-def determine_medication_codes_match_class_group(
-    medication_codes_text=None,
+def interpret_field_array_codes_match_any_relevant_codes(
+    field_array_values_text=None,
     delimiter=None,
-    class_group_codes=None,
+    relevant_query_codes=None,
 ):
     """
-    Determines whether any actual medication codes match a relevant class group
-    of medication codes.
+    Determines whether any actual codes from a UK Biobank data-field match
+    relevant query codes.
 
     Match uses "any" logic.
 
+    Implementation does not introduce missing values.
+
     arguments:
-        medication_codes_text (str): textual representation of a list of
-            medication codes from UK Biobank data-field "20003"
+        field_array_values_text (str): textual representation of a list of codes
+            from a UK Biobank array data-field
         delimiter (str): string delimiter between values in the textual
-            representation of a list of medication codes
-        class_group_codes (list<str>): medication codes that belong to a
-            relevant class group
+            representation of a list of codes
+        relevant_query_codes (list<str>): relevant codes for which to query any
+            matches
 
     raises:
 
     returns:
-        (dict<list<str>>): medication codes in relevant ATC classes
+        (float): binary logical representation of whether any of record's codes
+            match relevant query codes
 
     """
 
     # Determine whether any actual medication codes match the comparisons.
     values_actual = utility.parse_text_list_values(
-        collection=medication_codes_text,
+        collection=field_array_values_text,
         delimiter=delimiter,
     )
     match = utility.determine_any_actual_values_match_comparisons(
         values_actual=values_actual,
-        values_comparison=class_group_codes,
+        values_comparison=relevant_query_codes,
     )
     # Determine logical binary representation of whether there was any match.
     if (match):
@@ -4611,19 +4614,19 @@ def organize_hormonal_medications(
     # or Vitamin D.
     table["medication_sex_hormone"] = table.apply(
         lambda row:
-            determine_medication_codes_match_class_group(
-                medication_codes_text=row["20003_array"],
+            interpret_field_array_codes_match_any_relevant_codes(
+                field_array_values_text=row["20003_array"],
                 delimiter=";",
-                class_group_codes=medication_classes["G03"]["codes_class"],
+                relevant_query_codes=medication_classes["G03"]["codes_class"],
             ),
         axis="columns", # apply function to each row
     )
     table["medication_vitamin_d"] = table.apply(
         lambda row:
-            determine_medication_codes_match_class_group(
-                medication_codes_text=row["20003_array"],
+            interpret_field_array_codes_match_any_relevant_codes(
+                field_array_values_text=row["20003_array"],
                 delimiter=";",
-                class_group_codes=medication_classes["A11CC"]["codes_class"],
+                relevant_query_codes=medication_classes["A11CC"]["codes_class"],
             ),
         axis="columns", # apply function to each row
     )
@@ -4643,6 +4646,457 @@ def organize_hormonal_medications(
             medication_use_indicator="medication_vitamin_d",
             table=table,
         )
+        pass
+    # Return information.
+    return table
+
+
+# Female Oral Contraception or Hormonal Therapy
+# Review:
+# 14 January 2022: TCW verified the documentations and interpretations of
+# data-fields for recent use of Oral Contraception or Hormonal Therapy.
+
+
+def interpret_recent_female_hormone_therapies(
+    age=None,
+    recent_range=None,
+    ever_used=None,
+    age_started=None,
+    age_stopped=None,
+):
+    """
+    Inteprets whether a female person used recently either oral contraception or
+    hormone-replacement therapy.
+
+    Relevant UK Biobank data fields and their codings:
+    oral contraception
+    2784 (100349)
+    2794 (100291)
+    2804 (100595)
+    hormone-replacement therapy
+    2814 (100349)
+    3536 (100291)
+    3546 (100598)
+
+    Accommodate inexact float values.
+
+    arguments:
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        ever_used (float): UK Biobank field 2784 or 2814, ever taken either oral
+            contraception or hormone-replacement therapy
+        age_started (float): UK Biobank field 2794 or 3536, age started either
+            oral contraception or hormone-replacement therapy
+        age_stopped (float): UK Biobank field 2804 or 3546, age stopped either oral
+            contraception or hormone-replacement therapy
+
+    raises:
+
+    returns:
+        (float): interpretation value (1: true, 0: false, NAN: missing, null)
+
+    """
+
+    if (
+        (not pandas.isna(ever_used)) and
+        (-3.5 <= ever_used and ever_used < 1.5)
+    ):
+        # Variable "ever_used" has a valid value.
+        # Determine whether person has ever used therapy.
+        if (0.5 <= ever_used and ever_used < 1.5):
+            # 1: "Yes"
+            # Person has used therapy.
+            # Determine whether person used therapy recently.
+            if (
+                (not pandas.isna(age_stopped)) and
+                (-11.5 <= age_stopped and age_stopped <= age)
+            ):
+                # Variable "age_stopped" has a valid value.
+                if (-11.5 <= age_stopped and age_stopped < -10.5):
+                    # -11: "Still taking the pill"
+                    # -11: "Still taking HRT"
+                    # Person used oral contraception currently.
+                    value = 1
+                elif (
+                    (age_stopped >= (age - recent_range)) and
+                    (age_stopped <= age)
+                ):
+                    # Person used therapy within recent range of current age.
+                    value = 1
+                elif ((age_stopped < (age - recent_range))):
+                    # Person ceased use of therapy longer than recently.
+                    value = 0
+                elif (-1.5 <= age_stopped and age_stopped < -0.5):
+                    # -1: "Do not know"
+                    # Unable to determine how recently person used therapy.
+                    value = float("nan")
+                elif (-3.5 <= age_stopped and age_stopped < -2.5):
+                    # -3: "Prefer not to answer"
+                    # Unable to determine how recently person used therapy.
+                    value = float("nan")
+                else:
+                    # uninterpretable
+                    # Unable to determine how recently person used therapy.
+                    value = float("nan")
+            else:
+                # Unable to determine how recently person used therapy.
+                # null
+                value = float("nan")
+        elif (-0.5 <= ever_used and ever_used < 0.5):
+            # 0: "No"
+            # Person has not used therapy.
+            value = 0
+        elif (-1.5 <= ever_used and ever_used < -0.5):
+            # -1: "Do not know"
+            value = float("nan")
+        elif (-3.5 <= ever_used and ever_used < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
+def interpret_recent_oral_contraception(
+    age=None,
+    recent_range=None,
+    field_2784=None,
+    field_2794=None,
+    field_2804=None,
+):
+    """
+    Inteprets recent use of oral contraception.
+
+    Recent use of oral contraception will be a covariate in analyses.
+    To preserve samples in analyses, do not perpetuate null values.
+    Interpret null values as false.
+    Hence the greatest confidence will be in true values, and these will drive
+    much of the signal in analyses.
+
+    Data-Field "2784": "Ever taken oral contraceptive pill"
+    UK Biobank data coding "100349" for variable field "2784".
+    1: "Yes"
+    0: "No"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Data-Field "2794": "Age started oral contraceptive pill"
+    UK Biobank data coding "100291" for variable field "2794".
+    [5 to person's age]: "age in years"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Data-Field "2804": "Age when last used oral contraceptive pill"
+    UK Biobank data coding "100595" for variable field "2804".
+    [5 to person's age]: "age in years"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+    -11: "Still taking the pill"
+
+    Accommodate inexact float values.
+
+    arguments:
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
+        field_2794 (float): UK Biobank field 2794, age started oral
+            contraception
+        field_2804 (float): UK Biobank field 2804, age stopped oral
+            contraception
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    value = interpret_recent_female_hormone_therapies(
+        age=age,
+        recent_range=recent_range,
+        ever_used=field_2784,
+        age_started=field_2794,
+        age_stopped=field_2804,
+    )
+    # Return.
+    return value
+
+
+def interpret_recent_hormone_replacement_therapy(
+    age=None,
+    recent_range=None,
+    field_2814=None,
+    field_3536=None,
+    field_3546=None,
+):
+    """
+    Inteprets recent use of hormone replacement therapy.
+
+    Recent use of hormone replacement therapy will be a covariate in analyses.
+    To preserve samples in analyses, do not perpetuate null values.
+    Interpret null values as false.
+    Hence the greatest confidence will be in true values, and these will drive
+    much of the signal in analyses.
+
+    Data-Field "2814": "Ever used hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100349" for variable field "2814".
+    1: "Yes"
+    0: "No"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Data-Field "3536": "Age started hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100291" for variable field "3536".
+    [16 to person's age]: "age in years"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Data-Field "3546": "Age last used hormone-replacement therapy (HRT)"
+    UK Biobank data coding "100598" for variable field "3546".
+    [20 to person's age]: "age in years"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+    -11: "Still taking HRT"
+
+    Accommodate inexact float values.
+
+    arguments:
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        field_2814 (float): UK Biobank field 2814, ever taken hormone
+            replacement therapy (HRT)
+        field_3536 (float): UK Biobank field 3536, age started hormone
+            replacement therapy (HRT)
+        field_3546 (float): UK Biobank field 3546, age stopped hormone
+            replacement therapy (HRT)
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    value = interpret_recent_female_hormone_therapies(
+        age=age,
+        recent_range=recent_range,
+        ever_used=field_2814,
+        age_started=field_3536,
+        age_stopped=field_3546,
+    )
+    # Return.
+    return value
+
+
+def determine_female_oral_contraception(
+    sex_text=None,
+    age=None,
+    recent_range=None,
+    field_2784=None,
+    field_2794=None,
+    field_2804=None,
+    field_6153_values_text=None,
+):
+    """
+    Determine whether person used Oral Contraception recently or currently.
+
+    Data-Field "6153": "Medication for cholesterol, blood pressure, diabetes, or
+    take exogenous hormones"
+    UK Biobank data coding "100626" for data-field "6153".
+    1: "Cholesterol lowering medication"
+    2: "Blood pressure medication"
+    3: "Insulin"
+    4: "Hormone replacement therapy"
+    5: "Oral contraceptive pill or minipill"
+    -7: "None of the above"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
+        field_2794 (float): UK Biobank field 2794, age started oral
+            contraception
+        field_2804 (float): UK Biobank field 2804, age stopped oral
+            contraception
+        field_6153_values_text (str): textual representation of a list of
+            medication codes from UK Biobank data-field "6153"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret oral contraception.
+    therapy = interpret_recent_oral_contraception(
+        age=age,
+        recent_range=recent_range, # recent range in years
+        field_2784=field_2784,
+        field_2794=field_2794,
+        field_2804=field_2804,
+    )
+    # Interpret array codes.
+    match = interpret_field_array_codes_match_any_relevant_codes(
+        field_array_values_text=field_6153_values_text,
+        delimiter=";",
+        relevant_query_codes=["5",], # data-field "6153" coding "100626"
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        value = utility.determine_logical_or_combination_binary_missing(
+            first=therapy,
+            second=match,
+            single_false_sufficient=True,
+        )
+    else:
+        # This specific variable is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def determine_female_hormone_replacement_therapy(
+    sex_text=None,
+    age=None,
+    recent_range=None,
+    field_2814=None,
+    field_3536=None,
+    field_3546=None,
+    field_6153_values_text=None,
+):
+    """
+    Determine whether person used Hormone Therapy recently or currently.
+
+    Data-Field "6153": "Medication for cholesterol, blood pressure, diabetes, or
+    take exogenous hormones"
+    UK Biobank data coding "100626" for data-field "6153".
+    1: "Cholesterol lowering medication"
+    2: "Blood pressure medication"
+    3: "Insulin"
+    4: "Hormone replacement therapy"
+    5: "Oral contraceptive pill or minipill"
+    -7: "None of the above"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (int): age of person in years
+        recent_range (int): years within current age to consider recent
+        field_2814 (float): UK Biobank field 2814, ever taken hormone
+            replacement therapy (HRT)
+        field_3536 (float): UK Biobank field 3536, age started hormone
+            replacement therapy (HRT)
+        field_3546 (float): UK Biobank field 3546, age stopped hormone
+            replacement therapy (HRT)
+        field_6153_values_text (str): textual representation of a list of
+            medication codes from UK Biobank data-field "6153"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret hormone replacement therapy.
+    therapy = interpret_recent_hormone_replacement_therapy(
+        age=age,
+        recent_range=recent_range,
+        field_2814=field_2814,
+        field_3536=field_3536,
+        field_3546=field_3546,
+    )
+    # Interpret array codes.
+    match = interpret_field_array_codes_match_any_relevant_codes(
+        field_array_values_text=field_6153_values_text,
+        delimiter=";",
+        relevant_query_codes=["4",], # data-field "6153" coding "100626"
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        value = utility.determine_logical_or_combination_binary_missing(
+            first=therapy,
+            second=match,
+            single_false_sufficient=True,
+        )
+    else:
+        # This specific variable is undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+def organize_female_hormonal_therapy(
+    table=None,
+    report=None,
+):
+    """
+    Organizes interpretation of female-specific use of Oral Contraception or
+    Hormonal Therapy.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Determine whether person was using oral contraception recently.
+    table["oral_contraception"] = table.apply(
+        lambda row:
+            determine_female_oral_contraception(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                recent_range=1, # years within current age to consider recent
+                field_2784=row["2784-0.0"],
+                field_2794=row["2794-0.0"],
+                field_2804=row["2804-0.0"],
+                field_6153_values_text=row["6153_array"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine whether person was using hormone replacement therapy recently.
+    table["hormone_therapy"] = table.apply(
+        lambda row:
+            determine_female_hormone_replacement_therapy(
+                sex_text=row["sex_text"],
+                age=row["age"],
+                recent_range=1, # years within current age to consider recent
+                field_2814=row["2814-0.0"],
+                field_3536=row["3536-0.0"],
+                field_3546=row["3546-0.0"],
+                field_6153_values_text=row["6153_array"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_female_hormonal_therapy()")
+        utility.print_terminal_partition(level=3)
         pass
     # Return information.
     return table
@@ -4971,9 +5425,17 @@ def organize_sex_hormone_variables(
 
     ##########
     # Determine use of medications that alter hormones.
+    # These medications are relevant to both females and males.
     table = organize_hormonal_medications(
         table=table,
         path_dock=path_dock,
+        report=report,
+    )
+
+    ##########
+    # Determine female-specific use of Oral Contraception or Hormonal Therapy.
+    table = organize_female_hormonal_therapy(
+        table=table,
         report=report,
     )
 
@@ -5667,240 +6129,6 @@ def interpret_pregnancy(
     else:
         # null
         value = float("nan")
-    # Return.
-    return value
-
-
-def interpret_recent_hormone_alteration_therapies(
-    age=None,
-    recent_range=None,
-    ever_used=None,
-    age_started=None,
-    age_stopped=None,
-):
-    """
-    Inteprets whether a female person used recently either oral contraception or
-    hormone-replacement therapy.
-
-    Relevant UK Biobank data fields and their codings:
-    oral contraception
-    2784 (100349)
-    2794 (100291)
-    2804 (100595)
-    hormone-replacement therapy
-    2814 (100349)
-    3536 (100291)
-    3546 (100598)
-
-    Accommodate inexact float values.
-
-    arguments:
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        ever_used (float): UK Biobank field 2784 or 2814, ever taken either oral
-            contraception or hormone-replacement therapy
-        age_started (float): UK Biobank field 2794 or 3536, age started either
-            oral contraception or hormone-replacement therapy
-        age_stopped (float): UK Biobank field 2804 or 3546, age stopped either oral
-            contraception or hormone-replacement therapy
-
-    raises:
-
-    returns:
-        (float): interpretation value (1: true, 0: false, NAN: missing, null)
-
-    """
-
-    if (
-        (not pandas.isna(ever_used)) and
-        (-3.5 <= ever_used and ever_used < 1.5)
-    ):
-        # Variable "ever_used" has a valid value.
-        # Determine whether person has ever used therapy.
-        if (0.5 <= ever_used and ever_used < 1.5):
-            # 1: "yes"
-            # Person has used therapy.
-            # Determine whether person used therapy recently.
-            if (
-                (not pandas.isna(age_stopped)) and
-                (-11.5 <= age_stopped and age_stopped <= age)
-            ):
-                # Variable "age_stopped" has a valid value.
-                if (-11.5 <= age_stopped and age_stopped < -10.5):
-                    # -11: "still taking the pill"
-                    # -11: "still taking HRT"
-                    # Person used oral contraception currently.
-                    value = 1
-                elif (
-                    (age_stopped >= (age - recent_range)) and
-                    (age_stopped <= age)
-                ):
-                    # Person used therapy within recent range of current age.
-                    value = 1
-                elif ((age_stopped < (age - recent_range))):
-                    # Person ceased use of therapy longer than recently.
-                    value = 0
-                elif (-1.5 <= age_stopped and age_stopped < -0.5):
-                    # -1: "do not know"
-                    value = float("nan")
-                elif (-3.5 <= age_stopped and age_stopped < -2.5):
-                    # -3: "prefer not to answer"
-                    value = float("nan")
-                else:
-                    # uninterpretable
-                    value = float("nan")
-            else:
-                # null
-                value = float("nan")
-        elif (-0.5 <= ever_used and ever_used < 0.5):
-            # 0: "no"
-            # Person has not used therapy.
-            value = 0
-        elif (-1.5 <= ever_used and ever_used < -0.5):
-            # -1: "do not know"
-            value = float("nan")
-        elif (-3.5 <= ever_used and ever_used < -2.5):
-            # -3: "prefer not to answer"
-            value = float("nan")
-        else:
-            # uninterpretable
-            value = float("nan")
-    else:
-        # null
-        value = float("nan")
-    # Return.
-    return value
-
-
-def interpret_recent_oral_contraception(
-    age=None,
-    recent_range=None,
-    field_2784=None,
-    field_2794=None,
-    field_2804=None,
-):
-    """
-    Inteprets recent use of oral contraception.
-
-    Recent use of oral contraception will be a covariate in analyses.
-    To preserve samples in analyses, do not perpetuate null values.
-    Interpret null values as false.
-    Hence the greatest confidence will be in true values, and these will drive
-    much of the signal in analyses.
-
-    Data-Field "2784": "ever taken oral contraceptive pill"
-    UK Biobank data coding "100349" for variable field "2784".
-    "yes": 1
-    "no": 0
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "2794": "age started oral contraceptive pill"
-    UK Biobank data coding "100291" for variable field "2794".
-    "age in years": 5 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "2804": "age when last used oral contraceptive pill"
-    UK Biobank data coding "100595" for variable field "2804".
-    "age in years": 5 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-    "still taking the pill": -11
-
-    Accommodate inexact float values.
-
-    arguments:
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
-        field_2794 (float): UK Biobank field 2794, age started oral
-            contraception
-        field_2804 (float): UK Biobank field 2804, age stopped oral
-            contraception
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    value = interpret_recent_hormone_alteration_therapies(
-        age=age,
-        recent_range=recent_range,
-        ever_used=field_2784,
-        age_started=field_2794,
-        age_stopped=field_2804,
-    )
-    # Return.
-    return value
-
-
-def interpret_recent_hormone_replacement_therapy(
-    age=None,
-    recent_range=None,
-    field_2814=None,
-    field_3536=None,
-    field_3546=None,
-):
-    """
-    Inteprets recent use of hormone replacement therapy.
-
-    Recent use of hormone replacement therapy will be a covariate in analyses.
-    To preserve samples in analyses, do not perpetuate null values.
-    Interpret null values as false.
-    Hence the greatest confidence will be in true values, and these will drive
-    much of the signal in analyses.
-
-    Data-Field "2814": "ever used hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100349" for variable field "2814".
-    "yes": 1
-    "no": 0
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "3536": "age started hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100291" for variable field "3536".
-    "age in years": 16 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-
-    Data-Field "3546": "age last used hormone-replacement therapy (HRT)"
-    UK Biobank data coding "100598" for variable field "3546".
-    "age in years": 20 - person's age
-    "do not know": -1
-    "prefer not to answer": -3
-    "still taking HRT": -11
-
-    Accommodate inexact float values.
-
-    arguments:
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        field_2814 (float): UK Biobank field 2814, ever taken hormone
-            replacement therapy (HRT)
-        field_3536 (float): UK Biobank field 3536, age started hormone
-            replacement therapy (HRT)
-        field_3546 (float): UK Biobank field 3546, age stopped hormone
-            replacement therapy (HRT)
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    value = interpret_recent_hormone_alteration_therapies(
-        age=age,
-        recent_range=recent_range,
-        ever_used=field_2814,
-        age_started=field_3536,
-        age_stopped=field_3546,
-    )
     # Return.
     return value
 
@@ -7108,109 +7336,6 @@ def determine_female_pregnancy(
     return value
 
 
-# TODO: TCW, 13 January 2022
-# TODO: need to include data-field "6153"
-
-
-def determine_female_oral_contraception(
-    sex_text=None,
-    age=None,
-    recent_range=None,
-    field_2784=None,
-    field_2794=None,
-    field_2804=None,
-):
-    """
-    Determine whether person used oral contraception recently or currently.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        field_2784 (float): UK Biobank field 2784, ever taken oral contraception
-        field_2794 (float): UK Biobank field 2794, age started oral
-            contraception
-        field_2804 (float): UK Biobank field 2804, age stopped oral
-            contraception
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret oral contraception.
-    contraception = interpret_recent_oral_contraception(
-        age=age,
-        recent_range=recent_range, # recent range in years
-        field_2784=field_2784,
-        field_2794=field_2794,
-        field_2804=field_2804,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        value = contraception
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-# TODO: TCW, 13 January 2022
-# TODO: need to include data-field "6153"
-
-def determine_female_hormone_replacement_therapy(
-    sex_text=None,
-    age=None,
-    recent_range=None,
-    field_2814=None,
-    field_3536=None,
-    field_3546=None,
-):
-    """
-    Determine count of days since previous menstruation (menstrual period).
-
-    This function uses a specific definition of pregnancy that considers
-    menopause and does not include uncertain cases.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        age (int): age of person in years
-        recent_range (int): years within current age to consider recent
-        field_2814 (float): UK Biobank field 2784, ever taken hormone
-            replacement therapy
-        field_3536 (float): UK Biobank field 2794, age started hormone
-            replacement therapy (HRT)
-        field_3546 (float): UK Biobank field 2804, age stopped hormone
-            replacement therapy (HRT)
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret hormone replacement therapy.
-    therapy = interpret_recent_hormone_replacement_therapy(
-        age=age,
-        recent_range=recent_range,
-        field_2814=field_2814,
-        field_3536=field_3536,
-        field_3546=field_3546,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        value = therapy
-    else:
-        # This specific variable is undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -7471,63 +7596,20 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply function to each row
     )
 
-    ##########
-    # Medications and therapies that alter hormone levels
-
-    # Determine whether person was using oral contraception recently.
-    table["oral_contraception"] = table.apply(
-        lambda row:
-            determine_female_oral_contraception(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                recent_range=1, # years within current age to consider recent
-                field_2784=row["2784-0.0"],
-                field_2794=row["2794-0.0"],
-                field_2804=row["2804-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    # Determine whether person was using hormone replacement therapy recently.
-    table["hormone_therapy"] = table.apply(
-        lambda row:
-            determine_female_hormone_replacement_therapy(
-                sex_text=row["sex_text"],
-                age=row["age"],
-                recent_range=1, # years within current age to consider recent
-                field_2814=row["2814-0.0"],
-                field_3536=row["3536-0.0"],
-                field_3546=row["3546-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-
-    if False:
-        # Determine whether person was using any hormone-altering medications
-        # recently.
-        table["hormone_alteration"] = table.apply(
-            lambda row:
-                determine_female_any_hormone_alteration_medication(
-                    sex_text=row["sex_text"],
-                    oral_contraception=row["oral_contraception"],
-                    hormone_therapy=row["hormone_therapy"],
-                 ),
-            axis="columns", # apply function to each row
-        )
-        # Determine combination categories by menopause and hormone-atering therapy.
-        # Report on 28 April 2021.
-        # Category 1: 24158
-        # Category 2: 178007
-        # Category 3: 8438
-        # Category 4: 51786
-        table = (
-            utility.determine_binary_categorical_products_of_two_binary_variables(
-                table=table,
-                first="menopause_binary",
-                second="hormone_alteration",
-                prefix="menopause_hormone_category",
-                report=report,
-        ))
-        pass
+    # Determine combination categories by menopause and hormone-atering therapy.
+    # Report on 28 April 2021.
+    # Category 1: 24158
+    # Category 2: 178007
+    # Category 3: 8438
+    # Category 4: 51786
+    #table = (
+    #    utility.determine_binary_categorical_products_of_two_binary_variables(
+    #        table=table,
+    #        first="menopause_binary",
+    #        second="hormone_therapy",
+    #        prefix="menopause_hormone_category",
+    #        report=report,
+    #))
 
     # Remove columns for variables that are not necessary anymore.
     # Pandas drop throws error if column names do not exist.
@@ -7537,8 +7619,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "2724-0.0", "3591-0.0", "2834-0.0",
             "3140-0.0",
             "3700-0.0", "3710-0.0", "3720-0.0",
-            "2784-0.0", "2794-0.0", "2804-0.0",
-            "2814-0.0", "3536-0.0", "3546-0.0",
+            #"2784-0.0", "2794-0.0", "2804-0.0", # Oral Contraception
+            #"2814-0.0", "3536-0.0", "3546-0.0", # Hormonal Therapy
         ],
         axis="columns",
         inplace=True
@@ -7558,7 +7640,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "menstruation_phase",
         "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
-        "oral_contraception", "hormone_therapy",
+        #"oral_contraception", "hormone_therapy",
         #"hormone_alteration",
         #"menopause_hormone_category_1", "menopause_hormone_category_2",
         #"menopause_hormone_category_3", "menopause_hormone_category_4",
