@@ -5621,18 +5621,20 @@ def organize_sex_hormone_variables(
 # TODO: review all "interpretation" functions below...
 
 
+# review: TCW on 17 January 2022
 def interpret_menstruation_days(
     field_3700=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3700.
+    Intepret UK Biobank's coding for data-field 3700.
 
     Data-Field "3700": "Time since last menstrual period"
-    UK Biobank data coding "100291" for variable field "3700".
-    0 - 365: "days"
+    UK Biobank data-coding "100291" for data-field "3700".
+    [0 - 365]: "days"
     -1: "Do not know"
     -3: "Prefer not to answer"
 
+    Note: "How many days since your last menstrual period?"
     Note: "Please count from the first day of your last menstrual period."
 
     Accommodate inexact float values.
@@ -5658,30 +5660,31 @@ def interpret_menstruation_days(
             # The variable has a valid value for days.
             value = float(field_3700)
         elif (-1.5 <= field_3700 and field_3700 < -0.5):
-            # -1: "do not know"
+            # -1: "Do not know"
             value = float("nan")
         elif (-3.5 <= field_3700 and field_3700 < -2.5):
-            # -3: "prefer not to answer"
+            # -3: "Prefer not to answer"
             value = float("nan")
         else:
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_menstruation_cycle_duration(
     field_3710=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3710.
+    Intepret UK Biobank's coding for data-field 3710.
 
     Data-Field "3710": "Length of menstrual cycle"
-    UK Biobank data coding "100582" for variable field "3710".
-    7 - 365: "days"
+    UK Biobank data-coding "100582" for data-field "3710".
+    [7 - 365]: "days"
     -6: "Irregular cycle"
     -1: "Do not know"
     -3: "Prefer not to answer"
@@ -5724,24 +5727,25 @@ def interpret_menstruation_cycle_duration(
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_menstruation_cycle_irregularity(
     field_3710=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3710.
+    Intepret UK Biobank's coding for data-field 3710.
 
     Only interpret whether the variable indicates that the person had an
     irregular menstrual cycle.
 
     Data-Field "3710": "Length of menstrual cycle"
-    UK Biobank data coding "100582" for variable field "3710".
-    7 - 365: "days"
+    UK Biobank data-coding "100582" for data-field "3710".
+    [7 - 365]: "days"
     -6: "Irregular cycle"
     -1: "Do not know"
     -3: "Prefer not to answer"
@@ -5784,22 +5788,23 @@ def interpret_menstruation_cycle_irregularity(
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_menstruation_period_current(
     field_3720=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3720.
+    Intepret UK Biobank's coding for data-field 3720.
 
     Data-Field "3720": "Menstruating today"
-    UK Biobank data coding "100349" for variable field "3720".
-    1: "Yes"
+    UK Biobank data-coding "100349" for data-field "3720".
     0: "No"
+    1: "Yes"
     -1: "Do not know"
     -3: "Prefer not to answer"
 
@@ -5822,12 +5827,12 @@ def interpret_menstruation_period_current(
         (-3.5 <= field_3720 and field_3720 < 1.5)
     ):
         # The variable has a valid value.
-        if (0.5 <= field_3720 and field_3720 < 1.5):
-            # 1: "Yes"
-            value = 1
-        elif (-0.5 <= field_3720 and field_3720 < 0.5):
+        if (-0.5 <= field_3720 and field_3720 < 0.5):
             # 0: "No"
             value = 0
+        elif (0.5 <= field_3720 and field_3720 < 1.5):
+            # 1: "Yes"
+            value = 1
         elif (-1.5 <= field_3720 and field_3720 < -0.5):
             # -1: "Do not know"
             value = float("nan")
@@ -5838,25 +5843,24 @@ def interpret_menstruation_period_current(
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_menopause_hysterectomy(
     field_2724=None,
 ):
     """
-    Intepret UK Biobank's coding for field 2724.
+    Intepret UK Biobank's coding for data-field 2724.
 
     Only interpret whether the variable indicates that the person had a
-    hysterectomy.
-
-    The only valid value is whether person indicated hysterectomy.
+    hysterectomy. The only valid value is whether person indicated hysterectomy.
 
     Data-Field "2724": "Had menopause"
-    UK Biobank data coding "100579" for variable field "2724".
+    UK Biobank data-coding "100579" for data-field "2724".
     0: "No"
     1: "Yes"
     2: "Not sure - had a hysterectomy"
@@ -5901,23 +5905,24 @@ def interpret_menopause_hysterectomy(
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_menopause_natural_self_report(
     field_2724=None,
 ):
     """
-    Intepret UK Biobank's coding for field 2724.
+    Intepret UK Biobank's coding for data-field 2724.
 
     Only interpret whether the variable indicates that the person self reported
     natural menopause, not involving hysterectomy.
 
     Data-Field "2724": "Had menopause"
-    UK Biobank data coding "100579" for variable field "2724".
+    UK Biobank data-coding "100579" for data-field "2724".
     0: "No"
     1: "Yes"
     2: "Not sure - had a hysterectomy"
@@ -5962,28 +5967,27 @@ def interpret_menopause_natural_self_report(
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_hysterectomy(
     field_3591=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3591.
+    Intepret UK Biobank's coding for data-field 3591.
 
     Data-Field "3591": "Ever had hysterectomy (womb removed)"
-    UK Biobank data coding "100599" for variable field "3591".
-    "no": 0
-    "yes": 1
-    "not sure": -5
-    "prefer not to answer": -3
+    UK Biobank data-coding "100599" for data-field "3591".
+    0: "No"
+    1: "Yes"
+    -5: "Not sure"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
-
-    Interpret missing or null values as False.
 
     arguments:
         field_3591 (float): UK Biobank field 3591, whether person has had a
@@ -6003,44 +6007,43 @@ def interpret_hysterectomy(
     ):
         # The variable has a valid value.
         if (-0.5 <= field_3591 and field_3591 < 0.5):
-            # 0: "no"
+            # 0: "No"
             value = 0
         elif (0.5 <= field_3591 and field_3591 < 1.5):
-            # 1: "yes"
+            # 1: "Yes"
             value = 1
         elif (-5.5 <= field_3591 and field_3591 < -4.5):
-            # -5: "not sure"
+            # -5: "Not sure"
             value = float("nan")
         elif (-3.5 <= field_3591 and field_3591 < -2.5):
-            # -3: "prefer not to answer"
+            # -3: "Prefer not to answer"
             value = float("nan")
         else:
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_oophorectomy(
     field_2834=None,
 ):
     """
-    Intepret UK Biobank's coding for field 2834.
+    Intepret UK Biobank's coding for data-field 2834.
 
     Data-Field "2834": "Bilateral oophorectomy (both ovaries
     removed)"
-    UK Biobank data coding "100599" for variable field "2834".
-    "no": 0
-    "yes": 1
-    "not sure": -5
-    "prefer not to answer": -3
+    UK Biobank data-coding "100599" for data-field "2834".
+    0: "No"
+    1: "Yes"
+    -5: "Not sure"
+    -3: "Prefer not to answer"
 
     Accommodate inexact float values.
-
-    Interpret missing or null values as False.
 
     arguments:
         field_2834 (float): UK Biobank field 2834, whether person has had an
@@ -6060,40 +6063,43 @@ def interpret_oophorectomy(
     ):
         # The variable has a valid value.
         if (-0.5 <= field_2834 and field_2834 < 0.5):
-            # 0: "no"
+            # 0: "No"
             value = 0
         elif (0.5 <= field_2834 and field_2834 < 1.5):
-            # 1: "yes"
+            # 1: "Yes"
             value = 1
         elif (-5.5 <= field_2834 and field_2834 < -4.5):
-            # -5: "not sure"
+            # -5: "Not sure"
             value = float("nan")
         elif (-3.5 <= field_2834 and field_2834 < -2.5):
-            # -3: "prefer not to answer"
+            # -3: "Prefer not to answer"
             value = float("nan")
         else:
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
 
 
+# review: TCW on 17 January 2022
 def interpret_pregnancy(
     field_3140=None,
 ):
     """
-    Intepret UK Biobank's coding for field 3140.
+    Intepret UK Biobank's coding for data-field 3140.
 
-    Interpret "unsure" pregnancy as potential pregnancy.
+    Interpret "unsure" pregnancy as potential pregnancy. Assume that persons who
+    were likely or trying to get pregnant might be more likely to answer
+    "unsure".
 
     Data-Field "3140": "Pregnant"
-    UK Biobank data coding "100267" for variable field "3140".
-    "no": 0
-    "yes": 1
-    "unsure": 2
+    UK Biobank data-coding "100267" for data-field "3140".
+    0: "No"
+    1: "Yes"
+    2: "Unsure"
 
     Accommodate inexact float values.
 
@@ -6114,20 +6120,20 @@ def interpret_pregnancy(
     ):
         # The variable has a valid value.
         if (-0.5 <= field_3140 and field_3140 < 0.5):
-            # 0: "no"
+            # 0: "No"
             value = 0
         elif (0.5 <= field_3140 and field_3140 < 1.5):
-            # 1: "yes"
+            # 1: "Yes"
             value = 1
         elif (1.5 <= field_3140 and field_3140 < 2.5):
-            # 2: "unsure"
+            # 2: "Unsure"
             # Interpret "unsure" pregnancy as potential pregnancy.
             value = 1
         else:
             # uninterpretable
             value = float("nan")
     else:
-        # null
+        # missing or uninterpretable
         value = float("nan")
     # Return.
     return value
@@ -6272,6 +6278,7 @@ def determine_female_menstruation_cycle_irregularity(
     return value
 
 
+# review: TCW on _____
 def determine_female_hysterectomy(
     sex_text=None,
     field_2724=None,
@@ -6316,6 +6323,7 @@ def determine_female_hysterectomy(
     return value
 
 
+# review: TCW on ____
 def determine_female_oophorectomy(
     sex_text=None,
     field_2834=None,
@@ -6349,6 +6357,7 @@ def determine_female_oophorectomy(
     return value
 
 
+# review: TCW on _____
 def determine_female_hysterectomy_or_oophorectomy(
     sex_text=None,
     hysterectomy=None,
@@ -6385,6 +6394,7 @@ def determine_female_hysterectomy_or_oophorectomy(
     return value
 
 
+# review: TCW on ____
 def determine_female_menopause_natural_self_report(
     sex_text=None,
     field_2724=None,
@@ -6422,6 +6432,42 @@ def determine_female_menopause_natural_self_report(
         value = float("nan")
     # Return information.
     return value
+
+
+# review: TCW on ____
+def determine_female_pregnancy(
+    sex_text=None,
+    field_3140=None,
+):
+    """
+    Determine whether female persons were pregnant.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_3140 (float): UK Biobank field 3140, whether person was pregnant
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret pregnancy.
+    pregnancy = interpret_pregnancy(
+        field_3140=field_3140,
+    )
+    # Comparison.
+    if (sex_text == "female"):
+        value = pregnancy
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+
 
 
 def determine_female_menopause_binary(
@@ -6660,6 +6706,7 @@ def determine_female_menopause_binary_strict(
     return value
 
 
+# review: TCW on _____
 def determine_female_menopause_ordinal(
     sex_text=None,
     age=None,
@@ -7299,38 +7346,6 @@ def determine_female_menstruation_phase_cycle(
             value = float("nan")
     else:
         # Menstruation undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-def determine_female_pregnancy(
-    sex_text=None,
-    field_3140=None,
-):
-    """
-    Determine whether female persons were pregnant.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        field_3140 (float): UK Biobank field 3140, whether person was pregnant
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret pregnancy.
-    pregnancy = interpret_pregnancy(
-        field_3140=field_3140,
-    )
-    # Comparison.
-    if (sex_text == "female"):
-        value = pregnancy
-    else:
-        # Pregnancy undefined for males.
         value = float("nan")
     # Return information.
     return value
