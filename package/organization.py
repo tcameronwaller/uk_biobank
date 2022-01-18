@@ -5912,7 +5912,7 @@ def interpret_menopause_hysterectomy(
 
 
 # review: TCW on 17 January 2022
-def interpret_menopause_natural_self_report(
+def interpret_menopause_self_report(
     field_2724=None,
 ):
     """
@@ -6091,9 +6091,9 @@ def interpret_pregnancy(
     """
     Intepret UK Biobank's coding for data-field 3140.
 
-    Interpret "unsure" pregnancy as potential pregnancy. Assume that persons who
-    were likely or trying to get pregnant might be more likely to answer
-    "unsure".
+    An alternative method would interpret "unsure" pregnancy as potential
+    pregnancy. This method would assume that persons who were likely or trying
+    to become pregnant might be more likely to answer "unsure".
 
     Data-Field "3140": "Pregnant"
     UK Biobank data-coding "100267" for data-field "3140".
@@ -6127,8 +6127,8 @@ def interpret_pregnancy(
             value = 1
         elif (1.5 <= field_3140 and field_3140 < 2.5):
             # 2: "Unsure"
-            # Interpret "unsure" pregnancy as potential pregnancy.
-            value = 1
+            # Do not interpret "unsure" pregnancy as potential pregnancy.
+            value = float("nan")
         else:
             # uninterpretable
             value = float("nan")
@@ -6139,6 +6139,7 @@ def interpret_pregnancy(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_days(
     sex_text=None,
     imputation_days=None,
@@ -6202,6 +6203,7 @@ def determine_female_menstruation_days(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_cycle_duration(
     sex_text=None,
     field_3710=None,
@@ -6240,6 +6242,7 @@ def determine_female_menstruation_cycle_duration(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_cycle_irregularity(
     sex_text=None,
     field_3710=None,
@@ -6278,7 +6281,7 @@ def determine_female_menstruation_cycle_irregularity(
     return value
 
 
-# review: TCW on _____
+# review: TCW on 18 January 2022
 def determine_female_hysterectomy(
     sex_text=None,
     field_2724=None,
@@ -6314,7 +6317,7 @@ def determine_female_hysterectomy(
         value = utility.determine_logical_or_combination_binary_missing(
             first=menopause_hysterectomy,
             second=hysterectomy,
-            single_false_sufficient=True, # both variables have similar meaning
+            single_false_sufficient=True, # both variables have similar meanings
         )
     else:
         # Hysterectomy is undefined for males.
@@ -6323,7 +6326,7 @@ def determine_female_hysterectomy(
     return value
 
 
-# review: TCW on ____
+# review: TCW on 18 January 2022
 def determine_female_oophorectomy(
     sex_text=None,
     field_2834=None,
@@ -6357,7 +6360,7 @@ def determine_female_oophorectomy(
     return value
 
 
-# review: TCW on _____
+# review: TCW on 18 January 2022
 def determine_female_hysterectomy_or_oophorectomy(
     sex_text=None,
     hysterectomy=None,
@@ -6385,7 +6388,7 @@ def determine_female_hysterectomy_or_oophorectomy(
         value = utility.determine_logical_or_combination_binary_missing(
             first=hysterectomy,
             second=oophorectomy,
-            single_false_sufficient=False,
+            single_false_sufficient=False, # variables have different meanings
         )
     else:
         # Hysterectomy and oophorectomy are undefined for males.
@@ -6394,8 +6397,8 @@ def determine_female_hysterectomy_or_oophorectomy(
     return value
 
 
-# review: TCW on ____
-def determine_female_menopause_natural_self_report(
+# review: TCW on 18 January 2022
+def determine_female_menopause_self_report(
     sex_text=None,
     field_2724=None,
 ):
@@ -6416,7 +6419,7 @@ def determine_female_menopause_natural_self_report(
     """
 
     # Interpret self report of natural menopause.
-    menopause_natural_self_report = interpret_menopause_natural_self_report(
+    menopause_self_report = interpret_menopause_self_report(
         field_2724=field_2724,
     )
     # Comparison.
@@ -6425,7 +6428,7 @@ def determine_female_menopause_natural_self_report(
         (sex_text == "female")
     ):
         # Female.
-        value = menopause_natural_self_report
+        value = menopause_self_report
     else:
         # Male.
         # Menstruation undefined for males.
@@ -6434,7 +6437,7 @@ def determine_female_menopause_natural_self_report(
     return value
 
 
-# review: TCW on ____
+# review: TCW on 18 January 2022
 def determine_female_pregnancy(
     sex_text=None,
     field_3140=None,
@@ -6467,9 +6470,7 @@ def determine_female_pregnancy(
     return value
 
 
-
-
-
+# TODO: obsolete? consider removal?
 def determine_female_menopause_binary(
     sex_text=None,
     age=None,
@@ -6520,7 +6521,7 @@ def determine_female_menopause_binary(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural_self_report(
+    menopause_natural = interpret_menopause_self_report(
         field_2724=field_2724,
     )
     # Determine categories for menopause.
@@ -6584,6 +6585,7 @@ def determine_female_menopause_binary(
     return value
 
 
+# TODO: obsolete? consider removal?
 def determine_female_menopause_binary_strict(
     sex_text=None,
     age=None,
@@ -6643,7 +6645,7 @@ def determine_female_menopause_binary_strict(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural_self_report(
+    menopause_natural = interpret_menopause_self_report(
         field_2724=field_2724,
     )
     # Determine categories for menopause.
@@ -6717,7 +6719,7 @@ def determine_female_menopause_ordinal(
     menstruation_days=None,
     threshold_menstruation_pre=None,
     threshold_menstruation_post=None,
-    menopause_natural_self_report=None,
+    menopause_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
 ):
@@ -6753,8 +6755,8 @@ def determine_female_menopause_ordinal(
             menstrual period, below which to consider females premenopausal
         threshold_menstruation_post (int): threshold in days since last
             menstrual period, above which to consider all females postmenopausal
-        menopause_natural_self_report (float): binary representation of whether
-            person self reported natural menopause
+        menopause_self_report (float): binary representation of whether person
+            self reported having experienced menopause
         hysterectomy (float): binary logical representation of whether person
             has had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
@@ -6773,8 +6775,8 @@ def determine_female_menopause_ordinal(
         # Determine postmenopause.
         if (
             (
-                (not pandas.isna(menopause_natural_self_report)) and
-                (menopause_natural_self_report == 1)
+                (not pandas.isna(menopause_self_report)) and
+                (menopause_self_report == 1)
             ) or
             (
                 (not pandas.isna(oophorectomy)) and
@@ -6804,8 +6806,8 @@ def determine_female_menopause_ordinal(
         elif (
             (
                 (
-                    (pandas.isna(menopause_natural_self_report)) or
-                    (menopause_natural_self_report == 0)
+                    (pandas.isna(menopause_self_report)) or
+                    (menopause_self_report == 0)
                 ) and
                 (
                     (pandas.isna(oophorectomy)) or
@@ -6843,8 +6845,8 @@ def determine_female_menopause_ordinal(
         elif (
             (
                 (
-                    (pandas.isna(menopause_natural_self_report)) or
-                    (menopause_natural_self_report == 0)
+                    (pandas.isna(menopause_self_report)) or
+                    (menopause_self_report == 0)
                 ) and
                 (
                     (pandas.isna(oophorectomy)) or
@@ -6874,6 +6876,7 @@ def determine_female_menopause_ordinal(
     return value
 
 
+# review: TCW on _____
 def determine_female_menopause_ordinal_strict(
     sex_text=None,
     age=None,
@@ -6933,7 +6936,7 @@ def determine_female_menopause_ordinal_strict(
     # Interpret menopause.
     # Interpret whether person self-reported menopause that did not involve
     # hysterectomy.
-    menopause_natural = interpret_menopause_natural_self_report(
+    menopause_natural = interpret_menopause_self_report(
         field_2724=field_2724,
     )
     # Assign aliases for variables with long names.
@@ -7021,6 +7024,7 @@ def determine_female_menopause_ordinal_strict(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_days_threshold(
     sex_text=None,
     menopause_ordinal=None,
@@ -7029,17 +7033,15 @@ def determine_female_menstruation_days_threshold(
     threshold_perimenopause=None,
 ):
     """
-    Determine a female person's categorical menstruation phase.
-
-    0: follicular phase of menstruation
-    1: luteal phase of menstruation
+    Determines a female person's days of the menstrual cycle by applying a
+    threshold filter that is specific to menopause status.
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of whether female
-            person has experienced menopause
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
+        menopause_ordinal (float): ordinal representation of female person's
+            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_days (float): count of days since previous menstruation
+            (menstrual period, start of menstrual cycle)
         threshold_premenopause (int): threshold in days for menstrual cycle in
             premenopausal female persons, above which to set menstruation days
             to missing
@@ -7091,7 +7093,7 @@ def determine_female_menstruation_days_threshold(
                 # Person does not qualify for any categories.
                 value = float("nan")
         else:
-            # Variables have missing values.
+            # Necessary variables have missing values.
             value = float("nan")
     else:
         # Menstruation undefined for males.
@@ -7100,6 +7102,7 @@ def determine_female_menstruation_days_threshold(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_phase(
     sex_text=None,
     menopause_ordinal=None,
@@ -7115,10 +7118,10 @@ def determine_female_menstruation_phase(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of whether female
-            person has experienced menopause
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
+        menopause_ordinal (float): ordinal representation of female person's
+            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_days (float): count of days since previous menstruation
+            (menstrual period, start of menstrual cycle)
         threshold_premenopause (int): threshold in days for premenopause female
             persons, below which to consider follicular phase of menstruation
             cycle
@@ -7175,7 +7178,7 @@ def determine_female_menstruation_phase(
                 # Person does not qualify for any categories.
                 value = float("nan")
         else:
-            # Variables have missing values.
+            # Necessary variables have missing values.
             value = float("nan")
     else:
         # Menstruation undefined for males.
@@ -7184,6 +7187,7 @@ def determine_female_menstruation_phase(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_phase_early_late(
     sex_text=None,
     menopause_ordinal=None,
@@ -7194,6 +7198,9 @@ def determine_female_menstruation_phase_early_late(
 ):
     """
     Determine a female person's categorical menstruation phase.
+
+    In this implementation, the thresholds on menstruation phase are the same
+    for pre- and peri-menopausal female persons.
 
     0: early follicular phase of menstruation
     - - (day 0 to day threshold_middle_follicular)
@@ -7206,10 +7213,10 @@ def determine_female_menstruation_phase_early_late(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of whether female
-            person has experienced menopause
-        menstruation_days (int): count of days since previous menstruation
-            (menstrual period)
+        menopause_ordinal (float): ordinal representation of female person's
+            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_days (float): count of days since previous menstruation
+            (menstrual period, start of menstrual cycle)
         threshold_middle_follicular (int): threshold in days for middle of
             follicular phase of menstruation cycle
         threshold_ovulation (int): threshold in days for the approximate
@@ -7268,7 +7275,7 @@ def determine_female_menstruation_phase_early_late(
                 # Person does not qualify for any categories.
                 value = float("nan")
         else:
-            # Variables have missing values.
+            # Necessary variables have missing values.
             value = float("nan")
     else:
         # Menstruation undefined for males.
@@ -7277,6 +7284,7 @@ def determine_female_menstruation_phase_early_late(
     return value
 
 
+# review: TCW on 18 January 2022
 def determine_female_menstruation_phase_cycle(
     sex_text=None,
     menopause_ordinal=None,
@@ -7285,17 +7293,17 @@ def determine_female_menstruation_phase_cycle(
     """
     Determine a female person's menstruation phase from a cyclical perspective.
 
-    0: late luteal or early follicular phase of menstruation cycle
+    0: early follicular or late luteal phase of menstrual cycle
     - "shoulder"
-    1: late follicular or early luteal phase of menstruation cycle
+    1: late follicular or early luteal phase of menstrual cycle
     - "ovulation"
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of whether female
-            person has experienced menopause
-        menstruation_phase_early_late (int): ordinal representation of phases of
-            the menstruation cycle
+        menopause_ordinal (float): ordinal representation of female person's
+            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_phase_early_late (float): ordinal representation of phases
+            of the menstrual cycle
 
     raises:
 
@@ -7342,13 +7350,77 @@ def determine_female_menstruation_phase_cycle(
                 # Person does not qualify for any categories.
                 value = float("nan")
         else:
-            # Variables have missing values.
+            # Necessary variables have missing values.
             value = float("nan")
     else:
         # Menstruation undefined for males.
         value = float("nan")
     # Return information.
     return value
+
+
+# review: TCW on 18 January 2022
+def report_female_menopause_three_groups(
+    female_menopause=None,
+    table=None,
+):
+    """
+    Reports counts of female persons in groups by menopause status.
+
+    arguments:
+        female_menopause (str): name of column for definition of female
+            menopause status
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_female_premenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[female_menopause] == 0)
+        ), :
+    ]
+    table_female_perimenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[female_menopause] == 1)
+        ), :
+    ]
+    table_female_postmenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[female_menopause] == 2)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_premenopause = table_female_premenopause.shape[0]
+    count_perimenopause = table_female_perimenopause.shape[0]
+    count_postmenopause = table_female_postmenopause.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_female_menopause_three_groups()")
+    utility.print_terminal_partition(level=3)
+    print("count of total females: " + str(count_female))
+    print("count of premenopause: " + str(count_premenopause))
+    print("count of perimenopause: " + str(count_perimenopause))
+    print("count of postmenopause: " + str(count_postmenopause))
+    pass
 
 
 def organize_female_menstruation_pregnancy_menopause_variables(
@@ -7459,9 +7531,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
 
     # Determine whether female persons self reported natural menopause, which
     # neither involves hysterectomy nor oophorectomy.
-    table["menopause_natural_self_report"] = table.apply(
+    table["menopause_self_report"] = table.apply(
         lambda row:
-            determine_female_menopause_natural_self_report(
+            determine_female_menopause_self_report(
                 sex_text=row["sex_text"],
                 field_2724=row["2724-0.0"],
             ),
@@ -7515,8 +7587,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_days=row["menstruation_days"],
                 threshold_menstruation_pre=60, # threshold in days
                 threshold_menstruation_post=365, # threshold in days
-                menopause_natural_self_report=(
-                    row["menopause_natural_self_report"]
+                menopause_self_report=(
+                    row["menopause_self_report"]
                 ),
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
@@ -7679,6 +7751,10 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
         print(table_report)
+        report_female_menopause_three_groups(
+            female_menopause="menopause_ordinal",
+            table=table,
+        )
     # Collect information.
     pail = dict()
     pail["table"] = table
