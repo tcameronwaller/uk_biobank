@@ -6605,6 +6605,7 @@ def determine_female_menopause_ordinal(
             ) and
             (
                 (pandas.isna(menstruation_duration)) or
+                (menstruation_duration < threshold_menstruation_duration) or
                 (menstruation_duration >= threshold_menstruation_duration)
             ) and
             (
@@ -7539,7 +7540,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_days=row["menstruation_days"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=60, # threshold in days
+                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7556,7 +7557,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_days=row["menstruation_days"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=60, # threshold in days
+                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7573,7 +7574,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_days=row["menstruation_days"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=60, # threshold in days
+                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7590,7 +7591,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_days=row["menstruation_days"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=60, # threshold in days
+                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7610,7 +7611,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menopause_ordinal=row["menopause_ordinal"],
                 menstruation_days=row["menstruation_days"],
                 threshold_premenopause=31, # threshold in days
-                threshold_perimenopause=41, # threshold in days
+                threshold_perimenopause=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
