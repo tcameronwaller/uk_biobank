@@ -7525,7 +7525,7 @@ def report_female_menstruation_regularity_duration_range(
     )
     print(
         "count with 'regular' menstrual cycle of duration within " +
-        "threshold range, but current menstrual cycle days of "
+        "threshold range, but current menstrual cycle days of " +
         str(threshold_duration_high) +
         " days, but current menstrual cycle days of : " +
         str(threshold_duration_high) +
