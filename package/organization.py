@@ -6482,6 +6482,118 @@ def determine_female_pregnancy(
     return value
 
 
+# review: TCW on __ January 2022
+def determine_female_menstruation_cycle_regular_duration_range(
+    sex_text=None,
+    menstruation_irregularity=None,
+    menstruation_duration=None,
+    menstruation_days=None,
+    threshold_duration_low=None,
+    threshold_duration_high=None,
+):
+    """
+    Determine whether female person experienced regular menstrual cycles of
+    duration within low and high thresholds.
+
+    Hence this definition combines information from multiple variables to
+    indicate regularity in menstrual cycle and duration of the menstrual cycle
+    within thresholds.
+
+    Notice that variable "menstruation_irregularity" has value "0" if there is a
+    valid value for "menstruation_duration".
+
+    Notice that due to the repeating nature of the menstrual cycle, variable
+    "menstruation_days" can have values below the lower threshold even when a
+    regular cycle has a full duration within both thresholds; however, if
+    "menstruation_days" has a value above the higher threshold then that
+    information suffices to determine that the menstrual cycle does not have a
+    regular duration within the threshold range.
+
+    code:
+    1: female person experienced regular menstrual cycles of duration within
+    low and high thresholds
+    (low <= full duration and full duration < high)
+    (current days < high)
+    0: female person experienced irregular menstrual cycles or regular cycles of
+    duration beyond low or high thresholds
+    (low > duration or duration >= high)
+    (current days >= high)
+    missing: missing information prevented interpretation
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menstruation_irregularity (float): binary logical representation of
+            whether person had irregularity in menstrual cycle
+        menstruation_duration (float): count of days in person's regular or
+            usual menstrual cycle
+        menstruation_days (float): count of days since person's previous
+            menstrual period or start of menstrual cycle
+        threshold_duration_low (float): low threshold in days on the
+            duration of the menstrual cycle
+        threshold_duration_high (float): high threshold in days on the
+            duration of the menstrual cycle
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine menopause status.
+    # Pay close attention to "and", "or" logic in comparisons.
+    if (sex_text == "female"):
+        # Determine whether female person experienced regular menstrual cycles
+        # of duration within low and high thresholds.
+        if (
+            (
+                (pandas.isna(menstruation_irregularity)) or
+                (menstruation_irregularity == 0)
+            ) and
+            (
+                (not pandas.isna(menstruation_duration)) and
+                (menstruation_duration >= threshold_duration_low) and
+                (menstruation_duration < threshold_duration_high)
+            ) and
+            (
+                (pandas.isna(menstruation_days)) or
+                (menstruation_days < threshold_duration_high)
+            )
+        ):
+            # Female person experienced regular menstrual cycles of duration
+            # within low and high thresholds.
+            value = 1
+        elif (
+            (
+                (not pandas.isna(menstruation_irregularity)) and
+                (menstruation_irregularity == 1)
+            ) or
+            (
+                (not pandas.isna(menstruation_duration)) and
+                (
+                    (menstruation_duration < threshold_duration_low) or
+                    (menstruation_duration >= threshold_duration_high)
+                )
+            ) or
+            (
+                (not pandas.isna(menstruation_days)) and
+                (menstruation_days >= threshold_duration_high)
+            )
+        ):
+            # Female person experienced irregular menstrual cycles or regular
+            # menstrual cycles of duration beyond low or high thresholds.
+            value = 0
+        else:
+            # Female person did not match definitions due to missing or
+            # uninterpretable information.
+            value = float("nan")
+    else:
+        # Menopause is undefined for male persons.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 # review: TCW on _____
 def determine_female_menopause_ordinal(
     sex_text=None,
@@ -6489,12 +6601,9 @@ def determine_female_menopause_ordinal(
     menopause_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
-    menstruation_irregularity=None,
-    menstruation_duration=None,
-    menstruation_days=None,
+    menstruation_regular_range=None,
     threshold_age_low=None,
     threshold_age_high=None,
-    threshold_menstruation_duration=None,
 ):
     """
     Determine whether female persons qualify for pre-menopause, peri-menopause,
@@ -6523,19 +6632,13 @@ def determine_female_menopause_ordinal(
             had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
             had a bilateral oophorectomy
-        menstruation_irregularity (float): binary logical representation of
-            whether person had irregularity in menstrual cycle
-        menstruation_duration (float): count of days in person's regular or
-            usual menstrual cycle
-        menstruation_days (float): count of days since person's previous
-            menstrual period or start of menstrual cycle
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         threshold_age_low (int): threshold age in years, below which to consider
             female persons premenopausal
         threshold_age_high (int): threshold age in years, above which to
             consider female persons postmenopausal
-        threshold_menstruation_duration (float): threshold in days of menstrual
-            cycle, below which to consider female persons premenopausal and
-            above which to consider female persons perimenopausal
 
     raises:
 
@@ -6562,29 +6665,13 @@ def determine_female_menopause_ordinal(
                 (oophorectomy == 0)
             ) and
             (
-                (pandas.isna(menstruation_irregularity)) or
-                (menstruation_irregularity == 0)
-            ) and
-            (
-                (pandas.isna(menstruation_duration)) or
-                (menstruation_duration < threshold_menstruation_duration)
-            ) and
-            (
-                (pandas.isna(menstruation_days)) or
-                (menstruation_days < threshold_menstruation_duration)
+                (pandas.isna(menstruation_regular_range)) or
+                (menstruation_regular_range == 1)
             )
         ):
             # Person qualifies for premenopause.
             value = 0
         # Determine peri-menopause.
-        # Variable "menstruation_irregularity" has value "0" if there is a valid
-        # value for "menstruation_duration". Hence it is necessary to allow any
-        # value of "menstruation_irregularity" (0, 1, or missing).
-        # Due to repeating cycle, variable "menstruation_days" can occur below
-        # threshold "threshold_menstruation_duration" even when a regular cycle
-        # has duration "menstruation_duration" above that threshold. Hence it is
-        # necessary to allow "menstruation_days" to be missing, below threshold,
-        # or above threshold.
         elif (
             (
                 (not pandas.isna(age)) and
@@ -6597,21 +6684,6 @@ def determine_female_menopause_ordinal(
             (
                 (pandas.isna(oophorectomy)) or
                 (oophorectomy == 0)
-            ) and
-            (
-                (pandas.isna(menstruation_irregularity)) or
-                (menstruation_irregularity == 0) or # "0" if duration is valid
-                (menstruation_irregularity == 1)
-            ) and
-            (
-                (pandas.isna(menstruation_duration)) or
-                (menstruation_duration < threshold_menstruation_duration) or
-                (menstruation_duration >= threshold_menstruation_duration)
-            ) and
-            (
-                (pandas.isna(menstruation_days)) or
-                (menstruation_days < threshold_menstruation_duration) or
-                (menstruation_days >= threshold_menstruation_duration)
             )
         ):
             # Person qualifies for peri-menopause.
@@ -6643,19 +6715,20 @@ def determine_female_menopause_ordinal(
     return value
 
 
-# review: TCW on _____
+#determine_female_menopause_ordinal_age_only
+#determine_female_menopause_ordinal_age_self_only
+#determine_female_menopause_ordinal_age_self_oophorectomy_only
+
+
 def determine_female_menopause_ordinal_age_only(
     sex_text=None,
     age=None,
     menopause_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
-    menstruation_irregularity=None,
-    menstruation_duration=None,
-    menstruation_days=None,
+    menstruation_regular_range=None,
     threshold_age_low=None,
     threshold_age_high=None,
-    threshold_menstruation_duration=None,
 ):
     """
     Determine whether female persons qualify for pre-menopause, peri-menopause,
@@ -6684,19 +6757,13 @@ def determine_female_menopause_ordinal_age_only(
             had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
             had a bilateral oophorectomy
-        menstruation_irregularity (float): binary logical representation of
-            whether person had irregularity in menstrual cycle
-        menstruation_duration (float): count of days in person's regular or
-            usual menstrual cycle
-        menstruation_days (float): count of days since person's previous
-            menstrual period or start of menstrual cycle
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         threshold_age_low (int): threshold age in years, below which to consider
             female persons premenopausal
         threshold_age_high (int): threshold age in years, above which to
             consider female persons postmenopausal
-        threshold_menstruation_duration (float): threshold in days of menstrual
-            cycle, below which to consider female persons premenopausal and
-            above which to consider female persons perimenopausal
 
     raises:
 
@@ -6718,14 +6785,6 @@ def determine_female_menopause_ordinal_age_only(
             # Person qualifies for premenopause.
             value = 0
         # Determine peri-menopause.
-        # Variable "menstruation_irregularity" has value "0" if there is a valid
-        # value for "menstruation_duration". Hence it is necessary to allow any
-        # value of "menstruation_irregularity" (0, 1, or missing).
-        # Due to repeating cycle, variable "menstruation_days" can occur below
-        # threshold "threshold_menstruation_duration" even when a regular cycle
-        # has duration "menstruation_duration" above that threshold. Hence it is
-        # necessary to allow "menstruation_days" to be missing, below threshold,
-        # or above threshold.
         elif (
             (
                 (not pandas.isna(age)) and
@@ -6753,19 +6812,15 @@ def determine_female_menopause_ordinal_age_only(
     return value
 
 
-# review: TCW on _____
 def determine_female_menopause_ordinal_age_self_only(
     sex_text=None,
     age=None,
     menopause_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
-    menstruation_irregularity=None,
-    menstruation_duration=None,
-    menstruation_days=None,
+    menstruation_regular_range=None,
     threshold_age_low=None,
     threshold_age_high=None,
-    threshold_menstruation_duration=None,
 ):
     """
     Determine whether female persons qualify for pre-menopause, peri-menopause,
@@ -6794,19 +6849,13 @@ def determine_female_menopause_ordinal_age_self_only(
             had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
             had a bilateral oophorectomy
-        menstruation_irregularity (float): binary logical representation of
-            whether person had irregularity in menstrual cycle
-        menstruation_duration (float): count of days in person's regular or
-            usual menstrual cycle
-        menstruation_days (float): count of days since person's previous
-            menstrual period or start of menstrual cycle
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         threshold_age_low (int): threshold age in years, below which to consider
             female persons premenopausal
         threshold_age_high (int): threshold age in years, above which to
             consider female persons postmenopausal
-        threshold_menstruation_duration (float): threshold in days of menstrual
-            cycle, below which to consider female persons premenopausal and
-            above which to consider female persons perimenopausal
 
     raises:
 
@@ -6832,14 +6881,6 @@ def determine_female_menopause_ordinal_age_self_only(
             # Person qualifies for premenopause.
             value = 0
         # Determine peri-menopause.
-        # Variable "menstruation_irregularity" has value "0" if there is a valid
-        # value for "menstruation_duration". Hence it is necessary to allow any
-        # value of "menstruation_irregularity" (0, 1, or missing).
-        # Due to repeating cycle, variable "menstruation_days" can occur below
-        # threshold "threshold_menstruation_duration" even when a regular cycle
-        # has duration "menstruation_duration" above that threshold. Hence it is
-        # necessary to allow "menstruation_days" to be missing, below threshold,
-        # or above threshold.
         elif (
             (
                 (not pandas.isna(age)) and
@@ -6875,19 +6916,15 @@ def determine_female_menopause_ordinal_age_self_only(
     return value
 
 
-# review: TCW on _____
 def determine_female_menopause_ordinal_age_self_oophorectomy_only(
     sex_text=None,
     age=None,
     menopause_self_report=None,
     hysterectomy=None,
     oophorectomy=None,
-    menstruation_irregularity=None,
-    menstruation_duration=None,
-    menstruation_days=None,
+    menstruation_regular_range=None,
     threshold_age_low=None,
     threshold_age_high=None,
-    threshold_menstruation_duration=None,
 ):
     """
     Determine whether female persons qualify for pre-menopause, peri-menopause,
@@ -6916,19 +6953,13 @@ def determine_female_menopause_ordinal_age_self_oophorectomy_only(
             had an hysterectomy
         oophorectomy (float): binary logical representation of whether person
             had a bilateral oophorectomy
-        menstruation_irregularity (float): binary logical representation of
-            whether person had irregularity in menstrual cycle
-        menstruation_duration (float): count of days in person's regular or
-            usual menstrual cycle
-        menstruation_days (float): count of days since person's previous
-            menstrual period or start of menstrual cycle
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         threshold_age_low (int): threshold age in years, below which to consider
             female persons premenopausal
         threshold_age_high (int): threshold age in years, above which to
             consider female persons postmenopausal
-        threshold_menstruation_duration (float): threshold in days of menstrual
-            cycle, below which to consider female persons premenopausal and
-            above which to consider female persons perimenopausal
 
     raises:
 
@@ -6958,14 +6989,6 @@ def determine_female_menopause_ordinal_age_self_oophorectomy_only(
             # Person qualifies for premenopause.
             value = 0
         # Determine peri-menopause.
-        # Variable "menstruation_irregularity" has value "0" if there is a valid
-        # value for "menstruation_duration". Hence it is necessary to allow any
-        # value of "menstruation_irregularity" (0, 1, or missing).
-        # Due to repeating cycle, variable "menstruation_days" can occur below
-        # threshold "threshold_menstruation_duration" even when a regular cycle
-        # has duration "menstruation_duration" above that threshold. Hence it is
-        # necessary to allow "menstruation_days" to be missing, below threshold,
-        # or above threshold.
         elif (
             (
                 (not pandas.isna(age)) and
@@ -7007,6 +7030,11 @@ def determine_female_menopause_ordinal_age_self_oophorectomy_only(
         value = float("nan")
     # Return information.
     return value
+
+
+
+
+
 
 
 # review: TCW on 18 January 2022
@@ -7344,6 +7372,215 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
+    # TODO: TCW 19 January 2022
+    # TODO: also new report function below to report counts of female persons
+    # with "menstruation_duration" within and beyond range...
+    # also report count of female persons with irregular menstrual cycle
+
+
+# review: TCW on 19 January January 2022
+def report_female_menstruation_regularity_duration_range(
+    threshold_duration_low=None,
+    threshold_duration_high=None,
+    table=None,
+):
+    """
+    Reports counts of female persons who have regular or irregular menstrual
+    cycles of durations below or above thresholds.
+
+    arguments:
+        threshold_duration_low (float): low threshold in days on the
+            duration of the menstrual cycle
+        threshold_duration_high (float): high threshold in days on the
+            duration of the menstrual cycle
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_female_irregularity = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_irregularity"] == 1)
+        ), :
+    ]
+    table_female_regularity = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_irregularity"] == 0)
+        ), :
+    ]
+    table_female_regular_range = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
+    table_female_duration_below_range = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_duration"] < threshold_duration_low)
+        ), :
+    ]
+    table_female_duration_above_range = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_duration"] >= threshold_duration_high)
+        ), :
+    ]
+    table_female_current_days_above_range = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_days"] >= threshold_duration_high)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_irregularity = table_female_irregularity.shape[0]
+    count_regularity = table_female_regularity.shape[0]
+    count_regular_range = table_female_regular_range.shape[0]
+    count_duration_below = table_female_duration_below_range.shape[0]
+    count_duration_above = table_female_duration_above_range.shape[0]
+    count_current_above = table_female_current_days_above_range.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_female_menstruation_regularity_duration_range()")
+    utility.print_terminal_partition(level=3)
+    print("... all counts specific to female persons ...")
+    utility.print_terminal_partition(level=4)
+    print("count of total: " + str(count_female))
+    print(
+        "count with 'irregular' menstrual cycle: " +
+        str(count_irregularity)
+    )
+    print(
+        "count with 'regular' menstrual cycle: " +
+        str(count_regularity)
+    )
+    print(
+        "count with 'regular' menstrual cycle of duration within " +
+        "threshold range: " +
+        str(count_regular_range)
+    )
+    print(
+        "count with menstrual cycle duration shorter than " +
+        str(threshold_duration_low) +
+        " days: " +
+        str(count_duration_below)
+    )
+    print(
+        "count with menstrual cycle duration of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_duration_above)
+    )
+    print(
+        "count with current menstrual cycle days of" +
+        str(threshold_duration_high) +
+        " days or more: " +
+        str(count_current_above)
+    )
+    pass
+
+
+# review: TCW on 18 January 2022
+def report_female_self_report_menopause_hysterectomy_oophorectomy(
+    table=None,
+):
+    """
+    Reports counts of female persons who self-reported having experienced
+    menopause or having received an oophorectomy.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_female_menopause_self_report = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menopause_self_report"] == 1)
+        ), :
+    ]
+    table_female_hysterectomy = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["hysterectomy"] == 1)
+        ), :
+    ]
+    table_female_oophorectomy = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["oophorectomy"] == 1)
+        ), :
+    ]
+    table_female_hyster_oophor = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["hysterectomy_or_oophorectomy"] == 1)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_menopause_self = table_female_menopause_self_report.shape[0]
+    count_hysterectomy = table_female_hysterectomy.shape[0]
+    count_oophorectomy = table_female_oophorectomy.shape[0]
+    count_hyster_oophor = table_female_hyster_oophor.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_female_self_report_menopause_hysterectomy_oophorectomy()")
+    utility.print_terminal_partition(level=3)
+    print("... all counts specific to female persons ...")
+    utility.print_terminal_partition(level=4)
+    print("count of total: " + str(count_female))
+    print(
+        "count who self-reported menopause: " +
+        str(count_menopause_self)
+    )
+    print(
+        "count who had hysterectomy: " +
+        str(count_hysterectomy)
+    )
+    print(
+        "count who had oophorectomy: " +
+        str(count_oophorectomy)
+    )
+    print(
+        "count who had either hysterectomy or oophorectomy: " +
+        str(count_hyster_oophor)
+    )
+    pass
+
+
 # review: TCW on 18 January 2022
 def report_female_menopause_three_groups(
     female_menopause=None,
@@ -7470,12 +7707,26 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply function to each row
     )
-    # Determine whether person reports irregularity in menstrual cycle.
+    # Determine whether person reported irregularity in menstrual cycle.
     table["menstruation_irregularity"] = table.apply(
         lambda row:
             determine_female_menstruation_cycle_irregularity(
                 sex_text=row["sex_text"],
                 field_3710=row["3710-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine whether duration of regular menstrual cycle is in a normal
+    # range.
+    table["menstruation_regular_range"] = table.apply(
+        lambda row:
+            determine_female_menstruation_cycle_regular_duration_range(
+                sex_text=row["sex_text"],
+                menstruation_irregularity=row["menstruation_irregularity"],
+                menstruation_duration=row["menstruation_duration"],
+                menstruation_days=row["menstruation_days"],
+                threshold_duration_low=24,
+                threshold_duration_high=35,
             ),
         axis="columns", # apply function to each row
     )
@@ -7535,15 +7786,13 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menopause_self_report=row["menopause_self_report"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
-                menstruation_irregularity=row["menstruation_irregularity"],
-                menstruation_duration=row["menstruation_duration"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_regular_range=row["menstruation_regular_range"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
+
     table["menopause_age"] = table.apply(
         lambda row:
             determine_female_menopause_ordinal_age_only(
@@ -7552,12 +7801,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menopause_self_report=row["menopause_self_report"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
-                menstruation_irregularity=row["menstruation_irregularity"],
-                menstruation_duration=row["menstruation_duration"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_regular_range=row["menstruation_regular_range"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7569,12 +7815,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menopause_self_report=row["menopause_self_report"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
-                menstruation_irregularity=row["menstruation_irregularity"],
-                menstruation_duration=row["menstruation_duration"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_regular_range=row["menstruation_regular_range"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7586,12 +7829,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menopause_self_report=row["menopause_self_report"],
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
-                menstruation_irregularity=row["menstruation_irregularity"],
-                menstruation_duration=row["menstruation_duration"],
-                menstruation_days=row["menstruation_days"],
+                menstruation_regular_range=row["menstruation_regular_range"],
                 threshold_age_low=47, # threshold age in years
                 threshold_age_high=56, # threshold age in years
-                threshold_menstruation_duration=35, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7729,6 +7969,14 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
         print(table_report)
+        report_female_menstruation_regularity_duration_range(
+            threshold_duration_low=24,
+            threshold_duration_high=35,
+            table=table,
+        )
+        report_female_self_report_menopause_hysterectomy_oophorectomy(
+            table=table,
+        )
         report_female_menopause_three_groups(
             female_menopause="menopause_ordinal",
             table=table,
@@ -7752,6 +8000,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
+
+
+
+
+
 
 
 # review: TCW on _____
