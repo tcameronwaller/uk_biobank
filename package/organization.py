@@ -7447,6 +7447,20 @@ def report_female_menstruation_regularity_duration_range(
             (table["menstruation_days"] >= threshold_duration_high)
         ), :
     ]
+    table_discrepancy_duration_current = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_duration"] < threshold_duration_high) &
+            (table["menstruation_days"] >= threshold_duration_high)
+        ), :
+    ]
+    table_discrepancy_regular_current = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_regular_range"] == 1) &
+            (table["menstruation_days"] >= threshold_duration_high)
+        ), :
+    ]
     # Counts.
     count_female = table_female.shape[0]
     count_irregularity = table_female_irregularity.shape[0]
@@ -7455,6 +7469,13 @@ def report_female_menstruation_regularity_duration_range(
     count_duration_below = table_female_duration_below_range.shape[0]
     count_duration_above = table_female_duration_above_range.shape[0]
     count_current_above = table_female_current_days_above_range.shape[0]
+    count_discrepancy_duration_current = (
+        table_discrepancy_duration_current.shape[0]
+    )
+    count_discrepancy_regular_current = (
+        table_discrepancy_regular_current.shape[0]
+    )
+
     # Report.
     utility.print_terminal_partition(level=2)
     print("report: ")
@@ -7493,6 +7514,23 @@ def report_female_menstruation_regularity_duration_range(
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_current_above)
+    )
+    print(
+        "count with regular menstrual cycle duration of fewer than " +
+        str(threshold_duration_high) +
+        " days, but current menstrual cycle days of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_discrepancy_duration_current)
+    )
+    print(
+        "count with 'regular' menstrual cycle of duration within " +
+        "threshold range, but current menstrual cycle days of "
+        str(threshold_duration_high) +
+        " days, but current menstrual cycle days of : " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_discrepancy_regular_current)
     )
     pass
 
