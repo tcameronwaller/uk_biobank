@@ -7483,40 +7483,40 @@ def report_female_menstruation_regularity_duration_range(
     utility.print_terminal_partition(level=3)
     print("... all counts specific to female persons ...")
     utility.print_terminal_partition(level=4)
-    print("count of total: " + str(count_female))
+    print("total: " + str(count_female))
     print(
-        "count with 'irregular' menstrual cycle: " +
+        "'irregular' menstrual cycle: " +
         str(count_irregularity)
     )
     print(
-        "count with 'regular' menstrual cycle: " +
+        "'regular' menstrual cycle: " +
         str(count_regularity)
     )
     print(
-        "count with 'regular' menstrual cycle of duration within " +
+        "'regular' menstrual cycle of duration within " +
         "threshold range: " +
         str(count_regular_range)
     )
     print(
-        "count with menstrual cycle duration shorter than " +
+        "'regular' menstrual cycle duration shorter than " +
         str(threshold_duration_low) +
         " days: " +
         str(count_duration_below)
     )
     print(
-        "count with menstrual cycle duration of " +
+        "'regular' menstrual cycle duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_duration_above)
     )
     print(
-        "count with current menstrual cycle days of " +
+        "current menstrual cycle duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_current_above)
     )
     print(
-        "count with regular menstrual cycle duration of fewer than " +
+        "'regular' menstrual cycle duration shorter than " +
         str(threshold_duration_high) +
         " days, but current menstrual cycle days of " +
         str(threshold_duration_high) +
@@ -7526,8 +7526,6 @@ def report_female_menstruation_regularity_duration_range(
     print(
         "count with 'regular' menstrual cycle of duration within " +
         "threshold range, but current menstrual cycle days of " +
-        str(threshold_duration_high) +
-        " days, but current menstrual cycle days of : " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_discrepancy_regular_current)
@@ -7599,21 +7597,21 @@ def report_female_self_report_menopause_hysterectomy_oophorectomy(
     utility.print_terminal_partition(level=3)
     print("... all counts specific to female persons ...")
     utility.print_terminal_partition(level=4)
-    print("count of total: " + str(count_female))
+    print("total: " + str(count_female))
     print(
-        "count who self-reported menopause: " +
+        "self-reported menopause: " +
         str(count_menopause_self)
     )
     print(
-        "count who had hysterectomy: " +
+        "had hysterectomy: " +
         str(count_hysterectomy)
     )
     print(
-        "count who had oophorectomy: " +
+        "had oophorectomy: " +
         str(count_oophorectomy)
     )
     print(
-        "count who had either hysterectomy or oophorectomy: " +
+        "had either hysterectomy or oophorectomy: " +
         str(count_hyster_oophor)
     )
     pass
@@ -7677,11 +7675,12 @@ def report_female_menopause_three_groups(
     print("report_female_menopause_three_groups()")
     utility.print_terminal_partition(level=3)
     print("menopause variable: " + str(female_menopause))
+    print("... all counts specific to female persons ...")
     utility.print_terminal_partition(level=4)
-    print("count of total females: " + str(count_female))
-    print("count of premenopause: " + str(count_premenopause))
-    print("count of perimenopause: " + str(count_perimenopause))
-    print("count of postmenopause: " + str(count_postmenopause))
+    print("total: " + str(count_female))
+    print("pre-menopause: " + str(count_premenopause))
+    print("peri-menopause: " + str(count_perimenopause))
+    print("post-menopause: " + str(count_postmenopause))
     pass
 
 
