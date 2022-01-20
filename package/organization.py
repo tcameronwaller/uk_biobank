@@ -7725,8 +7725,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_irregularity=row["menstruation_irregularity"],
                 menstruation_duration=row["menstruation_duration"],
                 menstruation_days=row["menstruation_days"],
-                threshold_duration_low=21,
-                threshold_duration_high=39,
+                threshold_duration_low=21, # inclusive of lower threshold
+                threshold_duration_high=36, # exclusive of higher threshold
             ),
         axis="columns", # apply function to each row
     )
@@ -7787,8 +7787,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 hysterectomy=row["hysterectomy"],
                 oophorectomy=row["oophorectomy"],
                 menstruation_regular_range=row["menstruation_regular_range"],
-                threshold_age_low=47, # threshold age in years
-                threshold_age_high=56, # threshold age in years
+                threshold_age_low=47, # inclusive of lower threshold
+                threshold_age_high=56, # exclusive of higher threshold
             ),
         axis="columns", # apply function to each row
     )
@@ -7970,8 +7970,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         )
         print(table_report)
         report_female_menstruation_regularity_duration_range(
-            threshold_duration_low=21, # 24
-            threshold_duration_high=39, # 35
+            threshold_duration_low=21, # inclusive of lower threshold
+            threshold_duration_high=36, # exclusive of higher threshold
             table=table,
         )
         report_female_self_report_menopause_hysterectomy_oophorectomy(
