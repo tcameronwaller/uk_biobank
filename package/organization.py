@@ -7489,9 +7489,9 @@ def report_female_menstruation_regularity_duration_range(
         str(count_duration_above)
     )
     print(
-        "count with current menstrual cycle days of" +
+        "count with current menstrual cycle days of " +
         str(threshold_duration_high) +
-        " days or more: " +
+        " days or longer: " +
         str(count_current_above)
     )
     pass
@@ -7725,8 +7725,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 menstruation_irregularity=row["menstruation_irregularity"],
                 menstruation_duration=row["menstruation_duration"],
                 menstruation_days=row["menstruation_days"],
-                threshold_duration_low=24,
-                threshold_duration_high=35,
+                threshold_duration_low=21,
+                threshold_duration_high=39,
             ),
         axis="columns", # apply function to each row
     )
@@ -7970,8 +7970,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         )
         print(table_report)
         report_female_menstruation_regularity_duration_range(
-            threshold_duration_low=24,
-            threshold_duration_high=35,
+            threshold_duration_low=21, # 24
+            threshold_duration_high=39, # 35
             table=table,
         )
         report_female_self_report_menopause_hysterectomy_oophorectomy(
