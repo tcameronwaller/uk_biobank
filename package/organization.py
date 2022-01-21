@@ -6482,7 +6482,7 @@ def determine_female_pregnancy(
     return value
 
 
-# review: TCW on __ January 2022
+# review: TCW on 20 January 2022
 def determine_female_menstruation_cycle_regular_duration_range(
     sex_text=None,
     menstruation_irregularity=None,
@@ -6594,7 +6594,7 @@ def determine_female_menstruation_cycle_regular_duration_range(
     return value
 
 
-# review: TCW on _____
+# review: TCW on 20 January 2022
 def determine_female_menopause_ordinal(
     sex_text=None,
     age=None,
@@ -7032,115 +7032,31 @@ def determine_female_menopause_ordinal_age_self_oophorectomy_only(
     return value
 
 
-
-
-
-
-
-# review: TCW on 18 January 2022
-def determine_female_menstruation_days_threshold(
-    sex_text=None,
-    menopause_ordinal=None,
-    menstruation_days=None,
-    threshold_premenopause=None,
-    threshold_perimenopause=None,
-):
-    """
-    Determines a female person's days of the menstrual cycle by applying a
-    threshold filter that is specific to menopause status.
-
-    arguments:
-        sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of female person's
-            menopause status (0: pre-; 1: peri-; 2: post-)
-        menstruation_days (float): count of days since previous menstruation
-            (menstrual period, start of menstrual cycle)
-        threshold_premenopause (int): threshold in days for menstrual cycle in
-            premenopausal female persons, above which to set menstruation days
-            to missing
-        threshold_perimenopause (int): threshold in days for menstrual cycle in
-            perimenopausal female persons, above which to set menstruation days
-            to missing
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Determine categorical phase of menstruation cycle.
-    if (sex_text == "female"):
-        # Determine whether any variables have missing values.
-        if (
-            (not pandas.isna(menopause_ordinal)) and
-            (not pandas.isna(menstruation_days))
-        ):
-            # Determine threshold values for premenopausal females.
-            if (menopause_ordinal == 0):
-                if (menstruation_days < threshold_premenopause):
-                    # Days of menstrual cycle are below threshold.
-                    value = menstruation_days
-                elif (menstruation_days >= threshold_premenopause):
-                    # Days of menstrual cycle are above threshold.
-                    value = float("nan")
-                else:
-                    # Confusion in interpretation.
-                    value = float("nan")
-            # Determine threshold values for perimenopausal females.
-            elif (menopause_ordinal == 1):
-                if (menstruation_days < threshold_perimenopause):
-                    # Days of menstrual cycle are below threshold.
-                    value = menstruation_days
-                elif (menstruation_days >= threshold_perimenopause):
-                    # Days of menstrual cycle are above threshold.
-                    value = float("nan")
-                else:
-                    # Confusion in interpretation.
-                    value = float("nan")
-            # Determine threshold values for postmenopausal females.
-            elif (menopause_ordinal == 2):
-                # Menstruation undefined for postmenopause females.
-                value = float("nan")
-            else:
-                # Person does not qualify for any categories.
-                value = float("nan")
-        else:
-            # Necessary variables have missing values.
-            value = float("nan")
-    else:
-        # Menstruation undefined for males.
-        value = float("nan")
-    # Return information.
-    return value
-
-
-# review: TCW on 18 January 2022
+# review: TCW on 20 January 2022
 def determine_female_menstruation_phase(
     sex_text=None,
-    menopause_ordinal=None,
+    menstruation_regular_range=None,
     menstruation_days=None,
-    threshold_premenopause=None,
-    threshold_perimenopause=None,
+    threshold_ovulation=None,
 ):
     """
     Determine a female person's categorical menstruation phase.
+
+    Only consider for female persons who had a regular menstrual cycle of
+    duration within threshold range (menstruation_regular_range = 1).
 
     0: follicular phase of menstruation
     1: luteal phase of menstruation
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of female person's
-            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         menstruation_days (float): count of days since previous menstruation
             (menstrual period, start of menstrual cycle)
-        threshold_premenopause (int): threshold in days for premenopause female
-            persons, below which to consider follicular phase of menstruation
-            cycle
-        threshold_perimenopause (int): threshold in days for perimenopause
-            female persons, below which to consider follicular phase of
-            menstruation cycle
+        threshold_ovulation (int): threshold in days for the approximate
+            "middle" of menstruation cycle at ovulation
 
     raises:
 
@@ -7153,40 +7069,20 @@ def determine_female_menstruation_phase(
     if (sex_text == "female"):
         # Determine whether any variables have missing values.
         if (
-            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_regular_range)) and
             (not pandas.isna(menstruation_days))
         ):
-            # Determine categorical phase of menstruation cycle for premenopause
-            # females.
-            if (menopause_ordinal == 0):
-                if (menstruation_days < threshold_premenopause):
-                    # Person qualifies for follicular phase of menstruation
-                    # cycle.
+            # Determine categorical phase of menstruation cycle.
+            if (menstruation_regular_range == 1):
+                if (menstruation_days < threshold_ovulation):
+                    # Person qualifies for follicular phase of menstrual cycle.
                     value = 0
-                elif (menstruation_days >= threshold_premenopause):
-                    # Person qualitifies for luteal phase of menstruation cycle.
+                elif (menstruation_days >= threshold_ovulation):
+                    # Person qualitifies for luteal phase of menstrual cycle.
                     value = 1
                 else:
                     # Persons does not qualify for any categories.
                     value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # perimenopause females.
-            elif (menopause_ordinal == 1):
-                if (menstruation_days < threshold_perimenopause):
-                    # Person qualifies for follicular phase of menstruation
-                    # cycle.
-                    value = 0
-                elif (menstruation_days >= threshold_perimenopause):
-                    # Person qualitifies for luteal phase of menstruation cycle.
-                    value = 1
-                else:
-                    # Persons does not qualify for any categories.
-                    value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # postmenopause females.
-            elif (menopause_ordinal == 2):
-                # Menstruation undefined for postmenopause females.
-                value = float("nan")
             else:
                 # Person does not qualify for any categories.
                 value = float("nan")
@@ -7200,10 +7096,10 @@ def determine_female_menstruation_phase(
     return value
 
 
-# review: TCW on 18 January 2022
+# review: TCW on 20 January 2022
 def determine_female_menstruation_phase_early_late(
     sex_text=None,
-    menopause_ordinal=None,
+    menstruation_regular_range=None,
     menstruation_days=None,
     threshold_middle_follicular=None,
     threshold_ovulation=None,
@@ -7212,8 +7108,8 @@ def determine_female_menstruation_phase_early_late(
     """
     Determine a female person's categorical menstruation phase.
 
-    In this implementation, the thresholds on menstruation phase are the same
-    for pre- and peri-menopausal female persons.
+    Only consider for female persons who had a regular menstrual cycle of
+    duration within threshold range (menstruation_regular_range = 1).
 
     0: early follicular phase of menstruation
     - - (day 0 to day threshold_middle_follicular)
@@ -7226,8 +7122,9 @@ def determine_female_menstruation_phase_early_late(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of female person's
-            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_regular_range (float): binary logical representation of
+            whether person experienced regular menstrual cycles of duration
+            within low and high thresholds
         menstruation_days (float): count of days since previous menstruation
             (menstrual period, start of menstrual cycle)
         threshold_middle_follicular (int): threshold in days for middle of
@@ -7248,12 +7145,11 @@ def determine_female_menstruation_phase_early_late(
     if (sex_text == "female"):
         # Determine whether any variables have missing values.
         if (
-            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_regular_range)) and
             (not pandas.isna(menstruation_days))
         ):
-            # Determine categorical phase of menstruation cycle for premenopause
-            # and perimenopause females.
-            if ((menopause_ordinal == 0) or (menopause_ordinal == 1)):
+            # Determine categorical phase of menstrual cycle.
+            if (menstruation_regular_range == 1):
                 if (
                     (menstruation_days < threshold_middle_follicular)
                 ):
@@ -7279,11 +7175,6 @@ def determine_female_menstruation_phase_early_late(
                 else:
                     # Persons does not qualify for any categories.
                     value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # postmenopause females.
-            elif (menopause_ordinal == 2):
-                # Menstruation undefined for postmenopause females.
-                value = float("nan")
             else:
                 # Person does not qualify for any categories.
                 value = float("nan")
@@ -7297,10 +7188,9 @@ def determine_female_menstruation_phase_early_late(
     return value
 
 
-# review: TCW on 18 January 2022
+# review: TCW on 20 January 2022
 def determine_female_menstruation_phase_cycle(
     sex_text=None,
-    menopause_ordinal=None,
     menstruation_phase_early_late=None,
 ):
     """
@@ -7313,8 +7203,6 @@ def determine_female_menstruation_phase_cycle(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        menopause_ordinal (float): ordinal representation of female person's
-            menopause status (0: pre-; 1: peri-; 2: post-)
         menstruation_phase_early_late (float): ordinal representation of phases
             of the menstrual cycle
 
@@ -7329,38 +7217,27 @@ def determine_female_menstruation_phase_cycle(
     if (sex_text == "female"):
         # Determine whether any variables have missing values.
         if (
-            (not pandas.isna(menopause_ordinal)) and
             (not pandas.isna(menstruation_phase_early_late))
         ):
-            # Determine categorical phase of menstruation cycle for premenopause
-            # and perimenopause females.
-            if ((menopause_ordinal == 0) or (menopause_ordinal == 1)):
-                if (
-                    (menstruation_phase_early_late == 0) or
-                    (menstruation_phase_early_late == 3)
-                ):
-                    # Person qualifies for early follicular phase or late luteal
-                    # phase.
-                    # "shoulder"
-                    value = 0
-                elif (
-                    (menstruation_phase_early_late == 1) or
-                    (menstruation_phase_early_late == 2)
-                ):
-                    # Person qualitifies for late follicular or early luteal
-                    # phase.
-                    # "ovulation"
-                    value = 1
-                else:
-                    # Persons does not qualify for any categories.
-                    value = float("nan")
-            # Determine categorical phase of menstruation cycle for
-            # postmenopause females.
-            elif (menopause_ordinal == 2):
-                # Menstruation undefined for postmenopause females.
-                value = float("nan")
+            # Determine categorical phase of menstrual cycle.
+            if (
+                (menstruation_phase_early_late == 0) or
+                (menstruation_phase_early_late == 3)
+            ):
+                # Person qualifies for early follicular phase or late luteal
+                # phase.
+                # "shoulder"
+                value = 0
+            elif (
+                (menstruation_phase_early_late == 1) or
+                (menstruation_phase_early_late == 2)
+            ):
+                # Person qualitifies for late follicular or early luteal
+                # phase.
+                # "ovulation"
+                value = 1
             else:
-                # Person does not qualify for any categories.
+                # Persons does not qualify for any categories.
                 value = float("nan")
         else:
             # Necessary variables have missing values.
@@ -7372,13 +7249,7 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
-    # TODO: TCW 19 January 2022
-    # TODO: also new report function below to report counts of female persons
-    # with "menstruation_duration" within and beyond range...
-    # also report count of female persons with irregular menstrual cycle
-
-
-# review: TCW on 19 January January 2022
+# review: TCW on 20 January January 2022
 def report_female_menstruation_regularity_duration_range(
     threshold_duration_low=None,
     threshold_duration_high=None,
@@ -7423,6 +7294,27 @@ def report_female_menstruation_regularity_duration_range(
             (table["menstruation_irregularity"] == 0)
         ), :
     ]
+
+    table_female_valid_duration = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (~pandas.isna(table["menstruation_duration"]))
+        ), :
+    ]
+    table_female_valid_current = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (~pandas.isna(table["menstruation_days"]))
+        ), :
+    ]
+    table_female_valid_duration_or_current = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            ((~pandas.isna(table["menstruation_duration"])) |
+            (~pandas.isna(table["menstruation_days"])))
+        ), :
+    ]
+
     table_female_regular_range = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -7447,6 +7339,7 @@ def report_female_menstruation_regularity_duration_range(
             (table["menstruation_days"] >= threshold_duration_high)
         ), :
     ]
+
     table_discrepancy_duration_current = table.loc[
         (
             (table["sex_text"] == "female") &
@@ -7462,13 +7355,23 @@ def report_female_menstruation_regularity_duration_range(
         ), :
     ]
     # Counts.
+
     count_female = table_female.shape[0]
+
     count_irregularity = table_female_irregularity.shape[0]
     count_regularity = table_female_regularity.shape[0]
+
+    count_valid_duration = table_female_valid_duration.shape[0]
+    count_valid_current = table_female_valid_current.shape[0]
+    count_valid_duration_or_current = (
+        table_female_valid_duration_or_current.shape[0]
+    )
+
     count_regular_range = table_female_regular_range.shape[0]
     count_duration_below = table_female_duration_below_range.shape[0]
     count_duration_above = table_female_duration_above_range.shape[0]
     count_current_above = table_female_current_days_above_range.shape[0]
+
     count_discrepancy_duration_current = (
         table_discrepancy_duration_current.shape[0]
     )
@@ -7484,48 +7387,56 @@ def report_female_menstruation_regularity_duration_range(
     print("... all counts specific to female persons ...")
     utility.print_terminal_partition(level=4)
     print("total: " + str(count_female))
+
+    print("'irregular' menstrual cycle: " + str(count_irregularity))
+    print("'regular' menstrual cycle: " + str(count_regularity))
+
     print(
-        "'irregular' menstrual cycle: " +
-        str(count_irregularity)
+        "non-missing regular duration of menstrual cycle: " +
+        str(count_valid_duration)
     )
     print(
-        "'regular' menstrual cycle: " +
-        str(count_regularity)
+        "non-missing days of current menstrual cycle: " +
+        str(count_valid_current)
     )
     print(
-        "'regular' menstrual cycle of duration within " +
-        "threshold range: " +
+        "non-missing regular duration or days of current menstrual cycle: " +
+        str(count_valid_duration_or_current)
+    )
+
+    print(
+        "regular menstrual cycle of duration within threshold range: " +
         str(count_regular_range)
     )
     print(
-        "'regular' menstrual cycle duration shorter than " +
+        "regular menstrual cycle duration shorter than " +
         str(threshold_duration_low) +
         " days: " +
         str(count_duration_below)
     )
     print(
-        "'regular' menstrual cycle duration of " +
+        "regular menstrual cycle duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_duration_above)
     )
     print(
-        "current menstrual cycle duration of " +
+        "current menstrual cycle at duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_current_above)
     )
     print(
-        "'regular' menstrual cycle duration shorter than " +
+        "regular menstrual cycle duration shorter than " +
         str(threshold_duration_high) +
-        " days, but current menstrual cycle days of " +
+        " days, but current menstrual cycle at duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_discrepancy_duration_current)
     )
     print(
-        "count with 'regular' menstrual cycle of duration within " +
-        "threshold range, but current menstrual cycle days of " +
+        "regular menstrual cycle of duration within " +
+        "threshold range, but current menstrual cycle at duration of " +
         str(threshold_duration_high) +
         " days or longer: " +
         str(count_discrepancy_regular_current)
@@ -7876,32 +7787,14 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     ##########
     # Menstrual cycle
 
-    # Set thresholds on days of menstrual cycle that are specific to
-    # premenopause or perimenopause status.
-    # Notice that these thresholds differ from those for definition of
-    # menopause status.
-    # Rather, these thresholds clean up the menopause cohorts after definition.
-    table["menstruation_days_threshold"] = table.apply(
-        lambda row:
-            determine_female_menstruation_days_threshold(
-                sex_text=row["sex_text"],
-                menopause_ordinal=row["menopause_ordinal"],
-                menstruation_days=row["menstruation_days"],
-                threshold_premenopause=31, # threshold in days
-                threshold_perimenopause=35, # threshold in days
-            ),
-        axis="columns", # apply function to each row
-    )
-
     # Determine female persons' categorical menstruation phase.
     table["menstruation_phase"] = table.apply(
         lambda row:
             determine_female_menstruation_phase(
                 sex_text=row["sex_text"],
-                menopause_ordinal=row["menopause_ordinal"],
-                menstruation_days=row["menstruation_days_threshold"],
-                threshold_premenopause=15, # threshold in days
-                threshold_perimenopause=15, # threshold in days
+                menstruation_regular_range=row["menstruation_regular_range"],
+                menstruation_days=row["menstruation_days"],
+                threshold_ovulation=15, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7911,11 +7804,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_menstruation_phase_early_late(
                 sex_text=row["sex_text"],
-                menopause_ordinal=row["menopause_ordinal"],
-                menstruation_days=row["menstruation_days_threshold"],
+                menstruation_regular_range=row["menstruation_regular_range"],
+                menstruation_days=row["menstruation_days"],
                 threshold_middle_follicular=5, # threshold in days
                 threshold_ovulation=15,
-                threshold_middle_luteal=20, # threshold in days
+                threshold_middle_luteal=19, # threshold in days
             ),
         axis="columns", # apply function to each row
     )
@@ -7926,7 +7819,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_menstruation_phase_cycle(
                 sex_text=row["sex_text"],
-                menopause_ordinal=row["menopause_ordinal"],
                 menstruation_phase_early_late=(
                     row["menstruation_phase_early_late"]
                 ),
@@ -7978,11 +7870,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         "IID",
         "sex_text",
         "age",
-        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
-        #"menopause_binary", "menopause_binary_strict",
-        "menopause_ordinal", #"menopause_ordinal_strict",
-        "menstruation_days", "menstruation_days_threshold",
+        "menstruation_days",
         "menstruation_duration", "menstruation_irregularity",
+        "menstruation_regular_range",
+        "hysterectomy", "oophorectomy", "hysterectomy_or_oophorectomy",
+        "menopause_ordinal",
         "menstruation_phase",
         "menstruation_phase_early_late", "menstruation_phase_cycle",
         "pregnancy",
@@ -8213,7 +8105,7 @@ def obsolete_determine_female_menopause_ordinal_before_2022_01_18(
 
 
 # TODO: obsolete? consider removal?
-def determine_female_menopause_binary(
+def obsolete_determine_female_menopause_binary(
     sex_text=None,
     age=None,
     threshold_age=None,
@@ -8328,7 +8220,7 @@ def determine_female_menopause_binary(
 
 
 # TODO: obsolete? consider removal?
-def determine_female_menopause_binary_strict(
+def obsolete_determine_female_menopause_binary_strict(
     sex_text=None,
     age=None,
     threshold_age=None,
@@ -8451,7 +8343,7 @@ def determine_female_menopause_binary_strict(
 
 
 # TODO: obsolete? consider removal?
-def determine_female_menopause_ordinal_strict(
+def obsolete_determine_female_menopause_ordinal_strict(
     sex_text=None,
     age=None,
     threshold_age_pre=None,
@@ -8593,6 +8485,85 @@ def determine_female_menopause_ordinal_strict(
             value = float("nan")
     else:
         # Menopause undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# TODO: TCW 20 January 2022 --> I think I want to remove this function... obsolete...
+# review: TCW on 18 January 2022
+def obsolete_determine_female_menstruation_days_threshold(
+    sex_text=None,
+    menopause_ordinal=None,
+    menstruation_days=None,
+    threshold_premenopause=None,
+    threshold_perimenopause=None,
+):
+    """
+    Determines a female person's days of the menstrual cycle by applying a
+    threshold filter that is specific to menopause status.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        menopause_ordinal (float): ordinal representation of female person's
+            menopause status (0: pre-; 1: peri-; 2: post-)
+        menstruation_days (float): count of days since previous menstruation
+            (menstrual period, start of menstrual cycle)
+        threshold_premenopause (int): threshold in days for menstrual cycle in
+            premenopausal female persons, above which to set menstruation days
+            to missing
+        threshold_perimenopause (int): threshold in days for menstrual cycle in
+            perimenopausal female persons, above which to set menstruation days
+            to missing
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine categorical phase of menstruation cycle.
+    if (sex_text == "female"):
+        # Determine whether any variables have missing values.
+        if (
+            (not pandas.isna(menopause_ordinal)) and
+            (not pandas.isna(menstruation_days))
+        ):
+            # Determine threshold values for premenopausal females.
+            if (menopause_ordinal == 0):
+                if (menstruation_days < threshold_premenopause):
+                    # Days of menstrual cycle are below threshold.
+                    value = menstruation_days
+                elif (menstruation_days >= threshold_premenopause):
+                    # Days of menstrual cycle are above threshold.
+                    value = float("nan")
+                else:
+                    # Confusion in interpretation.
+                    value = float("nan")
+            # Determine threshold values for perimenopausal females.
+            elif (menopause_ordinal == 1):
+                if (menstruation_days < threshold_perimenopause):
+                    # Days of menstrual cycle are below threshold.
+                    value = menstruation_days
+                elif (menstruation_days >= threshold_perimenopause):
+                    # Days of menstrual cycle are above threshold.
+                    value = float("nan")
+                else:
+                    # Confusion in interpretation.
+                    value = float("nan")
+            # Determine threshold values for postmenopausal females.
+            elif (menopause_ordinal == 2):
+                # Menstruation undefined for postmenopause females.
+                value = float("nan")
+            else:
+                # Person does not qualify for any categories.
+                value = float("nan")
+        else:
+            # Necessary variables have missing values.
+            value = float("nan")
+    else:
+        # Menstruation undefined for males.
         value = float("nan")
     # Return information.
     return value
