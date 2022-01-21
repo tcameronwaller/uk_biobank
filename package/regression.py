@@ -869,13 +869,15 @@ def execute_procedure(
                 ),
                 independences_summary=[
                     "sex_y", "age", "body_log", "assessment_season",
-                    "assessment_region", "medication_vitamin_d",
+                    "assessment_region",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "menopause_ordinal", "menstruation_phase_cycle",
                 ],
                 filter_execution=True,
                 report=True,
         ))
         pass
-    if True:
+    if False:
         pail_vitamin_d_two = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -906,9 +908,9 @@ def execute_procedure(
     information["tables"]["table_regressions_vitamin_d_sex_age_body"] = (
         pail_vitamin_d_one["table"]
     )
-    information["tables"]["table_regressions_vitamin_d_depression_bipolar_alcohol"] = (
-        pail_vitamin_d_two["table"]
-    )
+    #information["tables"]["table_regressions_vitamin_d_depression_bipolar_alcohol"] = (
+    #    pail_vitamin_d_two["table"]
+    #)
     #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
     #    pail_vitamin_d_two["table"]
     #)
