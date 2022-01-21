@@ -3722,6 +3722,23 @@ def stratify_set_primary_sex_age_body_menopause(
     ]
     records.append(record)
 
+    # Menstruation
+
+    record = dict()
+    record["name"] = "female_menstruation_regular"
+    record["cohort"] = "female_menstruation_regular"
+    record["cohort_model"] = "female_menstruation_regular"
+    record["category"] = "menstruation"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
+    records.append(record)
+
     # Menopause
 
     record = dict()

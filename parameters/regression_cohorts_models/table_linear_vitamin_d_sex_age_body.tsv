@@ -22,9 +22,9 @@ execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	indepen
 1	female_male	1	vitamin_d_imputation_log	2	13	13	assessment_region	marginal model
 1	female_male	1	vitamin_d_imputation_log	2	14	14	medication_vitamin_d	marginal model
 1	female_male	1	vitamin_d_imputation_log	2	15	15	alteration_sex_hormone	marginal model
-0	female	2	vitamin_d_log	1	1	1	menopause_ordinal;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
-0	female	2	vitamin_d_imputation_log	2	1	1	menopause_ordinal;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
-0	female_menstruation_regular	3	vitamin_d_log	1	1	1	menopause_ordinal;menstruation_phase_cycle;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
-0	female_menstruation_regular	3	vitamin_d_imputation_log	2	1	1	menopause_ordinal;menstruation_phase_cycle;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
-0	male	4	vitamin_d_log	1	1	1	age;body_log;assessment_season;assessment_region	
-0	male	4	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_season;assessment_region	
+1	female	2	vitamin_d_log	1	1	1	menopause_ordinal;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
+1	female	2	vitamin_d_imputation_log	2	1	1	menopause_ordinal;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
+1	female_menstruation_regular	3	vitamin_d_log	1	1	1	menopause_ordinal;menstruation_phase_cycle;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
+1	female_menstruation_regular	3	vitamin_d_imputation_log	2	1	1	menopause_ordinal;menstruation_phase_cycle;age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
+0	male	4	vitamin_d_log	1	1	1	age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
+0	male	4	vitamin_d_imputation_log	2	1	1	age;body_log;assessment_season;assessment_region;medication_vitamin_d;alteration_sex_hormone	
