@@ -7595,6 +7595,90 @@ def report_female_menopause_three_groups(
     pass
 
 
+# review: TCW on 24 January 2022
+def report_combination_female_regular_menstruation_by_menopause(
+    menopause=None,
+    menstruation_regular_range=None,
+    table=None,
+):
+    """
+    Reports counts of female persons in groups defined by combination of
+    menopause status and regular menstruation.
+
+    arguments:
+        menopause (str): name of column for definition of female menopause
+            status
+        menstruation_regular_range (float): name of column for binary logical
+            representation of whether person experienced regular menstrual
+            cycles of duration within low and high thresholds
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_regular_premenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[menstruation_regular_range] == 1) &
+            (table[menopause] == 0)
+        ), :
+    ]
+    table_regular_perimenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[menstruation_regular_range] == 1) &
+            (table[menopause] == 1)
+        ), :
+    ]
+    table_regular_postmenopause = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[menstruation_regular_range] == 1) &
+            (table[menopause] == 2)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+    count_regular_premenopause = table_regular_premenopause.shape[0]
+    count_regular_perimenopause = table_regular_perimenopause.shape[0]
+    count_regular_postmenopause = table_regular_postmenopause.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_combination_female_regular_menstruation_by_menopause()")
+    utility.print_terminal_partition(level=3)
+    print("menopause variable: " + str(menopause))
+    print("... all counts specific to female persons ...")
+    utility.print_terminal_partition(level=4)
+    print("total: " + str(count_female))
+    print(
+        "regular menstruation and pre-menopause: " +
+        str(count_regular_premenopause)
+    )
+    print(
+        "regular menstruation and peri-menopause: " +
+        str(count_regular_perimenopause)
+    )
+    print(
+        "regular menstruation and post-menopause: " +
+        str(count_regular_postmenopause)
+    )
+    pass
+
+
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -7922,6 +8006,11 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             female_menopause="menopause_age_self_oophorectomy",
             table=table,
         )
+        report_combination_female_regular_menstruation_by_menopause(
+            menopause="menopause_ordinal",
+            menstruation_regular_range="menstruation_regular_range",
+            table=table,
+        )
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -7929,11 +8018,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     pail["table_report"] = table_report
     # Return information.
     return pail
-
-
-
-
-
 
 
 # review: TCW on _____
