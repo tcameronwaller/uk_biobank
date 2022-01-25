@@ -259,6 +259,8 @@ def read_source_fields_codes_interpretations(
             "coding": "string",
             "meaning": "string",
             "season": numpy.int32,
+            "season_strict": numpy.int32,
+            "note": "string",
         },
     )
     table_field_55.reset_index(
@@ -751,6 +753,7 @@ def organize_genotype_principal_component_variables(
 # General assessment
 
 
+# review: TCW, 25 January 2022
 def interpret_assessment_site(
     field_54=None,
     codes_interpretations=None,
@@ -830,6 +833,7 @@ def interpret_assessment_site(
     return interpretation
 
 
+# review: TCW, 25 January 2022
 def interpret_assessment_site_region(
     field_54=None,
     codes_interpretations=None,
@@ -993,6 +997,7 @@ def interpret_assessment_month_category(
     return interpretation
 
 
+# Review: TCW, 25 January 2022
 def interpret_assessment_month_season(
     field_55=None,
     codes_interpretations=None,
@@ -1001,7 +1006,7 @@ def interpret_assessment_month_season(
     Intepret UK Biobank's coding for data field 55.
 
     Data-Field "55": "Month of attending assessment centre"
-    UK Biobank data coding "8" for variable field "55".
+    UK Biobank data-coding "8" for data-field "55".
     1: "January"
     2: "February"
     3: "March"
@@ -1046,7 +1051,7 @@ def interpret_assessment_month_season(
         field_55_string = str(int(field_55))
         if (field_55_string in codes_interpretations.keys()):
             interpretation = int(
-                codes_interpretations[field_55_string]["season"]
+                codes_interpretations[field_55_string]["season_strict"]
             )
         else:
             # Uninterpretable value.
@@ -1058,6 +1063,7 @@ def interpret_assessment_month_season(
     return interpretation
 
 
+# Review: TCW ___
 def interpret_sex_self_report(
     field_31=None,
 ):
@@ -1109,6 +1115,7 @@ def interpret_sex_self_report(
     return interpretation
 
 
+# Review: TCW ___
 def interpret_sex_genetic(
     field_22001=None,
 ):
@@ -1152,6 +1159,49 @@ def interpret_sex_genetic(
         else:
             # Uninterpretable value
             interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+# Review: TCW ___
+def interpret_sex_chromosome_aneuploidy(
+    field_22019=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field 22019.
+
+    Data-Field "22019": "Sex chromosome aneuploidy"
+    UK Biobank data-coding "1" for data-field "22019".
+    1: "Yes"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_22019 (float): UK Biobank data-field 22019, sex-chromosome
+            aneuploidy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_22019)) and
+        (0.5 <= field_22019 and field_22019 < 1.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (0.5 <= field_22019 and field_22019 < 1.5):
+            # 1: "Yes"
+            interpretation = 1
+        else:
+            interpretation = 0
     else:
         # Missing or uninterpretable value
         interpretation = float("nan")
@@ -1564,14 +1614,19 @@ def determine_genotype_array_axiom_logical_binary(
     return interpretation
 
 
+# Review: TCW ___
 def determine_consensus_biological_sex_y(
     field_31=None,
     field_22001=None,
+    field_22019=None,
 ):
     """
-    Determine consensus sex (biological sex, not social gender).
+    Determine consensus biological sex (not social gender).
     Prioritize interpretation of the genetic sex variable and use self report to
     fill in missing values.
+
+    Exclude records for persons whose genotypes were evident of aneuploidy in
+    the sex chromosomes.
 
     Use a logical binary encoding for presence of Y chromosome.
     0 : female (false, XX)
@@ -1582,8 +1637,10 @@ def determine_consensus_biological_sex_y(
     1: "Male"
 
     arguments:
-        field_31 (float): UK Biobank field 31, person's self-reported sex
-        field_22001 (float): UK Biobank field 22001, genetic sex
+        field_31 (float): UK Biobank data-field 31, person's self-reported sex
+        field_22001 (float): UK Biobank data-field 22001, genetic sex
+        field_22019 (float): UK Biobank data-field 22019, sex-chromosome
+            aneuploidy
 
     raises:
 
@@ -1600,19 +1657,31 @@ def determine_consensus_biological_sex_y(
     sex_genetic = interpret_sex_genetic(
         field_22001=field_22001,
     )
+    aneuploidy_sex = interpret_sex_chromosome_aneuploidy(
+        field_22019=field_22019,
+    )
     # Comparison.
-    # Prioritize genetic sex.
-    if (not pandas.isna(sex_genetic)):
-        # Genetic sex variable has a valid value.
-        # Prioritize this variable.
-        value = sex_genetic
-    elif (not pandas.isna(sex_self_report)):
-        # Person has missing value for genetic sex.
-        # Self-report sex variable has a valid value.
-        # Resort to self-report sex in absence of genetic sex.
-        value = sex_self_report
+    # Determine whether there was aneuploidy in the sex chromosomes.
+    if (
+        (not pandas.isna(aneuploidy_sex)) and
+        (aneuploidy_sex == 0)
+    ):
+        # Prioritize genetic sex.
+        if (not pandas.isna(sex_genetic)):
+            # Genetic sex variable has a valid value.
+            # Prioritize this variable.
+            value = sex_genetic
+        elif (not pandas.isna(sex_self_report)):
+            # Person has missing value for genetic sex.
+            # Self-report sex variable has a valid value.
+            # Resort to self-report sex in absence of genetic sex.
+            value = sex_self_report
+        else:
+            # Missing information.
+            value = float("nan")
     else:
-        # Lack of information.
+        # Aneuploidy in the sex chromosomes complicates definition of biological
+        # sex.
         value = float("nan")
     # Return information.
     return value
@@ -1814,7 +1883,10 @@ def create_categorical_variable_indicators(
         separator=None,
     ):
         if (separator in str(name)):
-            name_prefix = str(name).split(separator)[0].strip()
+            name_elements = str(name).split(separator)
+            name_elements.pop() # remove last name element for integer
+            name_prefix = str(separator).join(name_elements)
+            #name_prefix = str(name).split(separator)[0].strip()
             if (str(prefix) == str(name_prefix)):
                 match = True
             else:
@@ -1974,7 +2046,10 @@ def reduce_categorical_variable_indicators(
         separator=None,
     ):
         if (separator in str(name)):
-            name_prefix = str(name).split(separator)[0].strip()
+            name_elements = str(name).split(separator)
+            name_elements.pop() # remove last name element for integer
+            name_prefix = str(separator).join(name_elements)
+            #name_prefix = str(name).split(separator)[0].strip()
             if (str(prefix) == str(name_prefix)):
                 match = True
             else:
@@ -2135,7 +2210,7 @@ def create_reduce_categorical_variable_indicators(
         table=table,
         index=index,
         column=column,
-        prefix=str(prefix + "-" + "indicator"),
+        prefix=str(prefix + "_" + "indicator"),
         separator=separator,
         report=report,
     )
@@ -2145,7 +2220,7 @@ def create_reduce_categorical_variable_indicators(
         index=index,
         column=column,
         columns_indicators=pail_indicator["columns_indicators"],
-        prefix=str(prefix + "-" + "component"),
+        prefix=str(prefix + "_" + "component"),
         separator=separator,
         report=report,
     )
@@ -2434,7 +2509,8 @@ def report_genotype_arrays_batches(
 
 
 # TODO: TCW 25 January 2022
-# TODO: consider sex chromosome aneuploidy in determination of sex...
+# TODO: consider sex chromosome aneuploidy (data-field "22019") in determination of sex...
+
 
 
 def organize_assessment_basis_variables(
@@ -2511,23 +2587,24 @@ def organize_assessment_basis_variables(
     )
 
     # Create binary indicators of categories and reduce their dimensionality.
+    table = create_reduce_categorical_variable_indicators(
+        table=table,
+        index="eid",
+        column="assessment_site",
+        prefix="assessment_site",
+        separator="_",
+        report=True,
+    )
     if False:
         table = create_reduce_categorical_variable_indicators(
             table=table,
             index="eid",
             column="assessment_month",
-            prefix="month",
+            prefix="assessment_month",
             separator="_",
             report=True,
         )
-        table = create_reduce_categorical_variable_indicators(
-            table=table,
-            index="eid",
-            column="assessment_site",
-            prefix="site",
-            separator="_",
-            report=True,
-        )
+        pass
     # Determine sex consensus between self-report and genotypic sex.
     # Reserve the variable names "sex" or "SEX" for recognition in PLINK2.
     # Use logical binary representation of presence of Y chromosome.
