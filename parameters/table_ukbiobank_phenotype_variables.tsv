@@ -7,6 +7,7 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	22021	float32	genotype		488237		Genetic kinship to other participants	Genotyping process and sample QC		0;	
 1	31	float32	basis	sex	502492	nominal	Sex	Baseline characteristics		0;	
 1	22001	float32	basis	sex_genotype	488251	nominal	Genetic sex	Genotyping process and sample QC		0;	
+1	22019	float32	basis		651		Sex chromosome aneuploidy	Genotyping process and sample QC		0;	
 1	21022	float32	basis	age	502492	ratio	Age at recruitment	Baseline characteristics		0;	
 1	21002	float32	basis	weight	499809	ratio	Weight	Body size measures		0;	
 1	50	float32	basis	height	500031	ratio	Standing height	Body size measures		0;	

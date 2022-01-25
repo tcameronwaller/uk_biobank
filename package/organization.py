@@ -2433,6 +2433,10 @@ def report_genotype_arrays_batches(
     pass
 
 
+# TODO: TCW 25 January 2022
+# TODO: consider sex chromosome aneuploidy in determination of sex...
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
