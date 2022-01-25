@@ -1063,7 +1063,7 @@ def interpret_assessment_month_season(
     return interpretation
 
 
-# Review: TCW ___
+# review: TCW, 25 January 2022
 def interpret_sex_self_report(
     field_31=None,
 ):
@@ -1115,12 +1115,12 @@ def interpret_sex_self_report(
     return interpretation
 
 
-# Review: TCW ___
+# review: TCW, 25 January 2022
 def interpret_sex_genetic(
     field_22001=None,
 ):
     """
-    Intepret UK Biobank's data-coding for data-field 22001.
+    Intepret UK Biobank's data-coding for data-field "22001".
 
     Data-Field "22001": "Genetic sex"
     UK Biobank data-coding "9" for data-field "22001".
@@ -1166,18 +1166,24 @@ def interpret_sex_genetic(
     return interpretation
 
 
-# Review: TCW ___
+# review: TCW, 25 January 2022
 def interpret_sex_chromosome_aneuploidy(
     field_22019=None,
 ):
     """
-    Intepret UK Biobank's data-coding for data-field 22019.
+    Intepret UK Biobank's data-coding for data-field "22019".
 
     Data-Field "22019": "Sex chromosome aneuploidy"
     UK Biobank data-coding "1" for data-field "22019".
     1: "Yes"
 
     Accommodate inexact float values.
+
+    Note:
+    "Sex chromosome aneuploidy marker. This indicates samples which were
+    identified as putatively carrying sex chromosome configurations that are not
+    either XX or XY. These were identified by looking at average log2Ratios for
+    Y and X chromosomes."
 
     arguments:
         field_22019 (float): UK Biobank data-field 22019, sex-chromosome
@@ -1195,16 +1201,11 @@ def interpret_sex_chromosome_aneuploidy(
         (not pandas.isna(field_22019)) and
         (0.5 <= field_22019 and field_22019 < 1.5)
     ):
-        # The variable has a valid value.
-        # Interpret the value.
-        if (0.5 <= field_22019 and field_22019 < 1.5):
-            # 1: "Yes"
-            interpretation = 1
-        else:
-            interpretation = 0
+        # 1: "Yes"
+        interpretation = 1
     else:
-        # Missing or uninterpretable value
-        interpretation = float("nan")
+        # Absence of affirmative indicator suggests opposite is true.
+        interpretation = 0
     # Return.
     return interpretation
 
@@ -1614,7 +1615,7 @@ def determine_genotype_array_axiom_logical_binary(
     return interpretation
 
 
-# Review: TCW ___
+# review: TCW, 25 January 2022
 def determine_consensus_biological_sex_y(
     field_31=None,
     field_22001=None,
@@ -1622,17 +1623,16 @@ def determine_consensus_biological_sex_y(
 ):
     """
     Determine consensus biological sex (not social gender).
-    Prioritize interpretation of the genetic sex variable and use self report to
-    fill in missing values.
 
-    Exclude records for persons whose genotypes were evident of aneuploidy in
-    the sex chromosomes.
+    Prioritize interpretation of the genetic sex variable, and use self report
+    to fill in any missing values. Exclude records for persons whose genotypes
+    suggested aneuploidy in the sex chromosomes.
 
     Use a logical binary encoding for presence of Y chromosome.
     0 : female (false, XX)
     1 : male (true, XY)
 
-    Code is same as UK Biobank for data-field 31 and data-field 22001.
+    Code is same as UK Biobank for data-fields "31" and "22001".
     0: "Female"
     1: "Male"
 
@@ -2509,8 +2509,7 @@ def report_genotype_arrays_batches(
 
 
 # TODO: TCW 25 January 2022
-# TODO: consider sex chromosome aneuploidy (data-field "22019") in determination of sex...
-
+# TODO: test the categorical indicator variables and PCA reduction of dimensionality
 
 
 def organize_assessment_basis_variables(
@@ -2613,6 +2612,7 @@ def organize_assessment_basis_variables(
             determine_consensus_biological_sex_y(
                 field_31=row["31-0.0"],
                 field_22001=row["22001-0.0"],
+                field_22019=row["22019-0.0"],
             ),
         axis="columns", # apply function to each row
     )
