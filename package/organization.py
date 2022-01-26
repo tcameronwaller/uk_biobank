@@ -1863,8 +1863,9 @@ def create_categorical_variable_indicators(
             Biobank cohort
         index (str): name of table's index column by which to merge after create
             of columns for indicator variables
-        column (str): name of column with categorical variable for which to
-            define binary dummies and reduce by principal components
+        column (str): name of column with categorical, character, string
+            variable for which to define binary dummies and reduce by principal
+            components
         prefix (str): prefix for names of new dummy and principal component
             columns in table
         separator (str): separator for names of new columns
@@ -1898,6 +1899,14 @@ def create_categorical_variable_indicators(
     # Copy information.
     table = table.copy(deep=True)
     table_indicators = table.copy(deep=True)
+    # Organize values of the categorical variable.
+    column_values = str(prefix + "_values")
+    table_indicators[column_values] = table_indicators.apply(
+        lambda row:
+            str(row[column]).replace(" ", "_"),
+        axis="columns", # apply function to each row
+    )
+
     # Organize tables.
     table.reset_index(
         level=None,
@@ -1916,7 +1925,7 @@ def create_categorical_variable_indicators(
         drop=False,
     )
     table_indicators = table_indicators.loc[
-        :, table_indicators.columns.isin([index, column])
+        :, table_indicators.columns.isin([index, column_values])
     ]
     # Drop any rows with missing values in the original column.
     table_indicators.dropna(
@@ -1931,7 +1940,7 @@ def create_categorical_variable_indicators(
         prefix=prefix,
         prefix_sep=separator,
         dummy_na=False, # whether to create indicators for missing values
-        columns=[column],
+        columns=[column_values],
         drop_first=True, # whether to create "k - 1" dummies, adequate
         dtype=numpy.uint8,
     )
@@ -1941,6 +1950,7 @@ def create_categorical_variable_indicators(
         drop=True,
         inplace=True
     )
+    columns_indicators = table_indicators.columns.to_list()
     table = table.merge(
         table_indicators,
         how="outer",
@@ -1949,15 +1959,15 @@ def create_categorical_variable_indicators(
         suffixes=("_original", "_indicator"),
     )
     # Extract names of columns for dummies.
-    columns = copy.deepcopy(table.columns.to_list())
-    columns_indicators = list(filter(
-        lambda column_trial: match_column_dummy(
-            name=column_trial,
-            prefix=prefix,
-            separator=separator,
-        ),
-        columns
-    ))
+    #columns = copy.deepcopy(table.columns.to_list())
+    #columns_indicators = list(filter(
+    #    lambda column_trial: match_column_dummy(
+    #        name=column_trial,
+    #        prefix=prefix,
+    #        separator=separator,
+    #    ),
+    #    columns
+    #))
 
     # Report.
     if report:
@@ -2189,10 +2199,11 @@ def create_reduce_categorical_variable_indicators(
             Biobank cohort
         index (str): name of table's index column by which to merge after create
             of columns for indicator variables
-        column (str): name of column with categorical variable for which to
-            define binary dummies and reduce by principal components
-        prefix (str): prefix for names of new dummy and principal component
-            columns in table
+        column (str): name of column with categorical, character, string
+            variable for which to define binary dummies and reduce by principal
+            components
+        prefix (str): prefix for names of new dummy indicator and principal
+            component columns in table
         separator (str): separator for names of new columns, preferrably
             underscore "_" and not hyphen "-"
         report (bool): whether to print reports
