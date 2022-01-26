@@ -1949,7 +1949,7 @@ def create_categorical_variable_indicators(
         drop=True,
         inplace=True
     )
-    columns_indicators = table_indicators.columns.to_list()
+    columns_indicators = copy.deepcopy(table_indicators.columns.to_list())
     table = table.merge(
         table_indicators,
         how="outer",
@@ -1957,17 +1957,6 @@ def create_categorical_variable_indicators(
         right_on=index,
         suffixes=("_original", "_indicator"),
     )
-    # Extract names of columns for dummies.
-    #columns = copy.deepcopy(table.columns.to_list())
-    #columns_indicators = list(filter(
-    #    lambda column_trial: match_column_dummy(
-    #        name=column_trial,
-    #        prefix=prefix,
-    #        separator=separator,
-    #    ),
-    #    columns
-    #))
-
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -2124,6 +2113,7 @@ def reduce_categorical_variable_indicators(
         drop=True,
         inplace=True
     )
+    columns_components = copy.deepcopy(table_component_scores.columns.to_list())
     table = table.merge(
         table_component_scores,
         how="outer",
@@ -2132,15 +2122,15 @@ def reduce_categorical_variable_indicators(
         suffixes=("_original", "_component"),
     )
     # Extract names of columns for dummies.
-    columns = copy.deepcopy(table.columns.to_list())
-    columns_components = list(filter(
-        lambda column_trial: match_column_component(
-            name=column_trial,
-            prefix=prefix,
-            separator=separator,
-        ),
-        columns
-    ))
+    #columns = copy.deepcopy(table.columns.to_list())
+    #columns_components = list(filter(
+    #    lambda column_trial: match_column_component(
+    #        name=column_trial,
+    #        prefix=prefix,
+    #        separator=separator,
+    #    ),
+    #    columns
+    #))
 
     # Report.
     if report:
