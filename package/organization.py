@@ -1893,7 +1893,7 @@ def create_categorical_variable_indicators(
     counts_values = table_indicators[column_values].value_counts(
         normalize=False,
         sort=True,
-        ascending=True,
+        ascending=False, # whether to sort in order of ascending counts
         dropna=False,
     )
     # Organize tables.
@@ -2001,8 +2001,7 @@ def create_categorical_variable_indicators(
     return pail
 
 
-# TODO: TCW, 25 January 2022
-# TODO: remove the sub-function "match_column_component()" if obsolete
+# review: TCW, 26 January 2022
 def reduce_categorical_variable_indicators(
     table=None,
     index=None,
@@ -2036,24 +2035,6 @@ def reduce_categorical_variable_indicators(
 
     """
 
-    def match_column_component(
-        name=None,
-        prefix=None,
-        separator=None,
-    ):
-        if (separator in str(name)):
-            name_elements = str(name).split(separator)
-            name_elements.pop() # remove last name element for integer
-            name_prefix = str(separator).join(name_elements)
-            #name_prefix = str(name).split(separator)[0].strip()
-            if (str(prefix) == str(name_prefix)):
-                match = True
-            else:
-                match = False
-        else:
-            match = False
-        return match
-
     # Copy information.
     table = table.copy(deep=True)
     table_indicators = table.copy(deep=True)
@@ -2086,14 +2067,6 @@ def reduce_categorical_variable_indicators(
         inplace=True
     )
 
-    # Compare methods for Pincipal Component Analysis.
-    decomp.compare_principal_components_methods(
-        table=table_indicators,
-        index_name=index,
-        prefix=prefix,
-        separator=separator,
-        report=True,
-    )
     # Reduce dimensionality of indicator variables.
     pail_reduction = (
         decomp.organize_principal_components_by_singular_value_decomposition(
@@ -2127,16 +2100,6 @@ def reduce_categorical_variable_indicators(
         right_on=index,
         suffixes=("_original", "_component"),
     )
-    # Extract names of columns for dummies.
-    #columns = copy.deepcopy(table.columns.to_list())
-    #columns_components = list(filter(
-    #    lambda column_trial: match_column_component(
-    #        name=column_trial,
-    #        prefix=prefix,
-    #        separator=separator,
-    #    ),
-    #    columns
-    #))
 
     # Report.
     if report:
@@ -2152,6 +2115,14 @@ def reduce_categorical_variable_indicators(
         print(unique_values)
         print("count of dummy indicator variables: " + str(count_indicators))
         print("count of component variables: " + str(count_components))
+        # Compare methods for Pincipal Component Analysis.
+        decomp.compare_principal_components_methods(
+            table=table_indicators,
+            index_name=index,
+            prefix=prefix,
+            separator=separator,
+            report=True,
+        )
         # Organize table.
         columns_report = copy.deepcopy(columns_components)
         columns_report.insert(0, column)
@@ -2162,9 +2133,12 @@ def reduce_categorical_variable_indicators(
             :, table_report.columns.isin(columns_report)
         ]
         table_report = table_report[[*columns_report]]
-        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=4)
         print("Here is table with component variables...")
         print(table_report)
+        utility.print_terminal_partition(level=4)
+        print("Here are the new columns for principal components...")
+        print(columns_components)
     # Collect information.
     pail = dict()
     pail["table"] = table
@@ -2228,7 +2202,7 @@ def create_reduce_categorical_variable_indicators(
         columns_indicators=pail_indicator["columns_indicators"],
         prefix=str(prefix + "_" + "component"),
         separator=separator,
-        report=False,
+        report=report,
     )
     # Return information.
     return pail_reduction["table"]
