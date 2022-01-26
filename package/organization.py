@@ -2074,7 +2074,7 @@ def reduce_categorical_variable_indicators(
             index_name=index,
             prefix=prefix,
             separator=separator,
-            report=report,
+            report=False, # report is extensive
         )
     )
     # Organize table.
