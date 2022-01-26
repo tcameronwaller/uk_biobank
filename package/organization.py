@@ -2488,10 +2488,6 @@ def report_genotype_arrays_batches(
     pass
 
 
-# TODO: TCW 25 January 2022
-# TODO: test the categorical indicator variables and PCA reduction of dimensionality
-
-
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
