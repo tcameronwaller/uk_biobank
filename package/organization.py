@@ -1906,7 +1906,6 @@ def create_categorical_variable_indicators(
             str(row[column]).replace(" ", "_"),
         axis="columns", # apply function to each row
     )
-
     # Organize tables.
     table.reset_index(
         level=None,
