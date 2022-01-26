@@ -997,7 +997,7 @@ def interpret_assessment_month_category(
     return interpretation
 
 
-# Review: TCW, 25 January 2022
+# review: TCW, 25 January 2022
 def interpret_assessment_month_season(
     field_55=None,
     codes_interpretations=None,
