@@ -1889,6 +1889,13 @@ def create_categorical_variable_indicators(
             str(row[column]).replace(" ", "_"),
         axis="columns", # apply function to each row
     )
+    # Count instances of all unique values of the categorical variable.
+    counts_values = table_indicators[column_values].value_counts(
+        normalize=False,
+        sort=True,
+        ascending=True,
+        dropna=False,
+    )
     # Organize tables.
     table.reset_index(
         level=None,
@@ -1951,6 +1958,10 @@ def create_categorical_variable_indicators(
         unique_values = table[column].unique()
         count_unique_values = unique_values.size
         count_indicators = len(columns_indicators)
+        utility.print_terminal_partition(level=4)
+        print("counts of instances of all original unique values...")
+        print(counts_values)
+        utility.print_terminal_partition(level=4)
         print("count of original unique values: " + str(count_unique_values))
         print(unique_values)
         print("count of dummy indicator variables: " + str(count_indicators))
@@ -1980,7 +1991,7 @@ def create_categorical_variable_indicators(
         table_aggregate = series_aggregate.to_frame(name="sum")
         utility.print_terminal_partition(level=4)
         print("Here are sums for each category...")
-        print(series_aggregate)
+        #print(series_aggregate)
         print(table_aggregate)
     # Collect information.
     pail = dict()
