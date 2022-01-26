@@ -1842,6 +1842,7 @@ def determine_body_mass_index(
     return value
 
 
+# review: TCW, 26 January 2022
 def create_categorical_variable_indicators(
     table=None,
     index=None,
@@ -1931,7 +1932,9 @@ def create_categorical_variable_indicators(
         drop=True,
         inplace=True
     )
+    # Collect names of new columns for indicator variables.
     columns_indicators = copy.deepcopy(table_indicators.columns.to_list())
+    # Merge indicators to main table.
     table = table.merge(
         table_indicators,
         how="outer",
@@ -2072,6 +2075,14 @@ def reduce_categorical_variable_indicators(
         inplace=True
     )
 
+    # Compare methods for Pincipal Component Analysis.
+    decomp.compare_principal_components_methods(
+        table=table_indicators,
+        index_name=index,
+        prefix=prefix,
+        separator=separator,
+        report=True,
+    )
     # Reduce dimensionality of indicator variables.
     pail_reduction = (
         decomp.organize_principal_components_by_singular_value_decomposition(
@@ -2206,7 +2217,7 @@ def create_reduce_categorical_variable_indicators(
         columns_indicators=pail_indicator["columns_indicators"],
         prefix=str(prefix + "_" + "component"),
         separator=separator,
-        report=report,
+        report=False,
     )
     # Return information.
     return pail_reduction["table"]
