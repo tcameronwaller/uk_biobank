@@ -1878,24 +1878,6 @@ def create_categorical_variable_indicators(
 
     """
 
-    def match_column_dummy(
-        name=None,
-        prefix=None,
-        separator=None,
-    ):
-        if (separator in str(name)):
-            name_elements = str(name).split(separator)
-            name_elements.pop() # remove last name element for integer
-            name_prefix = str(separator).join(name_elements)
-            #name_prefix = str(name).split(separator)[0].strip()
-            if (str(prefix) == str(name_prefix)):
-                match = True
-            else:
-                match = False
-        else:
-            match = False
-        return match
-
     # Copy information.
     table = table.copy(deep=True)
     table_indicators = table.copy(deep=True)
@@ -2005,6 +1987,8 @@ def create_categorical_variable_indicators(
     return pail
 
 
+# TODO: TCW, 25 January 2022
+# TODO: remove the sub-function "match_column_component()" if obsolete
 def reduce_categorical_variable_indicators(
     table=None,
     index=None,
