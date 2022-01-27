@@ -754,6 +754,7 @@ def organize_genotype_principal_component_variables(
 
 
 # review: TCW, 25 January 2022
+# review: TCW, 27 January 2022; data-field "54" coding and site names
 def interpret_assessment_site(
     field_54=None,
     codes_interpretations=None,
@@ -834,6 +835,7 @@ def interpret_assessment_site(
 
 
 # review: TCW, 25 January 2022
+# review: TCW, 27 January 2022; data-field "54" coding and site regions
 def interpret_assessment_site_region(
     field_54=None,
     codes_interpretations=None,
