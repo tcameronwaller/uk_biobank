@@ -1930,7 +1930,7 @@ def create_categorical_variable_indicators(
         prefix_sep=separator,
         dummy_na=False, # whether to create indicators for missing values
         columns=[column_values],
-        drop_first=True, # whether to create "k - 1" dummies, adequate
+        drop_first=False, # whether to create "k - 1" dummies, adequate
         dtype=numpy.uint8,
     )
     table_indicators.set_index(
