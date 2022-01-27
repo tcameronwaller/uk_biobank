@@ -181,7 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         #"table_linear_hormones_sex_age_menopause.tsv",
-        "table_linear_vitamin_d_sex_age_body.tsv",
+        "table_linear_vitamin_d_basis.tsv",
         "table_linear_vitamin_d_psychiatry.tsv",
         #"table_linear_hormones_alcoholism_any.tsv",
         #"table_linear_hormones_alcoholism_1.tsv",
@@ -865,13 +865,23 @@ def execute_procedure(
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_linear_vitamin_d_sex_age_body"]
+                    source_reference["table_linear_vitamin_d_basis"]
                 ),
                 independences_summary=[
-                    "sex_y", "age", "body_log", "assessment_season",
-                    "assessment_region",
-                    "medication_vitamin_d", "alteration_sex_hormone",
                     "menopause_ordinal", "menstruation_phase_cycle",
+                    "sex_y", "age", "body_log",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "assessment_season", "assessment_region",
+                    "assessment_site_component_1",
+                    "assessment_site_component_2",
+                    "assessment_site_component_3",
+                    "assessment_site_component_4",
+                    "assessment_site_component_5",
+                    "assessment_site_component_6",
+                    "assessment_site_component_7",
+                    "assessment_site_component_8",
+                    "assessment_site_component_9",
+                    "assessment_site_component_10",
                 ],
                 filter_execution=True,
                 report=True,
