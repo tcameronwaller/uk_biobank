@@ -2490,6 +2490,117 @@ def report_genotype_arrays_batches(
     pass
 
 
+def report_assessment_season_region(
+    column_name=None,
+    table=None,
+):
+    """
+    Reports counts of persons who had assessment in each ordinal season.
+
+    "assessment_season"
+    0: winter
+    1: spring, autumn
+    2: summer
+
+    "assessment_region"
+    0: Southern England
+    1: Central England
+    2: Northern England
+
+    arguments:
+        column_name (str): name of column for assessment season or region
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # assessment_season
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_female_0 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[column_name] == 0)
+        ), :
+    ]
+    table_female_1 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[column_name] == 1)
+        ), :
+    ]
+    table_female_2 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table[column_name] == 2)
+        ), :
+    ]
+
+    # Males.
+    table_male = table.loc[
+        (
+            (table["sex_text"] == "male")
+        ), :
+    ]
+    table_male_0 = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[column_name] == 0)
+        ), :
+    ]
+    table_male_1 = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[column_name] == 1)
+        ), :
+    ]
+    table_male_2 = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table[column_name] == 2)
+        ), :
+    ]
+
+    # Counts.
+    count_female = table_female.shape[0]
+    count_male = table_male.shape[0]
+    count_female_0 = table_female_0.shape[0]
+    count_female_1 = table_female_1.shape[0]
+    count_female_2 = table_female_2.shape[0]
+    count_male_0 = table_male_0.shape[0]
+    count_male_1 = table_male_1.shape[0]
+    count_male_2 = table_male_2.shape[0]
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_assessment_season_region()")
+    utility.print_terminal_partition(level=3)
+    print("assessment categoriy variable: " + str(column_name))
+    utility.print_terminal_partition(level=4)
+    print("total female persons: " + str(count_female))
+    print("female persons with value '0': " + str(count_female_0))
+    print("female persons with value '1': " + str(count_female_1))
+    print("female persons with value '2': " + str(count_female_2))
+    utility.print_terminal_partition(level=4)
+    print("total male persons: " + str(count_male))
+    print("male persons with value '0': " + str(count_male_0))
+    print("male persons with value '1': " + str(count_male_1))
+    print("male persons with value '2': " + str(count_male_2))
+    pass
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
@@ -2703,6 +2814,15 @@ def organize_assessment_basis_variables(
         utility.print_terminal_partition(level=3)
         # Genotype arrays and batches.
         report_genotype_arrays_batches(table=table)
+        # Assessment season and region.
+        report_assessment_season_region(
+            column_name="assessment_season",
+            table=table,
+        )
+        report_assessment_season_region(
+            column_name="assessment_region",
+            table=table,
+        )
         # Variable types.
         utility.print_terminal_partition(level=2)
         print("After type conversion")
