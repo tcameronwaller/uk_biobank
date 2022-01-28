@@ -868,7 +868,8 @@ def execute_procedure(
                     source_reference["table_linear_vitamin_d_basis"]
                 ),
                 independences_summary=[
-                    "menstruation_phase_cycle", "menopause_ordinal",
+                    #"menstruation_phase_cycle",
+                    "menopause_ordinal",
                     "sex_y", "age", "body_log",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "assessment_season", "assessment_region",
@@ -891,9 +892,9 @@ def execute_procedure(
                     "assessment_site_indicator_oxford",
                     "assessment_site_indicator_manchester",
                     "assessment_site_indicator_barts",
-                    "assessment_site_indicator_stockport_pilot",
-                    "assessment_site_indicator_swansea",
-                    "assessment_site_indicator_wrexham",
+                    #"assessment_site_indicator_stockport_pilot",
+                    #"assessment_site_indicator_swansea",
+                    #"assessment_site_indicator_wrexham",
                 ],
                 filter_execution=True,
                 report=True,
