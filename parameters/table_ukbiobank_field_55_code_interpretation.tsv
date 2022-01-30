@@ -1,13 +1,13 @@
-coding	meaning	code	interpretation	season	season_strict	note
-1	January	1	January	0	0	
-2	February	2	February	0	0	
-3	March	3	March	0	0	spring equinox on 20 or 21 March
-4	April	4	April	1	1	
-5	May	5	May	1	1	
-6	June	6	June	2	1	summer solstice on 20 or 21 June
-7	July	7	July	2	2	
-8	August	8	August	2	2	
-9	September	9	September	2	2	autumnal equinox on 22 or 23 September
-10	October	10	October	2	1	
-11	November	11	November	1	1	
-12	December	12	December	1	1	winter solstice on 21 or 22 December
+coding	meaning	code	interpretation	season	season_strict	day_length	note
+1	January	1	January	0	0	0	
+2	February	2	February	0	0	1	
+3	March	3	March	0	0	1	spring equinox on 20 or 21 March
+4	April	4	April	1	1	1	
+5	May	5	May	1	1	2	
+6	June	6	June	2	1	2	summer solstice on 20 or 21 June
+7	July	7	July	2	2	2	
+8	August	8	August	2	2	1	
+9	September	9	September	2	2	1	autumnal equinox on 22 or 23 September
+10	October	10	October	2	1	1	
+11	November	11	November	1	1	0	
+12	December	12	December	1	1	0	winter solstice on 21 or 22 December

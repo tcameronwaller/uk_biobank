@@ -260,6 +260,7 @@ def read_source_fields_codes_interpretations(
             "meaning": "string",
             "season": numpy.int32,
             "season_strict": numpy.int32,
+            "day_length": numpy.int32,
             "note": "string",
         },
     )
@@ -1005,7 +1006,7 @@ def interpret_assessment_month_season(
     codes_interpretations=None,
 ):
     """
-    Intepret UK Biobank's coding for data field 55.
+    Intepret UK Biobank's coding for data-field "55".
 
     Data-Field "55": "Month of attending assessment centre"
     UK Biobank data-coding "8" for data-field "55".
@@ -1054,6 +1055,72 @@ def interpret_assessment_month_season(
         if (field_55_string in codes_interpretations.keys()):
             interpretation = int(
                 codes_interpretations[field_55_string]["season_strict"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
+# review: TCW, 30 January 2022
+def interpret_assessment_month_day_length(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "55".
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data-coding "8" for data-field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["day_length"]
             )
         else:
             # Uninterpretable value.
@@ -1512,6 +1579,35 @@ def determine_assessment_month_season(
     # Interpret codes.
     # Set value.
     value = interpret_assessment_month_season(
+        field_55=field_55,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_day_length(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Determine the ordinal approximate day length from the assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_day_length(
         field_55=field_55,
         codes_interpretations=codes_interpretations,
     )
@@ -2631,8 +2727,14 @@ def organize_assessment_basis_variables(
     # Copy information.
     table = table.copy(deep=True)
 
+    # TODO: TCW, 30 January 2022
+    # - site
+    # - latitude
+    # - season
+    # - day_length
+
     # Determine assessment site.
-    table["assessment_site"] = table.apply(
+    table["site"] = table.apply(
         lambda row:
             determine_assessment_site_category(
                 field_54=row["54-0.0"],
@@ -2640,7 +2742,7 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-    table["assessment_region"] = table.apply(
+    table["region"] = table.apply(
         lambda row:
             determine_assessment_site_region(
                 field_54=row["54-0.0"],
@@ -2650,14 +2752,14 @@ def organize_assessment_basis_variables(
     )
 
     # Determine month of assessment.
-    table["assessment_month_order"] = table.apply(
+    table["month_order"] = table.apply(
         lambda row:
             determine_assessment_month_order(
                 field_55=row["55-0.0"],
             ),
         axis="columns", # apply function to each row
     )
-    table["assessment_month"] = table.apply(
+    table["month_name"] = table.apply(
         lambda row:
             determine_assessment_month_category(
                 field_55=row["55-0.0"],
@@ -2665,7 +2767,7 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-    table["assessment_season"] = table.apply(
+    table["season"] = table.apply(
         lambda row:
             determine_assessment_month_season(
                 field_55=row["55-0.0"],
@@ -2673,13 +2775,23 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
+    table["day_length"] = table.apply(
+        lambda row:
+            determine_assessment_month_day_length(
+                field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
+
 
     # Create binary indicators of categories and reduce their dimensionality.
     table = create_reduce_categorical_variable_indicators(
         table=table,
         index="eid",
-        column="assessment_site",
-        prefix="assessment_site",
+        column="site",
+        prefix="site",
         separator="_",
         report=True,
     )
@@ -2687,8 +2799,8 @@ def organize_assessment_basis_variables(
         table = create_reduce_categorical_variable_indicators(
             table=table,
             index="eid",
-            column="assessment_month",
-            prefix="assessment_month",
+            column="month_name",
+            prefix="month_name",
             separator="_",
             report=True,
         )
@@ -2795,8 +2907,8 @@ def organize_assessment_basis_variables(
     columns_report = [
         #"eid",
         "IID",
-        "assessment_site", "assessment_region",
-        "assessment_month", "assessment_month_order", "assessment_season",
+        "site", "region",
+        "month_name", "month_order", "season", "day_length",
         "sex_y", "sex_x", "sex_text",
         "age", "age_grade_female", "age_grade_male",
         "body", "body_grade_female", "body_grade_male", "body_log",
@@ -2816,11 +2928,15 @@ def organize_assessment_basis_variables(
         report_genotype_arrays_batches(table=table)
         # Assessment season and region.
         report_assessment_season_region(
-            column_name="assessment_season",
+            column_name="season",
             table=table,
         )
         report_assessment_season_region(
-            column_name="assessment_region",
+            column_name="day_length",
+            table=table,
+        )
+        report_assessment_season_region(
+            column_name="region",
             table=table,
         )
         # Variable types.
