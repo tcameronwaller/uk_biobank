@@ -930,7 +930,7 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["tables"] = dict()
-    information["tables"]["table_regressions_vitamin_d_sex_age_body"] = (
+    information["tables"]["table_regressions_vitamin_d_basis"] = (
         pail_vitamin_d_one["table"]
     )
     #information["tables"]["table_regressions_vitamin_d_depression_bipolar_alcohol"] = (

@@ -98,6 +98,12 @@ def initialize_directories(
     paths["reference_population"] = os.path.join(
         path_dock, "stratification", "reference_population"
     )
+    paths["vitamin_d_linear"] = os.path.join(
+        path_dock, "stratification", "vitamin_d_linear"
+    )
+    paths["vitamin_d_logistic"] = os.path.join(
+        path_dock, "stratification", "vitamin_d_logistic"
+    )
     paths["hormones_linear"] = os.path.join(
         path_dock, "stratification", "hormones_linear"
     )
@@ -120,6 +126,12 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["reference_population"]
+    )
+    utility.create_directories(
+        path=paths["vitamin_d_linear"]
+    )
+    utility.create_directories(
+        path=paths["vitamin_d_logistic"]
     )
     utility.create_directories(
         path=paths["hormones_linear"]
@@ -2087,9 +2099,11 @@ def stratify_genotype_cohorts_vitamin_d(
                 "eid", "IID",
                 "white_british",
                 "genotype_array_axiom",
-                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "sex_y", "sex_x", "sex_text",
+                "age",
+                "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 "pregnancy",
                 dependence,
             ],
@@ -2104,7 +2118,7 @@ def stratify_genotype_cohorts_vitamin_d(
                 "age", #"age_grade_male",
                 "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 dependence,
             ],
             male_prefixes=["genotype_pc_",],
@@ -2138,9 +2152,11 @@ def stratify_genotype_cohorts_vitamin_d(
                 "eid", "IID",
                 "white_british",
                 "genotype_array_axiom",
-                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "sex_y", "sex_x", "sex_text",
+                "age",
+                "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 "pregnancy",
                 dependence,
             ],
@@ -2155,7 +2171,7 @@ def stratify_genotype_cohorts_vitamin_d(
                 "age", #"age_grade_male",
                 "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 dependence,
             ],
             male_prefixes=["genotype_pc_",],
@@ -2188,9 +2204,11 @@ def stratify_genotype_cohorts_vitamin_d(
                 "eid", "IID",
                 "white_british",
                 "genotype_array_axiom",
-                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "sex_y", "sex_x", "sex_text",
+                "age",
+                "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 "pregnancy", "menopause_ordinal",
                 dependence,
             ],
@@ -2235,7 +2253,7 @@ def stratify_genotype_cohorts_vitamin_d(
                 "age", #"age_grade_male",
                 "body", "body_log",
                 "medication_vitamin_d", "alteration_sex_hormone",
-                "day_length", "region",
+                "season", "day_length", "region",
                 dependence,
             ],
             male_prefixes=["genotype_pc_",],
@@ -2281,6 +2299,11 @@ def stratify_genotype_cohorts_vitamin_d(
 # TODO: TCW, 30 January 2022
 # TODO: need to update the variable names to match new names, especially basis variables
 # TODO: consider including "age_grade_male" in the male portions of cohorts
+
+# TODO: TCW, 31 January 2022
+# TODO: EVENTUALLY, Estrogen and Testosterone will require different covariates
+# TODO: than Albumin and SHBG.
+# TODO: For example, "alteration_sex_hormones" is more relevant to Estrogen and Testosterone
 
 def stratify_genotype_cohorts_hormones_by_sex_together(
     dependence=None,
@@ -3940,6 +3963,11 @@ def stratify_genotype_cohorts_logistic_set_bipolar_body(
 ##########
 # Drivers for genotype cohorts
 
+
+# TODO: TCW, 31 January 2022
+# TODO: EVENTUALLY, Estrogen and Testosterone will require different covariates
+# TODO: than Albumin and SHBG.
+# TODO: For example, "alteration_sex_hormones" is more relevant to Estrogen and Testosterone
 
 def execute_stratify_genotype_cohorts_plink_format_set(
     table=None,
@@ -5782,6 +5810,14 @@ def write_genotype_product(
     write_genotype_product_cohorts_models(
         information=information["reference_population"],
         path_parent=paths["reference_population"],
+    )
+    write_genotype_product_cohorts_models(
+        information=information["vitamin_d_linear"],
+        path_parent=paths["vitamin_d_linear"],
+    )
+    write_genotype_product_cohorts_models(
+        information=information["vitamin_d_logistic"],
+        path_parent=paths["vitamin_d_logistic"],
     )
     write_genotype_product_cohorts_models(
         information=information["hormones_linear"],
