@@ -1784,6 +1784,7 @@ def select_records_by_ancestry_case_control_valid_variables_values(
 # Cohort, model selection: sets for genetic analyses on phenotypes and genotypes
 
 
+# obsolete?
 def stratify_genotype_cohorts_ordinal_hormones(
     dependence=None,
     table_kinship_pairs=None,
@@ -1968,6 +1969,316 @@ def stratify_genotype_cohorts_ordinal_hormones(
     # Return information.
     return records
 
+
+def stratify_genotype_cohorts_vitamin_d(
+    dependence=None,
+    table_kinship_pairs=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts, phenotypes, and model covariates
+    for genetic analysis.
+
+    Notice that different variables are relevant for females and males.
+    Combination of tables for females and males introduces missing or null
+    values for these sex-specific variables.
+    Remove records with null values separately for females and males but not
+    after combination.
+
+    arguments:
+        dependence (str): name of table's column for dependent (outcome)
+            variable
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<dict>): collection of information about phenotype variables in
+            separate cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+
+    # Collect records of information about each cohort, model, and phenotype.
+    # Select and organize variables across cohorts.
+    records = list()
+
+    # Cohort: non-pregnant females and males together
+    # Kinship priority: none
+    record = dict()
+    record["category"] = "female_male"
+    record["cohort"] = "female_male"
+    record["cohort_model"] = "female_male"
+    record["dependence"] = dependence
+    record["name"] = str(record["cohort_model"] + "_" + dependence)
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=[],
+            priority_variable=None,
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                "pregnancy",
+                dependence,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text",
+                "age", #"age_grade_male",
+                "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                dependence,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    table_priority_none = record["table"].copy(deep=True)
+    records.append(record)
+
+    # Cohort: non-pregnant females and males together
+    # Kinship priority: female
+    record = dict()
+    record["category"] = "female_male"
+    record["cohort"] = "female_male"
+    record["cohort_model"] = "female_male_priority_female"
+    record["dependence"] = dependence
+    record["name"] = str(record["cohort_model"] + "_" + dependence)
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=["female",],
+            priority_variable="sex_text",
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                "pregnancy",
+                dependence,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text",
+                "age", #"age_grade_male",
+                "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                dependence,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    table_priority_female = record["table"].copy(deep=True)
+    records.append(record)
+
+    # Cohort: non-pregnant females and males together
+    # Kinship priority: male
+    record = dict()
+    record["category"] = "female_male"
+    record["cohort"] = "female_male"
+    record["cohort_model"] = "female_male_priority_male"
+    record["dependence"] = dependence
+    record["name"] = str(record["cohort_model"] + "_" + dependence)
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=["male",],
+            priority_variable="sex_text",
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                "pregnancy",
+                dependence,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text",
+                "age", #"age_grade_male",
+                "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                dependence,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    table_priority_male = record["table"].copy(deep=True)
+    records.append(record)
+
+    # Cohort: all non-pregnant females together
+    record = dict()
+    record["category"] = "female"
+    record["cohort"] = "female"
+    record["cohort_model"] = "female"
+    record["dependence"] = dependence
+    record["name"] = str(record["cohort_model"] + "_" + dependence)
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=[],
+            priority_variable=None,
+            white_british=[1,],
+            female=True,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text", "age", "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                "pregnancy", "menopause_ordinal",
+                dependence,
+            ],
+            female_prefixes=["genotype_pc_",],
+            male=False,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[],
+            male_prefixes=[],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    records.append(record)
+
+    # Cohort: males
+    record = dict()
+    record["category"] = "male"
+    record["cohort"] = "male"
+    record["cohort_model"] = "male"
+    record["dependence"] = dependence
+    record["name"] = str(record["cohort_model"] + "_" + dependence)
+    record["name_table"] = str("table_" + record["name"])
+    record["table"] = (
+        select_records_by_ancestry_sex_specific_valid_variables_values(
+            name=record["name"],
+            priority_values=[],
+            priority_variable=None,
+            white_british=[1,],
+            female=False,
+            female_pregnancy=[0,],
+            female_menopause_binary=[0, 1,],
+            female_menopause_ordinal=[0, 1, 2,],
+            female_variables=[],
+            female_prefixes=[],
+            male=True,
+            age_grade_male=[0, 1, 2,],
+            male_variables=[
+                "eid", "IID",
+                "white_british",
+                "genotype_array_axiom",
+                "sex_y", "sex_x", "sex_text",
+                "age", #"age_grade_male",
+                "body", "body_log",
+                "medication_vitamin_d", "alteration_sex_hormone",
+                "day_length", "region",
+                dependence,
+            ],
+            male_prefixes=["genotype_pc_",],
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+    ))
+    records.append(record)
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "stratify_genotype_cohorts_vitamin_d"
+        )
+        print(
+            "report: " + function_name
+        )
+        utility.print_terminal_partition(level=3)
+        print("dependence: " + str(dependence))
+        report_kinship_filter_priority_selection(
+            name="... Comparison of priority to female persons in population ...",
+            priority_values=["female",],
+            priority_variable="sex_text",
+            table_full=table,
+            table_simple=table_priority_none,
+            table_priority=table_priority_female,
+            report=report,
+        )
+        report_kinship_filter_priority_selection(
+            name="... Comparison of priority to male persons in population ...",
+            priority_values=["male",],
+            priority_variable="sex_text",
+            table_full=table,
+            table_simple=table_priority_none,
+            table_priority=table_priority_male,
+            report=report,
+        )
+    # Return information.
+    return records
+
+
+# TODO: TCW, 30 January 2022
+# TODO: need to update the variable names to match new names, especially basis variables
+# TODO: consider including "age_grade_male" in the male portions of cohorts
 
 def stratify_genotype_cohorts_hormones_by_sex_together(
     dependence=None,
@@ -2658,6 +2969,11 @@ def stratify_genotype_cohorts_hormones_by_sex_menopause_age(
     return records
 
 
+
+
+# Drivers
+
+
 def stratify_genotype_cohorts_set_reference_population(
     table=None,
     table_kinship_pairs=None,
@@ -2922,6 +3238,121 @@ def stratify_genotype_cohorts_set_reference_population(
     return records
 
 
+def stratify_genotype_cohorts_linear_set_vitamin_d(
+    table=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts and model covariates for genetic
+    analyses.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    records = list()
+    # Select and organize variables across cohorts.
+    dependences = [
+        "vitamin_d", "vitamin_d_log",
+        "vitamin_d_imputation", "vitamin_d_imputation_log",
+    ]
+    for dependence in dependences:
+        records_hormone = (
+            stratify_genotype_cohorts_vitamin_d(
+                dependence=dependence,
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=report,
+        ))
+        records.extend(records_hormone)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "stratify_genotype_cohorts_linear_set_vitamin_d"
+        )
+        print(
+            "report: " + function_name
+        )
+        for record in records:
+            utility.print_terminal_partition(level=5)
+            print(record["name"])
+            print(
+                "Count records: " + str(record["table"].shape[0])
+            )
+    # Return information.
+    return records
+
+
+def stratify_genotype_cohorts_logistic_set_vitamin_d(
+    table=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Organizes tables for specific cohorts and model covariates for genetic
+    analyses.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons in UK Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables
+
+    """
+
+    # Compile information.
+    records = list()
+    # Select and organize variables across cohorts.
+    dependences = [
+        "vitamin_d_detection",
+    ]
+    for dependence in dependences:
+        records_hormone = (
+            stratify_genotype_cohorts_vitamin_d(
+                dependence=dependence,
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=report,
+        ))
+        records.extend(records_hormone)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        function_name = str(
+            "stratify_genotype_cohorts_logistic_set_vitamin_d"
+        )
+        print(
+            "report: " + function_name
+        )
+        for record in records:
+            utility.print_terminal_partition(level=5)
+            print(record["name"])
+            print(
+                "Count records: " + str(record["table"].shape[0])
+            )
+    # Return information.
+    return records
+
+
 def stratify_genotype_cohorts_linear_set_hormones_proteins(
     table=None,
     table_kinship_pairs=None,
@@ -3025,7 +3456,6 @@ def stratify_genotype_cohorts_logistic_set_hormones_proteins(
     records = list()
     # Select and organize variables across cohorts.
     phenotypes = [
-        "vitamin_d_detection",
         "albumin_detection",
         "steroid_globulin_detection",
         "oestradiol_detection",
@@ -3554,6 +3984,46 @@ def execute_stratify_genotype_cohorts_plink_format_set(
                 organize_phenotype_covariate_table_plink_format(
                     boolean_variables=[],
                     binary_variables=[],
+                    continuous_variables=[],
+                    sex_y="sex_y",
+                    remove_null_records=False,
+                    table=record["table"],
+            ))
+            pass
+    elif (set == "vitamin_d_linear"):
+        records = (
+            stratify_genotype_cohorts_linear_set_vitamin_d(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
+        # Translate variable encodings and table format for analysis in PLINK2.
+        pail = dict()
+        for record in records:
+            pail[record["name_table"]] = (
+                organize_phenotype_covariate_table_plink_format(
+                    boolean_variables=[],
+                    binary_variables=[],
+                    continuous_variables=[], # record["dependence"]
+                    sex_y="sex_y",
+                    remove_null_records=False,
+                    table=record["table"],
+            ))
+            pass
+    elif (set == "vitamin_d_logistic"):
+        records = (
+            stratify_genotype_cohorts_logistic_set_vitamin_d(
+                table=table,
+                table_kinship_pairs=table_kinship_pairs,
+                report=report,
+        ))
+        # Translate variable encodings and table format for analysis in PLINK2.
+        pail = dict()
+        for record in records:
+            pail[record["name_table"]] = (
+                organize_phenotype_covariate_table_plink_format(
+                    boolean_variables=[],
+                    binary_variables=[record["dependence"]],
                     continuous_variables=[],
                     sex_y="sex_y",
                     remove_null_records=False,
