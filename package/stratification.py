@@ -3272,6 +3272,10 @@ def stratify_genotype_cohorts_linear_set_vitamin_d(
     Organizes tables for specific cohorts and model covariates for genetic
     analyses.
 
+    The reason to stratify separately for "vitamin_d" and for
+    "vitamin_d_imputation" as an example is that the imputation variable has
+    fewer missing values and hence has a different cohort.
+
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
