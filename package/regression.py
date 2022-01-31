@@ -568,7 +568,7 @@ def drive_linear_regressions_cohorts_dependences_models(
             print("cohort: " + cohort)
             print("dependent variable: " + dependence)
             print("model: " + model)
-            print(table_cohort)
+            #print(table_cohort)
         # Organize record.
         record = dict()
         record["cohort"] = cohort
@@ -605,6 +605,8 @@ def drive_linear_regressions_cohorts_dependences_models(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
+        print("drive_linear_regressions_cohorts_dependences_models")
+        utility.print_terminal_partition(level=5)
         print(table_regressions)
     # Compile information.
     pail = dict()
