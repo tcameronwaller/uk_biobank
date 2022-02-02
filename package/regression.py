@@ -933,9 +933,6 @@ def execute_procedure(
     information["tables"]["table_regressions_vitamin_d_basis"] = (
         pail_vitamin_d_one["table"]
     )
-    #information["tables"]["table_regressions_vitamin_d_depression_bipolar_alcohol"] = (
-    #    pail_vitamin_d_two["table"]
-    #)
     #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
     #    pail_vitamin_d_two["table"]
     #)

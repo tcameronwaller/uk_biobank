@@ -10478,9 +10478,10 @@ def determine_total_alcohol_consumption_monthly(
     # Consider current alcohol consumption.
     if (
         (not math.isnan(alcohol_current)) and
-        (-0.5 <= alcohol_current and alcohol_current < 0.5)
+        (alcohol_current == 0)
     ):
         # Person never consumes any alcohol currently.
+        # Still prioritize quantity variables in case they are more accurate.
         if (not math.isnan(alcohol_monthly)):
             alcohol_drinks_monthly = alcohol_monthly
         else:
@@ -10633,7 +10634,7 @@ def organize_alcohol_consumption_variables(
         report=report,
     )
     # Organize information about current alcohol consumption quantity.
-    if False:
+    if True:
         pail_quantity = organize_alcohol_consumption_quantity_variables(
             table=pail_consumption["table"],
             report=report,
