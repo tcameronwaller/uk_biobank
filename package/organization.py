@@ -10640,7 +10640,7 @@ def organize_alcohol_consumption_variables(
             report=report,
         )
     # Return information.
-    return pail_consumption
+    return pail_quantity
 
 
 ##########
