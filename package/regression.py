@@ -902,7 +902,7 @@ def execute_procedure(
                 report=True,
         ))
         pass
-    if False:
+    if True:
         pail_vitamin_d_two = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -910,16 +910,24 @@ def execute_procedure(
                     source_reference["table_linear_vitamin_d_psychiatry"]
                 ),
                 independences_summary=[
-                    "sex_y", "age", "body_log", "assessment_season",
-                    "assessment_region", "medication_vitamin_d",
+                    "neuroticism",
+                    "neuroticism_log",
                     "depression_control_case_loose",
                     "depression_control_case_strict",
                     "bipolar_control_case_loose",
                     "bipolar_control_case_strict",
-                    "alcohol_frequency",
                     "alcohol_current",
+                    "alcohol_frequency",
+                    "alcohol_drinks_monthly",
+                    "alcohol_audit",
+                    "alcohol_auditc",
+                    "alcohol_auditp",
                     "alcoholism_control_case_any",
                     "alcoholism_control_case_1",
+                    "menopause_ordinal",
+                    "sex_y", "age", "body_log",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "season", "region",
                 ],
                 filter_execution=True,
                 report=True,
@@ -933,9 +941,9 @@ def execute_procedure(
     information["tables"]["table_regressions_vitamin_d_basis"] = (
         pail_vitamin_d_one["table"]
     )
-    #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
-    #    pail_vitamin_d_two["table"]
-    #)
+    information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
+        pail_vitamin_d_two["table"]
+    )
     # Write product information to file.
     write_product(
         paths=paths,
