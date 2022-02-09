@@ -3162,19 +3162,19 @@ def define_biochemistry_fields_measurement_reportability_missingness():
     record["missingness"] = "30695-0.0"
     records.append(record)
 
-    record = dict()
-    record["name"] = "c_reactive_protein"
-    record["measurement"] = "30710-0.0"
-    record["reportability"] = "30716-0.0"
-    record["missingness"] = "30715-0.0"
-    records.append(record)
+    #record = dict()
+    #record["name"] = "c_reactive_protein"
+    #record["measurement"] = "30710-0.0"
+    #record["reportability"] = "30716-0.0"
+    #record["missingness"] = "30715-0.0"
+    #records.append(record)
 
-    record = dict()
-    record["name"] = "rheumatoid_factor"
-    record["measurement"] = "30820-0.0"
-    record["reportability"] = "30826-0.0"
-    record["missingness"] = "30825-0.0"
-    records.append(record)
+    #record = dict()
+    #record["name"] = "rheumatoid_factor"
+    #record["measurement"] = "30820-0.0"
+    #record["reportability"] = "30826-0.0"
+    #record["missingness"] = "30825-0.0"
+    #records.append(record)
 
     # Return information.
     return records
@@ -3201,6 +3201,9 @@ def convert_hormone_concentration_units_moles_per_liter(
 
     UK Biobank field 30890, concentration in nanomoles per liter (nmol/L) of
     vitamin D in blood
+
+    UK Biobank data-field 30690, concentration in millimoles per liter (mmol/L)
+    of cholesterol in blood
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -3304,9 +3307,10 @@ def organize_report_column_pair_correlations(
     pass
 
 
-# Imputation of missing hormone measurements
+# Imputation of missing biochemical measurements
 
 
+# review: TCW, 09 February 2022
 def interpret_biochemistry_missingness_beyond_detection_range(
     field_code_782=None,
 ):
@@ -3326,7 +3330,10 @@ def interpret_biochemistry_missingness_beyond_detection_range(
     Data-Field "30805": "Oestradiol missing reason"
     Data-Field "30855": "Testosterone missing reason"
     Data-Field "30895": "Vitamin D missing reason"
-    UK Biobank data coding "782" for variable fields.
+    Data-Field "30695": "Cholesterol missing reason"
+    Data-Field "30715": "C-reactive protein missing reason"
+    Data-Field "30825": "Rheumatoid factor missing reason"
+    UK Biobank data-coding "782" for variable fields.
     1: "No data returned"
     2: "Original value above or below reportable limit"
     3: "Unrecoverable aliquot problem (dip)"
@@ -3397,6 +3404,7 @@ def interpret_biochemistry_missingness_beyond_detection_range(
     return value
 
 
+# review: TCW, 09 February 2022
 def interpret_biochemistry_reportability_detection_limit(
     field_code_4917=None,
 ):
@@ -3419,7 +3427,11 @@ def interpret_biochemistry_reportability_detection_limit(
     Data-Field "30806": "Oestradiol reportability"
     Data-Field "30856": "Testosterone reportability"
     Data-Field "30896": "Vitamin D reportability"
-    UK Biobank data coding "4917" for variable fields.
+    Data-Field "30696": "Cholesterol reportability"
+    Data-Field "30716": "C-reactive protein reportability"
+    Data-Field "30826": "Rheumatoid factor reportability"
+
+    UK Biobank data-coding "4917" for variable fields.
     1: "Reportable at assay and after aliquot correction, if attempted"
     2: "Reportable at assay but not reportable after any corrections (too low)"
     3: "Reportable at assay but not reportable after any corrections (too high)"
@@ -5819,6 +5831,7 @@ def organize_sex_hormone_variables(
     factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
     factors_concentration["vitamin_d"] = 1E9 # 1 nmol / L
+    factors_concentration["cholesterol"] = 1E3 # 1 mmol / L
     table = convert_hormone_concentration_units_moles_per_liter(
         table=table,
         factors_concentration=factors_concentration,
