@@ -542,7 +542,7 @@ def drive_linear_regressions_cohorts_dependences_models(
         ]
         pass
     # Stratify phenotypes in cohorts.
-    records_cohorts = ukb_strat.stratify_set_primary_sex_age_body_menopause(
+    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
         table=table,
     )
     entries_cohorts = (

@@ -1066,6 +1066,72 @@ def interpret_assessment_month_season(
     return interpretation
 
 
+# review: TCW, 09 February 2022
+def interpret_assessment_month_season_stratification(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "55".
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data-coding "8" for data-field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["season_stratification"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
 # review: TCW, 30 January 2022
 def interpret_assessment_month_day_length(
     field_55=None,
@@ -1579,6 +1645,35 @@ def determine_assessment_month_season(
     # Interpret codes.
     # Set value.
     value = interpret_assessment_month_season(
+        field_55=field_55,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_season_stratification(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Determine assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_season_stratification(
         field_55=field_55,
         codes_interpretations=codes_interpretations,
     )
@@ -2775,6 +2870,14 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
+    table["season_stratification"] = table.apply(
+        lambda row:
+            determine_assessment_month_season_stratification(
+                field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
+            ),
+        axis="columns", # apply function to each row
+    )
     table["day_length"] = table.apply(
         lambda row:
             determine_assessment_month_day_length(
@@ -3000,7 +3103,7 @@ def organize_assessment_basis_variables(
 # Chung, Pathology Informatics, 2017 (PubMed:28828199)
 
 
-def define_hormone_fields_measurement_reportability_missingness():
+def define_biochemistry_fields_measurement_reportability_missingness():
     """
     Define data fields in U.K. Biobank for measurement, reportability, and
     missingness of hormones.
@@ -3050,6 +3153,27 @@ def define_hormone_fields_measurement_reportability_missingness():
     record["measurement"] = "30890-0.0"
     record["reportability"] = "30896-0.0"
     record["missingness"] = "30895-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "cholesterol"
+    record["measurement"] = "30690-0.0"
+    record["reportability"] = "30696-0.0"
+    record["missingness"] = "30695-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "c_reactive_protein"
+    record["measurement"] = "30710-0.0"
+    record["reportability"] = "30716-0.0"
+    record["missingness"] = "30715-0.0"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "rheumatoid_factor"
+    record["measurement"] = "30820-0.0"
+    record["reportability"] = "30826-0.0"
+    record["missingness"] = "30825-0.0"
     records.append(record)
 
     # Return information.
@@ -5673,7 +5797,7 @@ def organize_sex_hormone_variables(
 
     # Define reportability and missingness variables for each hormone.
     hormone_fields = (
-        define_hormone_fields_measurement_reportability_missingness()
+        define_biochemistry_fields_measurement_reportability_missingness()
     )
     # Convert variable types to float.
     columns_hormones = list()

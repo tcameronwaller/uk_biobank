@@ -4165,7 +4165,7 @@ def execute_stratify_genotype_cohorts_plink_format_set(
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
 
 
-def stratify_set_primary_sex_age_body_menopause(
+def stratify_phenotype_cohorts_set_sex_age_menopause(
     table=None,
 ):
     """
@@ -4379,6 +4379,32 @@ def stratify_set_primary_sex_age_body_menopause(
     ]
     records.append(record)
 
+    # Return information
+    return records
+
+
+def stratify_phenotype_cohorts_set_sex_body(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
     # Body Mass Index (BMI)
 
     record = dict()
@@ -4471,6 +4497,206 @@ def stratify_set_primary_sex_age_body_menopause(
     # Return information
     return records
 
+
+def stratify_phenotype_cohorts_set_sex_season(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    # Females and males together in seasons
+
+    record = dict()
+    record["name"] = "female_male_season_winter"
+    record["cohort"] = "female_male_season_winter"
+    record["cohort_model"] = "female_male_season_winter"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["pregnancy"] == 0) &
+            (table["season_stratification"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_male_season_summer"
+    record["cohort"] = "female_male_season_summer"
+    record["cohort_model"] = "female_male_season_summer"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["pregnancy"] == 0) &
+            (table["season_stratification"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Females in seasons
+
+    record = dict()
+    record["name"] = "female_season_winter"
+    record["cohort"] = "female_season_winter"
+    record["cohort_model"] = "female_season_winter"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["season_stratification"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "female_season_summer"
+    record["cohort"] = "female_season_summer"
+    record["cohort_model"] = "female_season_summer"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["season_stratification"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Males in seasons
+
+    record = dict()
+    record["name"] = "male_season_winter"
+    record["cohort"] = "male_season_winter"
+    record["cohort_model"] = "male_season_winter"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["season_stratification"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = "male_season_summer"
+    record["cohort"] = "male_season_summer"
+    record["cohort_model"] = "male_season_summer"
+    record["category"] = "season"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "male") &
+            (table["season_stratification"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def stratify_phenotype_cohorts_regression(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Collect records of information about each cohort and model.
+    records = list()
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_age_menopause(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_body(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_season(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    # Return information
+    return records
+
+
+def organize_dictionary_entries_stratification_cohorts(
+    records=None,
+):
+    """
+    Organizes information about cohorts.
+
+    arguments:
+        records (list<dict>): records with information about cohorts
+
+    raises:
+
+    returns:
+        (dict<dict>): entries with information about cohorts
+
+    """
+
+    # Copy information.
+    records = copy.deepcopy(records)
+    # Organize dictionary entries for cohorts.
+    entries = dict()
+    for record in records:
+        entries[record["name"]] = record
+        pass
+    # Return information
+    return entries
+
+
+# TODO: TCW, 09 February 2022
+# TODO: some of the functions below might be obsolete
 
 def stratify_set_secondary_menopause(
     table=None,
@@ -5691,35 +5917,6 @@ def stratify_cohorts_models_phenotypes_sets(
 
     # Return information
     return records
-
-
-def organize_dictionary_entries_stratification_cohorts(
-    records=None,
-):
-    """
-    Organizes information about cohorts.
-
-    arguments:
-        records (list<dict>): records with information about cohorts
-
-    raises:
-
-    returns:
-        (dict<dict>): entries with information about cohorts
-
-    """
-
-    # Copy information.
-    records = copy.deepcopy(records)
-    # Organize dictionary entries for cohorts.
-    entries = dict()
-    for record in records:
-        entries[record["name"]] = record
-        pass
-    # Return information
-    return entries
-
-
 
 
 ##########

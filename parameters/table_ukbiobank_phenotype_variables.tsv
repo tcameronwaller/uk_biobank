@@ -30,7 +30,9 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	30896	float32	hormone		452477		Vitamin D reportability	Blood biochemistry processing		0;	
 1	30750	float32	metabolism		467885		Glycated haemoglobin (HbA1c)	Blood biochemistry		0;	
 1	30740	float32	metabolism		431819		Glucose	Blood biochemistry		0;	
-1	30690	float32	metabolism		470819		Cholesterol	Blood biochemistry		0;	
+1	30690	float32	metabolism		470767		Cholesterol	Blood biochemistry		0;	
+1	30695	float32	metabolism				Cholesterol missing reason	Blood biochemistry processing		0;	
+1	30696	float32	metabolism				Cholesterol reportability	Blood biochemistry processing		0;	
 1	30760	float32	metabolism		432110		HDL cholesterol	Blood biochemistry		0;	
 1	30870	float32	metabolism		470449		Triglycerides	Blood biochemistry		0;	
 1	30630	float32	metabolism		429766		Apolipoprotein A	Blood biochemistry		0;	
@@ -47,8 +49,12 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	30810	float32	metabolism		431500		Phosphate	Blood biochemistry		0;	
 1	30860	float32	metabolism		431846		Total protein	Blood biochemistry		0;	
 1	30710	float32	metabolism		469830		C-reactive protein	Blood biochemistry		0;	
+1	30715	float32	metabolism				C-reactive protein missing reason	Blood biochemistry processing		0;	
+1	30716	float32	metabolism				C-reactive protein reportability	Blood biochemistry processing		0;	
 1	30770	float32	metabolism		468358		IGF-1	Blood biochemistry		0;	
-1	30820	float32	metabolism		41986		Rheumatoid factor	Blood biochemistry		0;	
+1	30820	float32	metabolism		41985		Rheumatoid factor	Blood biochemistry		0;	
+1	30825	float32	metabolism				Rheumatoid factor missing reason	Blood biochemistry processing		0;	
+1	30826	float32	metabolism				Rheumatoid factor reportability	Blood biochemistry processing		0;	
 1	2724	float32	female	menopause	272914	nominal	Had menopause	Female-specific factors		0;	hysterectomy mimics menopause
 1	3581	float32	female		173419		Age at menopause (last menstrual period)	Female-specific factors		0;	
 1	3591	float32	female	hysterectomy	242688	nominal	Ever had hysterectomy (womb removed)	Female-specific factors		0;	hysterectomy mimics menopause
