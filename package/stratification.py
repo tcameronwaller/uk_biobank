@@ -4198,7 +4198,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     #record["table"] = table
     record["table"] = table.loc[
         (
-            ((pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
         ), :
     ]
     records.append(record)
@@ -4536,7 +4536,7 @@ def stratify_phenotype_cohorts_set_sex_season(
     record["menstruation"] = False
     record["table"] = table.loc[
         (
-            ((pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
             (table["season_stratification"] == 0)
         ), :
     ]
@@ -4551,7 +4551,7 @@ def stratify_phenotype_cohorts_set_sex_season(
     record["menstruation"] = False
     record["table"] = table.loc[
         (
-            ((pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
             (table["season_stratification"] == 2)
         ), :
     ]
