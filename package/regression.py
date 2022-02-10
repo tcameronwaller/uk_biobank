@@ -867,7 +867,7 @@ def execute_procedure(
 
     # Drive regressions.
     if True:
-        pail_vitamin_d_one = (
+        pail_1 = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
@@ -884,8 +884,45 @@ def execute_procedure(
                 report=True,
         ))
         pass
+    if True:
+        pail_2 = (
+            drive_linear_regressions_cohorts_dependences_models(
+                table=source["table_phenotypes"],
+                table_cohorts_models=(
+                    source_reference["table_linear_oestradiol_basis"]
+                ),
+                independences_summary=[
+                    "menstruation_phase_cycle",
+                    "menopause_ordinal",
+                    "sex_y", "age", "body_log", "cholesterol_imputation",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "season", "day_length", "region",
+                ],
+                filter_execution=True,
+                report=True,
+        ))
+        pass
+    if True:
+        pail_3 = (
+            drive_linear_regressions_cohorts_dependences_models(
+                table=source["table_phenotypes"],
+                table_cohorts_models=(
+                    source_reference["table_linear_testosterone_basis"]
+                ),
+                independences_summary=[
+                    "menstruation_phase_cycle",
+                    "menopause_ordinal",
+                    "sex_y", "age", "body_log", "cholesterol_imputation",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "season", "day_length", "region",
+                ],
+                filter_execution=True,
+                report=True,
+        ))
+        pass
+
     if False:
-        pail_vitamin_d_two = (
+        pail_10 = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
@@ -921,8 +958,15 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
     information["tables"]["table_regressions_vitamin_d_basis"] = (
-        pail_vitamin_d_one["table"]
+        pail_1["table"]
     )
+    information["tables"]["table_regressions_oestradiol_basis"] = (
+        pail_2["table"]
+    )
+    information["tables"]["table_regressions_testosterone_basis"] = (
+        pail_3["table"]
+    )
+
     #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
     #    pail_vitamin_d_two["table"]
     #)
