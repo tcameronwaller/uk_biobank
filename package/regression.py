@@ -872,37 +872,15 @@ def execute_procedure(
                 independences_summary=[
                     "menstruation_phase_cycle",
                     "menopause_ordinal",
-                    "sex_y", "age", "body_log",
+                    "sex_y", "age", "body_log", "cholesterol_imputation",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "season", "day_length", "region",
-                    #"site_indicator_leeds",
-                    #"site_indicator_bristol",
-                    #"site_indicator_newcastle",
-                    #"site_indicator_nottingham",
-                    #"site_indicator_liverpool",
-                    #"site_indicator_sheffield",
-                    #"site_indicator_reading",
-                    #"site_indicator_hounslow",
-                    #"site_indicator_bury",
-                    #"site_indicator_croydon",
-                    #"site_indicator_birmingham",
-                    #"site_indicator_middlesborough",
-                    #"site_indicator_stoke",
-                    #"site_indicator_glasgow",
-                    #"site_indicator_cardiff",
-                    #"site_indicator_edinburgh",
-                    #"site_indicator_oxford",
-                    #"site_indicator_manchester",
-                    #"site_indicator_barts",
-                    ###"site_indicator_stockport_pilot",
-                    ###"site_indicator_swansea",
-                    ###"site_indicator_wrexham",
                 ],
                 filter_execution=True,
                 report=True,
         ))
         pass
-    if True:
+    if False:
         pail_vitamin_d_two = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -941,9 +919,9 @@ def execute_procedure(
     information["tables"]["table_regressions_vitamin_d_basis"] = (
         pail_vitamin_d_one["table"]
     )
-    information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
-        pail_vitamin_d_two["table"]
-    )
+    #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
+    #    pail_vitamin_d_two["table"]
+    #)
     # Write product information to file.
     write_product(
         paths=paths,
