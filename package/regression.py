@@ -894,7 +894,8 @@ def execute_procedure(
                 independences_summary=[
                     "menstruation_phase_cycle",
                     "menopause_ordinal",
-                    "sex_y", "age", "body_log", "cholesterol_imputation",
+                    #"sex_y",
+                    "age", "body_log", "cholesterol_imputation",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "season", "day_length", "region",
                 ],
@@ -912,7 +913,8 @@ def execute_procedure(
                 independences_summary=[
                     "menstruation_phase_cycle",
                     "menopause_ordinal",
-                    "sex_y", "age", "body_log", "cholesterol_imputation",
+                    #"sex_y",
+                    "age", "body_log", "cholesterol_imputation",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "season", "day_length", "region",
                 ],
