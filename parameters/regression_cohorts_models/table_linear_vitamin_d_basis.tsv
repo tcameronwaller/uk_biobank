@@ -1,33 +1,34 @@
 execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence	model_note
-1	female_male	1	vitamin_d	1	1	1	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
-1	female_male	1	vitamin_d_log	2	1	1	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
-1	female_male	1	vitamin_d_imputation	3	1	1	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
-1	female_male	1	vitamin_d_imputation_log	4	1	1	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
-1	female_male	1	vitamin_d_imputation_log	4	2	2	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;day_length;region	joint model with ‘day_length’
-0	female_male	1	vitamin_d_imputation_log	4	3	3	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region;site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts	joint model with ‘site_indicator[s]’
-1	female_male	1	vitamin_d_imputation_log	4	4	4	age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “sex_y”
-1	female_male	1	vitamin_d_imputation_log	4	5	5	sex_y;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “age”
-1	female_male	1	vitamin_d_imputation_log	4	6	6	sex_y;age;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “body_log”
-1	female_male	1	vitamin_d_imputation_log	4	7	7	sex_y;age;body_log;alteration_sex_hormone;season;region	leave out “medication_vitamin_d”
-1	female_male	1	vitamin_d_imputation_log	4	8	8	sex_y;age;body_log;medication_vitamin_d;season;region	leave out “alteration_sex_hormone”
-1	female_male	1	vitamin_d_imputation_log	4	9	9	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;region	leave out “season”
-1	female_male	1	vitamin_d_imputation_log	4	10	10	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season	leave out “region”
-1	female_male	1	vitamin_d_imputation_log	4	11	11	age;body_log;medication_vitamin_d;alteration_sex_hormone;day_length;region	leave out “sex_y”
-1	female_male	1	vitamin_d_imputation_log	4	12	12	sex_y;body_log;medication_vitamin_d;alteration_sex_hormone;day_length;region	leave out “age”
-1	female_male	1	vitamin_d_imputation_log	4	13	13	sex_y;age;medication_vitamin_d;alteration_sex_hormone;day_length;region	leave out “body_log”
-1	female_male	1	vitamin_d_imputation_log	4	14	14	sex_y;age;body_log;alteration_sex_hormone;day_length;region	leave out “medication_vitamin_d”
-1	female_male	1	vitamin_d_imputation_log	4	15	15	sex_y;age;body_log;medication_vitamin_d;day_length;region	leave out “alteration_sex_hormone”
-1	female_male	1	vitamin_d_imputation_log	4	16	16	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;region	leave out “day_length”
-1	female_male	1	vitamin_d_imputation_log	4	17	17	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;day_length	leave out “region”
-1	female_male	1	vitamin_d_imputation_log	4	18	18	sex_y	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	19	19	age	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	20	20	body_log	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	21	21	medication_vitamin_d	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	22	22	alteration_sex_hormone	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	23	23	season	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	24	24	day_length	marginal model
-1	female_male	1	vitamin_d_imputation_log	4	25	25	region	marginal model
-0	female_male	1	vitamin_d_imputation_log	4	26	26	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts	marginal model
-1	female	2	vitamin_d_imputation_log	4	1	1	menopause_ordinal;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
-1	female_menstruation_regular	3	vitamin_d_imputation_log	4	1	1	menstruation_phase_cycle;menopause_ordinal;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
-1	male	4	vitamin_d_imputation_log	4	1	1	age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+1	female_male	1	vitamin_d	1	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
+1	female_male	1	vitamin_d_log	2	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
+1	female_male	1	vitamin_d_imputation	3	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
+1	female_male	1	vitamin_d_imputation_log	4	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
+1	female_male	1	vitamin_d_imputation	3	2	2	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;day_length;region	joint model with ‘day_length’
+0	female_male	1	vitamin_d_imputation	3	3	3	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region;site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts	joint model with ‘site_indicator[s]’
+1	female_male	1	vitamin_d_imputation	3	4	4	age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “sex_y”
+1	female_male	1	vitamin_d_imputation	3	5	5	sex_y;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “age”
+1	female_male	1	vitamin_d_imputation	3	6	6	sex_y;age;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “body_log”
+1	female_male	1	vitamin_d_imputation	3	7	7	sex_y;age;body_log;medication_vitamin_d;alteration_sex_hormone;season;region	leave out “cholesterol”
+1	female_male	1	vitamin_d_imputation	3	8	8	sex_y;age;body_log;cholesterol;alteration_sex_hormone;season;region	leave out “medication_vitamin_d”
+1	female_male	1	vitamin_d_imputation	3	9	9	sex_y;age;body_log;cholesterol;medication_vitamin_d;season;region	leave out “alteration_sex_hormone”
+1	female_male	1	vitamin_d_imputation	3	10	10	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	leave out “season”
+1	female_male	1	vitamin_d_imputation	3	11	11	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season	leave out “region”
+1	female_male	1	vitamin_d_imputation	3	19	19	sex_y	marginal model
+1	female_male	1	vitamin_d_imputation	3	20	20	age	marginal model
+1	female_male	1	vitamin_d_imputation	3	21	21	body_log	marginal model
+1	female_male	1	vitamin_d_imputation	3	22	22	cholesterol	marginal model
+1	female_male	1	vitamin_d_imputation	3	23	23	medication_vitamin_d	marginal model
+1	female_male	1	vitamin_d_imputation	3	24	24	alteration_sex_hormone	marginal model
+1	female_male	1	vitamin_d_imputation	3	25	25	season	marginal model
+1	female_male	1	vitamin_d_imputation	3	26	26	day_length	marginal model
+1	female_male	1	vitamin_d_imputation	3	27	27	region	marginal model
+0	female_male	1	vitamin_d_imputation	3	28	28	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts	marginal model
+1	female_male_winter	2	vitamin_d_imputation	3	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	female_male_summer	3	vitamin_d_imputation	3	1	1	sex_y;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	female	4	vitamin_d_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+1	female_menstruation_regular	5	vitamin_d_imputation	3	1	1	menstruation_phase_cycle;menopause_ordinal;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+1	female_winter	6	vitamin_d_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	female_summer	7	vitamin_d_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	male	8	vitamin_d_imputation	3	1	1	age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+1	male_winter	9	vitamin_d_imputation	3	1	1	age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	male_summer	10	vitamin_d_imputation	3	1	1	age;body_log;cholesterol;medication_vitamin_d;alteration_sex_hormone;region	joint model

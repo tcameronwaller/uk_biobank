@@ -4523,9 +4523,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     # Females and males together in seasons
 
     record = dict()
-    record["name"] = "female_male_season_winter"
-    record["cohort"] = "female_male_season_winter"
-    record["cohort_model"] = "female_male_season_winter"
+    record["name"] = "female_male_winter"
+    record["cohort"] = "female_male_winter"
+    record["cohort_model"] = "female_male_winter"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
@@ -4538,9 +4538,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_male_season_summer"
-    record["cohort"] = "female_male_season_summer"
-    record["cohort_model"] = "female_male_season_summer"
+    record["name"] = "female_male_summer"
+    record["cohort"] = "female_male_summer"
+    record["cohort_model"] = "female_male_summer"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
@@ -4555,9 +4555,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     # Females in seasons
 
     record = dict()
-    record["name"] = "female_season_winter"
-    record["cohort"] = "female_season_winter"
-    record["cohort_model"] = "female_season_winter"
+    record["name"] = "female_winter"
+    record["cohort"] = "female_winter"
+    record["cohort_model"] = "female_winter"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
@@ -4571,9 +4571,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     records.append(record)
 
     record = dict()
-    record["name"] = "female_season_summer"
-    record["cohort"] = "female_season_summer"
-    record["cohort_model"] = "female_season_summer"
+    record["name"] = "female_summer"
+    record["cohort"] = "female_summer"
+    record["cohort_model"] = "female_summer"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
@@ -4589,9 +4589,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     # Males in seasons
 
     record = dict()
-    record["name"] = "male_season_winter"
-    record["cohort"] = "male_season_winter"
-    record["cohort_model"] = "male_season_winter"
+    record["name"] = "male_winter"
+    record["cohort"] = "male_winter"
+    record["cohort_model"] = "male_winter"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
@@ -4604,9 +4604,9 @@ def stratify_phenotype_cohorts_set_sex_season(
     records.append(record)
 
     record = dict()
-    record["name"] = "male_season_summer"
-    record["cohort"] = "male_season_summer"
-    record["cohort_model"] = "male_season_summer"
+    record["name"] = "male_summer"
+    record["cohort"] = "male_summer"
+    record["cohort_model"] = "male_summer"
     record["category"] = "season"
     record["phenotype"] = "null"
     record["menstruation"] = False
