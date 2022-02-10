@@ -568,7 +568,7 @@ def drive_linear_regressions_cohorts_dependences_models(
             print("cohort: " + cohort)
             print("dependent variable: " + dependence)
             print("model: " + model)
-            #print(table_cohort)
+            print(table_cohort)
         # Organize record.
         record = dict()
         record["cohort"] = cohort
