@@ -1,5 +1,5 @@
 execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence	model_note
-1	female_male	1	vitamin_d	1	1	1	sex_y;age;body_log;cholesterol_imputation_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
+1	female_male	1	vitamin_d	1	1	1	sex_y;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
 1	female_male	1	vitamin_d_log	2	1	1	sex_y;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
 1	female_male	1	vitamin_d_imputation	3	1	1	sex_y;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
 1	female_male	1	vitamin_d_imputation_log	4	1	1	sex_y;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with ‘season’
