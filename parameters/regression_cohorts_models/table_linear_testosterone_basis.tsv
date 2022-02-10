@@ -1,0 +1,16 @@
+execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence	model_note
+1	female	1	testosterone	1	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	female	1	testosterone_log	2	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	female	1	testosterone_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	female	1	testosterone_imputation_log	4	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	female	1	testosterone_imputation	3	2	2	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;day_length;region	joint model with “day_length”
+1	female_winter	2	testosterone_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	female_summer	3	testosterone_imputation	3	1	1	menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	female_menstruation_regular	4	testosterone_imputation	3	1	1	menstruation_phase_cycle;menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+1	male	5	testosterone	1	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	male	5	testosterone_log	2	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	male	5	testosterone_imputation	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	male	5	testosterone_imputation_log	4	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+1	male	5	testosterone_imputation	3	2	2	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;day_length;region	joint model with “day_length”
+1	male_winter	6	testosterone_imputation	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;region	joint model
+1	male_summer	7	testosterone_imputation	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;region	joint model

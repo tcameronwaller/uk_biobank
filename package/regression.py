@@ -182,7 +182,11 @@ def read_source_cohort_model_reference(
     file_names = [
         #"table_linear_hormones_sex_age_menopause.tsv",
         "table_linear_vitamin_d_basis.tsv",
-        "table_linear_vitamin_d_psychiatry.tsv",
+        "table_linear_oestradiol_basis.tsv",
+        "table_linear_testosterone_basis.tsv",
+        #"table_linear_steroid_globulin_basis.tsv",
+        #"table_linear_albumin_basis.tsv",
+        #"table_linear_vitamin_d_psychiatry.tsv",
         #"table_linear_hormones_alcoholism_any.tsv",
         #"table_linear_hormones_alcoholism_1.tsv",
         #"table_linear_hormones_bipolar_loose.tsv",
@@ -568,7 +572,7 @@ def drive_linear_regressions_cohorts_dependences_models(
             print("cohort: " + cohort)
             print("dependent variable: " + dependence)
             print("model: " + model)
-            print(table_cohort)
+            #print(table_cohort)
         # Organize record.
         record = dict()
         record["cohort"] = cohort
