@@ -186,7 +186,7 @@ def read_source_cohort_model_reference(
         "table_linear_testosterone_basis.tsv",
         #"table_linear_steroid_globulin_basis.tsv",
         #"table_linear_albumin_basis.tsv",
-        #"table_linear_vitamin_d_psychiatry.tsv",
+        "table_linear_vitamin_d_psychiatry.tsv",
         #"table_linear_hormones_alcoholism_any.tsv",
         #"table_linear_hormones_alcoholism_1.tsv",
         #"table_linear_hormones_bipolar_loose.tsv",
@@ -923,30 +923,30 @@ def execute_procedure(
         ))
         pass
 
-    if False:
-        pail_10 = (
+    if True:
+        pail_4 = (
             drive_linear_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
                     source_reference["table_linear_vitamin_d_psychiatry"]
                 ),
                 independences_summary=[
-                    "neuroticism",
-                    "neuroticism_log",
+                    #"neuroticism",
+                    #"neuroticism_log",
                     "depression_control_case_loose",
                     "depression_control_case_strict",
                     "bipolar_control_case_loose",
                     "bipolar_control_case_strict",
-                    "alcohol_current",
-                    "alcohol_frequency",
-                    "alcohol_drinks_monthly",
-                    "alcohol_audit",
-                    "alcohol_auditc",
-                    "alcohol_auditp",
-                    "alcoholism_control_case_any",
-                    "alcoholism_control_case_1",
+                    #"alcohol_current",
+                    #"alcohol_frequency",
+                    #"alcohol_drinks_monthly",
+                    #"alcohol_audit",
+                    #"alcohol_auditc",
+                    #"alcohol_auditp",
+                    #"alcoholism_control_case_any",
+                    #"alcoholism_control_case_1",
                     "menopause_ordinal",
-                    "sex_y", "age", "body_log",
+                    "sex_y", "age", "body_log", "cholesterol_imputation",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "season", "region",
                 ],
@@ -968,10 +968,9 @@ def execute_procedure(
     information["tables"]["table_regressions_testosterone_basis"] = (
         pail_3["table"]
     )
-
-    #information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
-    #    pail_vitamin_d_two["table"]
-    #)
+    information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
+        pail_4["table"]
+    )
     # Write product information to file.
     write_product(
         paths=paths,
