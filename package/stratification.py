@@ -4531,7 +4531,6 @@ def stratify_phenotype_cohorts_set_sex_season(
     record["menstruation"] = False
     record["table"] = table.loc[
         (
-            (table["pregnancy"] == 0) &
             (table["season_stratification"] == 0)
         ), :
     ]
@@ -4546,7 +4545,6 @@ def stratify_phenotype_cohorts_set_sex_season(
     record["menstruation"] = False
     record["table"] = table.loc[
         (
-            (table["pregnancy"] == 0) &
             (table["season_stratification"] == 2)
         ), :
     ]
