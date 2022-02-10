@@ -3180,6 +3180,7 @@ def define_biochemistry_fields_measurement_reportability_missingness():
     return records
 
 
+# review: TCW, 09 February 2022
 def convert_hormone_concentration_units_moles_per_liter(
     table=None,
     factors_concentration=None,
@@ -3187,23 +3188,25 @@ def convert_hormone_concentration_units_moles_per_liter(
     """
     Converts hormone concentrations to units of moles per liter (mol/L).
 
-    UK Biobank field 30600, concentration in grams per liter (g/L) of albumin in
-    blood
+    UK Biobank data-field 30600, concentration in grams per liter (g/L) of
+    albumin in blood
 
-    UK Biobank field 30830, concentration in nanomoles per liter (nmol/L) of
-    steroid hormone binding globulin (SHBG) in blood
+    UK Biobank data-field 30830, concentration in nanomoles per liter (nmol/L)
+    of steroid hormone binding globulin (SHBG) in blood
 
-    UK Biobank field 30800, concentration in picomoles per liter (pmol/L) of
-    oestradiol in blood
+    UK Biobank data-field 30800, concentration in picomoles per liter (pmol/L)
+    of oestradiol in blood
 
-    UK Biobank field 30850, concentration in nanomoles per liter (nmol/L) of
-    total testosterone in blood
+    UK Biobank data-field 30850, concentration in nanomoles per liter (nmol/L)
+    of total testosterone in blood
 
-    UK Biobank field 30890, concentration in nanomoles per liter (nmol/L) of
-    vitamin D in blood
+    UK Biobank data-field 30890, concentration in nanomoles per liter (nmol/L)
+    of vitamin D in blood
 
     UK Biobank data-field 30690, concentration in millimoles per liter (mmol/L)
     of cholesterol in blood
+
+    https://www.nist.gov/pml/weights-and-measures/metric-si-prefixes
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -3227,31 +3230,37 @@ def convert_hormone_concentration_units_moles_per_liter(
             (row["30600-0.0"] / 66472.2) * factors_concentration["albumin"]
         ),
         axis="columns", # apply function to each row
-    ) # 1 mole = 66472.2 g
+    ) # 1 mole = 66472.2 g = 66.5 kDa
     table["steroid_globulin"] = table.apply(
         lambda row: float(
             (row["30830-0.0"] / 1E9) * factors_concentration["steroid_globulin"]
         ),
         axis="columns", # apply function to each row
-    ) # 1 mol = 1E9 nmol
+    ) # 1 mol = 1E9 nanomole
     table["oestradiol"] = table.apply(
         lambda row: float(
             (row["30800-0.0"] / 1E12) * factors_concentration["oestradiol"]
         ),
         axis="columns", # apply function to each row
-    ) # 1 mol = 1E12 pmol
+    ) # 1 mol = 1E12 picomole
     table["testosterone"] = table.apply(
         lambda row: float(
             (row["30850-0.0"] / 1E9) * factors_concentration["testosterone"]
         ),
         axis="columns", # apply function to each row
-    ) # 1 mol = 1E9 nmol
+    ) # 1 mol = 1E9 nanomole
     table["vitamin_d"] = table.apply(
         lambda row: float(
             (row["30890-0.0"] / 1E9) * factors_concentration["vitamin_d"]
         ),
         axis="columns", # apply function to each row
-    ) # 1 mol = 1E9 nmol
+    ) # 1 mol = 1E9 nanomole
+    table["cholesterol"] = table.apply(
+        lambda row: float(
+            (row["30690-0.0"] / 1E3) * factors_concentration["cholesterol"]
+        ),
+        axis="columns", # apply function to each row
+    ) # 1 mol = 1E3 millimole
     # Return information.
     return table
 
@@ -3623,7 +3632,7 @@ def determine_hormone_binary_detection(
             # measurement, do not assign definitive value.
             value = float("nan")
     else:
-        # Hormone's measurement has a not missing value.
+        # Hormone's measurement has a non-missing value.
         value = 1
     # Return information.
     return value
@@ -5896,15 +5905,16 @@ def organize_sex_hormone_variables(
     ##########
     # Transform variables' values to normalize distributions.
     columns_hormones_normalization = [
-        "vitamin_d", "vitamin_d_imputation",
-        "albumin", "albumin_imputation",
-        "steroid_globulin", "steroid_globulin_imputation",
         "oestradiol", "oestradiol_imputation",
         "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
         "oestradiol_free", "oestradiol_free_imputation",
         "testosterone", "testosterone_imputation",
         "testosterone_bioavailable", "testosterone_bioavailable_imputation",
         "testosterone_free", "testosterone_free_imputation",
+        "vitamin_d", "vitamin_d_imputation",
+        "steroid_globulin", "steroid_globulin_imputation",
+        "albumin", "albumin_imputation",
+        "cholesterol", "cholesterol_imputation",
     ]
     table = utility.transform_normalize_table_continuous_ratio_variables(
         columns=columns_hormones_normalization,
@@ -5950,6 +5960,8 @@ def organize_sex_hormone_variables(
         "testosterone_bioavailable_imputation",
         "testosterone_free",
         "testosterone_free_imputation",
+        "cholesterol",
+        "cholesterol_imputation",
     ]
     table_report = table_report.loc[
         :, table_report.columns.isin(columns_report)
@@ -5970,10 +5982,12 @@ def organize_sex_hormone_variables(
         print(table_report.dtypes)
         utility.print_terminal_partition(level=3)
 
+        table_correlation = table.copy(deep=True)
+
         utility.print_terminal_partition(level=2)
         print("correlations in MALES!")
-        table_male = table_clean.loc[
-            (table_clean["sex_text"] == "male"), :
+        table_male = table_correlation.loc[
+            (table_correlation["sex_text"] == "male"), :
         ]
         utility.print_terminal_partition(level=3)
         organize_report_column_pair_correlations(
@@ -6004,13 +6018,39 @@ def organize_sex_hormone_variables(
         organize_report_column_pair_correlations(
             column_one="oestradiol_free",
             column_two="oestradiol_bioavailable",
+            table=table_male,
+        )
+        organize_report_column_pair_correlations(
+            column_one="vitamin_d",
+            column_two="oestradiol",
+            table=table_male,
+        )
+        organize_report_column_pair_correlations(
+            column_one="vitamin_d",
+            column_two="testosterone",
+            table=table_male,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="vitamin_d",
+            table=table_male,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="oestradiol",
+            table=table_male,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="testosterone",
             table=table_male,
         )
 
+
         utility.print_terminal_partition(level=2)
         print("correlations in FEMALES!")
-        table_female = table.loc[
-            (table["sex_text"] == "female"), :
+        table_female = table_correlation.loc[
+            (table_correlation["sex_text"] == "female"), :
         ]
         utility.print_terminal_partition(level=3)
         organize_report_column_pair_correlations(
@@ -6041,6 +6081,31 @@ def organize_sex_hormone_variables(
         organize_report_column_pair_correlations(
             column_one="oestradiol_free",
             column_two="oestradiol_bioavailable",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="vitamin_d",
+            column_two="oestradiol",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="vitamin_d",
+            column_two="testosterone",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="vitamin_d",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="oestradiol",
+            table=table_female,
+        )
+        organize_report_column_pair_correlations(
+            column_one="cholesterol",
+            column_two="testosterone",
             table=table_female,
         )
 
