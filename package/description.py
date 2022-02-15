@@ -643,7 +643,7 @@ def organize_cohort_hormone_missingness_record(
     #table_missing = table[table[column_variable].isna()]
     table_missing = table.loc[
         (
-            (pandas.isna(table[column_variable])
+            (pandas.isna(table[column_variable]))
         ), :
     ]
     table_missing_range = table.loc[
