@@ -6594,14 +6594,15 @@ def interpret_oophorectomy(
 
 
 # review: TCW on 17 January 2022
+# review TCW on 15 February 2022
 def interpret_pregnancy(
     field_3140=None,
 ):
     """
     Intepret UK Biobank's coding for data-field 3140.
 
-    An alternative method would interpret "unsure" pregnancy as potential
-    pregnancy. This method would assume that persons who were likely or trying
+    This method interprets self-report "unsure" pregnancy as potential
+    pregnancy. This method assumes that persons who were likely or trying
     to become pregnant might be more likely to answer "unsure".
 
     Data-Field "3140": "Pregnant"
@@ -6636,8 +6637,9 @@ def interpret_pregnancy(
             value = 1
         elif (1.5 <= field_3140 and field_3140 < 2.5):
             # 2: "Unsure"
-            # Do not interpret "unsure" pregnancy as potential pregnancy.
-            value = float("nan")
+            # Interpret "unsure" pregnancy as potential pregnancy.
+            #value = float("nan")
+            value = 1
         else:
             # uninterpretable
             value = float("nan")
@@ -8057,18 +8059,21 @@ def report_female_menopause_three_groups(
     table_female_premenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[female_menopause] == 0)
         ), :
     ]
     table_female_perimenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[female_menopause] == 1)
         ), :
     ]
     table_female_postmenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[female_menopause] == 2)
         ), :
     ]
@@ -8084,6 +8089,7 @@ def report_female_menopause_three_groups(
     utility.print_terminal_partition(level=3)
     print("menopause variable: " + str(female_menopause))
     print("... all counts specific to female persons ...")
+    print("... all counts except for total females exclude pregnancy...")
     utility.print_terminal_partition(level=4)
     print("total: " + str(count_female))
     print("pre-menopause: " + str(count_premenopause))
@@ -8129,6 +8135,7 @@ def report_combination_female_regular_menstruation_by_menopause(
     table_regular_premenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[menstruation_regular_range] == 1) &
             (table[menopause] == 0)
         ), :
@@ -8136,6 +8143,7 @@ def report_combination_female_regular_menstruation_by_menopause(
     table_regular_perimenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[menstruation_regular_range] == 1) &
             (table[menopause] == 1)
         ), :
@@ -8143,6 +8151,7 @@ def report_combination_female_regular_menstruation_by_menopause(
     table_regular_postmenopause = table.loc[
         (
             (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
             (table[menstruation_regular_range] == 1) &
             (table[menopause] == 2)
         ), :
@@ -8159,6 +8168,7 @@ def report_combination_female_regular_menstruation_by_menopause(
     utility.print_terminal_partition(level=3)
     print("menopause variable: " + str(menopause))
     print("... all counts specific to female persons ...")
+    print("... all counts except for total females exclude pregnancy...")
     utility.print_terminal_partition(level=4)
     print("total: " + str(count_female))
     print(
@@ -8225,6 +8235,7 @@ def report_alteration_sex_hormones_by_female_menopause(
         table_female_premenopause_alteration = table.loc[
             (
                 (table["sex_text"] == "female") &
+                (table["pregnancy"] == 0) &
                 (table[menopause] == 0) &
                 (table[alteration_sex_hormone] == 1)
             ), :
@@ -8232,6 +8243,7 @@ def report_alteration_sex_hormones_by_female_menopause(
         table_female_perimenopause_alteration = table.loc[
             (
                 (table["sex_text"] == "female") &
+                (table["pregnancy"] == 0) &
                 (table[menopause] == 1) &
                 (table[alteration_sex_hormone] == 1)
             ), :
@@ -8239,6 +8251,7 @@ def report_alteration_sex_hormones_by_female_menopause(
         table_female_postmenopause_alteration = table.loc[
             (
                 (table["sex_text"] == "female") &
+                (table["pregnancy"] == 0) &
                 (table[menopause] == 2) &
                 (table[alteration_sex_hormone] == 1)
             ), :
@@ -8246,6 +8259,7 @@ def report_alteration_sex_hormones_by_female_menopause(
         table_female_menstruation_alteration = table.loc[
             (
                 (table["sex_text"] == "female") &
+                (table["pregnancy"] == 0) &
                 (table[menstruation_regular_range] == 1) &
                 (table[alteration_sex_hormone] == 1)
             ), :
@@ -8263,6 +8277,7 @@ def report_alteration_sex_hormones_by_female_menopause(
         utility.print_terminal_partition(level=3)
         utility.print_terminal_partition(level=4)
         print("counts for: FEMALES")
+        print("... all counts except for total females exclude pregnancy...")
         utility.print_terminal_partition(level=5)
         print("count of total: " + str(count_female))
         print(
