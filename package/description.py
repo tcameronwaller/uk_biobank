@@ -572,12 +572,17 @@ def organize_cohort_model_variables_summary_long_records(
 # TODO: TCW 30 July 2021
 # TODO: work on this... report separate percentages for reportability LOW and reportability HIGH
 
+
+# TODO: TCW 15 February 2022
+# TODO: report ALL percentage relative to the TOTAL size of the cohort!!!
+
 def organize_cohort_hormone_missingness_record(
     name_cohort=None,
-    name_hormone=None,
-    column_hormone=None,
-    column_reportability_limit=None,
+    name_variable=None,
+    column_variable=None,
+    column_detection=None,
     column_missingness_range=None,
+    column_reportability_limit=None,
     table=None,
 ):
     """
@@ -591,13 +596,19 @@ def organize_cohort_hormone_missingness_record(
     # missing with reportability "not reportable ... too low": <count> (<percentage>%)
     # missing with both annotations: <count> (<percentage>%)
 
-    # "<hormone>_reportability_limit" 1: not reportable due to measurement less than limit of detection
-    # "<hormone>_missingness_range" 1: missing due to measurement beyond detection range
+    "[variable]_missingness_range" 1: missing due to measurement beyond
+    detection range
+
+    "[variable]_reportability_limit" 1: not reportable due to measurement less
+    than limit of detection
+    "[variable]_reportability_limit" 2: not reportable due to measurement
+    greater than limit of detection
 
     arguments:
         name_cohort (str): name of cohort
-        name_hormone (str): name of hormone
-        column_hormone (str): name of table's column for hormone's measurements
+        name_variable (str): name of variable for report
+        column_variable (str): name of table's column for variable's
+            measurements
         column_reportability_limit (str): name of table's column for hormone's
             reportability less than limit of detection
         column_missingness_range (str): name of table's column for hormone's
@@ -615,94 +626,155 @@ def organize_cohort_hormone_missingness_record(
     # Collect information for record.
     record = dict()
     record["cohort"] = str(name_cohort)
-    record["hormone"] = str(name_hormone)
+    record["variable"] = str(name_variable)
     # Copy information.
     table = table.copy(deep=True)
 
+    # Stratify table.
     # Select relevant rows of the table.
     #array_measurement_total = copy.deepcopy(table[name].to_numpy())
     #array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
-    table_measurement_valid = table.dropna(
+    table_not_missing = table.dropna(
         axis="index",
         how="any",
-        subset=[column_hormone],
+        subset=[column_variable],
         inplace=False,
     )
-    table_measurement_missing = table[table[column_hormone].isna()]
-    table_missingness_range = table_measurement_missing.loc[
+    #table_missing = table[table[column_variable].isna()]
+    table_missing = table.loc[
         (
-            (table_measurement_missing[column_missingness_range] == 1)
+            (pandas.isna(table[column_variable])
         ), :
     ]
-    table_reportability_limit = table_measurement_missing.loc[
+    table_missing_range = table.loc[
         (
-            (table_measurement_missing[column_reportability_limit] == 1)
+            #(pandas.isna(table[column_variable]) &
+            (table[column_missingness_range] == 1)
         ), :
     ]
-    table_both = table_measurement_missing.loc[
+    table_reportability_low = table.loc[
         (
-            (table_measurement_missing[column_missingness_range] == 1) &
-            (table_measurement_missing[column_reportability_limit] == 1)
+            #(pandas.isna(table[column_variable]) &
+            (table[column_reportability_limit] == 1)
+        ), :
+    ]
+    table_reportability_high = table.loc[
+        (
+            #(pandas.isna(table[column_variable]) &
+            (table[column_reportability_limit] == 2)
+        ), :
+    ]
+    table_detectable = table.loc[
+        (table[column_detection] == 1), :
+    ]
+    table_undetectable = table.loc[
+        (table[column_detection] == 0), :
+    ]
+    table_undetectable_low = table.loc[
+        (
+            (table[column_detection] == 0) &
+            (table[column_reportability_limit] == 1)
+        ), :
+    ]
+    table_undetectable_high = table.loc[
+        (
+            (table[column_detection] == 0) &
+            (table[column_reportability_limit] == 2)
         ), :
     ]
 
     # Count records.
     #count_measurement_total = int(array_measurement_total.size)
     #count_measurement_valid = int(array_measurement_valid.size)
-    count_cohort_total = table.shape[0]
-    count_measurement_valid = table_measurement_valid.shape[0]
-    count_measurement_missing = table_measurement_missing.shape[0]
-    count_missingness_range = table_missingness_range.shape[0]
-    count_reportability_limit = table_reportability_limit.shape[0]
-    count_both = table_both.shape[0]
+    count_total = table.shape[0]
+    count_not_missing = table_not_missing.shape[0]
+    count_missing = table_missing.shape[0]
+    count_missing_range = table_missing_range.shape[0]
+    count_reportability_low = table_reportability_low.shape[0]
+    count_reportability_high = table_reportability_high.shape[0]
+    count_detectable = table_detectable.shape[0]
+    count_undetectable = table_undetectable.shape[0]
+    count_undetectable_low = table_undetectable_low.shape[0]
+    count_undetectable_high = table_undetectable_high.shape[0]
 
     # Calculate percentages.
-    if (count_cohort_total > 0):
-        percentage_measurement_valid = round(
-            ((count_measurement_valid / count_cohort_total) * 100), 3
+    if (count_total > 0):
+        percentage_not_missing = round(
+            ((count_not_missing / count_total) * 100), 3
         )
-        percentage_measurement_missing = round(
-            ((count_measurement_missing / count_cohort_total) * 100), 3
+        percentage_missing = round(
+            ((count_missing / count_total) * 100), 3
+        )
+        percentage_missing_range = round(
+            ((count_missing_range / count_total) * 100), 3
+        )
+        percentage_reportability_low = round(
+            ((count_reportability_low / count_total) * 100), 3
+        )
+        percentage_reportability_high = round(
+            ((count_reportability_high / count_total) * 100), 3
+        )
+        percentage_detectable = round(
+            ((count_detectable / count_total) * 100), 3
+        )
+        percentage_undetectable = round(
+            ((count_undetectable / count_total) * 100), 3
+        )
+        percentage_undetectable_low = round(
+            ((count_undetectable_low / count_total) * 100), 3
+        )
+        percentage_undetectable_high = round(
+            ((count_undetectable_high / count_total) * 100), 3
         )
     else:
-        percentage_measurement_valid = float("nan")
-        percentage_measurement_missing = float("nan")
-    if (count_measurement_missing > 0):
-        percentage_missingness_range = round(
-            ((count_missingness_range / count_measurement_missing) * 100), 3
-        )
-        percentage_reportability_limit = round(
-            ((count_reportability_limit / count_measurement_missing) * 100), 3
-        )
-        percentage_both = round(
-            ((count_both / count_measurement_missing) * 100), 3
-        )
-    else:
-        percentage_missingness_range = float("nan")
-        percentage_reportability_limit = float("nan")
-        percentage_both = float("nan")
+        percentage_not_missing = float("nan")
+        percentage_missing = float("nan")
+        percentage_missing_range = float("nan")
+        percentage_reportability_low = float("nan")
+        percentage_reportability_high = float("nan")
+        percentage_detectable = float("nan")
+        percentage_undetectable = float("nan")
+        percentage_undetectable_low = float("nan")
+        percentage_undetectable_high = float("nan")
+        pass
 
     # Collect information for record.
-    record["count_cohort_samples"] = count_cohort_total
-    record["measurement_valid"] = str(
-        str(count_measurement_valid) +
-        " (" + str(percentage_measurement_valid) + "%)"
+    record["count_cohort_samples"] = count_total
+    record["not_missing"] = str(
+        str(count_not_missing) +
+        " (" + str(percentage_not_missing) + "%)"
     )
-    record["measurement_missingness"] = str(
-        str(count_measurement_missing) +
-        " (" + str(percentage_measurement_missing) + "%)"
+    record["missing"] = str(
+        str(count_missing) +
+        " (" + str(percentage_missing) + "%)"
     )
-    record["missingness_range"] = str(
-        str(count_missingness_range) +
-        " (" + str(percentage_missingness_range) + "%)"
+    record["missing_range"] = str(
+        str(count_missing_range) +
+        " (" + str(percentage_missing_range) + "%)"
     )
-    record["reportability_low"] = str(
-        str(count_reportability_limit) +
-        " (" + str(percentage_reportability_limit) + "%)"
+    record["unreportable_low"] = str(
+        str(count_reportability_low) +
+        " (" + str(percentage_reportability_low) + "%)"
     )
-    record["both_missingness_reportability"] = str(
-        str(count_both) +
-        " (" + str(percentage_both) + "%)"
+    record["unreportable_high"] = str(
+        str(count_reportability_high) +
+        " (" + str(percentage_reportability_high) + "%)"
+    )
+    record["detectable"] = str(
+        str(count_detectable) +
+        " (" + str(percentage_detectable) + "%)"
+    )
+    record["undetectable"] = str(
+        str(count_undetectable) +
+        " (" + str(percentage_undetectable) + "%)"
+    )
+    record["undetectable_low"] = str(
+        str(count_undetectable_low) +
+        " (" + str(percentage_undetectable_low) + "%)"
+    )
+    record["undetectable_high"] = str(
+        str(count_undetectable_high) +
+        " (" + str(percentage_undetectable_high) + "%)"
     )
     # Return information.
     return record
@@ -710,6 +782,7 @@ def organize_cohort_hormone_missingness_record(
 
 def organize_cohorts_phenotypes_hormones_missingness(
     table=None,
+    report=None,
 ):
     """
     Organizes a summary table about missingness of hormone measurements in
@@ -718,6 +791,7 @@ def organize_cohorts_phenotypes_hormones_missingness(
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
+        report (bool): whether to print reports
 
     raises:
 
@@ -728,36 +802,36 @@ def organize_cohorts_phenotypes_hormones_missingness(
 
     # Copy information.
     table = table.copy(deep=True)
-    # Define hormones.
-    hormones = list()
-    hormones.append("vitamin_d")
-    hormones.append("albumin")
-    hormones.append("steroid_globulin")
-    hormones.append("oestradiol")
-    hormones.append("testosterone")
+    # Define measurements.
+    measurements = list()
+    measurements.append("albumin")
+    measurements.append("steroid_globulin")
+    measurements.append("cholesterol")
+    measurements.append("vitamin_d")
+    measurements.append("testosterone")
+    measurements.append("oestradiol")
     # Define cohorts for description.
-    pail_phenotypes = ukb_strat.stratify_cohorts_models_phenotypes_sets(
+    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
         table=table,
     )
     # Collect summary records and construct table.
     records = list()
     # Iterate on cohorts.
-    for collection_cohort in pail_phenotypes:
+    for collection_cohort in records_cohorts:
         # Iterate on hormones.
-        for hormone in hormones:
-            reportability_limit = str(
-                str(hormone) + "_reportability_limit"
-            )
-            missingness_range = str(
-                str(hormone) + "_missingness_range"
-            )
+        for measurement in measurements:
+            # Determine column names.
+            detection = str(str(measurement) + "_detection")
+            missingness_range = str(str(measurement) + "_missingness_range")
+            reportability_limit = str(str(measurement) + "_reportability_limit")
             # Organize information in record.
             record = organize_cohort_hormone_missingness_record(
                 name_cohort=collection_cohort["name"],
-                name_hormone=hormone,
-                column_hormone=hormone,
-                column_reportability_limit=reportability_limit,
+                name_variable=measurement,
+                column_variable=measurement,
+                column_detection=detection,
                 column_missingness_range=missingness_range,
+                column_reportability_limit=reportability_limit,
                 table=collection_cohort["table"],
             )
             # Collect records.
@@ -766,6 +840,14 @@ def organize_cohorts_phenotypes_hormones_missingness(
         pass
     # Organize table.
     table_missingness = pandas.DataFrame(data=records)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_cohorts_phenotypes_hormones_missingness()")
+        utility.print_terminal_partition(level=3)
+        print(table_missingness)
+        pass
     # Return information.
     return table_missingness
 
@@ -1228,7 +1310,6 @@ def execute_describe_cohorts_models_phenotypes(
             directories and files
         report (bool): whether to print reports
 
-
     raises:
 
     returns:
@@ -1247,75 +1328,79 @@ def execute_describe_cohorts_models_phenotypes(
     #    report=report,
     #)
 
+    # Organize report summary for missingness in biochemical measurements.
     table_missingness = organize_cohorts_phenotypes_hormones_missingness(
         table=table,
+        report=report,
     )
 
-    ##########
+    if False:
 
-    # Prepare table to summarize phenotype variables across cohorts and models.
-    # These cohorts and models are simple and do not include multiple covariates
-    # for genetic analyses.
-    pail_phenotypes = (
-        ukb_strat.stratify_cohorts_models_phenotypes_sets(
-        table=table,
-    ))
-    # Collect summary records and construct table.
-    records = list()
-    for collection in pail_phenotypes:
-        records_cohort = organize_cohort_model_variables_summary_long_records(
-            name=collection["name"],
-            cohort_model=collection["cohort_model"],
-            category=collection["category"],
-            table=collection["table"],
-        )
-        records.extend(records_cohort)
-    # Organize table.
-    table_phenotypes = pandas.DataFrame(data=records)
+        ##########
 
-    ##########
-
-    if (genotype_cohorts):
-        # Read source information from file.
-        table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
-            path_dock=path_dock,
-            report=report,
-        )
-        # Prepare table to summarize phenotype variables across cohorts and models
+        # Prepare table to summarize phenotype variables across cohorts and models.
+        # These cohorts and models are simple and do not include multiple covariates
         # for genetic analyses.
-        if (set == "sex_hormones"):
-            pail_genotypes = (
-                ukb_strat.stratify_genotype_cohorts_linear_set_sex_hormones(
-                    table=table,
-                    table_kinship_pairs=table_kinship_pairs,
-                    report=report,
-            ))
-        elif (set == "bipolar_disorder_body"):
-            pail_genotypes = (
-                ukb_strat.stratify_cohorts_genotypes_set_bipolar_body(
-                    table=table,
-                    table_kinship_pairs=table_kinship_pairs,
-                    report=report,
-            ))
-        else:
-            print("set of cohorts and models unrecognizable...")
-            pail_genotypes = list()
+        pail_phenotypes = (
+            ukb_strat.stratify_cohorts_models_phenotypes_sets(
+            table=table,
+        ))
         # Collect summary records and construct table.
         records = list()
-        for collection in pail_genotypes:
-            record = organize_cohort_model_variables_summary_wide_record(
+        for collection in pail_phenotypes:
+            records_cohort = organize_cohort_model_variables_summary_long_records(
                 name=collection["name"],
                 cohort_model=collection["cohort_model"],
                 category=collection["category"],
                 table=collection["table"],
             )
-            records.append(record)
+            records.extend(records_cohort)
         # Organize table.
-        table_genotypes = pandas.DataFrame(data=records)
-    else:
-        table_genotypes = pandas.DataFrame()
+        table_phenotypes = pandas.DataFrame(data=records)
 
-    ##########
+        ##########
+
+        if (genotype_cohorts):
+            # Read source information from file.
+            table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
+                path_dock=path_dock,
+                report=report,
+            )
+            # Prepare table to summarize phenotype variables across cohorts and models
+            # for genetic analyses.
+            if (set == "sex_hormones"):
+                pail_genotypes = (
+                    ukb_strat.stratify_genotype_cohorts_linear_set_sex_hormones(
+                        table=table,
+                        table_kinship_pairs=table_kinship_pairs,
+                        report=report,
+                ))
+            elif (set == "bipolar_disorder_body"):
+                pail_genotypes = (
+                    ukb_strat.stratify_cohorts_genotypes_set_bipolar_body(
+                        table=table,
+                        table_kinship_pairs=table_kinship_pairs,
+                        report=report,
+                ))
+            else:
+                print("set of cohorts and models unrecognizable...")
+                pail_genotypes = list()
+            # Collect summary records and construct table.
+            records = list()
+            for collection in pail_genotypes:
+                record = organize_cohort_model_variables_summary_wide_record(
+                    name=collection["name"],
+                    cohort_model=collection["cohort_model"],
+                    category=collection["category"],
+                    table=collection["table"],
+                )
+                records.append(record)
+            # Organize table.
+            table_genotypes = pandas.DataFrame(data=records)
+        else:
+            table_genotypes = pandas.DataFrame()
+
+        ##########
 
     # Report.
     if report:
@@ -1323,11 +1408,13 @@ def execute_describe_cohorts_models_phenotypes(
         utility.print_terminal_partition(level=2)
         print("report: execute_analyze_sex_cohorts_hormones()")
         utility.print_terminal_partition(level=3)
+
+
     # Collect information.
     pail = dict()
-    pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
-    pail["table_summary_cohorts_models_genotypes"] = table_genotypes
-    pail["table_cohorts_hormones_missingness"] = table_missingness
+    pail["table_cohorts_measurements_missingness"] = table_missingness
+    #pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
+    #pail["table_summary_cohorts_models_genotypes"] = table_genotypes
     # Return information.
     return pail
 
