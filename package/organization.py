@@ -8176,6 +8176,115 @@ def report_combination_female_regular_menstruation_by_menopause(
     pass
 
 
+def report_alteration_sex_hormones_by_female_menopause(
+    menopause=None,
+    menstruation_regular_range=None,
+    alteration_sex_hormone=None,
+    table=None,
+):
+    """
+    Reports counts of persons with stratification by sex who used medications in
+    a specific class group.
+
+    arguments:
+        menopause (str): name of column for definition of female menopause
+            status
+        menstruation_regular_range (float): name of column for binary logical
+            representation of whether person experienced regular menstrual
+            cycles of duration within low and high thresholds
+        alteration_sex_hormone (str): name of column for binary logical
+            representation of whether person used any medications that influence
+            sex hormones, including oral contraception and other hormonal
+            therapy in females
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Determine whether the necessary columns exist in the table.
+    columns = table.columns.tolist()
+    if (
+        (menopause in columns) and
+        (menstruation_regular_range in columns) and
+        (alteration_sex_hormone in columns)
+    ):
+        # Copy information in table.
+        table = table.copy(deep=True)
+
+        # Female total.
+        table_female = table.loc[
+            (
+                (table["sex_text"] == "female")
+            ), :
+        ]
+        # Female menopause.
+        table_female_premenopause_alteration = table.loc[
+            (
+                (table["sex_text"] == "female") &
+                (table[menopause] == 0) &
+                (table[alteration_sex_hormone] == 1)
+            ), :
+        ]
+        table_female_perimenopause_alteration = table.loc[
+            (
+                (table["sex_text"] == "female") &
+                (table[menopause] == 1) &
+                (table[alteration_sex_hormone] == 1)
+            ), :
+        ]
+        table_female_postmenopause_alteration = table.loc[
+            (
+                (table["sex_text"] == "female") &
+                (table[menopause] == 2) &
+                (table[alteration_sex_hormone] == 1)
+            ), :
+        ]
+        table_female_menstruation_alteration = table.loc[
+            (
+                (table["sex_text"] == "female") &
+                (table[menstruation_regular_range] == 1) &
+                (table[alteration_sex_hormone] == 1)
+            ), :
+        ]
+        # Counts.
+        count_female = table_female.shape[0]
+        count_pre_alter = table_female_premenopause_alteration.shape[0]
+        count_peri_alter = table_female_perimenopause_alteration.shape[0]
+        count_post_alter = table_female_postmenopause_alteration.shape[0]
+        count_regular_alter = table_female_menstruation_alteration.shape[0]
+        # Report.
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("report_alteration_sex_hormones_by_female_menopause()")
+        utility.print_terminal_partition(level=3)
+        utility.print_terminal_partition(level=4)
+        print("counts for: FEMALES")
+        utility.print_terminal_partition(level=5)
+        print("count of total: " + str(count_female))
+        print(
+            "count premenopause sex hormone alteration: " + str(count_pre_alter)
+        )
+        print(
+            "count perimenopause sex hormone alteration: " +
+            str(count_peri_alter)
+        )
+        print(
+            "count postmenopause sex hormone alteration: " +
+            str(count_post_alter)
+        )
+        print(
+            "count regular menstruation sex hormone alteration: " +
+            str(count_regular_alter)
+        )
+        utility.print_terminal_partition(level=4)
+        pass
+    pass
+
+
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -8506,6 +8615,12 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         report_combination_female_regular_menstruation_by_menopause(
             menopause="menopause_ordinal",
             menstruation_regular_range="menstruation_regular_range",
+            table=table,
+        )
+        report_alteration_sex_hormones_by_female_menopause(
+            menopause="menopause_ordinal",
+            menstruation_regular_range="menstruation_regular_range",
+            alteration_sex_hormone="alteration_sex_hormone",
             table=table,
         )
     # Collect information.

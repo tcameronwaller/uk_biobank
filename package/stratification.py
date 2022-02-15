@@ -4248,6 +4248,22 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     ]
     records.append(record)
 
+    record = dict()
+    record["name"] = "female_menstruation_regular_no_hormone_alteration"
+    record["cohort"] = "female_menstruation_regular_no_hormone_alteration"
+    record["cohort_model"] = "female_menstruation_regular_no_hormone_alteration"
+    record["category"] = "menstruation"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_regular_range"] == 1) &
+            (table["alteration_sex_hormone"] == 0)
+        ), :
+    ]
+    records.append(record)
+
     # Menopause
 
     record = dict()
@@ -4264,6 +4280,24 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
         ), :
     ]
     records.append(record)
+
+    record = dict()
+    record["name"] = "female_premenopause_no_hormone_alteration"
+    record["cohort"] = "female_premenopause_no_hormone_alteration"
+    record["cohort_model"] = "female_premenopause_no_hormone_alteration"
+    record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0) &
+            (table["alteration_sex_hormone"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+
 
     record = dict()
     record["name"] = "female_perimenopause"
