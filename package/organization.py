@@ -8077,11 +8077,19 @@ def report_female_menopause_three_groups(
             (table[female_menopause] == 2)
         ), :
     ]
+    table_female_regular = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
     # Counts.
     count_female = table_female.shape[0]
     count_premenopause = table_female_premenopause.shape[0]
     count_perimenopause = table_female_perimenopause.shape[0]
     count_postmenopause = table_female_postmenopause.shape[0]
+    count_regular = table_female_regular.shape[0]
     # Report.
     utility.print_terminal_partition(level=2)
     print("report: ")
@@ -8095,6 +8103,7 @@ def report_female_menopause_three_groups(
     print("pre-menopause: " + str(count_premenopause))
     print("peri-menopause: " + str(count_perimenopause))
     print("post-menopause: " + str(count_postmenopause))
+    print("regular menstruation: " + str(count_regular))
     pass
 
 
