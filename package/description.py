@@ -1250,8 +1250,8 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
                 pail[name_plot] = plot_variable_means_dot_trajectory(
                     label_title=name_label,
                     column_phenotype=phenotype,
-                    column_trajectory="menstruation_days_threshold",
-                    threshold_trajectory=30,
+                    column_trajectory="menstruation_days",
+                    threshold_trajectory=36,
                     title_abscissa="days of menstrual cycle",
                     title_ordinate="mean concentration (95% C.I.)",
                     table=pail_cohort["table"],
