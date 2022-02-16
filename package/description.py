@@ -1113,7 +1113,6 @@ def organize_phenotypes_plots_histogram(
 
 # TODO: TCW, 15 February 2022
 # TODO: rename to "..._trajectory_month"
-
 def organize_phenotypes_plots_dot_trajectory_assessment(
     table=None,
 ):
@@ -1251,7 +1250,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
                     label_title=name_label,
                     column_phenotype=phenotype,
                     column_trajectory="menstruation_days",
-                    threshold_trajectory=36,
+                    threshold_trajectory=31,
                     title_abscissa="days of menstrual cycle",
                     title_ordinate="mean concentration (95% C.I.)",
                     table=pail_cohort["table"],
