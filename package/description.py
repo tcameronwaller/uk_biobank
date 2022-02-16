@@ -492,9 +492,7 @@ def organize_cohort_model_variables_summary_long_records(
     # Collect information for general columns.
     phenotypes = [
         "age", "body",
-        "menstruation_days", "menstruation_days_threshold",
-        "albumin", "albumin_imputation",
-        "steroid_globulin", "steroid_globulin_imputation",
+        "menstruation_days", "menstruation_duration",
         "oestradiol", "oestradiol_imputation",
         "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
         "oestradiol_free", "oestradiol_free_imputation",
@@ -502,10 +500,12 @@ def organize_cohort_model_variables_summary_long_records(
         "testosterone_bioavailable", "testosterone_bioavailable_imputation",
         "testosterone_free", "testosterone_free_imputation",
         "vitamin_d", "vitamin_d_imputation",
+        "steroid_globulin", "steroid_globulin_imputation",
+        "albumin", "albumin_imputation",
+        "cholesterol", "cholesterol_imputation",
     ]
 
     records = list()
-
     # Iterate on relevant columns.
     # Collect information for record.
     for phenotype in phenotypes:
@@ -1334,73 +1334,73 @@ def execute_describe_cohorts_models_phenotypes(
         report=report,
     )
 
-    if False:
+    ##########
 
-        ##########
+    # Prepare table to summarize phenotype variables across cohorts and models.
+    # These cohorts and models are simple and do not include multiple covariates
+    # for genetic analyses.
 
-        # Prepare table to summarize phenotype variables across cohorts and models.
-        # These cohorts and models are simple and do not include multiple covariates
+    # Define cohorts for description.
+    pails_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
+        table=table,
+    )
+
+    # Collect summary records and construct table.
+    records = list()
+    for collection in pails_cohorts:
+        records_cohort = organize_cohort_model_variables_summary_long_records(
+            name=collection["name"],
+            cohort_model=collection["cohort_model"],
+            category=collection["category"],
+            table=collection["table"],
+        )
+        records.extend(records_cohort)
+    # Organize table.
+    table_phenotypes = pandas.DataFrame(data=records)
+
+    ##########
+
+    if (genotype_cohorts):
+        # Read source information from file.
+        table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
+            path_dock=path_dock,
+            report=report,
+        )
+        # Prepare table to summarize phenotype variables across cohorts and models
         # for genetic analyses.
-        pail_phenotypes = (
-            ukb_strat.stratify_cohorts_models_phenotypes_sets(
-            table=table,
-        ))
+        if (set == "sex_hormones"):
+            pail_genotypes = (
+                ukb_strat.stratify_genotype_cohorts_linear_set_sex_hormones(
+                    table=table,
+                    table_kinship_pairs=table_kinship_pairs,
+                    report=report,
+            ))
+        elif (set == "bipolar_disorder_body"):
+            pail_genotypes = (
+                ukb_strat.stratify_cohorts_genotypes_set_bipolar_body(
+                    table=table,
+                    table_kinship_pairs=table_kinship_pairs,
+                    report=report,
+            ))
+        else:
+            print("set of cohorts and models unrecognizable...")
+            pail_genotypes = list()
         # Collect summary records and construct table.
         records = list()
-        for collection in pail_phenotypes:
-            records_cohort = organize_cohort_model_variables_summary_long_records(
+        for collection in pail_genotypes:
+            record = organize_cohort_model_variables_summary_wide_record(
                 name=collection["name"],
                 cohort_model=collection["cohort_model"],
                 category=collection["category"],
                 table=collection["table"],
             )
-            records.extend(records_cohort)
+            records.append(record)
         # Organize table.
-        table_phenotypes = pandas.DataFrame(data=records)
+        table_genotypes = pandas.DataFrame(data=records)
+    else:
+        table_genotypes = pandas.DataFrame()
 
-        ##########
-
-        if (genotype_cohorts):
-            # Read source information from file.
-            table_kinship_pairs = ukb_strat.read_source_table_kinship_pairs(
-                path_dock=path_dock,
-                report=report,
-            )
-            # Prepare table to summarize phenotype variables across cohorts and models
-            # for genetic analyses.
-            if (set == "sex_hormones"):
-                pail_genotypes = (
-                    ukb_strat.stratify_genotype_cohorts_linear_set_sex_hormones(
-                        table=table,
-                        table_kinship_pairs=table_kinship_pairs,
-                        report=report,
-                ))
-            elif (set == "bipolar_disorder_body"):
-                pail_genotypes = (
-                    ukb_strat.stratify_cohorts_genotypes_set_bipolar_body(
-                        table=table,
-                        table_kinship_pairs=table_kinship_pairs,
-                        report=report,
-                ))
-            else:
-                print("set of cohorts and models unrecognizable...")
-                pail_genotypes = list()
-            # Collect summary records and construct table.
-            records = list()
-            for collection in pail_genotypes:
-                record = organize_cohort_model_variables_summary_wide_record(
-                    name=collection["name"],
-                    cohort_model=collection["cohort_model"],
-                    category=collection["category"],
-                    table=collection["table"],
-                )
-                records.append(record)
-            # Organize table.
-            table_genotypes = pandas.DataFrame(data=records)
-        else:
-            table_genotypes = pandas.DataFrame()
-
-        ##########
+    ##########
 
     # Report.
     if report:
@@ -1409,12 +1409,11 @@ def execute_describe_cohorts_models_phenotypes(
         print("report: execute_analyze_sex_cohorts_hormones()")
         utility.print_terminal_partition(level=3)
 
-
     # Collect information.
     pail = dict()
     pail["table_cohorts_measurements_missingness"] = table_missingness
-    #pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
-    #pail["table_summary_cohorts_models_genotypes"] = table_genotypes
+    pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
+    pail["table_summary_cohorts_models_genotypes"] = table_genotypes
     # Return information.
     return pail
 
