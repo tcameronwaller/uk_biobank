@@ -607,6 +607,7 @@ def drive_linear_logistic_regressions_cohorts_dependences_models(
     table_regressions = pro_regression.organize_table_regression_summaries(
         independence=independences_summary,
         table=table_regressions_raw,
+        type=type,
         report=report,
     )
     # Report.
