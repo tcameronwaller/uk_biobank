@@ -1170,7 +1170,7 @@ def organize_phenotypes_plots_dot_trajectory_month(
             pail[name_plot] = plot_variable_means_dot_trajectory(
                 label_title=name_label,
                 column_phenotype=phenotype,
-                column_trajectory="month",
+                column_trajectory="month_order",
                 threshold_trajectory=13,
                 title_abscissa="month of assessment and blood draw",
                 title_ordinate="mean concentration (95% C.I.)",
