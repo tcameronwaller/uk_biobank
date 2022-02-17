@@ -180,6 +180,7 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
+        "table_logistic_psychiatry.tsv",
         #"table_linear_hormones_sex_age_menopause.tsv",
         "table_linear_vitamin_d_basis.tsv",
         "table_linear_oestradiol_basis.tsv",
@@ -508,15 +509,16 @@ def drive_linear_regressions_hormones_alcoholism(
 # TODO: variable of interest
 
 
-def drive_linear_regressions_cohorts_dependences_models(
+def drive_linear_logistic_regressions_cohorts_dependences_models(
     table=None,
     table_cohorts_models=None,
     independences_summary=None,
     filter_execution=None,
+    type=None,
     report=None,
 ):
     """
-    Organize regressions.
+    Organize linear regressions.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -528,6 +530,7 @@ def drive_linear_regressions_cohorts_dependences_models(
             which to include statistics in the summary table
         filter_execution (bool): whether to filter records in cohort-model table
             by logical binary "execution" variable
+        type (str): type of regression analysis, either 'linear' or 'logistic'
         report (bool): whether to print reports
 
     raises:
@@ -585,14 +588,14 @@ def drive_linear_regressions_cohorts_dependences_models(
         )
         # Drive regression.
         pail_regression = (
-            pro_regression.drive_cohort_model_linear_regression(
+            pro_regression.drive_cohort_model_linear_logistic_regression(
                 table=table_cohort,
                 table_cohorts_models=table_cohorts_models,
                 cohort=cohort,
                 model=model,
                 dependence=dependence,
+                type=type,
                 report=report,
-
         ))
         record.update(pail_regression["summary"])
         # Collect records.
@@ -867,8 +870,32 @@ def execute_procedure(
 
     # Drive regressions.
     if True:
-        pail_1 = (
-            drive_linear_regressions_cohorts_dependences_models(
+        pail_logistic_1 = (
+            drive_linear_logistic_regressions_cohorts_dependences_models(
+                table=source["table_phenotypes"],
+                table_cohorts_models=(
+                    source_reference["table_logistic_psychiatry"]
+                ),
+                independences_summary=[
+                    #"menstruation_phase_cycle",
+                    #"menopause_ordinal",
+                    "sex_y", "age", "body_log",
+                    "medication_vitamin_d", "alteration_sex_hormone",
+                    "season", #"day_length",
+                    "region",
+                    "cholesterol_imputation",
+                    "oestradiol_detection",
+                    "testosterone_imputation",
+                    "vitamin_d_imputation",
+                ],
+                filter_execution=True,
+                type="logistic",
+                report=True,
+        ))
+        pass
+    if False:
+        pail_linear_1 = (
+            drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
                     source_reference["table_linear_vitamin_d_basis"]
@@ -881,12 +908,13 @@ def execute_procedure(
                     "season", "day_length", "region",
                 ],
                 filter_execution=True,
+                type="linear",
                 report=True,
         ))
         pass
-    if True:
-        pail_2 = (
-            drive_linear_regressions_cohorts_dependences_models(
+    if False:
+        pail_linear_2 = (
+            drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
                     source_reference["table_linear_oestradiol_basis"]
@@ -900,12 +928,13 @@ def execute_procedure(
                     "season", "day_length", "region",
                 ],
                 filter_execution=True,
+                type="linear",
                 report=True,
         ))
         pass
-    if True:
-        pail_3 = (
-            drive_linear_regressions_cohorts_dependences_models(
+    if False:
+        pail_linear_3 = (
+            drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
                     source_reference["table_linear_testosterone_basis"]
@@ -919,13 +948,14 @@ def execute_procedure(
                     "season", "day_length", "region",
                 ],
                 filter_execution=True,
+                type="linear",
                 report=True,
         ))
         pass
 
-    if True:
-        pail_4 = (
-            drive_linear_regressions_cohorts_dependences_models(
+    if False:
+        pail_linear_4 = (
+            drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
                     source_reference["table_linear_vitamin_d_psychiatry"]
@@ -951,6 +981,7 @@ def execute_procedure(
                     "season", "region",
                 ],
                 filter_execution=True,
+                type="linear",
                 report=True,
         ))
         pass
@@ -959,18 +990,21 @@ def execute_procedure(
     # Collect information.
     information = dict()
     information["tables"] = dict()
-    information["tables"]["table_regressions_vitamin_d_basis"] = (
-        pail_1["table"]
+    information["tables"]["table_regressions_logistic_psychiatry"] = (
+        pail_logistic_1["table"]
     )
-    information["tables"]["table_regressions_oestradiol_basis"] = (
-        pail_2["table"]
-    )
-    information["tables"]["table_regressions_testosterone_basis"] = (
-        pail_3["table"]
-    )
-    information["tables"]["table_regressions_vitamin_d_psychiatry"] = (
-        pail_4["table"]
-    )
+    #information["tables"]["table_regressions_linear_vitamin_d_basis"] = (
+    #    pail_linear_1["table"]
+    #)
+    #information["tables"]["table_regressions_linear_oestradiol_basis"] = (
+    #    pail_linear_2["table"]
+    #)
+    #information["tables"]["table_regressions_linear_testosterone_basis"] = (
+    #    pail_linear_3["table"]
+    #)
+    #information["tables"]["table_regressions_linear_vitamin_d_psychiatry"] = (
+    #    pail_linear_4["table"]
+    #)
     # Write product information to file.
     write_product(
         paths=paths,
