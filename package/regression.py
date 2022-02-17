@@ -882,7 +882,7 @@ def execute_procedure(
                     #"menopause_ordinal",
                     "sex_y", "age", "body_log",
                     "medication_vitamin_d", "alteration_sex_hormone",
-                    "season", #"day_length",
+                    "season", "day_length",
                     "region",
                     "cholesterol_imputation",
                     "oestradiol_detection",
