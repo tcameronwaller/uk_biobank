@@ -590,6 +590,7 @@ def drive_linear_logistic_regressions_cohorts_dependences_models(
         pail_regression = (
             pro_regression.drive_cohort_model_linear_logistic_regression(
                 table=table_cohort,
+                index="eid",
                 table_cohorts_models=table_cohorts_models,
                 cohort=cohort,
                 model=model,
