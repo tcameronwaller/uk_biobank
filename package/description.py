@@ -1111,9 +1111,7 @@ def organize_phenotypes_plots_histogram(
     return pail
 
 
-# TODO: TCW, 15 February 2022
-# TODO: rename to "..._trajectory_month"
-def organize_phenotypes_plots_dot_trajectory_assessment(
+def organize_phenotypes_plots_dot_trajectory_month(
     table=None,
 ):
     """
@@ -1136,43 +1134,39 @@ def organize_phenotypes_plots_dot_trajectory_assessment(
     # These cohorts and models are simple and do not include multiple covariates
     # for genetic analyses.
     # Collect records of information about each cohort and model.
-    records = list()
-    records_novel = (
-        ukb_strat.stratify_set_primary_sex_menopause_age(
-            table=table,
-        )
+    pails_cohorts = ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
+        table=table,
     )
-    records.extend(records_novel)
-    records_novel = (
-        ukb_strat.stratify_set_alcohol_sex_menopause_age(
-            table=table,
-        )
-    )
-    records.extend(records_novel)
 
     # Collect information for plots.
     pail = dict()
     # Iterate on tables for cohorts and models.
-    for record in records:
+    for pail_cohort in pails_cohorts:
         # Define phenotypes.
         phenotypes = [
-            "albumin", "albumin_imputation",
-            "steroid_globulin", "steroid_globulin_imputation",
+            "cholesterol", "cholesterol_imputation",
             "oestradiol", "oestradiol_imputation",
             "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
             "oestradiol_free", "oestradiol_free_imputation",
             "testosterone", "testosterone_imputation",
-            "testosterone_bioavailable", "testosterone_bioavailable_imputation",
+            "testosterone_bioavailable",
+            "testosterone_bioavailable_imputation",
             "testosterone_free", "testosterone_free_imputation",
             "vitamin_d", "vitamin_d_imputation",
+            "steroid_globulin", "steroid_globulin_imputation",
+            "albumin", "albumin_imputation",
             "alcohol_frequency",
+            "alcohol_drinks_monthly",
+            "alcohol_audit",
+            "alcohol_auditc",
+            "alcohol_auditp",
         ]
         # Iterate on phenotypes.
         for phenotype in phenotypes:
             # Plot hormone trajectories across month of assessment.
             # Chart.
             name_label = str(str(record["name"]) + "_" + str(phenotype))
-            name_plot = str(name_label + "_dot_assessment")
+            name_plot = str(name_label + "_dot_month")
             pail[name_plot] = plot_variable_means_dot_trajectory(
                 label_title=name_label,
                 column_phenotype=phenotype,
@@ -1224,6 +1218,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
         if (pail_cohort["menstruation"]):
             # Define phenotypes.
             phenotypes = [
+                "cholesterol", "cholesterol_imputation",
                 "oestradiol", "oestradiol_imputation",
                 "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
                 "oestradiol_free", "oestradiol_free_imputation",
@@ -1234,7 +1229,6 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
                 "vitamin_d", "vitamin_d_imputation",
                 "steroid_globulin", "steroid_globulin_imputation",
                 "albumin", "albumin_imputation",
-                "cholesterol", "cholesterol_imputation",
                 "alcohol_frequency",
             ]
 
@@ -1446,14 +1440,14 @@ def execute_plot_cohorts_models_phenotypes(
 
 
     # Dot plots of phenotypes ordinal variables.
-    #pail["dot_trajectory_assessment"] = (
-    #    organize_phenotypes_plots_dot_trajectory_assessment(
-    #        table=table,
-    #))
-    pail["dot_trajectory_menstruation"] = (
-        organize_phenotypes_plots_dot_trajectory_menstruation(
+    pail["dot_trajectory_month"] = (
+        organize_phenotypes_plots_dot_trajectory_month(
             table=table,
     ))
+    #pail["dot_trajectory_menstruation"] = (
+    #    organize_phenotypes_plots_dot_trajectory_menstruation(
+    #        table=table,
+    #))
 
     # Report.
     if report:
