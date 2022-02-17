@@ -1165,7 +1165,7 @@ def organize_phenotypes_plots_dot_trajectory_month(
         for phenotype in phenotypes:
             # Plot hormone trajectories across month of assessment.
             # Chart.
-            name_label = str(str(record["name"]) + "_" + str(phenotype))
+            name_label = str(str(pail_cohort["name"]) + "_" + str(phenotype))
             name_plot = str(name_label + "_dot_month")
             pail[name_plot] = plot_variable_means_dot_trajectory(
                 label_title=name_label,
@@ -1174,7 +1174,7 @@ def organize_phenotypes_plots_dot_trajectory_month(
                 threshold_trajectory=13,
                 title_abscissa="month of assessment and blood draw",
                 title_ordinate="mean concentration (95% C.I.)",
-                table=record["table"],
+                table=pail_cohort["table"],
             )
             pass
         pass
