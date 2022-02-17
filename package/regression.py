@@ -180,7 +180,7 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_logistic_psychiatry.tsv",
+        "table_logistic_alcoholism_1.tsv",
         #"table_linear_hormones_sex_age_menopause.tsv",
         "table_linear_vitamin_d_basis.tsv",
         "table_linear_oestradiol_basis.tsv",
@@ -875,21 +875,20 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_logistic_psychiatry"]
+                    source_reference["table_logistic_alcoholism_1"]
                 ),
                 independences_summary=[
-                    "menstruation_phase_cycle",
-                    "menopause_ordinal",
+                    #"menstruation_phase_cycle",
+                    #"menopause_ordinal",
                     "sex_y", "age", "body_log",
-                    "season",
-                    #"day_length",
-                    #"region",
+                    "season", "day_length", "region",
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "cholesterol_imputation",
-                    "oestradiol_detection",
-                    #"oestradiol_imputation",
-                    "testosterone_imputation",
                     "vitamin_d_imputation",
+                    "oestradiol_detection",
+                    "testosterone_imputation",
+                    "steroid_globulin_imputation",
+                    "albumin_imputation",
                 ],
                 filter_execution=True,
                 type="logistic",
