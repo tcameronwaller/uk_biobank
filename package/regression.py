@@ -878,8 +878,8 @@ def execute_procedure(
                     source_reference["table_logistic_alcoholism_1"]
                 ),
                 independences_summary=[
-                    "menstruation_phase_cycle",
-                    "menopause_ordinal",
+                    #"menstruation_phase_cycle",
+                    #"menopause_ordinal",
                     "sex_y", "age", "body_log",
                     "season", "day_length", "region",
                     "medication_vitamin_d", "alteration_sex_hormone",
