@@ -1,0 +1,22 @@
+execution	cohort	cohort_sort	dependence	dependence_sort	model	model_sort	independence	model_note
+1	female	1	oestradiol_detection	1	1	1	menopause_ordinal;age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model with “season”
+1	female	1	oestradiol_detection	1	2	2	menopause_ordinal;age;body_log;day_length;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model with “day_length”
+1	female	1	oestradiol_detection	1	3	3	menopause_ordinal	marginal model
+1	female	1	oestradiol_detection	1	4	4	age	marginal model
+1	female	1	oestradiol_detection	1	5	5	body_log	marginal model
+1	female	1	oestradiol_detection	1	6	6	season	marginal model
+1	female	1	oestradiol_detection	1	7	7	day_length	marginal model
+1	female	1	oestradiol_detection	1	8	8	region	marginal model
+1	female	1	oestradiol_detection	1	9	9	medication_vitamin_d	marginal model
+1	female	1	oestradiol_detection	1	10	10	alteration_sex_hormone	marginal model
+1	female	1	oestradiol_detection	1	11	11	cholesterol_imputation	marginal model
+1	female	1	oestradiol_detection	1	12	12	vitamin_d_imputation	marginal model
+0	female_menstruation_regular	4	oestradiol_detection	3	1	1	menstruation_phase_cycle;menopause_ordinal;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+0	female_premenopause	5	oestradiol_detection	3	1	1	menstruation_phase_cycle;age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+0	female_perimenopause	6	oestradiol_detection	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+0	female_postmenopause	7	oestradiol_detection	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model
+0	male	8	oestradiol_detection	1	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+0	male	8	oestradiol_detection	2	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+0	male	8	oestradiol_detection	3	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+0	male	8	oestradiol_detection	4	1	1	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;season;region	joint model with “season”
+0	male	8	oestradiol_detection	3	2	2	age;body_log;cholesterol_imputation;medication_vitamin_d;alteration_sex_hormone;day_length;region	joint model with “day_length”
