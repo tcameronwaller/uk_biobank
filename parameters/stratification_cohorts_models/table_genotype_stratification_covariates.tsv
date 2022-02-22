@@ -1,0 +1,12 @@
+execution	dependence	dependence_sort	cohort	cohort_sort	sex	model	model_sort	independence	model_note
+1	vitamin_d	1	female_male	1	female	1	1	pregnancy;sex_y;sex_x;sex_text;age;body;body_log;season;day_length;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation	
+1	vitamin_d	1	female_male	1	male	1	1	sex_y;sex_x;sex_text;age;body;body_log;season;day_length;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation	
+1	vitamin_d_log	2	female_male	1	female	1	1		
+1	vitamin_d_log	2	female_male	1	male	1	1		
+1	vitamin_d_imputation	3	female_male	1	female	1	1		
+1	vitamin_d_imputation	3	female_male	1	male	1	1		
+1	vitamin_d_imputation_log	4	female_male	1	female	1	1		
+1	vitamin_d_imputation_log	4	female_male	1	male	1	1		
+1	oestradiol_detection	5	female		female			menopause_ordinal;sex_y;sex_x;sex_text;age;body;body_log;season;day_length;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	
+1	oestradiol_detection	5	female		male				
+	oestradiol								

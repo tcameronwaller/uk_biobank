@@ -2019,6 +2019,10 @@ def stratify_genotype_cohorts_vitamin_d(
     table = table.copy(deep=True)
     table_kinship_pairs = table_kinship_pairs.copy(deep=True)
 
+    covariates_common = [
+        "eid", "IID", "white_british", "genotype_array_axiom",
+    ]
+
     # Collect records of information about each cohort, model, and phenotype.
     # Select and organize variables across cohorts.
     records = list()
