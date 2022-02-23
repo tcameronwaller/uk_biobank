@@ -4063,11 +4063,17 @@ def stratify_genotype_cohorts_models_set(
         independence_male = copy.deepcopy(
             record_stratification["independence"].split(";")
         )
-        independence_extra_female = copy.deepcopy(
-            record_stratification["independence_extra_female"].split(";")
-        )
-        independence_female = copy.deepcopy(independence_male)
-        independence_female.extend(independence_extra_female)
+        if (
+            (len(record_stratification["independence_extra_female"]) > 0) and
+            (";" in record_stratification["independence_extra_female"])
+        ):
+            independence_extra_female = copy.deepcopy(
+                record_stratification["independence_extra_female"].split(";")
+            )
+            independence_female = copy.deepcopy(independence_male)
+            independence_female.extend(independence_extra_female)
+        else:
+            independence_female = copy.deepcopy(independence_male)
         # Stratify cohorts and models.
         record_instance = (
             stratify_genotype_cohort_model_instance(
