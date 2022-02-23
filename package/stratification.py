@@ -1546,6 +1546,8 @@ def select_records_by_female_specific_valid_variables_values(
     # Determine whether to filter by ordinal definition of menopause.
     print("testy... here is 'menopause_ordinal'...")
     print(menopause_ordinal)
+    print("and here is menstruation_regular...")
+    print(menstruation_regular)
     if (
         (0 not in menopause_ordinal) or
         (1 not in menopause_ordinal) or
@@ -3907,7 +3909,7 @@ def stratify_genotype_cohort_model_instance(
                 white_british=[1,],
                 female=True,
                 female_pregnancy=[0,],
-                female_menstruation_regular=[1,],
+                female_menstruation_regular=[0, 1,],
                 female_menopause_ordinal=[0, 1, 2,],
                 female_variables=independence_female,
                 female_prefixes=["genotype_pc_",],
