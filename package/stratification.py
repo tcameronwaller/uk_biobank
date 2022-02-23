@@ -3830,7 +3830,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_male_priority_female"):
         record["table"] = (
@@ -3851,7 +3851,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_male_priority_male"):
         record["table"] = (
@@ -3872,7 +3872,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female"):
         record["table"] = (
@@ -3893,7 +3893,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_menstruation_regular"):
         record["table"] = (
@@ -3914,7 +3914,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_premenopause"):
         record["table"] = (
@@ -3935,7 +3935,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_perimenopause"):
         record["table"] = (
@@ -3956,7 +3956,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "female_postmenopause"):
         record["table"] = (
@@ -3977,7 +3977,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
     elif (cohort == "male"):
         record["table"] = (
@@ -3998,7 +3998,7 @@ def stratify_genotype_cohort_model_instance(
                 male_prefixes=["genotype_pc_",],
                 table_kinship_pairs=table_kinship_pairs,
                 table=table,
-                report=report,
+                report=False,
         ))
         pass
     # Report.
@@ -4012,6 +4012,8 @@ def stratify_genotype_cohort_model_instance(
         )
         utility.print_terminal_partition(level=3)
         print("dependence: " + str(dependence))
+        print("cohort: " + str(cohort))
+        print("table name: " + str(record["name_table"]))
         print("independence female: " + str(independence_female))
     # Return information.
     return record
