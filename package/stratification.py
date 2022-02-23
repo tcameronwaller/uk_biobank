@@ -1544,6 +1544,8 @@ def select_records_by_female_specific_valid_variables_values(
             (table["menstruation_regular_range"].isin(menstruation_regular)), :
         ]
     # Determine whether to filter by ordinal definition of menopause.
+    print("testy... here is 'menopause_ordinal'...")
+    print(menopause_ordinal)
     if (
         (0 not in menopause_ordinal) or
         (1 not in menopause_ordinal) or
