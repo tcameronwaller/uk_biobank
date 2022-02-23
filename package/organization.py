@@ -8310,7 +8310,8 @@ def report_alteration_sex_hormones_by_female_menopause(
 
 
 
-# TODO: "births_live_or_still": ordinal births_live + ordinal births_still
+# TODO: "pregnancies_count":
+# ordinal births_live + ordinal births_still + miscarriages + terminations
 
 # TODO: "years_since_last_birth"
 # TODO: TCW, 23 February 2020
@@ -8402,6 +8403,53 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply function to each row
     )
+
+    ##########
+    # Parity and count of live and still births
+
+    # Determine count of live births.
+    table["births_live_count"] = table.apply(
+        lambda row:
+            determine_female_births_live_count(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine count of still births.
+    table["births_still_count"] = table.apply(
+        lambda row:
+            determine_female_births_still_count(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine count of live or still births.
+    table["births_count"] = table.apply(
+        lambda row:
+            determine_female_births_still_count(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine count of total pregnancies.
+    # These pregnancies might have ended in abortion, miscarriage, still birth,
+    # or live birth.
+    table["births_count"] = table.apply(
+        lambda row:
+            determine_female_births_still_count(
+                sex_text=row["sex_text"],
+                field_2724=row["2724-0.0"],
+                field_3591=row["3591-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
 
     ##########
     # Menopause
