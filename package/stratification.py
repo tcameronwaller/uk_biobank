@@ -4065,17 +4065,17 @@ def stratify_genotype_cohorts_models_set(
     # Iterate on stratification records in set.
     # Collect information about stratifications.
     records_set = list()
-    for record_stratification in records_stratification:
+    for record_strat in records_stratification:
         # Extract names of independent variables.
         independence_male = copy.deepcopy(
-            record_stratification["independence"].split(";")
+            record_strat["independence"].split(";")
         )
         if (
-            (len(record_stratification["independence_extra_female"]) > 0) and
-            (";" in record_stratification["independence_extra_female"])
+            (len(str(record_strat["independence_extra_female"])) > 0) and
+            (";" in record_strat["independence_extra_female"])
         ):
             independence_extra_female = copy.deepcopy(
-                record_stratification["independence_extra_female"].split(";")
+                record_strat["independence_extra_female"].split(";")
             )
             independence_female = copy.deepcopy(independence_male)
             independence_female.extend(independence_extra_female)
@@ -4084,10 +4084,10 @@ def stratify_genotype_cohorts_models_set(
         # Stratify cohorts and models.
         record_instance = (
             stratify_genotype_cohort_model_instance(
-                dependence=record_stratification["dependence"],
-                dependence_binary=record_stratification["dependence_binary"],
-                cohort=record_stratification["cohort"],
-                model=record_stratification["model"],
+                dependence=record_strat["dependence"],
+                dependence_binary=record_strat["dependence_binary"],
+                cohort=record_strat["cohort"],
+                model=record_strat["model"],
                 independence_female=independence_female,
                 independence_male=independence_male,
                 table_kinship_pairs=table_kinship_pairs,
