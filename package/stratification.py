@@ -1549,6 +1549,7 @@ def select_records_by_female_specific_valid_variables_values(
         (1 not in menopause_ordinal) or
         (2 not in menopause_ordinal)
     ):
+        print("test test test... this should only run if selecting menopause sub-cohort")
         # Select records.
         table = table.loc[
             (table["menopause_ordinal"].isin(menopause_ordinal)), :
