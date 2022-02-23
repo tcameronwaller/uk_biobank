@@ -1541,7 +1541,7 @@ def select_records_by_female_specific_valid_variables_values(
     ):
         # Select records.
         table = table.loc[
-            (table["menstruation_regular_range"].isin(menopause_binary)), :
+            (table["menstruation_regular_range"].isin(menstruation_regular)), :
         ]
     # Determine whether to filter by ordinal definition of menopause.
     if (
