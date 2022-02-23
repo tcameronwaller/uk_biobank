@@ -6814,6 +6814,11 @@ def interpret_pregnancy_terminations_miscarriages_still_births(
     return value
 
 
+# TCW 23 February 2022
+# WORK ZONE
+############
+
+
 # review: TCW on 18 January 2022
 def determine_female_menstruation_days(
     sex_text=None,
@@ -7977,7 +7982,7 @@ def determine_female_births_live_still_count(
             (not pandas.isna(pregnancy_loss)) and
             (pregnancy_loss == 0)
         ):
-            # Female person did not experience any pregnancy that ended early.
+            # Female person did not experience any pregnancy loss.
             count_still = 0
         else:
             count_still = float("nan")
@@ -8047,7 +8052,10 @@ def determine_female_pregnancies_early_count(
     if (
         (sex_text == "female")
     ):
-        if (pregnancy_loss == 1):
+        if (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 1)
+        ):
             # Female person experienced a pregnancy loss.
             # Determine the count of pregnancies that ended early.
             if (
@@ -8065,9 +8073,14 @@ def determine_female_pregnancies_early_count(
                 # Lost pregnancy might have ended early from termination or
                 # abortion or might have ended late from still birth.
                 value = float("nan")
-        elif (pregnancy_loss == 0):
-            # Female person did not experience any pregnancy that ended early.
+        elif (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 0)
+        ):
+            # Female person did not experience any pregnancy loss.
             value = 0
+        else:
+            value = float("nan")
     else:
         # Pregnancy undefined for males.
         value = float("nan")
@@ -8232,6 +8245,11 @@ def report_female_pregnancies_births(
     print("2: " + str(count_births_2))
     print("3 or more: " + str(count_births_3_or_more))
     pass
+
+
+# TCW 23 February 2022
+# WORK ZONE
+############
 
 
 # review: TCW on 20 January January 2022
