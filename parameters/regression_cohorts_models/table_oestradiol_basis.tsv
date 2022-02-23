@@ -1,0 +1,95 @@
+execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	model	model_sort	independence	model_note
+1	female	1	oestradiol_detection	1	logistic	1	1	menopause_ordinal	marginal model
+1	female	1	oestradiol_detection	1	logistic	2	2	age	marginal model
+1	female	1	oestradiol_detection	1	logistic	3	3	body_log	marginal model
+1	female	1	oestradiol_detection	1	logistic	4	4	season	marginal model
+1	female	1	oestradiol_detection	1	logistic	5	5	day_length	marginal model
+1	female	1	oestradiol_detection	1	logistic	6	6	region	marginal model
+1	female	1	oestradiol_detection	1	logistic	7	7	medication_vitamin_d	marginal model
+1	female	1	oestradiol_detection	1	logistic	8	8	alteration_sex_hormone	marginal model
+1	female	1	oestradiol_detection	1	logistic	9	9	cholesterol_imputation	marginal model
+1	female	1	oestradiol_detection	1	logistic	10	10	vitamin_d_imputation	marginal model
+1	female	1	oestradiol_detection	1	logistic	11	11	testosterone_imputation	marginal model
+1	female	1	oestradiol_detection	1	logistic	12	12	steroid_globulin_imputation	marginal model
+1	female	1	oestradiol_detection	1	logistic	13	13	albumin_imputation	marginal model
+1	female	1	oestradiol_detection	1	logistic	14	14	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+1	female	1	oestradiol_detection	1	logistic	15	15	menopause_ordinal;age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+0	female	1	oestradiol_detection	1	logistic	16	16	age;body_log;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint; leave out “menopause_ordinal”
+0	female	1	oestradiol_detection	1	logistic	17	17	menopause_ordinal;body_log;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint; leave out “age”
+0	female	1	oestradiol_detection	1	logistic	18	18	menopause_ordinal;age;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint; leave out “body_log”
+0	female	1	oestradiol_detection	1	logistic	19	19	menopause_ordinal;age;body_log;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint; leave out “region”
+0	female	1	oestradiol_detection	1	logistic	20	20	menopause_ordinal;age;body_log;region;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint; leave out “medication_vitamin_d”
+0	female	1	oestradiol_detection	1	logistic	21	21	menopause_ordinal;age;body_log;region;medication_vitamin_d;cholesterol_imputation;vitamin_d_imputation	joint; leave out “alteration_sex_hormone”
+0	female	1	oestradiol_detection	1	logistic	22	22	menopause_ordinal;age;body_log;region;medication_vitamin_d;alteration_sex_hormone;vitamin_d_imputation	joint; leave out “cholesterol_imputation”
+0	female	1	oestradiol_detection	1	logistic	23	23	menopause_ordinal;age;body_log;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation	joint; leave out “vitamin_d_imputation
+0	female	1	oestradiol_bioavailable_imputation	2	linear	1	1	menopause_ordinal	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	2	2	age	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	3	3	body_log	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	4	4	season	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	5	5	day_length	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	6	6	region	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	7	7	medication_vitamin_d	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	8	8	alteration_sex_hormone	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	9	9	cholesterol_imputation	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	10	10	vitamin_d_imputation	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	11	11	testosterone_imputation	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	12	12	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+0	female	1	oestradiol_bioavailable_imputation	2	linear	13	13	menopause_ordinal;age;body_log;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+0	female	1	oestradiol_free_imputation	3	linear	1	1	menopause_ordinal	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	2	2	age	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	3	3	body_log	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	4	4	season	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	5	5	day_length	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	6	6	region	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	7	7	medication_vitamin_d	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	8	8	alteration_sex_hormone	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	9	9	cholesterol_imputation	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	10	10	vitamin_d_imputation	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	11	11	testosterone_imputation	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	12	12	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+0	female	1	oestradiol_free_imputation	3	linear	13	13	menopause_ordinal;age;body_log;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	1	1	menopause_ordinal;menstruation_phase_cycle;age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+1	female_premenopause	3	oestradiol_detection	1	logistic	1	1	menstruation_phase_cycle	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	2	2	age	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	3	3	body_log	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	4	4	season	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	5	5	day_length	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	6	6	region	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	7	7	medication_vitamin_d	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	8	8	alteration_sex_hormone	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	9	9	cholesterol_imputation	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	10	10	vitamin_d_imputation	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	11	11	testosterone_imputation	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	12	12	steroid_globulin_imputation	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	13	13	albumin_imputation	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	14	14	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+1	female_premenopause	3	oestradiol_detection	1	logistic	15	15	menstruation_phase_cycle;age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+1	female_perimenopause	4	oestradiol_detection	1	logistic	1	1	age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	1	1	age	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	2	2	body_log	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	3	3	season	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	4	4	day_length	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	5	5	region	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	6	6	medication_vitamin_d	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	7	7	alteration_sex_hormone	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	8	8	cholesterol_imputation	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	9	9	vitamin_d_imputation	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	10	10	testosterone_imputation	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	11	11	steroid_globulin_imputation	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	12	12	albumin_imputation	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	13	13	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+1	female_postmenopause	5	oestradiol_detection	1	logistic	14	14	age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model
+1	male	6	oestradiol_detection	1	logistic	1	1	age	marginal model
+1	male	6	oestradiol_detection	1	logistic	2	2	body_log	marginal model
+1	male	6	oestradiol_detection	1	logistic	3	3	season	marginal model
+1	male	6	oestradiol_detection	1	logistic	4	4	day_length	marginal model
+1	male	6	oestradiol_detection	1	logistic	5	5	region	marginal model
+1	male	6	oestradiol_detection	1	logistic	6	6	medication_vitamin_d	marginal model
+1	male	6	oestradiol_detection	1	logistic	7	7	alteration_sex_hormone	marginal model
+1	male	6	oestradiol_detection	1	logistic	8	8	cholesterol_imputation	marginal model
+1	male	6	oestradiol_detection	1	logistic	9	9	vitamin_d_imputation	marginal model
+1	male	6	oestradiol_detection	1	logistic	10	10	testosterone_imputation	marginal model
+1	male	6	oestradiol_detection	1	logistic	11	11	steroid_globulin_imputation	marginal model
+1	male	6	oestradiol_detection	1	logistic	12	12	albumin_imputation	marginal model
+1	male	6	oestradiol_detection	1	logistic	13	13	site_indicator_leeds;site_indicator_bristol;site_indicator_newcastle;site_indicator_nottingham;site_indicator_liverpool;site_indicator_sheffield;site_indicator_reading;site_indicator_hounslow;site_indicator_bury;site_indicator_croydon;site_indicator_birmingham;site_indicator_middlesborough;site_indicator_stoke;site_indicator_glasgow;site_indicator_cardiff;site_indicator_edinburgh;site_indicator_oxford;site_indicator_manchester;site_indicator_barts;site_indicator_stockport_pilot;site_indicator_swansea;site_indicator_wrexham	marginal model
+1	male	6	oestradiol_detection	1	logistic	14	14	age;body_log;season;region;medication_vitamin_d;alteration_sex_hormone;cholesterol_imputation;vitamin_d_imputation	joint model

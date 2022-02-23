@@ -180,8 +180,8 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_logistic_alcoholism_1.tsv",
-        "table_logistic_oestradiol_basis.tsv",
+        "table_oestradiol_basis.tsv",
+        #"table_logistic_alcoholism_1.tsv",
         #"table_linear_hormones_sex_age_menopause.tsv",
         #"table_linear_vitamin_d_basis.tsv",
         #"table_linear_testosterone_basis.tsv",
@@ -212,6 +212,7 @@ def read_source_cohort_model_reference(
                 "cohort_sort": "int",
                 "dependence": "string",
                 "dependence_sort": "int",
+                "dependence_type": "string",
                 "model": "string",
                 "model_sort": "int",
                 "independence": "string",
@@ -548,6 +549,12 @@ def drive_linear_logistic_regressions_cohorts_dependences_models(
             ), :
         ]
         pass
+    # Filter relevant cohorts-dependences-models by "dependence_type".
+    table_cohorts_models = table_cohorts_models.loc[
+        (
+            (table_cohorts_models["dependence_type"] == type)
+        ), :
+    ]
     # Stratify phenotypes in cohorts.
     records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
         table=table,
