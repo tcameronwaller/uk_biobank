@@ -4071,8 +4071,7 @@ def stratify_genotype_cohorts_models_set(
             record_strat["independence"].split(";")
         )
         if (
-            (len(str(record_strat["independence_extra_female"])) > 0) and
-            (";" in record_strat["independence_extra_female"])
+            (len(str(record_strat["independence_extra_female"])) > 0)
         ):
             independence_extra_female = copy.deepcopy(
                 record_strat["independence_extra_female"].split(";")
