@@ -66,6 +66,11 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	3710	float32	female		64164		Length of menstrual cycle	Female-specific factors		0;	
 1	3720	float32	female		76486		Menstruating today	Female-specific factors		0;	
 1	2714	float32	female	menarche	310271		Age when periods started (menarche)	Female-specific factors		0;	
+1	2734	float32	female		272864		Number of live births	Female-specific factors		0;	
+1	2774	float32	female		272863		Ever had stillbirth, spontaneous miscarriage or termination	Female-specific factors		0;	
+1	3829	float32	female		87851		Number of stillbirths	Female-specific factors		0;	
+1	2754	float32	female				Age at first live birth	Female-specific factors		0;	
+1	2764	float32	female				Age at last live birth	Female-specific factors		0;	
 1	2814	float32	female_hormone_therapy		272909		Ever used hormone-replacement therapy (HRT)	Female-specific factors		0;	
 1	3536	float32	female_hormone_therapy		105795		Age started hormone-replacement therapy (HRT)	Female-specific factors		0;	
 1	3546	float32	female_hormone_therapy		105795		Age last used hormone-replacement therapy (HRT)	Female-specific factors		0;	

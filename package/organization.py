@@ -8309,6 +8309,16 @@ def report_alteration_sex_hormones_by_female_menopause(
     pass
 
 
+
+# TODO: "births_live_or_still": ordinal births_live + ordinal births_still
+
+# TODO: "years_since_last_birth"
+# TODO: TCW, 23 February 2020
+# TODO: "years_since_last_birth" will be a bit more complex because females
+# TODO: who only had 1 single birth need different data field than multi-parous
+
+
+
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
