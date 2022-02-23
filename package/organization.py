@@ -7748,6 +7748,100 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
+
+
+# review: TCW on __ February 2022
+def determine_female_pregnancies_lost_count(
+    sex_text=None,
+    field_2774=None,
+    field_3849=None,
+    field_3839=None,
+    field_3829=None,
+):
+    """
+    Determine total count of pregnancies that female person experienced.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        pregnancies_lost (float): total count of pregnancies that ended early
+            due termination, abortion, or miscarriage
+        births (float): total count of live and still births
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (not pandas.isna(pregnancies_lost)) and
+            (not pandas.isna(births))
+        ):
+            value = (pregnancies_lost + births)
+        elif (not pandas.isna(pregnancies_lost)):
+            value = pregnancies_lost
+        elif (not pandas.isna(births)):
+            value = births
+        else:
+            # There is insufficient information.
+            value = float("nan")
+            pass
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# review: TCW on __ February 2022
+def determine_female_pregnancies_total_count(
+    sex_text=None,
+    pregnancies_lost=None,
+    births=None,
+):
+    """
+    Determine total count of pregnancies that female person experienced.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        pregnancies_lost (float): total count of pregnancies that ended early
+            due termination, abortion, or miscarriage
+        births (float): total count of live and still births
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (sex_text == "female"):
+        if (
+            (not pandas.isna(pregnancies_lost)) and
+            (not pandas.isna(births))
+        ):
+            value = (pregnancies_lost + births)
+        elif (not pandas.isna(pregnancies_lost)):
+            value = pregnancies_lost
+        elif (not pandas.isna(births)):
+            value = births
+        else:
+            # There is insufficient information.
+            value = float("nan")
+            pass
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+
+
 # review: TCW on 20 January January 2022
 def report_female_menstruation_regularity_duration_range(
     threshold_duration_low=None,
@@ -8319,7 +8413,6 @@ def report_alteration_sex_hormones_by_female_menopause(
 # TODO: who only had 1 single birth need different data field than multi-parous
 
 
-
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -8405,47 +8498,41 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     )
 
     ##########
-    # Parity and count of live and still births
+    # Parity and count of pregnancies and births.
 
-    # Determine count of live births.
-    table["births_live_count"] = table.apply(
-        lambda row:
-            determine_female_births_live_count(
-                sex_text=row["sex_text"],
-                field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    # Determine count of still births.
-    table["births_still_count"] = table.apply(
-        lambda row:
-            determine_female_births_still_count(
-                sex_text=row["sex_text"],
-                field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
-            ),
-        axis="columns", # apply function to each row
-    )
     # Determine count of live or still births.
-    table["births_count"] = table.apply(
+    table["births"] = table.apply(
         lambda row:
-            determine_female_births_still_count(
+            determine_female_births_live_still_count(
                 sex_text=row["sex_text"],
                 field_2724=row["2724-0.0"],
                 field_3591=row["3591-0.0"],
             ),
         axis="columns", # apply function to each row
     )
+
+    # Determine count of pregnancies lost either to termination or miscarriage.
+    table["pregnancies_lost"] = table.apply(
+        lambda row:
+            determine_female_pregnancies_lost_count(
+                sex_text=row["sex_text"],
+                field_2774=row["2774-0.0"],
+                field_3849=row["3849-0.0"],
+                field_3839=row["3839-0.0"],
+                field_3829=row["3829-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
     # Determine count of total pregnancies.
     # These pregnancies might have ended in abortion, miscarriage, still birth,
     # or live birth.
-    table["births_count"] = table.apply(
+    table["pregnancies"] = table.apply(
         lambda row:
-            determine_female_births_still_count(
+            determine_female_pregnancies_total_count(
                 sex_text=row["sex_text"],
-                field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
+                pregnancies_lost=row["pregnancies_lost"],
+                births=row["births"],
             ),
         axis="columns", # apply function to each row
     )
@@ -8714,6 +8801,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     return pail
 
 
+#####
+# SCRAP
+####
 
 
 # review: TCW on _____

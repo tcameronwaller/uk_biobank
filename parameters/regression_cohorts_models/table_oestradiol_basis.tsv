@@ -2,9 +2,9 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	model	mo
 1	female	1	oestradiol_detection	1	logistic	1	1	menopause_ordinal	marginal model
 1	female	1	oestradiol_detection	1	logistic	2	2	oophorectomy	marginal model
 1	female	1	oestradiol_detection	1	logistic	3	3	hysterectomy	marginal model
-1	female	1	oestradiol_detection	1	logistic	4	4	births_live_count	marginal model
-1	female	1	oestradiol_detection	1	logistic	5	5	births_still_count	marginal model
-1	female	1	oestradiol_detection	1	logistic	6	6	births_count	marginal model
+1	female	1	oestradiol_detection	1	logistic	4	4	births	marginal model
+1	female	1	oestradiol_detection	1	logistic	5	5	pregnancies_lost	marginal model
+1	female	1	oestradiol_detection	1	logistic	6	6	pregnancies	marginal model
 1	female	1	oestradiol_detection	1	logistic	7	7	age	marginal model
 1	female	1	oestradiol_detection	1	logistic	8	8	body_log	marginal model
 1	female	1	oestradiol_detection	1	logistic	9	9	season	marginal model
