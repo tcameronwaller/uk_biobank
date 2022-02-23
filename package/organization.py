@@ -7749,23 +7749,29 @@ def determine_female_menstruation_phase_cycle(
 
 
 
+#################
+# TODO: WORKING HERE RIGHT NOW!!!
+##################
 
 # review: TCW on __ February 2022
-def determine_female_pregnancies_lost_count(
+def determine_female_pregnancies_early_count(
     sex_text=None,
     field_2774=None,
     field_3849=None,
     field_3839=None,
-    field_3829=None,
 ):
     """
-    Determine total count of pregnancies that female person experienced.
+    Determine total count of pregnancies that ended early from abortive
+    termination or miscarriage.
 
     arguments:
         sex_text (str): textual representation of sex selection
-        pregnancies_lost (float): total count of pregnancies that ended early
-            due termination, abortion, or miscarriage
-        births (float): total count of live and still births
+        field_2774 (float): UK Biobank field 2774, whether person experienced
+            any type of early termination to a pregnancy
+        field_3849 (float): UK Biobank field 3849, count of pregnancy
+            abortive terminations
+        field_3839 (float): UK Biobank field 3839, count of pregnancy
+            spontaneous miscarriages
 
     raises:
 
@@ -7773,6 +7779,17 @@ def determine_female_pregnancies_lost_count(
         (float): interpretation value
 
     """
+
+    # Interpretation.
+    pregnancy_early_logical = interpret_pregnancy_early_logical(
+        field_2774=field_2774,
+    )
+    terminations = interpret_pregnancy_terminations(
+        field_3849=field_3849,
+    )
+    miscarriages = interpret_pregnancy_miscarriages(
+        field_3591=field_3591,
+    )
 
     # Comparison.
     if (sex_text == "female"):
@@ -7799,7 +7816,7 @@ def determine_female_pregnancies_lost_count(
 # review: TCW on __ February 2022
 def determine_female_pregnancies_total_count(
     sex_text=None,
-    pregnancies_lost=None,
+    pregnancies_early=None,
     births=None,
 ):
     """
@@ -7807,8 +7824,8 @@ def determine_female_pregnancies_total_count(
 
     arguments:
         sex_text (str): textual representation of sex selection
-        pregnancies_lost (float): total count of pregnancies that ended early
-            due termination, abortion, or miscarriage
+        pregnancies_early (float): total count of pregnancies that ended early
+            from abortive termination or miscarriage
         births (float): total count of live and still births
 
     raises:
@@ -7821,12 +7838,12 @@ def determine_female_pregnancies_total_count(
     # Comparison.
     if (sex_text == "female"):
         if (
-            (not pandas.isna(pregnancies_lost)) and
+            (not pandas.isna(pregnancies_early)) and
             (not pandas.isna(births))
         ):
-            value = (pregnancies_lost + births)
-        elif (not pandas.isna(pregnancies_lost)):
-            value = pregnancies_lost
+            value = (pregnancies_early + births)
+        elif (not pandas.isna(pregnancies_early)):
+            value = pregnancies_early
         elif (not pandas.isna(births)):
             value = births
         else:
@@ -8404,13 +8421,20 @@ def report_alteration_sex_hormones_by_female_menopause(
 
 
 
-# TODO: "pregnancies_count":
-# ordinal births_live + ordinal births_still + miscarriages + terminations
 
 # TODO: "years_since_last_birth"
 # TODO: TCW, 23 February 2020
 # TODO: "years_since_last_birth" will be a bit more complex because females
 # TODO: who only had 1 single birth need different data field than multi-parous
+
+# TODO: TCW, 23 February 2022
+# TODO: new report function for counts of...
+# 1. current pregnancies
+# 2. live births ( > 0, > 1)
+# 3. still births ( > 0, > 1)
+# 4. pregnancies that ended early ( > 0, > 1)
+# 5. pregnancies that ended in termination ( > 0, > 1)
+# 6. pregnancies that ended in miscarriage ( > 0, > 1)
 
 
 def organize_female_menstruation_pregnancy_menopause_variables(
@@ -8506,20 +8530,20 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             determine_female_births_live_still_count(
                 sex_text=row["sex_text"],
                 field_2724=row["2724-0.0"],
-                field_3591=row["3591-0.0"],
+                field_3829=row["3829-0.0"], # still births
             ),
         axis="columns", # apply function to each row
     )
 
-    # Determine count of pregnancies lost either to termination or miscarriage.
-    table["pregnancies_lost"] = table.apply(
+    # Determine count of pregnancies that ended early from abortive termination
+    # or miscarriage.
+    table["pregnancies_early"] = table.apply(
         lambda row:
-            determine_female_pregnancies_lost_count(
+            determine_female_pregnancies_early_count(
                 sex_text=row["sex_text"],
                 field_2774=row["2774-0.0"],
                 field_3849=row["3849-0.0"],
                 field_3839=row["3839-0.0"],
-                field_3829=row["3829-0.0"],
             ),
         axis="columns", # apply function to each row
     )
@@ -8531,7 +8555,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_pregnancies_total_count(
                 sex_text=row["sex_text"],
-                pregnancies_lost=row["pregnancies_lost"],
+                pregnancies_early=row["pregnancies_early"],
                 births=row["births"],
             ),
         axis="columns", # apply function to each row
