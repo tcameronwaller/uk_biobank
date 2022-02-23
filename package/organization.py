@@ -6650,6 +6650,170 @@ def interpret_pregnancy(
     return value
 
 
+############
+# TCW 23 February 2022
+# WORK ZONE
+
+
+# review: TCW on __ February 2022
+def interpret_live_births(
+    field_2734=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "2734".
+
+    Data-Field "2734": "Number of live births"
+
+    UK Biobank data-coding "100584" for data-field "2734".
+    0-25: "count of events"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_2734 (float): UK Biobank field 2734, count of live births
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2734)) and
+        (-3.5 <= field_2734 and field_2734 < 25.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_2734 and field_2734 < 25.5):
+            # 0-25: "count of events"
+            value = float(field_2734)
+        elif (-3.5 <= field_2734 and field_2734 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # missing or uninterpretable
+        value = float("nan")
+    # Return.
+    return value
+
+
+# review: TCW on __ February 2022
+def interpret_pregnancy_loss(
+    field_2774=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "2774".
+
+    Data-Field "2774": "Ever had stillbirth, spontaneous miscarriage or
+    termination"
+
+    UK Biobank data-coding "100349" for data-field "2774".
+    0: "No"
+    1: "Yes"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_2774 (float): UK Biobank field 2774, whether person experienced
+            any type of early termination to a pregnancy
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_2774)) and
+        (-3.5 <= field_2774 and field_2774 < 1.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= field_2774 and field_2774 < 0.5):
+            # 0: "No"
+            value = 0
+        elif (0.5 <= field_2774 and field_2774 < 1.5):
+            # 1: "Yes"
+            value = 1
+        elif (-1.5 <= field_2774 and field_2774 < -0.5):
+            # -1: "Do not know"
+            value = float("nan")
+        elif (-3.5 <= field_2774 and field_2774 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # missing or uninterpretable
+        value = float("nan")
+    # Return.
+    return value
+
+
+# review: TCW on __ February 2022
+def interpret_pregnancy_terminations_miscarriages_still_births(
+    code_100291=None,
+):
+    """
+    Intepret UK Biobank's data-coding "100291" for data-fields "3849", "3839",
+    and "3829".
+
+    Data-Field "3849": "Number of pregnancy terminations"
+    Data-Field "3839": "Number of spontaneous miscarriages"
+    Data-Field "3829": "Number of stillbirths"
+
+    UK Biobank data-coding "100291" for data-fields "3849", "3839", "3829".
+    0-35: "count of events"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        code_100291 (float): UK Biobank data-field "3849", "3839", or "3829", in
+            data-coding "100291"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(code_100291)) and
+        (-3.5 <= code_100291 and code_100291 < 35.5)
+    ):
+        # The variable has a valid value.
+        if (-0.5 <= code_100291 and code_100291 < 35.5):
+            # 0-35: "count of events"
+            value = float(code_100291)
+        elif (-1.5 <= code_100291 and code_100291 < -0.5):
+            # -1: "Do not know"
+            value = float("nan")
+        elif (-3.5 <= code_100291 and code_100291 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # missing or uninterpretable
+        value = float("nan")
+    # Return.
+    return value
+
+
 # review: TCW on 18 January 2022
 def determine_female_menstruation_days(
     sex_text=None,
@@ -7748,10 +7912,80 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
+############
+# TCW 23 February 2022
+# WORK ZONE
 
-#################
-# TODO: WORKING HERE RIGHT NOW!!!
-##################
+
+# review: TCW on __ February 2022
+def determine_female_births_live_still_count(
+    sex_text=None,
+    field_2734=None,
+    field_2774=None,
+    field_3829=None,
+):
+    """
+    Determine total count of pregnancies that ended early from abortive
+    termination or miscarriage.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_2734 (float): UK Biobank field 2734, count of live births
+        field_2774 (float): UK Biobank field 2774, whether person experienced
+            any type of early termination to a pregnancy
+        field_3829 (float): UK Biobank field 3829, count of still births
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpretation.
+    pregnancy_loss = interpret_pregnancy_loss(
+        field_2774=field_2774,
+    )
+    births_still = interpret_pregnancy_terminations_miscarriages_still_births(
+        code_100291=field_3829,
+    )
+
+    births_live = float("nan")
+
+    # Comparison.
+    if (
+        (sex_text == "female")
+    ):
+        # Determine count of still births.
+        if (pregnancy_loss == 1):
+            # Female person experienced a pregnancy loss.
+            # Determine the count of pregnancies that ended early.
+            if (
+                (not pandas.isna(births_still))
+            ):
+                count_still = births_still
+            else:
+                # There is inadequate explanation of the pregnancy loss.
+                # Do not make any assumptions.
+                # Lost pregnancy might have ended early from termination or
+                # abortion or might have ended late from still birth.
+                count_still = 0
+        elif (pregnancy_loss == 0):
+            # Female person did not experience any pregnancy that ended early.
+            count_still = 0
+        # Determine count of live births.
+        if (not pandas.isna(births_live)):
+            count_live = births_live
+        else:
+            count_live = 0
+        # Determine count of total still and live births.
+        value = (count_still + count_live)
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
 
 # review: TCW on __ February 2022
 def determine_female_pregnancies_early_count(
@@ -7767,7 +8001,7 @@ def determine_female_pregnancies_early_count(
     arguments:
         sex_text (str): textual representation of sex selection
         field_2774 (float): UK Biobank field 2774, whether person experienced
-            any type of early termination to a pregnancy
+            any type of loss of a pregnancy that did not end in live birth
         field_3849 (float): UK Biobank field 3849, count of pregnancy
             abortive terminations
         field_3839 (float): UK Biobank field 3839, count of pregnancy
@@ -7781,31 +8015,41 @@ def determine_female_pregnancies_early_count(
     """
 
     # Interpretation.
-    pregnancy_early_logical = interpret_pregnancy_early_logical(
+    pregnancy_loss = interpret_pregnancy_loss(
         field_2774=field_2774,
     )
-    terminations = interpret_pregnancy_terminations(
-        field_3849=field_3849,
+    terminations = interpret_pregnancy_terminations_miscarriages_still_births(
+        code_100291=field_3849,
     )
-    miscarriages = interpret_pregnancy_miscarriages(
-        field_3591=field_3591,
+    miscarriages = interpret_pregnancy_terminations_miscarriages_still_births(
+        code_100291=field_3839,
     )
 
     # Comparison.
-    if (sex_text == "female"):
-        if (
-            (not pandas.isna(pregnancies_lost)) and
-            (not pandas.isna(births))
-        ):
-            value = (pregnancies_lost + births)
-        elif (not pandas.isna(pregnancies_lost)):
-            value = pregnancies_lost
-        elif (not pandas.isna(births)):
-            value = births
-        else:
-            # There is insufficient information.
-            value = float("nan")
-            pass
+    if (
+        (sex_text == "female")
+    ):
+        if (pregnancy_loss == 1):
+            # Female person experienced a pregnancy loss.
+            # Determine the count of pregnancies that ended early.
+            if (
+                (not pandas.isna(terminations)) and
+                (not pandas.isna(miscarriages))
+            ):
+                value = (terminations + miscarriages)
+            elif (not pandas.isna(terminations)):
+                value = terminations
+            elif (not pandas.isna(miscarriages)):
+                value = miscarriages
+            else:
+                # There is inadequate explanation of the pregnancy loss.
+                # Do not make any assumptions.
+                # Lost pregnancy might have ended early from termination or
+                # abortion or might have ended late from still birth.
+                value = float("nan")
+        elif (pregnancy_loss == 0):
+            # Female person did not experience any pregnancy that ended early.
+            value = 0
     else:
         # Pregnancy undefined for males.
         value = float("nan")
@@ -8529,7 +8773,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_births_live_still_count(
                 sex_text=row["sex_text"],
-                field_2724=row["2724-0.0"],
+                field_2734=row["2734-0.0"],
+                field_2774=row["2774-0.0"],
                 field_3829=row["3829-0.0"], # still births
             ),
         axis="columns", # apply function to each row
