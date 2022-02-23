@@ -6166,7 +6166,7 @@ def execute_procedure(
         # Write product information to file.
         write_genotype_product(
             pail_write=pail_set,
-            directory=set,
+            directory=stratification_set,
             paths=paths,
         )
     pass
