@@ -1544,16 +1544,11 @@ def select_records_by_female_specific_valid_variables_values(
             (table["menstruation_regular_range"].isin(menstruation_regular)), :
         ]
     # Determine whether to filter by ordinal definition of menopause.
-    print("testy... here is 'menopause_ordinal'...")
-    print(menopause_ordinal)
-    print("and here is menstruation_regular...")
-    print(menstruation_regular)
     if (
         (0 not in menopause_ordinal) or
         (1 not in menopause_ordinal) or
         (2 not in menopause_ordinal)
     ):
-        print("test test test... this should only run if selecting menopause sub-cohort")
         # Select records.
         table = table.loc[
             (table["menopause_ordinal"].isin(menopause_ordinal)), :
@@ -1693,8 +1688,8 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     if female:
         table_female = select_records_by_female_specific_valid_variables_values(
             pregnancy=female_pregnancy,
-            menstruation_regular=copy.deepcopy(female_menstruation_regular),
-            menopause_ordinal=copy.deepcopy(female_menopause_ordinal),
+            menstruation_regular=female_menstruation_regular,
+            menopause_ordinal=female_menopause_ordinal,
             variables=female_variables,
             prefixes=female_prefixes,
             table=table,
@@ -4071,7 +4066,7 @@ def stratify_genotype_cohorts_models_set(
             record_strat["independence"].split(";")
         )
         if (
-            (len(str(record_strat["independence_extra_female"])) > 0)
+            (not pandas.isna(record_strat["independence_extra_female"])
         ):
             independence_extra_female = copy.deepcopy(
                 record_strat["independence_extra_female"].split(";")
