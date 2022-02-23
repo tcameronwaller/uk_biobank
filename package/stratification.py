@@ -3522,7 +3522,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
             white_british=[1,],
             female=True,
             female_pregnancy=[0,1,],
-            female_menopause_binary=[0, 1,],
+            female_menstruation_regular=[0, 1,],
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
@@ -3562,7 +3562,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
             white_british=[1,],
             female=True,
             female_pregnancy=[0,1,],
-            female_menopause_binary=[0, 1,],
+            female_menstruation_regular=[0, 1,],
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
@@ -3602,7 +3602,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
             white_british=[1,],
             female=True,
             female_pregnancy=[0,1,],
-            female_menopause_binary=[0, 1,],
+            female_menstruation_regular=[0, 1,],
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
@@ -3642,7 +3642,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
             white_british=[1,],
             female=True,
             female_pregnancy=[0,1,],
-            female_menopause_binary=[0, 1,],
+            female_menstruation_regular=[0, 1,],
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
@@ -3681,7 +3681,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
             white_british=[1,],
             female=False,
             female_pregnancy=[0,1,],
-            female_menopause_binary=[0, 1,],
+            female_menstruation_regular=[0, 1,],
             female_menopause_ordinal=[0, 1, 2,],
             female_variables=[
                 "eid", "IID",
