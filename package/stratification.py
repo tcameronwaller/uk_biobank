@@ -6158,7 +6158,7 @@ def execute_procedure(
         pass
     # Extract names of sets.
     stratification_sets = list(set(table_stratification["set"].to_list()))
-    if (True):
+    if (False):
         stratification_sets.insert(0, "reference_population")
     # Iterate on sets of stratification cohorts and models.
     for stratification_set in stratification_sets:
