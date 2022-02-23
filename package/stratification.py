@@ -6134,11 +6134,11 @@ def execute_procedure(
     )
     table_kinship_pairs = read_source_table_kinship_pairs(
         path_dock=path_dock,
-        report=report,
+        report=True,
     )
     table_stratification = read_source_table_stratification_cohorts_models(
         path_dock=path_dock,
-        report=report,
+        report=True,
     )
     # Filter stratification table by "execution".
     if True:
