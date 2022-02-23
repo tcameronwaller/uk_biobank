@@ -8190,7 +8190,7 @@ def report_female_pregnancies_births(
             (table["births"] == 2)
         ), :
     ]
-    table_births_3 = table.loc[
+    table_births_3_or_more = table.loc[
         (
             (table["sex_text"] == "female") &
             (table["births"] >= 3)
