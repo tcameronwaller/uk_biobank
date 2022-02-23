@@ -7949,15 +7949,18 @@ def determine_female_births_live_still_count(
     births_still = interpret_pregnancy_terminations_miscarriages_still_births(
         code_100291=field_3829,
     )
-
-    births_live = float("nan")
-
+    births_live = interpret_live_births(
+        field_2734=field_2734,
+    )
     # Comparison.
     if (
         (sex_text == "female")
     ):
         # Determine count of still births.
-        if (pregnancy_loss == 1):
+        if (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 1)
+        ):
             # Female person experienced a pregnancy loss.
             # Determine the count of pregnancies that ended early.
             if (
@@ -7969,17 +7972,32 @@ def determine_female_births_live_still_count(
                 # Do not make any assumptions.
                 # Lost pregnancy might have ended early from termination or
                 # abortion or might have ended late from still birth.
-                count_still = 0
-        elif (pregnancy_loss == 0):
+                count_still = float("nan")
+        elif (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 0)
+        ):
             # Female person did not experience any pregnancy that ended early.
             count_still = 0
+        else:
+            count_still = float("nan")
         # Determine count of live births.
         if (not pandas.isna(births_live)):
             count_live = births_live
         else:
-            count_live = 0
+            count_live = float("nan")
         # Determine count of total still and live births.
-        value = (count_still + count_live)
+        if (
+            (not pandas.isna(count_still)) and
+            (not pandas.isna(count_live))
+        ):
+            value = (count_still + count_live)
+        elif ((not pandas.isna(count_still))):
+            value = count_still
+        elif ((not pandas.isna(count_live))):
+            value = count_live
+        else:
+            value = float("nan")
     else:
         # Pregnancy undefined for males.
         value = float("nan")
@@ -8101,6 +8119,119 @@ def determine_female_pregnancies_total_count(
     return value
 
 
+# review: TCW on __ February 2022
+def report_female_pregnancies_births(
+    table=None,
+):
+    """
+    Reports counts of female persons who experienced events of pregnancy and
+    birth.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_pregnancies_0 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancies"] == 0)
+        ), :
+    ]
+    table_pregnancies_1 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancies"] == 1)
+        ), :
+    ]
+    table_pregnancies_2 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancies"] == 2)
+        ), :
+    ]
+    table_pregnancies_3_or_more = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["pregnancies"] >= 3)
+        ), :
+    ]
+
+
+    table_births_0 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births"] == 0)
+        ), :
+    ]
+    table_births_1 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births"] == 1)
+        ), :
+    ]
+    table_births_2 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births"] == 2)
+        ), :
+    ]
+    table_births_3 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births"] >= 3)
+        ), :
+    ]
+    # Counts.
+    count_female = table_female.shape[0]
+
+    count_pregnancies_0 = table_pregnancies_0.shape[0]
+    count_pregnancies_1 = table_pregnancies_1.shape[0]
+    count_pregnancies_2 = table_pregnancies_2.shape[0]
+    count_pregnancies_3_or_more = table_pregnancies_3_or_more.shape[0]
+
+    count_births_0 = table_births_0.shape[0]
+    count_births_1 = table_births_1.shape[0]
+    count_births_2 = table_births_2.shape[0]
+    count_births_3_or_more = table_births_3_or_more.shape[0]
+
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_female_self_report_menopause_hysterectomy_oophorectomy()")
+    utility.print_terminal_partition(level=3)
+    print("... all counts specific to female persons ...")
+    utility.print_terminal_partition(level=4)
+    print("total: " + str(count_female))
+    utility.print_terminal_partition(level=4)
+    print("Pregnancies...")
+    utility.print_terminal_partition(level=4)
+    print("0: " + str(count_pregnancies_0))
+    print("1: " + str(count_pregnancies_1))
+    print("2: " + str(count_pregnancies_2))
+    print("3 or more: " + str(count_pregnancies_3_or_more))
+    utility.print_terminal_partition(level=4)
+    print("Births...")
+    utility.print_terminal_partition(level=4)
+    print("0: " + str(count_births_0))
+    print("1: " + str(count_births_1))
+    print("2: " + str(count_births_2))
+    print("3 or more: " + str(count_births_3_or_more))
+    pass
 
 
 # review: TCW on 20 January January 2022
@@ -8666,6 +8797,9 @@ def report_alteration_sex_hormones_by_female_menopause(
 
 
 
+
+
+
 # TODO: "years_since_last_birth"
 # TODO: TCW, 23 February 2020
 # TODO: "years_since_last_birth" will be a bit more complex because females
@@ -9026,6 +9160,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             "organize_female_menstruation_pregnancy_menopause_variables()"
         )
         print(table_report)
+        report_female_pregnancies_births(
+            table=table,
+        )
         report_female_menstruation_regularity_duration_range(
             threshold_duration_low=21, # inclusive of lower threshold
             threshold_duration_high=36, # exclusive of higher threshold
