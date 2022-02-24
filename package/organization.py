@@ -8210,7 +8210,7 @@ def report_female_pregnancies_births(
     # Report.
     utility.print_terminal_partition(level=2)
     print("report: ")
-    print("report_female_self_report_menopause_hysterectomy_oophorectomy()")
+    print("report_female_pregnancies_births()")
     utility.print_terminal_partition(level=3)
     print("... all counts specific to female persons ...")
     utility.print_terminal_partition(level=4)
