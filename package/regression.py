@@ -908,7 +908,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_oestradiol_basis"]
+                    source_reference["table_tesosterone_basis"]
                 ),
                 independences_summary=[
                     "menstruation_phase_cycle",
@@ -931,12 +931,12 @@ def execute_procedure(
         ))
         pass
 
-    if False:
+    if True:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_oestradiol_basis"]
+                    source_reference["table_testosterone_basis"]
                 ),
                 independences_summary=[
                     "menstruation_phase_cycle",
@@ -963,13 +963,12 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_logistic_oestradiol_basis"] = (
+    information["tables"]["table_regressions_logistic_testosterone_basis"] = (
         pail_logistic_1["table"]
     )
-
-    #information["tables"]["table_regressions_linear_oestradiol_basis"] = (
-    #    pail_linear_1["table"]
-    #)
+    information["tables"]["table_regressions_linear_testosterone_basis"] = (
+        pail_linear_1["table"]
+    )
     # Write product information to file.
     write_product(
         paths=paths,
