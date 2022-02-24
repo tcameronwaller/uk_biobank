@@ -6650,12 +6650,7 @@ def interpret_pregnancy(
     return value
 
 
-############
-# TCW 23 February 2022
-# WORK ZONE
-
-
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def interpret_live_births(
     field_2734=None,
 ):
@@ -6665,7 +6660,7 @@ def interpret_live_births(
     Data-Field "2734": "Number of live births"
 
     UK Biobank data-coding "100584" for data-field "2734".
-    0-25: "count of events"
+    0-25: "Count of events"
     -3: "Prefer not to answer"
 
     Accommodate inexact float values.
@@ -6702,7 +6697,7 @@ def interpret_live_births(
     return value
 
 
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def interpret_pregnancy_loss(
     field_2774=None,
 ):
@@ -6722,7 +6717,7 @@ def interpret_pregnancy_loss(
 
     arguments:
         field_2774 (float): UK Biobank field 2774, whether person experienced
-            any type of early termination to a pregnancy
+            any type of loss of a pregnancy that did not end in live birth
 
     raises:
 
@@ -6759,8 +6754,8 @@ def interpret_pregnancy_loss(
     return value
 
 
-# review: TCW on __ February 2022
-def interpret_pregnancy_terminations_miscarriages_still_births(
+# review: TCW on 23 February 2022
+def interpret_pregnancy_terminations_miscarriages_stillbirths(
     code_100291=None,
 ):
     """
@@ -6772,7 +6767,7 @@ def interpret_pregnancy_terminations_miscarriages_still_births(
     Data-Field "3829": "Number of stillbirths"
 
     UK Biobank data-coding "100291" for data-fields "3849", "3839", "3829".
-    0-35: "count of events"
+    0-35: "Count of events"
     -1: "Do not know"
     -3: "Prefer not to answer"
 
@@ -6796,7 +6791,7 @@ def interpret_pregnancy_terminations_miscarriages_still_births(
     ):
         # The variable has a valid value.
         if (-0.5 <= code_100291 and code_100291 < 35.5):
-            # 0-35: "count of events"
+            # 0-35: "Count of events"
             value = float(code_100291)
         elif (-1.5 <= code_100291 and code_100291 < -0.5):
             # -1: "Do not know"
@@ -6812,11 +6807,6 @@ def interpret_pregnancy_terminations_miscarriages_still_births(
         value = float("nan")
     # Return.
     return value
-
-
-# TCW 23 February 2022
-# WORK ZONE
-############
 
 
 # review: TCW on 18 January 2022
@@ -7917,12 +7907,7 @@ def determine_female_menstruation_phase_cycle(
     return value
 
 
-############
-# TCW 23 February 2022
-# WORK ZONE
-
-
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def determine_female_births_live_still_count(
     sex_text=None,
     field_2734=None,
@@ -7930,14 +7915,14 @@ def determine_female_births_live_still_count(
     field_3829=None,
 ):
     """
-    Determine total count of pregnancies that ended early from abortive
-    termination or miscarriage.
+    Determine total count of pregnancies that progressed to full term or nearly
+    full term and ended in either a still birth or a live birth.
 
     arguments:
         sex_text (str): textual representation of sex selection
         field_2734 (float): UK Biobank field 2734, count of live births
         field_2774 (float): UK Biobank field 2774, whether person experienced
-            any type of early termination to a pregnancy
+            any type of loss of a pregnancy that did not end in live birth
         field_3829 (float): UK Biobank field 3829, count of still births
 
     raises:
@@ -7951,8 +7936,8 @@ def determine_female_births_live_still_count(
     pregnancy_loss = interpret_pregnancy_loss(
         field_2774=field_2774,
     )
-    births_still = interpret_pregnancy_terminations_miscarriages_still_births(
-        code_100291=field_3829,
+    births_still = interpret_pregnancy_terminations_miscarriages_stillbirths(
+        code_100291=field_3829, # count still births
     )
     births_live = interpret_live_births(
         field_2734=field_2734,
@@ -7967,22 +7952,21 @@ def determine_female_births_live_still_count(
             (pregnancy_loss == 1)
         ):
             # Female person experienced a pregnancy loss.
-            # Determine the count of pregnancies that ended early.
-            if (
-                (not pandas.isna(births_still))
-            ):
+            # Determine the count of pregnancies that ended in still birth.
+            if (not pandas.isna(births_still)):
                 count_still = births_still
             else:
                 # There is inadequate explanation of the pregnancy loss.
                 # Do not make any assumptions.
-                # Lost pregnancy might have ended early from termination or
-                # abortion or might have ended late from still birth.
+                # Lost pregnancy might have ended early in termination or
+                # abortion or might have ended late in still birth.
                 count_still = float("nan")
         elif (
             (not pandas.isna(pregnancy_loss)) and
             (pregnancy_loss == 0)
         ):
             # Female person did not experience any pregnancy loss.
+            # Hence female person did not experience any still births.
             count_still = 0
         else:
             count_still = float("nan")
@@ -7997,9 +7981,9 @@ def determine_female_births_live_still_count(
             (not pandas.isna(count_live))
         ):
             value = (count_still + count_live)
-        elif ((not pandas.isna(count_still))):
+        elif (not pandas.isna(count_still)):
             value = count_still
-        elif ((not pandas.isna(count_live))):
+        elif (not pandas.isna(count_live)):
             value = count_live
         else:
             value = float("nan")
@@ -8010,7 +7994,7 @@ def determine_female_births_live_still_count(
     return value
 
 
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def determine_female_pregnancies_early_count(
     sex_text=None,
     field_2774=None,
@@ -8018,8 +8002,8 @@ def determine_female_pregnancies_early_count(
     field_3839=None,
 ):
     """
-    Determine total count of pregnancies that ended early from abortive
-    termination or miscarriage.
+    Determine total count of pregnancies that ended early in either abortive
+    termination or spontaneous miscarriage.
 
     arguments:
         sex_text (str): textual representation of sex selection
@@ -8041,11 +8025,11 @@ def determine_female_pregnancies_early_count(
     pregnancy_loss = interpret_pregnancy_loss(
         field_2774=field_2774,
     )
-    terminations = interpret_pregnancy_terminations_miscarriages_still_births(
-        code_100291=field_3849,
+    terminations = interpret_pregnancy_terminations_miscarriages_stillbirths(
+        code_100291=field_3849, # count terminations
     )
-    miscarriages = interpret_pregnancy_terminations_miscarriages_still_births(
-        code_100291=field_3839,
+    miscarriages = interpret_pregnancy_terminations_miscarriages_stillbirths(
+        code_100291=field_3839, # count miscarriages
     )
 
     # Comparison.
@@ -8070,14 +8054,15 @@ def determine_female_pregnancies_early_count(
             else:
                 # There is inadequate explanation of the pregnancy loss.
                 # Do not make any assumptions.
-                # Lost pregnancy might have ended early from termination or
-                # abortion or might have ended late from still birth.
+                # Lost pregnancy might have ended early in termination or
+                # abortion or might have ended late in still birth.
                 value = float("nan")
         elif (
             (not pandas.isna(pregnancy_loss)) and
             (pregnancy_loss == 0)
         ):
             # Female person did not experience any pregnancy loss.
+            # Hence female person did not experience any early pregnancy loss.
             value = 0
         else:
             value = float("nan")
@@ -8088,7 +8073,7 @@ def determine_female_pregnancies_early_count(
     return value
 
 
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def determine_female_pregnancies_total_count(
     sex_text=None,
     pregnancies_early=None,
@@ -8100,7 +8085,7 @@ def determine_female_pregnancies_total_count(
     arguments:
         sex_text (str): textual representation of sex selection
         pregnancies_early (float): total count of pregnancies that ended early
-            from abortive termination or miscarriage
+            in either abortive termination or spontaneous miscarriage
         births (float): total count of live and still births
 
     raises:
@@ -8132,7 +8117,7 @@ def determine_female_pregnancies_total_count(
     return value
 
 
-# review: TCW on __ February 2022
+# review: TCW on 23 February 2022
 def report_female_pregnancies_births(
     table=None,
 ):
@@ -8245,11 +8230,6 @@ def report_female_pregnancies_births(
     print("2: " + str(count_births_2))
     print("3 or more: " + str(count_births_3_or_more))
     pass
-
-
-# TCW 23 February 2022
-# WORK ZONE
-############
 
 
 # review: TCW on 20 January January 2022
@@ -8813,24 +8793,10 @@ def report_alteration_sex_hormones_by_female_menopause(
     pass
 
 
-
-
-
-
-
-# TODO: "years_since_last_birth"
 # TODO: TCW, 23 February 2020
+# TODO: "years_since_last_birth"
 # TODO: "years_since_last_birth" will be a bit more complex because females
 # TODO: who only had 1 single birth need different data field than multi-parous
-
-# TODO: TCW, 23 February 2022
-# TODO: new report function for counts of...
-# 1. current pregnancies
-# 2. live births ( > 0, > 1)
-# 3. still births ( > 0, > 1)
-# 4. pregnancies that ended early ( > 0, > 1)
-# 5. pregnancies that ended in termination ( > 0, > 1)
-# 6. pregnancies that ended in miscarriage ( > 0, > 1)
 
 
 def organize_female_menstruation_pregnancy_menopause_variables(
@@ -8925,9 +8891,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_births_live_still_count(
                 sex_text=row["sex_text"],
-                field_2734=row["2734-0.0"],
-                field_2774=row["2774-0.0"],
-                field_3829=row["3829-0.0"], # still births
+                field_2734=row["2734-0.0"], # count live births
+                field_2774=row["2774-0.0"], # pregnancy loss
+                field_3829=row["3829-0.0"], # count still births
             ),
         axis="columns", # apply function to each row
     )
@@ -8938,9 +8904,9 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         lambda row:
             determine_female_pregnancies_early_count(
                 sex_text=row["sex_text"],
-                field_2774=row["2774-0.0"],
-                field_3849=row["3849-0.0"],
-                field_3839=row["3839-0.0"],
+                field_2774=row["2774-0.0"], # pregnancy loss
+                field_3849=row["3849-0.0"], # count terminations
+                field_3839=row["3839-0.0"], # count miscarriages
             ),
         axis="columns", # apply function to each row
     )
@@ -8957,7 +8923,6 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             ),
         axis="columns", # apply function to each row
     )
-
 
     ##########
     # Menopause
