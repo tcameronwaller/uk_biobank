@@ -931,7 +931,7 @@ def execute_procedure(
         ))
         pass
 
-    if True:
+    if False:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -966,9 +966,9 @@ def execute_procedure(
     information["tables"]["table_regressions_logistic_testosterone_basis"] = (
         pail_logistic_1["table"]
     )
-    information["tables"]["table_regressions_linear_testosterone_basis"] = (
-        pail_linear_1["table"]
-    )
+    #information["tables"]["table_regressions_linear_testosterone_basis"] = (
+    #    pail_linear_1["table"]
+    #)
     # Write product information to file.
     write_product(
         paths=paths,
