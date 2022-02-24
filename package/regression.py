@@ -181,7 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         "table_oestradiol_basis.tsv",
-        #"table_testosterone_basis.tsv",
+        "table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
         #"table_linear_hormones_sex_age_menopause.tsv",
         #"table_linear_vitamin_d_basis.tsv",
@@ -931,7 +931,7 @@ def execute_procedure(
         ))
         pass
 
-    if True:
+    if False:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -966,9 +966,10 @@ def execute_procedure(
     information["tables"]["table_regressions_logistic_oestradiol_basis"] = (
         pail_logistic_1["table"]
     )
-    information["tables"]["table_regressions_linear_oestradiol_basis"] = (
-        pail_linear_1["table"]
-    )
+
+    #information["tables"]["table_regressions_linear_oestradiol_basis"] = (
+    #    pail_linear_1["table"]
+    #)
     # Write product information to file.
     write_product(
         paths=paths,
