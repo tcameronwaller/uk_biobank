@@ -908,7 +908,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_tesosterone_basis"]
+                    source_reference["table_testosterone_basis"]
                 ),
                 independences_summary=[
                     "menstruation_phase_cycle",
