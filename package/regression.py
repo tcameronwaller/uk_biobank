@@ -908,7 +908,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_testosterone_basis"]
+                    source_reference["table_oestradiol_basis"]
                 ),
                 independences_summary=[
                     "menstruation_phase_cycle",
@@ -922,7 +922,7 @@ def execute_procedure(
                     "medication_vitamin_d", "alteration_sex_hormone",
                     "cholesterol_imputation",
                     "vitamin_d_imputation",
-                    "oestradiol_imputation",
+                    "testosterone_imputation",
                     "steroid_globulin_imputation", "albumin_imputation",
                 ],
                 filter_execution=True,
@@ -963,7 +963,7 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_logistic_testosterone_basis"] = (
+    information["tables"]["table_regressions_logistic_oestradiol_basis"] = (
         pail_logistic_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
