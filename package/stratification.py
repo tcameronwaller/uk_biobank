@@ -4064,9 +4064,14 @@ def stratify_genotype_cohorts_models_set(
     records_set = list()
     for record_strat in records_stratification:
         # Extract names of independent variables.
-        independence_male = copy.deepcopy(
-            record_strat["independence"].split(";")
-        )
+        if (
+            (not pandas.isna(record_strat["independence"]))
+        ):
+            independence_male = copy.deepcopy(
+                record_strat["independence"].split(";")
+            )
+        else:
+            independence_male = []
         if (
             (not pandas.isna(record_strat["independence_extra_female"]))
         ):
