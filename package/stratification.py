@@ -3743,6 +3743,8 @@ def stratify_genotype_cohorts_models_set_reference_population(
     return records
 
 
+# common covariates: "eid", "IID", "white_british", "genotype_array_axiom"
+
 def stratify_genotype_cohort_model_instance(
     dependence=None,
     dependence_binary=None,
