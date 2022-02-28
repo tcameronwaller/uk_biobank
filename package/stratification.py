@@ -4116,16 +4116,24 @@ def stratify_genotype_cohorts_models_set(
     return records_set
 
 
+# TODO: TCW, 28 February 2022
+# TODO: standardize the scale of all variables except for binary phenotypes (dependent variables) for PLINK2
+
+
 def execute_organize_stratification_genotype_cohorts_models(
     table=None,
     table_kinship_pairs=None,
     table_stratification=None,
     stratification_set=None,
+    variance_scale=None,
     format_plink=None,
     report=None,
 ):
     """
     Organizes information about cohorts and models for genetic analysis.
+
+    Note that the preference is to standardize scale of variables' variances
+    within PLINK2 with the argument "--covar-variance-standardize".
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -4136,6 +4144,8 @@ def execute_organize_stratification_genotype_cohorts_models(
             for stratification for analyses on genotypes
         stratification_set (str): name of set of cohorts and models for
             genotype stratification
+        variance_scale (bool): whether to convert the variance of variables to
+            standard scale (z-score)
         format_plink (bool): whether to convert table formats for PLINK2
         report (bool): whether to print reports
 
@@ -4169,10 +4179,26 @@ def execute_organize_stratification_genotype_cohorts_models(
 
     # Organize secondary stratification entries.
     pail = dict()
-    # Determine whether to translate table formats for PLINK2.
-    if (format_plink):
-        # Translate variable encodings and table format for analysis in PLINK2.
-        for record in records:
+    # Iterate on stratification records.
+    for record in records:
+        # Determine whether to standardize the scale of variance in variables.
+        if (variance_scale):
+            scale_variables = list(filter(
+                lambda column: (str(column) not in record["binary_variables"]),
+                record["table"].columns.to_list()
+            ))
+            record["table_scale"] = (
+                utility.standardize_scale_values_specific_table_columns(
+                    table=record["table"],
+                    columns=scale_variables,
+                    report=report,
+            ))
+        else:
+            record["table_scale"] = record["table"]
+        # Determine whether to translate table formats for PLINK2.
+        if (format_plink):
+            # Translate variable encodings and table format for analysis in
+            # PLINK2.
             pail[record["name_table"]] = (
                 organize_phenotype_covariate_table_plink_format(
                     boolean_variables=[],
@@ -4180,14 +4206,10 @@ def execute_organize_stratification_genotype_cohorts_models(
                     continuous_variables=[],
                     sex_y="sex_y",
                     remove_null_records=False,
-                    table=record["table"],
+                    table=record["table_scale"],
             ))
-            pass
-    else:
-        # Translate collection format.
-        for record in records:
-            pail[record["name_table"]] = record["table"]
-            pass
+        else:
+            pail[record["name_table"]] = record["table_scale"]
         pass
     # Report.
     if report:
@@ -6174,6 +6196,7 @@ def execute_procedure(
             table_kinship_pairs=table_kinship_pairs,
             table_stratification=table_stratification,
             stratification_set=stratification_set,
+            variance_scale=False, # whether to standardize variance scale
             format_plink=True, # whether to convert table formats for PLINK2
             report=True,
         )
