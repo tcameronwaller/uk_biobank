@@ -1187,7 +1187,7 @@ def translate_binary_phenotype_plink(
     return value
 
 
-def translate_biological_sex_plink(
+def translate_biological_sex_plink_binary(
     sex_y=None,
 ):
     """
@@ -1230,11 +1230,55 @@ def translate_biological_sex_plink(
     return interpretation
 
 
+def translate_biological_sex_plink(
+    sex_text=None,
+):
+    """
+    Translate biological sex to format for PLINK2.
+    2 : female (XX)
+    1 : male (XY)
+
+    arguments:
+        sex_text (float): sex as logical presence of Y chromosome
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(sex_text)) and
+        ((sex_text == "female") or (sex_text == "male"))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (sex_text == "female"):
+            # sex_y: 0, "female"
+            # PLINK2: 2, "female"
+            interpretation = 2
+        elif (sex_text == "male"):
+            # sex_y: 1, "male"
+            # PLINK2: 1, "male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return information.
+    return interpretation
+
+
+
 def organize_phenotype_covariate_table_plink_format(
     boolean_variables=None,
     binary_variables=None,
     continuous_variables=None,
-    sex_y=None,
+    sex_text=None,
     remove_null_records=None,
     table=None,
 ):
@@ -1289,7 +1333,7 @@ def organize_phenotype_covariate_table_plink_format(
         continuous_variables (list<str>): names of columns that PLINK ought
             to interpret as continuous variables (ordinal discrete, interval
             continuous, or ratio continuous)
-        sex_y (str): name of column for logical binary representation of
+        sex_text (str): name of column for logical binary representation of
             biological sex in terms of presence of Y chromosome (0: female, XX;
             1: male, XY)
         remove_null_records (bool): whether to remove records with any null
@@ -1341,7 +1385,7 @@ def organize_phenotype_covariate_table_plink_format(
     table["SEX"] = table.apply(
         lambda row:
             translate_biological_sex_plink(
-                sex_y=row[sex_y],
+                sex_text=row[sex_text],
             ),
         axis="columns", # apply function to each row
     )
@@ -4178,7 +4222,10 @@ def execute_organize_stratification_genotype_cohorts_models(
     for record in records:
         # Determine whether to standardize the scale of variance in variables.
         if (variance_scale):
-            exclusions = copy.deepcopy(record["binary_variables"])
+            exclusions = [
+                "eid", "IID", "white_british", "sex_text",
+            ]
+            exclusions.extend(copy.deepcopy(record["binary_variables"]))
             exclusions.append(copy.deepcopy(record["dependence"]))
             scale_variables = list(filter(
                 lambda column: (str(column) not in exclusions),
@@ -4201,7 +4248,7 @@ def execute_organize_stratification_genotype_cohorts_models(
                     boolean_variables=[],
                     binary_variables=record["binary_variables"],
                     continuous_variables=[],
-                    sex_y="sex_y",
+                    sex_text="sex_text",
                     remove_null_records=False,
                     table=record["table_scale"],
             ))
