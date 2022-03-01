@@ -6241,7 +6241,7 @@ def execute_procedure(
             table_kinship_pairs=table_kinship_pairs,
             table_stratification=table_stratification,
             stratification_set=stratification_set,
-            variance_scale=True, # whether to standardize variance scale
+            variance_scale=False, # whether to standardize variance scale
             format_plink=True, # whether to convert table formats for PLINK2
             report=True,
         )
