@@ -1392,7 +1392,8 @@ def organize_phenotype_covariate_table_plink_format(
     # Organize.
     table.reset_index(
         level=None,
-        inplace=True
+        inplace=True,
+        drop=False,
     )
     # Remove table rows with any empty cells or missing values.
     if remove_null_records:
@@ -4235,7 +4236,7 @@ def execute_organize_stratification_genotype_cohorts_models(
                 utility.standardize_scale_values_specific_table_columns(
                     table=record["table"],
                     columns=scale_variables,
-                    report=report,
+                    report=False,
             ))
         else:
             record["table_scale"] = record["table"]
