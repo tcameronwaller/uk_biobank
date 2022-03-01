@@ -3743,8 +3743,6 @@ def stratify_genotype_cohorts_models_set_reference_population(
     return records
 
 
-# common covariates: "eid", "IID", "white_british", "genotype_array_axiom"
-
 def stratify_genotype_cohort_model_instance(
     dependence=None,
     dependence_binary=None,
@@ -4114,10 +4112,6 @@ def stratify_genotype_cohorts_models_set(
             )
     # Return information.
     return records_set
-
-
-# TODO: TCW, 28 February 2022
-# TODO: standardize the scale of all variables except for binary phenotypes (dependent variables) for PLINK2
 
 
 def execute_organize_stratification_genotype_cohorts_models(
