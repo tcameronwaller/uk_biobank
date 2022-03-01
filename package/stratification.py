@@ -3809,6 +3809,7 @@ def stratify_genotype_cohort_model_instance(
     record["cohort_model"] = str(cohort + "_" + model)
     record["name"] = str(record["cohort_model"] + "_" + dependence)
     record["name_table"] = str("table_" + record["name"])
+    record["dependence"] = str(dependence)
     record["binary_variables"] = binary_variables
 
     if (cohort == "female_male"):
@@ -4177,9 +4178,11 @@ def execute_organize_stratification_genotype_cohorts_models(
     for record in records:
         # Determine whether to standardize the scale of variance in variables.
         if (variance_scale):
+            exclusions = copy.deepcopy(record["binary_variables"])
+            exclusions.append(copy.deepcopy(record["dependence"]))
             scale_variables = list(filter(
-                lambda column: (str(column) not in record["binary_variables"]),
-                record["table"].columns.to_list()
+                lambda column: (str(column) not in exclusions),
+                copy.deepcopy(record["table"].columns.to_list())
             ))
             record["table_scale"] = (
                 utility.standardize_scale_values_specific_table_columns(
@@ -6190,7 +6193,7 @@ def execute_procedure(
             table_kinship_pairs=table_kinship_pairs,
             table_stratification=table_stratification,
             stratification_set=stratification_set,
-            variance_scale=False, # whether to standardize variance scale
+            variance_scale=True, # whether to standardize variance scale
             format_plink=True, # whether to convert table formats for PLINK2
             report=True,
         )
