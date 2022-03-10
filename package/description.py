@@ -1001,8 +1001,8 @@ def organize_cohorts_hormone_deficiency(
         # Organize information in record.
         record = organize_cohort_hormone_deficiency_record(
             name_cohort=collection_cohort["name"],
-            name_variable=measurement,
-            column_variable=measurement,
+            name_variable=name_variable,
+            column_variable=column_variable,
             threshold=threshold,
             table=collection_cohort["table"],
         )
