@@ -4559,6 +4559,41 @@ def stratify_phenotype_cohorts_set_season_sex_age_menopause(
     # Collect records of information about each cohort and model.
     records = list()
 
+
+    record = dict()
+    record["name"] = str(str(name_season) + "_bipolar_disorder_loose")
+    record["cohort"] = str(str(name_season) + "_bipolar_disorder_loose")
+    record["cohort_model"] = "bipolar_disorder_loose"
+    record["category"] = "sex_together"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    #record["table"] = table
+    record["table"] = table.loc[
+        (
+            (table[column_season].isin(values_season)) &
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
+            (table["bipolar_control_case_loose"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_season) + "_bipolar_disorder_strict")
+    record["cohort"] = str(str(name_season) + "_bipolar_disorder_strict")
+    record["cohort_model"] = "bipolar_disorder_strict"
+    record["category"] = "sex_together"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    #record["table"] = table
+    record["table"] = table.loc[
+        (
+            (table[column_season].isin(values_season)) &
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
+            (table["bipolar_control_case_strict"] == 1)
+        ), :
+    ]
+    records.append(record)
+
     record = dict()
     record["name"] = str(str(name_season) + "_female_male")
     record["cohort"] = str(str(name_season) + "_female_male")
