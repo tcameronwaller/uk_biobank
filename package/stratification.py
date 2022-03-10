@@ -4819,6 +4819,55 @@ def stratify_phenotype_cohorts_regression(
     return records
 
 
+
+def stratify_phenotype_cohorts_season_sex_age(
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Collect records of information about each cohort and model.
+    records = list()
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_age_menopause(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_body(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_season(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    # Return information
+    return records
+
+
+
+
 def organize_dictionary_entries_stratification_cohorts(
     records=None,
 ):

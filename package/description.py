@@ -912,13 +912,13 @@ def organize_cohort_hormone_deficiency_record(
     # Select relevant rows of the table.
     table_below_threshold = table.loc[
         (
-            (~pandas.isna(table[column_variable]) &
+            (~pandas.isna(table[column_variable])) &
             (table[column_variable] < threshold)
         ), :
     ]
     table_above_threshold = table.loc[
         (
-            (~pandas.isna(table[column_variable]) &
+            (~pandas.isna(table[column_variable])) &
             (table[column_variable] >= threshold)
         ), :
     ]
