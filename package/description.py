@@ -991,9 +991,14 @@ def organize_cohorts_hormone_deficiency(
     # TODO: switch to cohorts that stratify by season...
 
 
-    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
-        table=table,
-    )
+    #records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
+    #    table=table,
+    #)
+
+    records_cohorts = (
+        ukb_strat.stratify_phenotype_cohorts_season_sex_age_menopause(
+            table=table,
+    ))
     # Collect summary records and construct table.
     records = list()
     # Iterate on cohorts.

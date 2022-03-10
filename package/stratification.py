@@ -5093,7 +5093,7 @@ def stratify_phenotype_cohorts_season_sex_age_menopause(
     records_novel = (
         stratify_phenotype_cohorts_set_season_sex_age_menopause(
             column_season="season_stratification",
-            values_season=[1,],
+            values_season=[2,],
             name_season="summer",
             table=table,
         )
