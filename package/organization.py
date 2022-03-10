@@ -5785,6 +5785,140 @@ def organize_combination_alteration_sex_hormones(
     return table
 
 
+# Report
+
+
+
+# review: TCW on 20 January January 2022
+def report_hormone_deficiency_by_sex_menopause_age(
+    column_hormone=None,
+    threshold_deficiency=None,
+    table=None,
+):
+    """
+    Reports counts and percentages of persons who were deficient in a hormone
+    with stratification by sex, female menopause status, and age.
+
+    arguments:
+        column_hormone (str): name of column for hormone measurement
+        threshold_deficiency (float): low threshold, concentrations below which
+            qualify as deficiency
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Females.
+    table_female = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    table_female_menstruation = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
+    # Counts.
+
+    count_female = table_female.shape[0]
+
+    count_irregularity = table_female_irregularity.shape[0]
+    count_regularity = table_female_regularity.shape[0]
+
+    count_valid_duration = table_female_valid_duration.shape[0]
+    count_valid_current = table_female_valid_current.shape[0]
+    count_valid_duration_or_current = (
+        table_female_valid_duration_or_current.shape[0]
+    )
+
+    count_regular_range = table_female_regular_range.shape[0]
+    count_duration_below = table_female_duration_below_range.shape[0]
+    count_duration_above = table_female_duration_above_range.shape[0]
+    count_current_above = table_female_current_days_above_range.shape[0]
+
+    count_discrepancy_duration_current = (
+        table_discrepancy_duration_current.shape[0]
+    )
+    count_discrepancy_regular_current = (
+        table_discrepancy_regular_current.shape[0]
+    )
+
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    print("report_female_menstruation_regularity_duration_range()")
+    utility.print_terminal_partition(level=3)
+    print("... all counts specific to female persons ...")
+    utility.print_terminal_partition(level=4)
+    print("total: " + str(count_female))
+
+    print("'irregular' menstrual cycle: " + str(count_irregularity))
+    print("'regular' menstrual cycle: " + str(count_regularity))
+
+    print(
+        "non-missing regular duration of menstrual cycle: " +
+        str(count_valid_duration)
+    )
+    print(
+        "non-missing days of current menstrual cycle: " +
+        str(count_valid_current)
+    )
+    print(
+        "non-missing regular duration or days of current menstrual cycle: " +
+        str(count_valid_duration_or_current)
+    )
+
+    print(
+        "regular menstrual cycle of duration within threshold range: " +
+        str(count_regular_range)
+    )
+    print(
+        "regular menstrual cycle duration shorter than " +
+        str(threshold_duration_low) +
+        " days: " +
+        str(count_duration_below)
+    )
+    print(
+        "regular menstrual cycle duration of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_duration_above)
+    )
+    print(
+        "current menstrual cycle at duration of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_current_above)
+    )
+    print(
+        "regular menstrual cycle duration shorter than " +
+        str(threshold_duration_high) +
+        " days, but current menstrual cycle at duration of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_discrepancy_duration_current)
+    )
+    print(
+        "regular menstrual cycle of duration within " +
+        "threshold range, but current menstrual cycle at duration of " +
+        str(threshold_duration_high) +
+        " days or longer: " +
+        str(count_discrepancy_regular_current)
+    )
+    pass
+
+
+
+
 # Main driver
 
 

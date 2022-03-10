@@ -569,12 +569,9 @@ def organize_cohort_model_variables_summary_long_records(
     return records
 
 
-# TODO: TCW 30 July 2021
-# TODO: work on this... report separate percentages for reportability LOW and reportability HIGH
+##########
+# Measurement missingness percentages across cohorts
 
-
-# TODO: TCW 15 February 2022
-# TODO: report ALL percentage relative to the TOTAL size of the cohort!!!
 
 def organize_cohort_hormone_missingness_record(
     name_cohort=None,
@@ -850,6 +847,182 @@ def organize_cohorts_phenotypes_hormones_missingness(
         pass
     # Return information.
     return table_missingness
+
+
+##########
+# Measurement threshold percentages across cohorts
+
+# TODO: TCW, 08 March 2022
+# TODO: try to make this fairly versatile... the idea is supply a "column_name" and "threshold_low" and then report
+# for the main cohort tables from "stratification" procedure...
+
+
+def organize_cohort_hormone_deficiency_record(
+    name_cohort=None,
+    name_variable=None,
+    column_variable=None,
+    threshold=None,
+    table=None,
+):
+    """
+    Determine for each hormone whether missingness variable indicates that the
+    measurement was not reportable because it was beyond the detection range.
+
+    # cohort:
+    # hormone:
+    # total measurement missingness: <count> (<percentage>%)
+    # missing with reason "above or below reportable limit": <count> (<percentage>%)
+    # missing with reportability "not reportable ... too low": <count> (<percentage>%)
+    # missing with both annotations: <count> (<percentage>%)
+
+    "[variable]_missingness_range" 1: missing due to measurement beyond
+    detection range
+
+    "[variable]_reportability_limit" 1: not reportable due to measurement less
+    than limit of detection
+    "[variable]_reportability_limit" 2: not reportable due to measurement
+    greater than limit of detection
+
+    arguments:
+        name_cohort (str): name of cohort
+        name_variable (str): name of variable for report
+        column_variable (str): name of table's column for variable's
+            measurements
+        threshold (float): threshold below which constitutes deficiency
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for record.
+    record = dict()
+    record["cohort"] = str(name_cohort)
+    record["variable"] = str(name_variable)
+    record["column"] = str(column_variable)
+    record["threshold"] = str(threshold)
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Stratify table.
+    # Select relevant rows of the table.
+    table_below_threshold = table.loc[
+        (
+            (~pandas.isna(table[column_variable]) &
+            (table[column_variable] < threshold)
+        ), :
+    ]
+    table_above_threshold = table.loc[
+        (
+            (~pandas.isna(table[column_variable]) &
+            (table[column_variable] >= threshold)
+        ), :
+    ]
+
+    # Count records.
+    #count_measurement_total = int(array_measurement_total.size)
+    #count_measurement_valid = int(array_measurement_valid.size)
+    count_total = table.shape[0]
+    count_below_threshold = table_below_threshold.shape[0]
+    count_above_threshold = table_above_threshold.shape[0]
+
+    # Calculate percentages.
+    if (count_total > 0):
+        percentage_below_threshold = round(
+            ((count_below_threshold / count_total) * 100), 3
+        )
+        percentage_above_threshold = round(
+            ((count_above_threshold / count_total) * 100), 3
+        )
+    else:
+        percentage_below_threshold = float("nan")
+        percentage_above_threshold = float("nan")
+        pass
+
+    # Collect information for record.
+    record["count_cohort_samples"] = count_total
+    record["below_threshold"] = str(
+        str(count_below_threshold) +
+        " (" + str(percentage_below_threshold) + "%)"
+    )
+    record["above_threshold"] = str(
+        str(count_above_threshold) +
+        " (" + str(percentage_above_threshold) + "%)"
+    )
+    # Return information.
+    return record
+
+
+def organize_cohorts_hormone_deficiency(
+    name_variable=None,
+    column_variable=None,
+    threshold=None,
+    table=None,
+    report=None,
+):
+    """
+    Organizes a summary table about missingness of hormone measurements in
+    cohorts.
+
+    arguments:
+        name_variable (str): name variable of interest
+        column_variable (str): name of column in table for hormone of interest
+        threshold (float): threshold below which constitutes deficiency
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of missingness of hormones in cohorts
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Define cohorts for description.
+
+    # TODO: switch to cohorts that stratify by season...
+
+
+    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
+        table=table,
+    )
+    # Collect summary records and construct table.
+    records = list()
+    # Iterate on cohorts.
+    for collection_cohort in records_cohorts:
+        # Organize information in record.
+        record = organize_cohort_hormone_deficiency_record(
+            name_cohort=collection_cohort["name"],
+            name_variable=measurement,
+            column_variable=measurement,
+            threshold=threshold,
+            table=collection_cohort["table"],
+        )
+        # Collect records.
+        records.append(record)
+        pass
+    # Organize table.
+    table_deficiency = pandas.DataFrame(data=records)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_cohorts_hormone_deficiency()")
+        utility.print_terminal_partition(level=3)
+        print(table_deficiency)
+        pass
+    # Return information.
+    return table_deficiency
+
+
 
 
 ##########
@@ -1320,6 +1493,16 @@ def execute_describe_cohorts_models_phenotypes(
     )
 
     ##########
+    #"column_name" and "threshold_low"
+
+    # Organize report summary for threshold in biochemical measurements.
+    table_deficiency = organize_cohorts_hormone_deficiency(
+        name_variable="vitamin_d",
+        column_variable="vitamin_d_imputation",
+        threshold=25.0, # nmol / L
+        table=table,
+        report=report,
+    )
 
     # Prepare table to summarize phenotype variables across cohorts and models.
     # These cohorts and models are simple and do not include multiple covariates
@@ -1397,6 +1580,7 @@ def execute_describe_cohorts_models_phenotypes(
     # Collect information.
     pail = dict()
     pail["table_cohorts_measurements_missingness"] = table_missingness
+    pail["table_cohorts_vitamin_d_deficiency"] = table_deficiency
     pail["table_summary_cohorts_models_phenotypes"] = table_phenotypes
     pail["table_summary_cohorts_models_genotypes"] = table_genotypes
     # Return information.
