@@ -491,18 +491,21 @@ def organize_cohort_model_variables_summary_long_records(
 
     # Collect information for general columns.
     phenotypes = [
-        "age", "body",
-        "menstruation_days", "menstruation_duration",
-        "oestradiol", "oestradiol_imputation",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-        "oestradiol_free", "oestradiol_free_imputation",
-        "testosterone", "testosterone_imputation",
-        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
-        "testosterone_free", "testosterone_free_imputation",
-        "vitamin_d", "vitamin_d_imputation",
-        "steroid_globulin", "steroid_globulin_imputation",
-        "albumin", "albumin_imputation",
-        "cholesterol", "cholesterol_imputation",
+        #"age", "body",
+        #"menstruation_days", "menstruation_duration",
+        #"oestradiol", "oestradiol_imputation",
+        #"oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+        #"oestradiol_free", "oestradiol_free_imputation",
+        #"testosterone", "testosterone_imputation",
+        #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
+        #"testosterone_free", "testosterone_free_imputation",
+        #"vitamin_d", "vitamin_d_imputation",
+        #"steroid_globulin", "steroid_globulin_imputation",
+        #"albumin", "albumin_imputation",
+        #"cholesterol", "cholesterol_imputation",
+        "alcohol_drinks_weekly",
+        "alcohol_drinks_monthly",
+        "alcohol_drinks_monthly_combination",
     ]
 
     records = list()
