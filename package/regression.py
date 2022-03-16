@@ -968,7 +968,7 @@ def execute_procedure(
     information["tables"] = dict()
 
     information["tables"]["table_regressions_linear_age_alcohol"] = (
-        pail_logistic_1["table"]
+        pail_linear_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
     #    pail_linear_1["table"]
