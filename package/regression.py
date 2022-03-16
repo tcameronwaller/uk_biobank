@@ -947,7 +947,7 @@ def execute_procedure(
                     #"hysterectomy",
                     #"pregnancies", "births",
                     #"age",
-                    "body_log",
+                    #"body_log",
                     "season", "day_length",
                     "region",
                     #"medication_vitamin_d", "alteration_sex_hormone",
