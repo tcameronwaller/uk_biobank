@@ -935,12 +935,14 @@ def interpret_assessment_month_order(
     return value
 
 
+# review: TCW, 16 March 2022
 def interpret_assessment_month_category(
     field_55=None,
     codes_interpretations=None,
 ):
     """
-    Intepret UK Biobank's coding for data field 55.
+    Intepret UK Biobank's coding for data field 55. Translate names of months to
+    lower-case.
 
     Data-Field "55": "Month of attending assessment centre"
     UK Biobank data coding "8" for variable field "55".
@@ -987,9 +989,9 @@ def interpret_assessment_month_category(
         field_55 = copy.deepcopy(field_55)
         field_55_string = str(int(field_55))
         if (field_55_string in codes_interpretations.keys()):
-            interpretation = (
+            interpretation = str(
                 codes_interpretations[field_55_string]["interpretation"]
-            )
+            ).strip().lower()
         else:
             # Uninterpretable value.
             interpretation = str("nan")
@@ -1007,6 +1009,10 @@ def interpret_assessment_month_season(
 ):
     """
     Intepret UK Biobank's coding for data-field "55".
+
+    0: Winter
+    1: Spring or Autumn
+    2: Summer
 
     Data-Field "55": "Month of attending assessment centre"
     UK Biobank data-coding "8" for data-field "55".
@@ -1055,72 +1061,6 @@ def interpret_assessment_month_season(
         if (field_55_string in codes_interpretations.keys()):
             interpretation = int(
                 codes_interpretations[field_55_string]["season_strict"]
-            )
-        else:
-            # Uninterpretable value.
-            interpretation = str("nan")
-    else:
-        # Missing value.
-        interpretation = str("nan")
-    # Return.
-    return interpretation
-
-
-# review: TCW, 09 February 2022
-def interpret_assessment_month_season_stratification(
-    field_55=None,
-    codes_interpretations=None,
-):
-    """
-    Intepret UK Biobank's coding for data-field "55".
-
-    Data-Field "55": "Month of attending assessment centre"
-    UK Biobank data-coding "8" for data-field "55".
-    1: "January"
-    2: "February"
-    3: "March"
-    4: "April"
-    5: "May"
-    6: "June"
-    7: "July"
-    8: "August"
-    9: "September"
-    10: "October"
-    11: "November"
-    12: "December"
-
-    Note:
-    "
-    Calendar month that participant attended a UK Biobank assessment centre.
-    Automatically acquired at Reception stage.
-    "
-
-    Accommodate inexact float values.
-
-    arguments:
-        field_55 (float): UK Biobank field 55, month of assessment
-        codes_interpretations (dict<dict<string>>): interpretations for each
-            code of UK Biobank field
-
-    raises:
-
-    returns:
-        (float): interpretation value
-
-    """
-
-    # Interpret field code.
-    if (
-        (not pandas.isna(field_55)) and
-        (0.5 <= field_55 and field_55 < 12.5)
-    ):
-        # The variable has a valid value.
-        # Determine code interpretation.
-        field_55 = copy.deepcopy(field_55)
-        field_55_string = str(int(field_55))
-        if (field_55_string in codes_interpretations.keys()):
-            interpretation = int(
-                codes_interpretations[field_55_string]["season_stratification"]
             )
         else:
             # Uninterpretable value.
@@ -1187,6 +1127,141 @@ def interpret_assessment_month_day_length(
         if (field_55_string in codes_interpretations.keys()):
             interpretation = int(
                 codes_interpretations[field_55_string]["day_length"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
+# review: TCW, 16 March 2022
+def interpret_assessment_month_season_summer_autumn(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "55".
+
+    0: Winter or Spring
+    1: Summer or Autumn
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data-coding "8" for data-field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["season_summer_autumn"]
+            )
+        else:
+            # Uninterpretable value.
+            interpretation = str("nan")
+    else:
+        # Missing value.
+        interpretation = str("nan")
+    # Return.
+    return interpretation
+
+
+# review: TCW, 09 February 2022
+def interpret_assessment_month_season_stratification(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Intepret UK Biobank's coding for data-field "55".
+
+    Data-Field "55": "Month of attending assessment centre"
+    UK Biobank data-coding "8" for data-field "55".
+    1: "January"
+    2: "February"
+    3: "March"
+    4: "April"
+    5: "May"
+    6: "June"
+    7: "July"
+    8: "August"
+    9: "September"
+    10: "October"
+    11: "November"
+    12: "December"
+
+    Note:
+    "
+    Calendar month that participant attended a UK Biobank assessment centre.
+    Automatically acquired at Reception stage.
+    "
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_55)) and
+        (0.5 <= field_55 and field_55 < 12.5)
+    ):
+        # The variable has a valid value.
+        # Determine code interpretation.
+        field_55 = copy.deepcopy(field_55)
+        field_55_string = str(int(field_55))
+        if (field_55_string in codes_interpretations.keys()):
+            interpretation = int(
+                codes_interpretations[field_55_string]["season_stratification"]
             )
         else:
             # Uninterpretable value.
@@ -1645,6 +1720,35 @@ def determine_assessment_month_season(
     # Interpret codes.
     # Set value.
     value = interpret_assessment_month_season(
+        field_55=field_55,
+        codes_interpretations=codes_interpretations,
+    )
+    # Return information.
+    return value
+
+
+def determine_assessment_month_season_summer_autumn(
+    field_55=None,
+    codes_interpretations=None,
+):
+    """
+    Determine assessment month.
+
+    arguments:
+        field_55 (float): UK Biobank field 55, month of assessment
+        codes_interpretations (dict<dict<string>>): interpretations for each
+            code of UK Biobank field
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret codes.
+    # Set value.
+    value = interpret_assessment_month_season_summer_autumn(
         field_55=field_55,
         codes_interpretations=codes_interpretations,
     )
@@ -2870,14 +2974,6 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-    table["season_stratification"] = table.apply(
-        lambda row:
-            determine_assessment_month_season_stratification(
-                field_55=row["55-0.0"],
-                codes_interpretations=source["field_55"],
-            ),
-        axis="columns", # apply function to each row
-    )
     table["day_length"] = table.apply(
         lambda row:
             determine_assessment_month_day_length(
@@ -2886,8 +2982,22 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-
-
+    table["season_summer_autumn"] = table.apply(
+        lambda row:
+            determine_assessment_month_season_summer_autumn(
+                field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["season_stratification"] = table.apply(
+        lambda row:
+            determine_assessment_month_season_stratification(
+                field_55=row["55-0.0"],
+                codes_interpretations=source["field_55"],
+            ),
+        axis="columns", # apply function to each row
+    )
 
     # Create binary indicators of categories and reduce their dimensionality.
     table = create_reduce_categorical_variable_indicators(
@@ -2898,16 +3008,14 @@ def organize_assessment_basis_variables(
         separator="_",
         report=True,
     )
-    if False:
-        table = create_reduce_categorical_variable_indicators(
-            table=table,
-            index="eid",
-            column="month_name",
-            prefix="month_name",
-            separator="_",
-            report=True,
-        )
-        pass
+    table = create_reduce_categorical_variable_indicators(
+        table=table,
+        index="eid",
+        column="month_name",
+        prefix="month",
+        separator="_",
+        report=True,
+    )
     # Determine sex consensus between self-report and genotypic sex.
     # Reserve the variable names "sex" or "SEX" for recognition in PLINK2.
     # Use logical binary representation of presence of Y chromosome.
@@ -10730,11 +10838,15 @@ def organize_depression_variables(
 # Alcohol consumption
 
 
+# review: TCW, 16 March 2022
 def interpret_alcohol_consumption_frequency(
     field_1558=None,
 ):
     """
     Intepret UK Biobank's data-coding for data-field 1558.
+
+    Notice that the directionality of the UK Biobank's data-coding for
+    data-field 1558 is the inverse of logical directionality.
 
     Data-Field "1558": "Alcohol intake frequency"
     UK Biobank data-coding "100402" for data-field "1558".
@@ -11542,7 +11654,7 @@ def organize_alcohol_consumption_quantity_variables(
         table=table,
     )
     # Calculate sum of drinks weekly.
-    table["drinks_weekly"] = table.apply(
+    table["alcohol_drinks_weekly"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["1588-0.0"],
@@ -11555,7 +11667,7 @@ def organize_alcohol_consumption_quantity_variables(
         axis="columns", # apply function to each row
     )
     # Calculate sum of drinks monthly.
-    table["drinks_monthly"] = table.apply(
+    table["alcohol_drinks_monthly"] = table.apply(
         lambda row:
             calculate_sum_drinks(
                 beer_cider=row["4429-0.0"],
@@ -11568,12 +11680,12 @@ def organize_alcohol_consumption_quantity_variables(
         axis="columns", # apply function to each row
     )
     # Determine sum of total drinks monthly.
-    table["alcohol_drinks_monthly"] = table.apply(
+    table["alcohol_drinks_monthly_combination"] = table.apply(
         lambda row:
             determine_total_alcohol_consumption_monthly(
                 alcohol_current=row["alcohol_current"],
-                drinks_weekly=row["drinks_weekly"],
-                drinks_monthly=row["drinks_monthly"],
+                drinks_weekly=row["alcohol_drinks_weekly"],
+                drinks_monthly=row["alcohol_drinks_monthly"],
                 weeks_per_month=4.345, # 52.143 weeks per year (12 months)
             ),
         axis="columns", # apply function to each row
@@ -11586,8 +11698,6 @@ def organize_alcohol_consumption_quantity_variables(
             "5364-0.0",
             "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
             "4462-0.0",
-            "drinks_weekly",
-            "drinks_monthly",
         ],
         axis="columns",
         inplace=True
@@ -11601,9 +11711,9 @@ def organize_alcohol_consumption_quantity_variables(
             "5364-0.0",
             "4429-0.0", "4407-0.0", "4418-0.0", "4451-0.0", "4440-0.0",
             "4462-0.0",
-            "drinks_weekly",
-            "drinks_monthly",
+            "alcohol_drinks_weekly",
             "alcohol_drinks_monthly",
+            "alcohol_drinks_monthly_combination",
             "alcohol_current",
         ])
     ]

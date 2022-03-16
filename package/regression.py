@@ -180,8 +180,9 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_oestradiol_basis.tsv",
-        "table_testosterone_basis.tsv",
+        "table_linear_age_alcohol_assessment_month_site.tsv",
+        #"table_oestradiol_basis.tsv",
+        #"table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
         #"table_linear_hormones_sex_age_menopause.tsv",
         #"table_linear_vitamin_d_basis.tsv",
