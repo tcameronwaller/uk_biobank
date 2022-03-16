@@ -180,7 +180,7 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_linear_age_alcohol_assessment_month_site.tsv",
+        "table_age_alcohol_assessment_month_site.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
@@ -904,7 +904,7 @@ def execute_procedure(
                 report=True,
         ))
         pass
-    if True:
+    if False:
         pail_logistic_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -932,27 +932,30 @@ def execute_procedure(
         ))
         pass
 
-    if False:
+    if True:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_testosterone_basis"]
+                    source_reference["table_age_alcohol_assessment_month_site"]
                 ),
                 independences_summary=[
-                    "menstruation_phase_cycle",
-                    "menopause_ordinal",
-                    "oophorectomy",
-                    "hysterectomy",
-                    "pregnancies", "births",
-                    "age", "body_log",
+                    "sex_y",
+                    #"menstruation_phase_cycle",
+                    #"menopause_ordinal",
+                    #"oophorectomy",
+                    #"hysterectomy",
+                    #"pregnancies", "births",
+                    #"age",
+                    "body_log",
                     "season", "day_length",
                     "region",
-                    "medication_vitamin_d", "alteration_sex_hormone",
-                    "cholesterol_imputation",
-                    "vitamin_d_imputation",
-                    "oestradiol_imputation",
-                    "steroid_globulin_imputation", "albumin_imputation",
+                    #"medication_vitamin_d", "alteration_sex_hormone",
+                    #"cholesterol_imputation",
+                    #"vitamin_d_imputation",
+                    #"oestradiol_imputation",
+                    #"steroid_globulin_imputation",
+                    #"albumin_imputation",
                 ],
                 filter_execution=True,
                 type="linear",
@@ -964,7 +967,7 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_logistic_oestradiol_basis"] = (
+    information["tables"]["table_regressions_linear_age_alcohol"] = (
         pail_logistic_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
