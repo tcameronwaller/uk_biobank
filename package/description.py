@@ -1213,6 +1213,75 @@ def plot_variable_means_dot_trajectory(
     return figure
 
 
+
+def organize_phenotypes_parameters_for_plots_histogram():
+    """
+    Organizes parameters for histogram plots.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    #"age",
+    #"body",
+    #"month",
+    #"albumin", "albumin_imputation",
+    #"steroid_globulin", "steroid_globulin_imputation",
+    #"oestradiol", "oestradiol_imputation",
+    #"oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+    #"oestradiol_free", "oestradiol_free_imputation",
+    #"testosterone", "testosterone_imputation",
+    #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
+    #"testosterone_free", "testosterone_free_imputation",
+    #"vitamin_d", "vitamin_d_imputation",
+    #"alcohol_frequency",
+    #"alcohol_drinks_weekly",
+    #"alcohol_drinks_monthly",
+    #"alcohol_drinks_monthly_combination",
+
+    record = dict()
+    record["name"] = "alcohol_drinks_weekly"
+    record["variable"] = "alcohol_drinks_weekly"
+    record["threshold"] = 100 # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+
+    record = dict()
+    record["name"] = "alcohol_drinks_weekly"
+    record["variable"] = "alcohol_drinks_weekly"
+    record["threshold"] = 100
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_monthly"
+    record["variable"] = "alcohol_drinks_monthly"
+    record["threshold"] = 50
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_monthly_combination"
+    record["variable"] = "alcohol_drinks_monthly_combination"
+    record["threshold"] = 500
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    # Return information
+    return records
+
+
+
+
 def organize_phenotypes_plots_histogram(
     threshold=None,
     table=None,
@@ -1238,11 +1307,12 @@ def organize_phenotypes_plots_histogram(
 
     # Copy information.
     table = table.copy(deep=True)
+
     # Prepare table to summarize phenotype variables across cohorts and models.
     # These cohorts and models are simple and do not include multiple covariates
     # for genetic analyses.
     # Collect records of information about each cohort and model.
-    records = list()
+    records_cohorts = list()
     #records_novel = (
     #    ukb_strat.stratify_phenotype_cohorts_regression(
     #        table=table,
@@ -1254,51 +1324,39 @@ def organize_phenotypes_plots_histogram(
             table=table,
         )
     )
-    records.extend(records_novel)
+    records_cohorts.extend(records_novel)
+
+    # Organize phenotypes and parameters.
+    records_phenotypes = organize_phenotypes_parameters_for_plots_histogram()
 
     # Collect information for plots.
     pail = dict()
     # Iterate on tables for cohorts and models.
-    for record in records:
-        # Define phenotypes.
-        phenotypes = [
-            #"age",
-            #"body",
-            #"month",
-            #"albumin", "albumin_imputation",
-            #"steroid_globulin", "steroid_globulin_imputation",
-            #"oestradiol", "oestradiol_imputation",
-            #"oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-            #"oestradiol_free", "oestradiol_free_imputation",
-            #"testosterone", "testosterone_imputation",
-            #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
-            #"testosterone_free", "testosterone_free_imputation",
-            #"vitamin_d", "vitamin_d_imputation",
-            #"alcohol_frequency",
-            "alcohol_drinks_weekly",
-            "alcohol_drinks_monthly",
-            "alcohol_drinks_monthly_combination",
-        ]
-        if (record["menstruation"]):
-            #phenotypes.append("menstruation_days_threshold")
-            pass
+    for record_cohort in records_cohorts:
+        #if (record_cohort["menstruation"]):
+        #    #phenotypes.append("menstruation_days_threshold")
+        #    pass
         # Iterate on phenotypes.
-        for phenotype in phenotypes:
+        for record_phenotype in records_phenotypes:
             # Organize information for plot.
+            name = record_phenotype["name"]
+            threshold = record_phenotype["threshold"]
+            variable = record_phenotype["variable"]
+            bins = record_phenotype["bins"]
             # Copy information.
-            table_cohort = record["table"].copy(deep=True)
+            table_cohort = record_cohort["table"].copy(deep=True)
             # Apply threshold.
             if (threshold is not None):
                 table_cohort = table_cohort.loc[
-                    (table_cohort[phenotype] < threshold), :
+                    (table_cohort[variable] < threshold), :
                 ]
             # Histogram.
-            name_label = str(str(record["name"]) + "_" + str(phenotype))
+            name_label = str(str(record_cohort["name"]) + "_" + str(name))
             name_plot = str(name_label + "_histogram")
             pail[name_plot] = plot_variable_values_histogram(
                 label_title=name_label,
                 array=table_cohort[phenotype].dropna().to_numpy(),
-                bins=70, # None or count of bins
+                bins=bins, # None or count of bins
             )
             pass
         pass
