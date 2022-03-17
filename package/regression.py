@@ -941,7 +941,7 @@ def execute_procedure(
                     source_reference["table_alcohol_consumption_hormones_proteins"]
                 ),
                 independences_summary=[
-                    "sex_y",
+                    #"sex_y",
                     #"menstruation_phase_cycle",
                     #"menopause_ordinal",
                     #"oophorectomy",
