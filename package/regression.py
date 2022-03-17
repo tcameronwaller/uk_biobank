@@ -182,6 +182,7 @@ def read_source_cohort_model_reference(
     file_names = [
         #"table_age_alcohol_assessment_month_site.tsv",
         "table_alcohol_consumption_hormones_proteins.tsv",
+        "table_depression_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
@@ -905,27 +906,16 @@ def execute_procedure(
                 report=True,
         ))
         pass
-    if False:
+    if True:
         pail_logistic_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_oestradiol_basis"]
+                    source_reference["table_depression_hormones_proteins"]
                 ),
                 independences_summary=[
-                    "menstruation_phase_cycle",
-                    "menopause_ordinal",
-                    "oophorectomy",
-                    "hysterectomy",
-                    "pregnancies", "births",
-                    "age", "body_log",
-                    "season", "day_length",
+                    "season",
                     "region",
-                    "medication_vitamin_d", "alteration_sex_hormone",
-                    "cholesterol_imputation",
-                    "vitamin_d_imputation",
-                    "testosterone_imputation",
-                    "steroid_globulin_imputation", "albumin_imputation",
                 ],
                 filter_execution=True,
                 type="logistic",
@@ -933,7 +923,7 @@ def execute_procedure(
         ))
         pass
 
-    if True:
+    if False:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -970,9 +960,13 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_alcohol_consumption_hormones_proteins"] = (
-        pail_linear_1["table"]
+    information["tables"]["table_regressions_depression_hormones_proteins"] = (
+        pail_logistic_1["table"]
     )
+
+    #information["tables"]["table_regressions_alcohol_consumption_hormones_proteins"] = (
+    #    pail_linear_1["table"]
+    #)
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
     #    pail_linear_1["table"]
     #)
