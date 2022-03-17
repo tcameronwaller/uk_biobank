@@ -5405,9 +5405,9 @@ def stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
     records = list()
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_season="alcohol_current",
-            values_season=[0,],
-            name_season="alcohol_no",
+            column_special="alcohol_current",
+            values_special=[0,],
+            name_special="alcohol_no",
             table=table,
         )
     )
@@ -5415,9 +5415,9 @@ def stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
 
     records_novel = (
         stratify_phenotype_cohorts_set_season_sex_age_menopause(
-            column_season="alcohol_current",
-            values_season=[1,],
-            name_season="alcohol_yes",
+            column_special="alcohol_current",
+            values_special=[1,],
+            name_special="alcohol_yes",
             table=table,
         )
     )
