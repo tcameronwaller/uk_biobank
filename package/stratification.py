@@ -5403,15 +5403,15 @@ def stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
 
     # Collect records of information about each cohort and model.
     records = list()
-    records_novel = (
-        stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="alcohol_current",
-            values_special=[0,],
-            name_special="alcohol_no",
-            table=table,
-        )
-    )
-    records.extend(records_novel)
+    #records_novel = (
+    #    stratify_phenotype_cohorts_set_special_sex_age_menopause(
+    #        column_special="alcohol_current",
+    #        values_special=[0,],
+    #        name_special="alcohol_no",
+    #        table=table,
+    #    )
+    #)
+    #records.extend(records_novel)
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(

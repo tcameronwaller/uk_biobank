@@ -1214,12 +1214,14 @@ def plot_variable_means_dot_trajectory(
 
 
 def organize_phenotypes_plots_histogram(
+    threshold=None,
     table=None,
 ):
     """
     Organizes information and plots.
 
     arguments:
+        threshold (float): upper threshold on phenotype values for histogram
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -1272,7 +1274,7 @@ def organize_phenotypes_plots_histogram(
             #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
             #"testosterone_free", "testosterone_free_imputation",
             #"vitamin_d", "vitamin_d_imputation",
-            "alcohol_frequency",
+            #"alcohol_frequency",
             "alcohol_drinks_weekly",
             "alcohol_drinks_monthly",
             "alcohol_drinks_monthly_combination",
@@ -1282,13 +1284,21 @@ def organize_phenotypes_plots_histogram(
             pass
         # Iterate on phenotypes.
         for phenotype in phenotypes:
+            # Organize information for plot.
+            # Copy information.
+            table_cohort = record["table"].copy(deep=True)
+            # Apply threshold.
+            if (threshold is not None):
+                table_cohort = table_cohort.loc[
+                    (table_cohort[phenotype] < threshold), :
+                ]
             # Histogram.
             name_label = str(str(record["name"]) + "_" + str(phenotype))
             name_plot = str(name_label + "_histogram")
             pail[name_plot] = plot_variable_values_histogram(
                 label_title=name_label,
-                array=record["table"][phenotype].dropna().to_numpy(),
-                bins=None,
+                array=table_cohort[phenotype].dropna().to_numpy(),
+                bins=70, # None or count of bins
             )
             pass
         pass
@@ -1628,6 +1638,7 @@ def execute_plot_cohorts_models_phenotypes(
     pail = dict()
     # Histograms.
     pail["histogram"] = organize_phenotypes_plots_histogram(
+        threshold=None, # None or upper threshold on values for histogram
         table=table,
     )
     # Box plots.
