@@ -11690,6 +11690,19 @@ def organize_alcohol_consumption_quantity_variables(
             ),
         axis="columns", # apply function to each row
     )
+
+    ##########
+    # Transform variables' values to normalize distributions.
+    columns_normalization = [
+        "alcohol_drinks_weekly",
+        "alcohol_drinks_monthly",
+        "alcohol_drinks_monthly_combination",
+    ]
+    table = utility.transform_normalize_table_continuous_ratio_variables(
+        columns=columns_normalization,
+        table=table,
+    )
+
     # Remove columns for variables that are not necessary anymore.
     table_clean = table.copy(deep=True)
     table_clean.drop(
