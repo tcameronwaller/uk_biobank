@@ -5333,6 +5333,14 @@ def stratify_phenotype_cohorts_regression(
     )
     records.extend(records_novel)
 
+    records_novel = (
+        stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+
     # Return information
     return records
 

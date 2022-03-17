@@ -180,7 +180,8 @@ def read_source_cohort_model_reference(
     pail = dict()
     # Iterate on tables.
     file_names = [
-        "table_age_alcohol_assessment_month_site.tsv",
+        #"table_age_alcohol_assessment_month_site.tsv",
+        "table_alcohol_consumption_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
@@ -937,7 +938,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_age_alcohol_assessment_month_site"]
+                    source_reference["table_alcohol_consumption_hormones_proteins"]
                 ),
                 independences_summary=[
                     "sex_y",
@@ -948,12 +949,14 @@ def execute_procedure(
                     #"pregnancies", "births",
                     #"age",
                     #"body_log",
-                    "season", "day_length",
+                    "season",
+                    #"day_length",
                     "region",
                     #"medication_vitamin_d", "alteration_sex_hormone",
                     #"cholesterol_imputation",
                     #"vitamin_d_imputation",
                     #"oestradiol_imputation",
+                    #"testosterone_imputation",
                     #"steroid_globulin_imputation",
                     #"albumin_imputation",
                 ],
@@ -967,7 +970,7 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_linear_age_alcohol"] = (
+    information["tables"]["table_regressions_alcohol_consumption_hormones"] = (
         pail_linear_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
