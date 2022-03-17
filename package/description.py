@@ -1258,21 +1258,42 @@ def organize_phenotypes_parameters_for_plots_histogram():
     record = dict()
     record["name"] = "alcohol_drinks_weekly"
     record["variable"] = "alcohol_drinks_weekly"
-    record["threshold"] = 100
+    record["threshold"] = 100 # None or upper threshold
     record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_drinks_monthly"
     record["variable"] = "alcohol_drinks_monthly"
-    record["threshold"] = 40
+    record["threshold"] = 40 # None or upper threshold
     record["bins"] = 40 # None or count of bins
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_drinks_monthly_combination"
     record["variable"] = "alcohol_drinks_monthly_combination"
-    record["threshold"] = 400
+    record["threshold"] = 400 # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_weekly_log"
+    record["variable"] = "alcohol_drinks_weekly_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_monthly_log"
+    record["variable"] = "alcohol_drinks_monthly_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 40 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_monthly_combination_log"
+    record["variable"] = "alcohol_drinks_monthly_combination_log"
+    record["threshold"] = None # None or upper threshold
     record["bins"] = 70 # None or count of bins
     records.append(record)
 
