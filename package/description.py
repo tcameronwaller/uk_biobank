@@ -1241,14 +1241,14 @@ def organize_phenotypes_plots_histogram(
     # for genetic analyses.
     # Collect records of information about each cohort and model.
     records = list()
+    #records_novel = (
+    #    ukb_strat.stratify_phenotype_cohorts_regression(
+    #        table=table,
+    #    )
+    #)
+    #records.extend(records_novel)
     records_novel = (
-        ukb_strat.stratify_set_primary_sex_menopause_age(
-            table=table,
-        )
-    )
-    records.extend(records_novel)
-    records_novel = (
-        ukb_strat.stratify_set_alcohol_sex_menopause_age(
+        ukb_strat.stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
             table=table,
         )
     )
@@ -1260,22 +1260,26 @@ def organize_phenotypes_plots_histogram(
     for record in records:
         # Define phenotypes.
         phenotypes = [
-            "age",
-            "body",
-            "month",
-            "albumin", "albumin_imputation",
-            "steroid_globulin", "steroid_globulin_imputation",
-            "oestradiol", "oestradiol_imputation",
-            "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-            "oestradiol_free", "oestradiol_free_imputation",
-            "testosterone", "testosterone_imputation",
-            "testosterone_bioavailable", "testosterone_bioavailable_imputation",
-            "testosterone_free", "testosterone_free_imputation",
-            "vitamin_d", "vitamin_d_imputation",
+            #"age",
+            #"body",
+            #"month",
+            #"albumin", "albumin_imputation",
+            #"steroid_globulin", "steroid_globulin_imputation",
+            #"oestradiol", "oestradiol_imputation",
+            #"oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+            #"oestradiol_free", "oestradiol_free_imputation",
+            #"testosterone", "testosterone_imputation",
+            #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
+            #"testosterone_free", "testosterone_free_imputation",
+            #"vitamin_d", "vitamin_d_imputation",
             "alcohol_frequency",
+            "alcohol_drinks_weekly",
+            "alcohol_drinks_monthly",
+            "alcohol_drinks_monthly_combination",
         ]
         if (record["menstruation"]):
-            phenotypes.append("menstruation_days_threshold")
+            #phenotypes.append("menstruation_days_threshold")
+            pass
         # Iterate on phenotypes.
         for phenotype in phenotypes:
             # Histogram.
@@ -1623,19 +1627,19 @@ def execute_plot_cohorts_models_phenotypes(
     #pail.update(pail_collection)
     pail = dict()
     # Histograms.
-    #pail["histogram"] = organize_phenotypes_plots_histogram(
-    #    table=table,
-    #)
+    pail["histogram"] = organize_phenotypes_plots_histogram(
+        table=table,
+    )
     # Box plots.
     # TODO: TCW 3 August 2021
     # TODO: box plots for hormones in different groups (assessment center?)
 
 
     # Dot plots of phenotypes ordinal variables.
-    pail["dot_trajectory_month"] = (
-        organize_phenotypes_plots_dot_trajectory_month(
-            table=table,
-    ))
+    #pail["dot_trajectory_month"] = (
+    #    organize_phenotypes_plots_dot_trajectory_month(
+    #        table=table,
+    #))
     #pail["dot_trajectory_menstruation"] = (
     #    organize_phenotypes_plots_dot_trajectory_menstruation(
     #        table=table,
