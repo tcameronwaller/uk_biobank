@@ -1355,7 +1355,7 @@ def organize_phenotypes_plots_histogram(
             name_plot = str(name_label + "_histogram")
             pail[name_plot] = plot_variable_values_histogram(
                 label_title=name_label,
-                array=table_cohort[phenotype].dropna().to_numpy(),
+                array=table_cohort[variable].dropna().to_numpy(),
                 bins=bins, # None or count of bins
             )
             pass
