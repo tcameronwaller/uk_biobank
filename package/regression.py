@@ -182,7 +182,7 @@ def read_source_cohort_model_reference(
     file_names = [
         #"table_age_alcohol_assessment_month_site.tsv",
         "table_alcohol_consumption_hormones_proteins.tsv",
-        "table_depression_hormones_proteins.tsv",
+        #"table_depression_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
         #"table_logistic_alcoholism_1.tsv",
@@ -906,7 +906,7 @@ def execute_procedure(
                 report=True,
         ))
         pass
-    if True:
+    if False:
         pail_logistic_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -923,7 +923,7 @@ def execute_procedure(
         ))
         pass
 
-    if False:
+    if True:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -960,13 +960,13 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_regressions_depression_hormones_proteins"] = (
-        pail_logistic_1["table"]
-    )
-
-    #information["tables"]["table_regressions_alcohol_consumption_hormones_proteins"] = (
-    #    pail_linear_1["table"]
+    #information["tables"]["table_regressions_depression_hormones_proteins"] = (
+    #    pail_logistic_1["table"]
     #)
+
+    information["tables"]["table_regressions_alcohol_consumption_hormones_proteins"] = (
+        pail_linear_1["table"]
+    )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
     #    pail_linear_1["table"]
     #)
