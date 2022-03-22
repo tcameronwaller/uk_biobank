@@ -266,17 +266,17 @@ def define_variables_description_table_attribution():
 
     # Variable: "genotype_availability"
 
-    record = dict()
-    record["name"] = "genotype_availability_0"
-    record["variable"] = "genotype_availability" # cat. or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+    #record = dict()
+    #record["name"] = "genotype_availability_0"
+    #record["variable"] = "genotype_availability" # cat. or discrete variable
+    #record["value"] = 0 # categorical or discrete value of variable
+    #records.append(record)
 
-    record = dict()
-    record["name"] = "genotype_availability_1"
-    record["variable"] = "genotype_availability" # cat. or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+    #record = dict()
+    #record["name"] = "genotype_availability_1"
+    #record["variable"] = "genotype_availability" # cat. or discrete variable
+    #record["value"] = 1 # categorical or discrete value of variable
+    #records.append(record)
 
     # Variable: "sex_text"
 
