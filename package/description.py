@@ -71,6 +71,439 @@ import uk_biobank.stratification as ukb_strat
 
 
 ##########
+# Initialization
+
+
+def initialize_directories(
+    restore=None,
+    path_dock=None,
+):
+    """
+    Initialize directories for procedure's product files.
+
+    arguments:
+        restore (bool): whether to remove previous versions of data
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (dict<str>): collection of paths to directories for procedure's files
+
+    """
+
+    # Collect paths.
+    paths = dict()
+    # Define paths to directories.
+    paths["dock"] = path_dock
+    paths["description"] = os.path.join(path_dock, "description")
+    paths["description_tables"] = os.path.join(paths["description"], "tables")
+    paths["description_plots"] = os.path.join(paths["description"], "plots")
+
+    # Remove previous files to avoid version or batch confusion.
+    if restore:
+        utility.remove_directory(path=paths["description"])
+    # Initialize directories.
+    utility.create_directories(
+        path=paths["description"]
+    )
+    utility.create_directories(
+        path=paths["description_tables"]
+    )
+    utility.create_directories(
+        path=paths["description_plots"]
+    )
+    # Return information.
+    return paths
+
+
+##########
+# Read
+
+
+
+def read_source(
+    path_dock=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Specify directories and files.
+    path_table_phenotypes = os.path.join(
+        path_dock, "organization",
+        "table_phenotypes.pickle",
+    )
+
+    # Read information from file.
+    table_phenotypes = pandas.read_pickle(
+        path_table_phenotypes
+    )
+    # Compile and return information.
+    return {
+        "table_phenotypes": table_phenotypes,
+        #"table_ukb_samples": table_ukb_samples,
+    }
+
+
+
+
+def read_organize_cohorts(
+    path_directory=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    arguments:
+        path_directory (str): path to container directory for files of
+            stratified cohort phenotype tables
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+
+    # Collect names of child files within parent directory.
+    files_names = utility.extract_directory_file_names(path=path_directory)
+    # Filter names of child files by suffix.
+    files_names_keep = list(filter(
+        lambda file_name: (".pickle" in file_name),
+        files_names
+    ))
+
+    # Collect cohort records.
+    records = list()
+
+    # Iterate on files within directory.
+    for file_name in files_names_keep:
+        # Determine name of cohort.
+        name_cohort = str(file_name).replace(".pickle", "").replace("table_", "")
+        # Specify directories and files.
+        path_file = os.path.join(
+            path_directory, file_name,
+        )
+        # Read information from file.
+        table_cohort = pandas.read_pickle(
+            path_file
+        )
+
+        # Collect information about cohort.
+        record = dict()
+        record["name"] = name_cohort
+        record["cohort"] = name_cohort
+        record["table"] = table_cohort
+        records.append(record)
+        pass
+
+    # Return information.
+    return records
+
+
+
+
+##########
+# Attribution Table
+# Counts of records in each cohort with each categorical or discrete value of
+# variables
+##########
+
+
+def define_variables_description_table_attribution():
+    """
+    Defines categorical or discrete variables and their values for description
+    in attribution table.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Collect records of information about each categorical varialbe and value.
+    records = list()
+
+    # Variable: "white_british"
+
+    record = dict()
+    record["name"] = "white_british_0"
+    record["variable"] = "white_british" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "white_british_1"
+    record["variable"] = "white_british" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "genotype_availability"
+
+    record = dict()
+    record["name"] = "genotype_availability_0"
+    record["variable"] = "genotype_availability" # cat. or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "genotype_availability_1"
+    record["variable"] = "genotype_availability" # cat. or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "sex_text"
+
+    record = dict()
+    record["name"] = "sex_text_female"
+    record["variable"] = "sex_text" # categorical or discrete variable
+    record["value"] = "female" # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "sex_text_male"
+    record["variable"] = "sex_text" # categorical or discrete variable
+    record["value"] = "male" # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "menstruation_regular_range"
+
+    record = dict()
+    record["name"] = "menstruation_regular_range_0"
+    record["variable"] = "menstruation_regular_range"
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "menstruation_regular_range_1"
+    record["variable"] = "menstruation_regular_range"
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "menopause_ordinal"
+
+    record = dict()
+    record["name"] = "menopause_ordinal_0"
+    record["variable"] = "menopause_ordinal" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "menopause_ordinal_1"
+    record["variable"] = "menopause_ordinal" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "menopause_ordinal_2"
+    record["variable"] = "menopause_ordinal" # categorical or discrete variable
+    record["value"] = 2 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "alcohol_ever"
+
+    record = dict()
+    record["name"] = "alcohol_ever_0"
+    record["variable"] = "alcohol_ever" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_ever_1"
+    record["variable"] = "alcohol_ever" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "alcohol_frequency"
+
+    record = dict()
+    record["name"] = "alcohol_frequency_0"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_1"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_2"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 2 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_3"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 3 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_4"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 4 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_5"
+    record["variable"] = "alcohol_frequency" # categorical or discrete variable
+    record["value"] = 5 # categorical or discrete value of variable
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def organize_attribution_record(
+    name_cohort=None,
+    name_variable_value=None,
+    variable=None,
+    value=None,
+    table=None,
+):
+    """
+    Organize a record (single row in table) to describe attribution of
+    categorical or discrete variable values across cohorts.
+
+    arguments:
+        name_cohort (str): name of cohort
+        name_variable_value (str): name of variable's value for report
+        variable (str): name of table's column for variable
+        value (object): categorical or discrete value of variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for record.
+    record = dict()
+    record["cohort"] = str(name_cohort)
+    record["variable_value"] = str(name_variable_value)
+    record["variable"] = str(variable)
+    record["value"] = str(value)
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Stratify table.
+    # Select relevant rows of the table.
+    table_variable_value = table.loc[
+        (
+            (~pandas.isna(table[variable])) &
+            (table[variable] == value)
+        ), :
+    ]
+
+    # Count records.
+    count_total = table.shape[0]
+    count_variable_value = table_variable_value.shape[0]
+
+    # Calculate percentages.
+    if (count_total > 0):
+        percentage_variable_value = round(
+            ((count_variable_value / count_total) * 100), 3
+        )
+    else:
+        percentage_variable_value = float("nan")
+        pass
+
+    # Collect information for record.
+    record["count_cohort_samples"] = count_total
+    record["count_variable_value"] = count_variable_value
+    record["count_variable_value_report"] = str(
+        str(count_variable_value) +
+        " (" + str(percentage_variable_value) + "%)"
+    )
+    # Return information.
+    return record
+
+
+def organize_description_table_attribution(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Organizes a description table for attribution of categorical or discrete
+    variable values across cohorts.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of missingness of hormones in cohorts
+
+    """
+
+    # Define variables.
+    records_variables = define_variables_description_table_attribution()
+
+    # Collect summary records for rows within description table.
+    records_description = list()
+    # Iterate on cohorts.
+    for record_cohort in records_cohorts:
+        # Iterate on variables.
+        for record_variable in records_variables:
+            # Organize information for description record.
+            record_description = organize_attribution_record(
+                name_cohort=record_cohort["name"],
+                name_variable_value=record_variable["name"],
+                variable=record_variable["variable"],
+                value=record_variable["value"],
+                table=record_cohort["table"],
+            )
+            # Collect records.
+            records_description.append(record_description)
+            pass
+        pass
+    # Organize table.
+    table_description = pandas.DataFrame(data=records_description)
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_description_table_attribution()")
+        utility.print_terminal_partition(level=3)
+        print(table_description)
+        pass
+    # Return information.
+    return table_description
+
+
+##########
 # Missingness Table
 # Measurement missingness percentages across cohorts
 ##########
@@ -364,286 +797,6 @@ def organize_cohorts_phenotypes_hormones_missingness(
         pass
     # Return information.
     return table_missingness
-
-
-##########
-# Attribution Table
-# Counts of records in each cohort with each categorical or discrete value of
-# variables
-##########
-
-# TODO: All good here, I think... (TCW, 22 March 2022)
-
-
-def define_variables_description_table_attribution():
-    """
-    Defines categorical or discrete variables and their values for description
-    in attribution table.
-
-    arguments:
-
-    raises:
-
-    returns:
-        (list<dict>): records with information about cohorts
-
-    """
-
-    # Collect records of information about each categorical varialbe and value.
-    records = list()
-
-    # Variable: "white_british"
-
-    record = dict()
-    record["name"] = "white_british_0"
-    record["variable"] = "white_british" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "white_british_1"
-    record["variable"] = "white_british" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "genotype_availability"
-
-    record = dict()
-    record["name"] = "genotype_availability_0"
-    record["variable"] = "genotype_availability" # cat. or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "genotype_availability_1"
-    record["variable"] = "genotype_availability" # cat. or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "sex_text"
-
-    record = dict()
-    record["name"] = "sex_text_female"
-    record["variable"] = "sex_text" # categorical or discrete variable
-    record["value"] = "female" # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "sex_text_male"
-    record["variable"] = "sex_text" # categorical or discrete variable
-    record["value"] = "male" # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "menstruation_regular_range"
-
-    record = dict()
-    record["name"] = "menstruation_regular_range_0"
-    record["variable"] = "menstruation_regular_range"
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "menstruation_regular_range_1"
-    record["variable"] = "menstruation_regular_range"
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "menopause_ordinal"
-
-    record = dict()
-    record["name"] = "menopause_ordinal_0"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "menopause_ordinal_1"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "menopause_ordinal_2"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 2 # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "alcohol_ever"
-
-    record = dict()
-    record["name"] = "alcohol_ever_0"
-    record["variable"] = "alcohol_ever" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_ever_1"
-    record["variable"] = "alcohol_ever" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    # Variable: "alcohol_frequency"
-
-    record = dict()
-    record["name"] = "alcohol_frequency_0"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_frequency_1"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_frequency_2"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 2 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_frequency_3"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 3 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_frequency_4"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 4 # categorical or discrete value of variable
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_frequency_5"
-    record["variable"] = "alcohol_frequency" # categorical or discrete variable
-    record["value"] = 5 # categorical or discrete value of variable
-    records.append(record)
-
-    # Return information
-    return records
-
-
-def organize_attribution_record(
-    name_cohort=None,
-    name_variable_value=None,
-    variable=None,
-    value=None,
-    table=None,
-):
-    """
-    Organize a record (single row in table) to describe attribution of
-    categorical or discrete variable values across cohorts.
-
-    arguments:
-        name_cohort (str): name of cohort
-        name_variable_value (str): name of variable's value for report
-        variable (str): name of table's column for variable
-        value (object): categorical or discrete value of variable
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): information for summary table record on cohort
-
-    """
-
-    # Collect information for record.
-    record = dict()
-    record["cohort"] = str(name_cohort)
-    record["variable_value"] = str(name_variable_value)
-    record["variable"] = str(variable)
-    record["value"] = str(value)
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Stratify table.
-    # Select relevant rows of the table.
-    table_variable_value = table.loc[
-        (
-            (~pandas.isna(table[variable])) &
-            (table[variable] == value)
-        ), :
-    ]
-
-    # Count records.
-    count_total = table.shape[0]
-    count_variable_value = table_variable_value.shape[0]
-
-    # Calculate percentages.
-    if (count_total > 0):
-        percentage_variable_value = round(
-            ((count_variable_value / count_total) * 100), 3
-        )
-    else:
-        percentage_variable_value = float("nan")
-        pass
-
-    # Collect information for record.
-    record["count_cohort_samples"] = count_total
-    record["count_variable_value"] = count_variable_value
-    record["count_variable_value_report"] = str(
-        str(count_variable_value) +
-        " (" + str(percentage_variable_value) + "%)"
-    )
-    # Return information.
-    return record
-
-
-def organize_description_table_attribution(
-    records_cohorts=None,
-    report=None,
-):
-    """
-    Organizes a description table for attribution of categorical or discrete
-    variable values across cohorts.
-
-    arguments:
-        records_cohorts (list<dict>): records with information about cohorts
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of missingness of hormones in cohorts
-
-    """
-
-    # Define variables.
-    records_variables = define_variables_description_table_attribution()
-
-    # Collect summary records for rows within description table.
-    records_description = list()
-    # Iterate on cohorts.
-    for record_cohort in records_cohorts:
-        # Iterate on variables.
-        for record_variable in records_variables:
-            # Organize information for description record.
-            record_description = organize_attribution_record(
-                name_cohort=record_cohort["name"],
-                name_variable_value=record_variable["name"],
-                variable=record_variable["variable"],
-                value=record_variable["value"],
-                table=record_cohort["table"],
-            )
-            # Collect records.
-            records_description.append(record_description)
-            pass
-        pass
-    # Organize table.
-    table_description = pandas.DataFrame(data=records_description)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: ")
-        print("organize_description_table_attribution()")
-        utility.print_terminal_partition(level=3)
-        print(table_description)
-        pass
-    # Return information.
-    return table_description
 
 
 ##########
@@ -1829,6 +1982,180 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
     return pail
 
 
+##########
+# Write
+##########
+
+
+def write_product_table(
+    name=None,
+    table=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        name (str): base name for file
+        table (object): table of information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_parent, str(name + ".tsv")
+    )
+    # Write information to file.
+    table.to_csv(
+        path_or_buf=path_table,
+        sep="\t",
+        header=True,
+        index=True,
+    )
+    pass
+
+
+def write_product_tables(
+    pail=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        pail (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    for name in pail.keys():
+        write_product_table(
+            name=name,
+            table=pail[name],
+            path_parent=path_parent,
+        )
+    pass
+
+
+def write_product_plot_figure(
+    name=None,
+    figure=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        name (str): base name for file
+        figure (object): figure object to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_file = os.path.join(
+        path_parent, str(name + ".png")
+    )
+    # Write information to file.
+    plot.write_figure(
+        figure=figure,
+        format="png",
+        resolution=300,
+        path=path_file,
+    )
+    pass
+
+
+def write_product_plots(
+    information=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Structure of "plots" collection is "dict<dict<object>>".
+    # First level of plots dictionary tree gives names for child directories.
+    # Second level of plots dictionary tree gives names of plots.
+    # Iterate across child directories.
+    for name_directory in information.keys():
+        # Define paths to directories.
+        path_child = os.path.join(
+            path_parent, name_directory
+        )
+        # Initialize directories.
+        utility.create_directories(
+            path=path_child
+        )
+        # Iterate across charts.
+        for name_file in information[name_directory].keys():
+            # Write chart object to file in child directory.
+            write_product_plot_figure(
+                name=name_file,
+                figure=information[name_directory][name_file],
+                path_parent=path_child,
+            )
+            pass
+        pass
+    pass
+
+
+def write_product(
+    information=None,
+    paths=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        information (object): information to write to file
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Export information.
+    write_product_description(
+        information=information["description"],
+        path_parent=paths["description"],
+    )
+    # Plots.
+    write_product_plots(
+        information=information["plots"],
+        path_parent=paths["plots"],
+    )
+    pass
+
+
+
+
+
 ###############################################################################
 # Drivers
 # The purpose of these driver functions is to make the module's functionality
@@ -1862,7 +2189,7 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
 def execute_description_tables(
     set_cohorts=None,
     set_tables=None,
-    path_dock=None,
+    paths=None,
     report=None,
 ):
     """
@@ -1872,8 +2199,8 @@ def execute_description_tables(
         set_cohorts (str): name of the set of cohorts for which to create
             description tables; "genotype", "phenotype", or "read"
         set_tables (list<str>): names of description tables to create
-        path_dock (str): path to dock directory for source and product
-            directories and files
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
         report (bool): whether to print reports
 
     raises:
@@ -1885,11 +2212,44 @@ def execute_description_tables(
     """
 
     # Define new or read old stratified cohort tables.
+    if (set_cohorts == "phenotype"):
+        # Read source information from file.
+        source = read_source(
+            path_dock=paths["dock"],
+            report=True,
+        )
+        records_cohorts = (
+            ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
+                table=source["table_phenotypes"],
+        ))
+    elif (set_cohorts == "read"):
+        path_directory = os.path.join(
+            paths["dock"], "stratification", "vitamin_d_linear",
+        )
+        records_cohorts = read_organize_cohorts(
+            path_directory=path_directory,
+            report=report,
+        )
+        pass
 
-    # TODO: if reading old tables, then supply a single directory and read all tables from within that directory...
-    # path_directory <-- container directory with tables as individual files
+    # Create description tables across cohorts.
 
-    
+    # Attribution table.
+    if ("attribution" in set_tables):
+        table_attribution = organize_description_table_attribution(
+            records_cohorts=records_cohorts,
+            report=report,
+        )
+    else:
+        table_attribution = pandas.DataFrame()
+    # Missingness table.
+
+
+    # Threshold table.
+
+
+    # Quantitation table.
+
 
     # Report.
     if report:
@@ -1901,11 +2261,63 @@ def execute_description_tables(
     # Collect information.
     pail = dict()
     pail["table_attribution"] = table_attribution
-    pail["table_missingness"] = table_missingness
-    pail["table_threshold"] = table_threshold
-    pail["table_quantitation"] = table_quantitation
-    # Return information.
-    return pail
+    #pail["table_missingness"] = table_missingness
+    #pail["table_threshold"] = table_threshold
+    #pail["table_quantitation"] = table_quantitation
+    # Write product information to file.
+    write_product_tables(
+        pail=pail,
+        path_parent=paths["description_tables"],
+    )
+    pass
+
+
+################################################################################
+# Procedure
+
+
+def execute_procedure(
+    path_dock=None,
+):
+    """
+    Function to execute module's main behavior.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+
+    """
+
+    # Report version.
+    utility.print_terminal_partition(level=1)
+    print(path_dock)
+    print("version check: TCW, 18 August 2021")
+    # Pause procedure.
+    time.sleep(5.0)
+
+    # Initialize directories.
+    paths = initialize_directories(
+        restore=True,
+        path_dock=path_dock,
+    )
+
+    # Create description tables.
+    execute_description_tables(
+        set_cohorts="phenotype",
+        set_tables=["attribution", "missingness", "threshold", "quantitation"],
+        paths=paths,
+        report=True,
+    )
+
+    # Create description plots.
+
+
+    pass
+
 
 
 
