@@ -65,6 +65,7 @@ import networkx
 import promiscuity.utility as utility
 import promiscuity.plot as plot
 import uk_biobank.stratification as ukb_strat
+import uk_biobank.organization as ukb_organization
 
 ###############################################################################
 # Functionality
@@ -2122,6 +2123,7 @@ def write_product_plots(
     pass
 
 
+# TODO: this function not needed anymore...
 def write_product(
     information=None,
     paths=None,
@@ -2319,10 +2321,7 @@ def execute_procedure(
     pass
 
 
-
-
-
-
+# TODO: old? maybe still useful...
 def execute_describe_cohorts_models_phenotypes(
     table=None,
     genotype_cohorts=None,
@@ -2464,7 +2463,7 @@ def execute_describe_cohorts_models_phenotypes(
 
 # Plots
 
-
+# TODO: old, but still need to implement new version...
 def execute_plot_cohorts_models_phenotypes(
     table=None,
     report=None,
