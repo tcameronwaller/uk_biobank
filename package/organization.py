@@ -1912,6 +1912,44 @@ def determine_genotype_array_axiom_logical_binary(
     return interpretation
 
 
+def determine_genotype_availability(
+    genotype_array=None,
+):
+    """
+    Determine whether genotype is available for the phenotype record.
+
+    Code:
+    0: genotype is unavailable
+    1: genotype is available
+
+    arguments:
+        genotype_array (str): name of genotype array, either "axiom" or "bileve"
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(genotype_array)) and
+        ((genotype_array == "axiom") or (genotype_array == "bileve"))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        # 1: genotype is available
+        interpretation = 1
+    else:
+        # Missing or uninterpretable value
+        # Interpret the value.
+        # 0: genotype is unavailable
+        interpretation = 0
+    # Return information.
+    return interpretation
+
+
 # review: TCW, 25 January 2022
 def determine_consensus_biological_sex_y(
     field_31=None,
@@ -3096,6 +3134,13 @@ def organize_assessment_basis_variables(
     table["genotype_array_axiom"] = table.apply(
         lambda row:
             determine_genotype_array_axiom_logical_binary(
+                genotype_array=row["genotype_array"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["genotype_availability"] = table.apply(
+        lambda row:
+            determine_genotype_availability(
                 genotype_array=row["genotype_array"],
             ),
         axis="columns", # apply function to each row

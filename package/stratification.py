@@ -6771,8 +6771,8 @@ def write_genotype_product(
 
     arguments:
         pail_write (dict): information to write to file
-        directory (str): name of subdirectory to create an within which to write
-            files
+        directory (str): name of subdirectory to create and within which to
+            write files
         paths (dict<str>): collection of paths to directories for procedure's
             files
 
