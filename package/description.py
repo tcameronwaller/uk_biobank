@@ -123,7 +123,6 @@ def initialize_directories(
 # Read
 
 
-
 def read_source(
     path_dock=None,
     report=None,
@@ -161,8 +160,6 @@ def read_source(
         "table_phenotypes": table_phenotypes,
         #"table_ukb_samples": table_ukb_samples,
     }
-
-
 
 
 def read_organize_cohorts(
@@ -224,8 +221,6 @@ def read_organize_cohorts(
     return records
 
 
-
-
 ##########
 # Attribution Table
 # Counts of records in each cohort with each categorical or discrete value of
@@ -266,17 +261,17 @@ def define_variables_description_table_attribution():
 
     # Variable: "genotype_availability"
 
-    #record = dict()
-    #record["name"] = "genotype_availability_0"
-    #record["variable"] = "genotype_availability" # cat. or discrete variable
-    #record["value"] = 0 # categorical or discrete value of variable
-    #records.append(record)
+    record = dict()
+    record["name"] = "genotype_availability_0"
+    record["variable"] = "genotype_availability" # cat. or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
 
-    #record = dict()
-    #record["name"] = "genotype_availability_1"
-    #record["variable"] = "genotype_availability" # cat. or discrete variable
-    #record["value"] = 1 # categorical or discrete value of variable
-    #records.append(record)
+    record = dict()
+    record["name"] = "genotype_availability_1"
+    record["variable"] = "genotype_availability" # cat. or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
 
     # Variable: "sex_text"
 
