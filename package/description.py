@@ -897,9 +897,9 @@ def organize_missingness_record(
             name_variable=name_variable,
             column_measurement=column_measurement,
             column_detection=column_detection,
-            column_missingness_range=None,
-            column_reportability_limit=None,
-            table=None,
+            column_missingness_range=column_missingness_range,
+            column_reportability_limit=column_reportability_limit,
+            table=table,
         )
     else:
         record = organize_missingness_record_basis(
@@ -907,9 +907,9 @@ def organize_missingness_record(
             name_variable=name_variable,
             column_measurement=column_measurement,
             column_detection=column_detection,
-            column_missingness_range=None,
-            column_reportability_limit=None,
-            table=None,
+            column_missingness_range=column_missingness_range,
+            column_reportability_limit=column_reportability_limit,
+            table=table,
         )
 
     # Return information.
