@@ -505,25 +505,18 @@ def organize_description_table_attribution(
 ##########
 
 
-def organize_cohort_hormone_missingness_record(
+def organize_missingness_record(
     name_cohort=None,
     name_variable=None,
-    column_variable=None,
+    column_measurement=None,
     column_detection=None,
     column_missingness_range=None,
     column_reportability_limit=None,
     table=None,
 ):
     """
-    Determine for each hormone whether missingness variable indicates that the
+    Determine for each variable whether missingness indicates that the
     measurement was not reportable because it was beyond the detection range.
-
-    # cohort:
-    # hormone:
-    # total measurement missingness: <count> (<percentage>%)
-    # missing with reason "above or below reportable limit": <count> (<percentage>%)
-    # missing with reportability "not reportable ... too low": <count> (<percentage>%)
-    # missing with both annotations: <count> (<percentage>%)
 
     "[variable]_missingness_range" 1: missing due to measurement beyond
     detection range
@@ -536,7 +529,7 @@ def organize_cohort_hormone_missingness_record(
     arguments:
         name_cohort (str): name of cohort
         name_variable (str): name of variable for report
-        column_variable (str): name of table's column for variable's
+        column_measurement (str): name of table's column for variable's
             measurements
         column_reportability_limit (str): name of table's column for hormone's
             reportability less than limit of detection
@@ -566,13 +559,13 @@ def organize_cohort_hormone_missingness_record(
     table_not_missing = table.dropna(
         axis="index",
         how="any",
-        subset=[column_variable],
+        subset=[column_measurement],
         inplace=False,
     )
     #table_missing = table[table[column_variable].isna()]
     table_missing = table.loc[
         (
-            (pandas.isna(table[column_variable]))
+            (pandas.isna(table[column_measurement]))
         ), :
     ]
     table_missing_range = table.loc[
@@ -709,17 +702,16 @@ def organize_cohort_hormone_missingness_record(
     return record
 
 
-def organize_cohorts_phenotypes_hormones_missingness(
-    table=None,
+def organize_description_table_missingness(
+    records_cohorts=None,
     report=None,
 ):
     """
-    Organizes a summary table about missingness of hormone measurements in
-    cohorts.
+    Organizes a description table for missingness of measurement variables
+    across cohorts.
 
     arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+        records_cohorts (list<dict>): records with information about cohorts
         report (bool): whether to print reports
 
     raises:
@@ -730,69 +722,57 @@ def organize_cohorts_phenotypes_hormones_missingness(
     """
 
     # Define variables.
-    #variables = list()
-    #variables.append("albumin")
-    #variables.append("steroid_globulin")
-    #variables.append("cholesterol")
-    #variables.append("vitamin_d")
-    #variables.append("oestradiol")
-    #variables.append("oestradiol_bioavailable")
-    #variables.append("oestradiol_free")
-    #variables.append("testosterone")
-    #variables.append("testosterone_bioavailable")
-    #variables.append("testosterone_free")
+    variables = list()
+    variables.append("albumin")
+    variables.append("steroid_globulin")
+    variables.append("cholesterol")
+    variables.append("vitamin_d")
+    variables.append("oestradiol")
+    variables.append("oestradiol_bioavailable")
+    variables.append("oestradiol_free")
+    variables.append("testosterone")
+    variables.append("testosterone_bioavailable")
+    variables.append("testosterone_free")
 
-
-    # Copy information.
-    table = table.copy(deep=True)
-    # Define measurements.
-    measurements = list()
-    measurements.append("albumin")
-    measurements.append("steroid_globulin")
-    measurements.append("cholesterol")
-    measurements.append("vitamin_d")
-    measurements.append("testosterone")
-    measurements.append("oestradiol")
-    # Define cohorts for description.
-    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
-        table=table,
-    )
-    # Collect summary records and construct table.
-    records = list()
+    # Collect summary records for rows within description table.
+    records_description = list()
     # Iterate on cohorts.
-    for collection_cohort in records_cohorts:
-        # Iterate on hormones.
-        for measurement in measurements:
+    for record_cohort in records_cohorts:
+        # Iterate on variables.
+        for variable in variables:
             # Determine column names.
-            detection = str(str(measurement) + "_detection")
-            missingness_range = str(str(measurement) + "_missingness_range")
-            reportability_limit = str(str(measurement) + "_reportability_limit")
-            # Organize information in record.
-            record = organize_cohort_hormone_missingness_record(
-                name_cohort=collection_cohort["name"],
-                name_variable=measurement,
-                column_variable=measurement,
+            detection = str(str(variable) + "_detection")
+            missingness_range = str(str(variable) + "_missingness_range")
+            reportability_limit = str(str(variable) + "_reportability_limit")
+            # Organize information for description record.
+            record_description = organize_missingness_record(
+                name_cohort=record_cohort["name"],
+                name_variable=variable,
+                column_measurement=variable,
                 column_detection=detection,
                 column_missingness_range=missingness_range,
                 column_reportability_limit=reportability_limit,
-                table=collection_cohort["table"],
+                table=record_cohort["table"],
             )
             # Collect records.
-            records.append(record)
+            records_description.append(record_description)
             pass
         pass
     # Organize table.
-    table_missingness = pandas.DataFrame(data=records)
+    table_description = pandas.DataFrame(data=records_description)
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("report: ")
-        print("organize_cohorts_phenotypes_hormones_missingness()")
+        print("organize_description_table_missingness()")
         utility.print_terminal_partition(level=3)
-        print(table_missingness)
+        print(table_description)
         pass
     # Return information.
-    return table_missingness
+    return table_description
+
+
+
 
 
 ##########
@@ -2239,8 +2219,15 @@ def execute_description_tables(
         )
     else:
         table_attribution = pandas.DataFrame()
-    # Missingness table.
 
+    # Missingness table.
+    if ("missingness" in set_tables):
+        table_missingness = organize_description_table_missingness(
+            records_cohorts=records_cohorts,
+            report=report,
+        )
+    else:
+        table_missingness = pandas.DataFrame()
 
     # Threshold table.
 
@@ -2258,7 +2245,7 @@ def execute_description_tables(
     # Collect information.
     pail = dict()
     pail["table_attribution"] = table_attribution
-    #pail["table_missingness"] = table_missingness
+    pail["table_missingness"] = table_missingness
     #pail["table_threshold"] = table_threshold
     #pail["table_quantitation"] = table_quantitation
     # Write product information to file.
