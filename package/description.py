@@ -1619,11 +1619,23 @@ def organize_quantitation_record(
     record["variable"] = str(variable)
     # Copy information.
     table = table.copy(deep=True)
+
+    # Stratify table.
+    # Select relevant rows of the table.
+    table_genotype = table.loc[
+        (
+            (~pandas.isna(table["genotype_availability"])) &
+            (table["genotype_availability"] == 1)
+        ), :
+    ]
+
     # Count records.
     count_total = int(table.shape[0])
+    count_total_genotype = int(table_genotype.shape[0])
 
     # Initialize missing values.
     count_variable = float("nan")
+    count_genotype_variable = float("nan")
     mean = float("nan")
     standard_error = float("nan")
     interval_95 = float("nan")
@@ -1636,8 +1648,12 @@ def organize_quantitation_record(
     # Determine whether table has the column.
     if (variable in table.columns.to_list()):
         array = copy.deepcopy(table[variable].dropna().to_numpy())
+        array_genotype = copy.deepcopy(
+            table_genotype[variable].dropna().to_numpy()
+        )
         # Determine count of valid values.
         count_variable = int(array.size)
+        count_genotype_variable = int(array_genotype.size)
         if (count_variable > 10):
             # Determine mean, median, standard deviation, and standard error of
             # values in array.
@@ -1654,7 +1670,9 @@ def organize_quantitation_record(
         pass
     # Collect information for record.
     record["count_cohort_total_records"] = count_total
-    record["count_variable"] = str(count_variable)
+    record["count_cohort_total_genotypes"] = count_total_genotype
+    record["count_variable_non_missing"] = str(count_variable)
+    record["count_variable_genotypes"] = str(count_genotype_variable)
     record["mean"] = str(round(mean, 7))
     record["standard_error"] = str(round(standard_error, 7))
     record["interval_95"] = str(round(interval_95, 7))
