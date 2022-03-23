@@ -505,7 +505,7 @@ def organize_description_table_attribution(
 ##########
 
 
-def organize_missingness_record(
+def organize_missingness_record_basis(
     name_cohort=None,
     name_variable=None,
     column_measurement=None,
@@ -531,10 +531,153 @@ def organize_missingness_record(
         name_variable (str): name of variable for report
         column_measurement (str): name of table's column for variable's
             measurements
-        column_reportability_limit (str): name of table's column for hormone's
-            reportability less than limit of detection
-        column_missingness_range (str): name of table's column for hormone's
+        column_detection (str): name of table's column for measurement's
+            detectability
+        column_missingness_range (str): name of table's column for measurement's
             reason for missingness beyond detection range
+        column_reportability_limit (str): name of table's column for
+            measurement's reportability less than limit of detection
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for record.
+    record = dict()
+    record["cohort"] = str(name_cohort)
+    record["variable"] = str(name_variable)
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Stratify table.
+    # Select relevant rows of the table.
+    #array_measurement_total = copy.deepcopy(table[name].to_numpy())
+    #array_measurement_valid = copy.deepcopy(table[name].dropna().to_numpy())
+    table_not_missing = table.dropna(
+        axis="index",
+        how="any",
+        subset=[column_measurement],
+        inplace=False,
+    )
+    #table_missing = table[table[column_variable].isna()]
+    table_missing = table.loc[
+        (
+            (pandas.isna(table[column_measurement]))
+        ), :
+    ]
+    # Count records.
+    #count_measurement_total = int(array_measurement_total.size)
+    #count_measurement_valid = int(array_measurement_valid.size)
+    count_total = table.shape[0]
+    count_not_missing = table_not_missing.shape[0]
+    count_missing = table_missing.shape[0]
+    count_missing_range = float("nan")
+    count_reportability_low = float("nan")
+    count_reportability_high = float("nan")
+    count_detectable = float("nan")
+    count_undetectable = float("nan")
+    count_undetectable_low = float("nan")
+    count_undetectable_high = float("nan")
+
+    # Calculate percentages.
+    if (count_total > 0):
+        percentage_not_missing = round(
+            ((count_not_missing / count_total) * 100), 3
+        )
+        percentage_missing = round(
+            ((count_missing / count_total) * 100), 3
+        )
+    else:
+        percentage_not_missing = float("nan")
+        percentage_missing = float("nan")
+        pass
+    percentage_missing_range = float("nan")
+    percentage_reportability_low = float("nan")
+    percentage_reportability_high = float("nan")
+    percentage_detectable = float("nan")
+    percentage_undetectable = float("nan")
+    percentage_undetectable_low = float("nan")
+    percentage_undetectable_high = float("nan")
+
+    # Collect information for record.
+    record["count_cohort_samples"] = count_total
+    record["not_missing"] = str(
+        str(count_not_missing) +
+        " (" + str(percentage_not_missing) + "%)"
+    )
+    record["missing"] = str(
+        str(count_missing) +
+        " (" + str(percentage_missing) + "%)"
+    )
+    record["missing_range"] = str(
+        str(count_missing_range) +
+        " (" + str(percentage_missing_range) + "%)"
+    )
+    record["unreportable_low"] = str(
+        str(count_reportability_low) +
+        " (" + str(percentage_reportability_low) + "%)"
+    )
+    record["unreportable_high"] = str(
+        str(count_reportability_high) +
+        " (" + str(percentage_reportability_high) + "%)"
+    )
+    record["detectable"] = str(
+        str(count_detectable) +
+        " (" + str(percentage_detectable) + "%)"
+    )
+    record["undetectable"] = str(
+        str(count_undetectable) +
+        " (" + str(percentage_undetectable) + "%)"
+    )
+    record["undetectable_low"] = str(
+        str(count_undetectable_low) +
+        " (" + str(percentage_undetectable_low) + "%)"
+    )
+    record["undetectable_high"] = str(
+        str(count_undetectable_high) +
+        " (" + str(percentage_undetectable_high) + "%)"
+    )
+    # Return information.
+    return record
+
+
+def organize_missingness_record_description(
+    name_cohort=None,
+    name_variable=None,
+    column_measurement=None,
+    column_detection=None,
+    column_missingness_range=None,
+    column_reportability_limit=None,
+    table=None,
+):
+    """
+    Determine for each variable whether missingness indicates that the
+    measurement was not reportable because it was beyond the detection range.
+
+    "[variable]_missingness_range" 1: missing due to measurement beyond
+    detection range
+
+    "[variable]_reportability_limit" 1: not reportable due to measurement less
+    than limit of detection
+    "[variable]_reportability_limit" 2: not reportable due to measurement
+    greater than limit of detection
+
+    arguments:
+        name_cohort (str): name of cohort
+        name_variable (str): name of variable for report
+        column_measurement (str): name of table's column for variable's
+            measurements
+        column_detection (str): name of table's column for measurement's
+            detectability
+        column_missingness_range (str): name of table's column for measurement's
+            reason for missingness beyond detection range
+        column_reportability_limit (str): name of table's column for
+            measurement's reportability less than limit of detection
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -702,6 +845,77 @@ def organize_missingness_record(
     return record
 
 
+def organize_missingness_record(
+    name_cohort=None,
+    name_variable=None,
+    column_measurement=None,
+    column_detection=None,
+    column_missingness_range=None,
+    column_reportability_limit=None,
+    table=None,
+):
+    """
+    Determine for each variable whether missingness indicates that the
+    measurement was not reportable because it was beyond the detection range.
+
+    "[variable]_missingness_range" 1: missing due to measurement beyond
+    detection range
+
+    "[variable]_reportability_limit" 1: not reportable due to measurement less
+    than limit of detection
+    "[variable]_reportability_limit" 2: not reportable due to measurement
+    greater than limit of detection
+
+    arguments:
+        name_cohort (str): name of cohort
+        name_variable (str): name of variable for report
+        column_measurement (str): name of table's column for variable's
+            measurements
+        column_detection (str): name of table's column for measurement's
+            detectability
+        column_missingness_range (str): name of table's column for measurement's
+            reason for missingness beyond detection range
+        column_reportability_limit (str): name of table's column for
+            measurement's reportability less than limit of detection
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    if (
+        (column_detection in table.columns.to_list()) and
+        (column_missingness_range in table.columns.to_list()) and
+        (column_reportability_limit in table.columns.to_list())
+    ):
+        record = organize_missingness_record_description(
+            name_cohort=name_cohort,
+            name_variable=name_variable,
+            column_measurement=column_measurement,
+            column_detection=column_detection,
+            column_missingness_range=None,
+            column_reportability_limit=None,
+            table=None,
+        )
+    else:
+        record = organize_missingness_record_basis(
+            name_cohort=name_cohort,
+            name_variable=name_variable,
+            column_measurement=column_measurement,
+            column_detection=column_detection,
+            column_missingness_range=None,
+            column_reportability_limit=None,
+            table=None,
+        )
+
+    # Return information.
+    return record
+
+
 def organize_description_table_missingness(
     records_cohorts=None,
     report=None,
@@ -770,9 +984,6 @@ def organize_description_table_missingness(
         pass
     # Return information.
     return table_description
-
-
-
 
 
 ##########
