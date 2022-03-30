@@ -881,37 +881,12 @@ def execute_procedure(
     # table_linear_vitamin-d_sex_age_body
 
     # Drive regressions.
-    if False:
-        pail_logistic_0 = (
-            drive_linear_logistic_regressions_cohorts_dependences_models(
-                table=source["table_phenotypes"],
-                table_cohorts_models=(
-                    source_reference["table_logistic_alcoholism_1"]
-                ),
-                independences_summary=[
-                    #"menstruation_phase_cycle",
-                    #"menopause_ordinal",
-                    "sex_y", "age", "body_log",
-                    "season", "day_length", "region",
-                    "medication_vitamin_d", "alteration_sex_hormone",
-                    "cholesterol_imputation",
-                    "vitamin_d_imputation",
-                    "oestradiol_detection",
-                    "testosterone_imputation",
-                    "steroid_globulin_imputation",
-                    "albumin_imputation",
-                ],
-                filter_execution=True,
-                type="logistic",
-                report=True,
-        ))
-        pass
-    if False:
+    if True:
         pail_logistic_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_depression_hormones_proteins"]
+                    source_reference["table_oestradiol_testosterone_female_basis"]
                 ),
                 independences_summary=[
                     "season",
@@ -928,7 +903,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_alcohol_consumption_hormones_proteins"]
+                    source_reference["table_oestradiol_testosterone_female_basis"]
                 ),
                 independences_summary=[
                     #"sex_y",
@@ -960,11 +935,10 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    #information["tables"]["table_regressions_depression_hormones_proteins"] = (
-    #    pail_logistic_1["table"]
-    #)
-
-    information["tables"]["table_oestradiol_testosterone_female_basis"] = (
+    information["tables"]["table_oestradiol_female_basis"] = (
+        pail_logistic_1["table"]
+    )
+    information["tables"]["table_testosterone_female_basis"] = (
         pail_linear_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
