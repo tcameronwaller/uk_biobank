@@ -8281,6 +8281,59 @@ def determine_female_births_live_still_count(
     return value
 
 
+# review: TCW on 30 March 2022
+def determine_female_parity_births_any(
+    sex_text=None,
+    births=None,
+):
+    """
+    Determine whether female person experienced any pregnancies that progressed
+    to full term or nearly full term and ended in either a still birth or a live
+    birth.
+
+    Definition of this variable is the same as parity.
+
+    code
+    0: female person experienced zero still or live births
+    1: female person experienced one or more still or live births
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        births (float): total count of still or live births
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (
+        (sex_text == "female")
+    ):
+        # Determine whether person experienced any births.
+        if (
+            (not pandas.isna(births)) and
+            (births > 0)
+        ):
+            # Female person experienced one or more births.
+            value = 1
+        elif (
+            (not pandas.isna(births)) and
+            (births == 0)
+        ):
+            # Female person experienced zero births.
+            value = 0
+        else:
+            value = float("nan")
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
 # review: TCW on 23 February 2022
 def determine_female_pregnancies_early_count(
     sex_text=None,
@@ -8404,7 +8457,7 @@ def determine_female_pregnancies_total_count(
     return value
 
 
-# review: TCW on 23 February 2022
+# review: TCW on 30 March 2022
 def report_female_pregnancies_births(
     table=None,
 ):
@@ -8481,6 +8534,20 @@ def report_female_pregnancies_births(
             (table["births"] >= 3)
         ), :
     ]
+
+    table_births_any_0 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births_any"] == 0)
+        ), :
+    ]
+    table_births_any_1 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["births_any"] == 1)
+        ), :
+    ]
+
     # Counts.
     count_female = table_female.shape[0]
 
@@ -8493,6 +8560,9 @@ def report_female_pregnancies_births(
     count_births_1 = table_births_1.shape[0]
     count_births_2 = table_births_2.shape[0]
     count_births_3_or_more = table_births_3_or_more.shape[0]
+
+    count_births_any_0 = table_births_any_0.shape[0]
+    count_births_any_1 = table_births_any_1.shape[0]
 
     # Report.
     utility.print_terminal_partition(level=2)
@@ -8516,6 +8586,10 @@ def report_female_pregnancies_births(
     print("1: " + str(count_births_1))
     print("2: " + str(count_births_2))
     print("3 or more: " + str(count_births_3_or_more))
+    print("Births Any (Parity)...")
+    utility.print_terminal_partition(level=4)
+    print("0: " + str(count_births_any_0))
+    print("1: " + str(count_births_any_1))
     pass
 
 
@@ -9080,7 +9154,7 @@ def report_alteration_sex_hormones_by_female_menopause(
     pass
 
 
-# TODO: TCW, 23 February 2020
+# TODO: TCW, 23 February 2022
 # TODO: "years_since_last_birth"
 # TODO: "years_since_last_birth" will be a bit more complex because females
 # TODO: who only had 1 single birth need different data field than multi-parous
@@ -9181,6 +9255,16 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_2734=row["2734-0.0"], # count live births
                 field_2774=row["2774-0.0"], # pregnancy loss
                 field_3829=row["3829-0.0"], # count still births
+            ),
+        axis="columns", # apply function to each row
+    )
+
+    # Determine count of live or still births.
+    table["births_any"] = table.apply(
+        lambda row:
+            determine_female_parity_births_any(
+                sex_text=row["sex_text"],
+                births=row["births"], # count live or still births
             ),
         axis="columns", # apply function to each row
     )
