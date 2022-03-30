@@ -162,6 +162,13 @@ def read_source(
     }
 
 
+# TODO: TCW, 23 March 2022
+# TODO: the genotype cohort tables don't include all phenotype variables...
+# TODO: 1. read in the genotype cohort tables and then extract "eid" identifiers
+# TODO: 2. read in the full "table_phenotypes" (or accept as argument)
+# TODO: 3. subset "table_phenotypes" by "eid" identifiers from genotype cohort tables
+
+
 def read_organize_cohorts(
     path_directory=None,
     report=None,
@@ -2439,29 +2446,10 @@ def write_product(
 # accessible in modular parts.
 
 
-# Descriptions
-
-# TODO: TCW, 21 March 2022
-# TODO: restructure the Description Procedure
-# TODO: 1. define stratified Cohort Tables
-# TODO: 1.1. read Cohort Tables from File in Stratification directory, such as to use same specific Cohort Tables from GWAS
-# TODO: 1.2. define new Cohort Tables for Phenotypes alone (not limited for available genotypes or kinship)
-# TODO: 1.3. define new Cohort Tables for Phenotypes and Genotypes (ancestry, available genotypes, kinship)
-# TODO: 2. define Description records for each Cohort Table
-# TODO: 2.1. "Missingness Table"
-# TODO: 2.2. "Attribution Table" Count, Percentage
-# TODO: - - For example: how many female persons have value "3" for "alcohol_frequency" variable
-# TODO: 2.3. "Threshold Table"
-# TODO: - - For example: percentage of Vitamin D measures above and below threshold for "deficiency"
-# TODO: 2.4. "Quantitation Table"
-# TODO: - - For example: Min, Max, Median, Mean, Standard Deviation, Standard Error, 95% CI for Age
-
-# TODO: the driver for each type of Table ("Missingness", "Attribution", "Treshold", "Quantitation") should...
-# TODO: 1. accept a list of records for stratified cohort tables
-# TODO: 2. iterate on cohort tables
-# TODO: 3. iterate on variables of relevance to that the Description Table Type
-# TODO: 4. Create a record (row for Description Table) for each Cohort Table and each Variable...
-
+# TODO: TCW, 23 March 2022
+# TODO: include cohorts for females without exclusion of pregnancy...
+# TODO: report in legend for Table 1 the counts of females excluded for pregnancy...
+# TODO: maybe just include 1 new cohort for females WITHOUT exclusion of pregnancy...
 
 def execute_description_tables(
     set_cohorts=None,
@@ -2471,6 +2459,19 @@ def execute_description_tables(
 ):
     """
     Organizes information about persons' sex hormones across UK Biobank.
+
+    1. define stratified Cohort Tables
+    1.1. read Cohort Tables from File in Stratification directory, such as to use same specific Cohort Tables from GWAS
+    1.2. define new Cohort Tables for Phenotypes alone (not limited for available genotypes or kinship)
+    1.3. define new Cohort Tables for Phenotypes and Genotypes (ancestry, available genotypes, kinship)
+    2. define Description records for each Cohort Table
+    2.1. "Missingness Table"
+    2.2. "Attribution Table" Count, Percentage
+    - - For example: how many female persons have value "3" for "alcohol_frequency" variable
+    2.3. "Threshold Table"
+    - - For example: percentage of Vitamin D measures above and below threshold for "deficiency"
+    2.4. "Quantitation Table"
+    - - For example: Min, Max, Median, Mean, Standard Deviation, Standard Error, 95% CI for Age
 
     arguments:
         set_cohorts (str): name of the set of cohorts for which to create
