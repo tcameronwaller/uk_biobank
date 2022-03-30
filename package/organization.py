@@ -8586,6 +8586,7 @@ def report_female_pregnancies_births(
     print("1: " + str(count_births_1))
     print("2: " + str(count_births_2))
     print("3 or more: " + str(count_births_3_or_more))
+    utility.print_terminal_partition(level=4)
     print("Births Any (Parity)...")
     utility.print_terminal_partition(level=4)
     print("0: " + str(count_births_any_0))

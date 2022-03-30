@@ -181,7 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         #"table_age_alcohol_assessment_month_site.tsv",
-        "table_alcohol_consumption_hormones_proteins.tsv",
+        "table_oestradiol_testosterone_female_basis.tsv",
         #"table_depression_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
@@ -964,7 +964,7 @@ def execute_procedure(
     #    pail_logistic_1["table"]
     #)
 
-    information["tables"]["table_regressions_alcohol_consumption_hormones_proteins"] = (
+    information["tables"]["table_oestradiol_testosterone_female_basis"] = (
         pail_linear_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (

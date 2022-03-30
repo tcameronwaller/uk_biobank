@@ -1,0 +1,61 @@
+execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	model	model_sort	independence	model_note
+1	female	1	oestradiol_detection	1	logistic	1	1	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female	1	oestradiol_detection	1	logistic	2	2	menopause_ordinal;oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female	1	oestradiol_detection	1	logistic	3	3	menopause_ordinal;oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female	1	oestradiol_detection	1	logistic	4	4	pregnancies	marginal
+1	female	1	oestradiol_detection	1	logistic	5	5	births	marginal
+1	female	1	oestradiol_detection	1	logistic	6	6	births_any	marginal
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	1	1	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	2	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	3	3	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	4	4	pregnancies	marginal
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	5	5	births	marginal
+1	female_menstruation_regular	2	oestradiol_detection	1	logistic	6	6	births_any	marginal
+1	female_premenopause	3	oestradiol_detection	1	logistic	1	1	menstruation_phase_cycle;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_premenopause	3	oestradiol_detection	1	logistic	2	2	menstruation_phase_cycle;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_premenopause	3	oestradiol_detection	1	logistic	3	3	menstruation_phase_cycle;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_premenopause	3	oestradiol_detection	1	logistic	4	4	pregnancies	marginal
+1	female_premenopause	3	oestradiol_detection	1	logistic	5	5	births	marginal
+1	female_premenopause	3	oestradiol_detection	1	logistic	6	6	births_any	marginal
+1	female_perimenopause	4	oestradiol_detection	1	logistic	1	1	hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_perimenopause	4	oestradiol_detection	1	logistic	2	2	hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_perimenopause	4	oestradiol_detection	1	logistic	3	3	hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_perimenopause	4	oestradiol_detection	1	logistic	4	4	pregnancies	marginal
+1	female_perimenopause	4	oestradiol_detection	1	logistic	5	5	births	marginal
+1	female_perimenopause	4	oestradiol_detection	1	logistic	6	6	births_any	marginal
+1	female_postmenopause	5	oestradiol_detection	1	logistic	1	1	oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_postmenopause	5	oestradiol_detection	1	logistic	2	2	oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_postmenopause	5	oestradiol_detection	1	logistic	3	3	oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_postmenopause	5	oestradiol_detection	1	logistic	4	4	pregnancies	marginal
+1	female_postmenopause	5	oestradiol_detection	1	logistic	5	5	births	marginal
+1	female_postmenopause	5	oestradiol_detection	1	logistic	6	6	births_any	marginal
+1	female	1	testosterone_imputation	2	linear	1	1	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female	1	testosterone_imputation	2	linear	2	2	menopause_ordinal;oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female	1	testosterone_imputation	2	linear	3	3	menopause_ordinal;oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female	1	testosterone_imputation	2	linear	4	4	pregnancies	marginal
+1	female	1	testosterone_imputation	2	linear	5	5	births	marginal
+1	female	1	testosterone_imputation	2	linear	6	6	births_any	marginal
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	1	1	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	2	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	3	3	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	4	4	pregnancies	marginal
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	5	5	births	marginal
+1	female_menstruation_regular	2	testosterone_imputation	2	linear	6	6	births_any	marginal
+1	female_premenopause	3	testosterone_imputation	2	linear	1	1	menstruation_phase_cycle;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_premenopause	3	testosterone_imputation	2	linear	2	2	menstruation_phase_cycle;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_premenopause	3	testosterone_imputation	2	linear	3	3	menstruation_phase_cycle;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_premenopause	3	testosterone_imputation	2	linear	4	4	pregnancies	marginal
+1	female_premenopause	3	testosterone_imputation	2	linear	5	5	births	marginal
+1	female_premenopause	3	testosterone_imputation	2	linear	6	6	births_any	marginal
+1	female_perimenopause	4	testosterone_imputation	2	linear	1	1	hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_perimenopause	4	testosterone_imputation	2	linear	2	2	hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_perimenopause	4	testosterone_imputation	2	linear	3	3	hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_perimenopause	4	testosterone_imputation	2	linear	4	4	pregnancies	marginal
+1	female_perimenopause	4	testosterone_imputation	2	linear	5	5	births	marginal
+1	female_perimenopause	4	testosterone_imputation	2	linear	6	6	births_any	marginal
+1	female_postmenopause	5	testosterone_imputation	2	linear	1	1	oophorectomy;hysterectomy;pregnancies;age;body_log;region;season;alteration_sex_hormone	joint with “pregnancies”
+1	female_postmenopause	5	testosterone_imputation	2	linear	2	2	oophorectomy;hysterectomy;births;age;body_log;region;season;alteration_sex_hormone	joint with “births”
+1	female_postmenopause	5	testosterone_imputation	2	linear	3	3	oophorectomy;hysterectomy;births_any;age;body_log;region;season;alteration_sex_hormone	joint with “births_any”
+1	female_postmenopause	5	testosterone_imputation	2	linear	4	4	pregnancies	marginal
+1	female_postmenopause	5	testosterone_imputation	2	linear	5	5	births	marginal
+1	female_postmenopause	5	testosterone_imputation	2	linear	6	6	births_any	marginal
