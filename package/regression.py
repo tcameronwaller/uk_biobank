@@ -881,7 +881,7 @@ def execute_procedure(
     # table_linear_vitamin-d_sex_age_body
 
     # Drive regressions.
-    if True:
+    if False:
         pail_logistic_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -898,7 +898,7 @@ def execute_procedure(
         ))
         pass
 
-    if False:
+    if True:
         pail_linear_1 = (
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
@@ -935,12 +935,12 @@ def execute_procedure(
     information = dict()
     information["tables"] = dict()
 
-    information["tables"]["table_oestradiol_female_basis"] = (
-        pail_logistic_1["table"]
-    )
-    #information["tables"]["table_testosterone_female_basis"] = (
-    #    pail_linear_1["table"]
+    #information["tables"]["table_oestradiol_female_basis"] = (
+    #    pail_logistic_1["table"]
     #)
+    information["tables"]["table_oestradiol_testosterone_female_basis"] = (
+        pail_linear_1["table"]
+    )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
     #    pail_linear_1["table"]
     #)
