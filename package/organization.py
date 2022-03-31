@@ -9535,7 +9535,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 sex_text=row["sex_text"],
                 births_any=row["births_any"],
                 years_since_live_birth=row["years_since_live_birth"],
-                threshold=4,
+                threshold=4, # 3 or fewer years qualifies as recent
             ),
         axis="columns", # apply function to each row
     )
