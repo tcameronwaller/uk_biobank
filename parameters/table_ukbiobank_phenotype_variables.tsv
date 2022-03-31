@@ -69,6 +69,7 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	2734	float32	female		272864		Number of live births	Female-specific factors		0;	
 1	2754	float32	female				Age at first live birth	Female-specific factors		0;	
 1	2764	float32	female				Age at last live birth	Female-specific factors		0;	
+1	3872	float32	female				Age of primiparous women at birth of child	Female-specific factors		0;	
 1	2774	float32	female		272863		Ever had stillbirth, spontaneous miscarriage or termination	Female-specific factors		0;	
 1	3849	float32	female				Number of pregnancy terminations	Female-specific factors		0;	
 1	3839	float32	female				Number of spontaneous miscarriages	Female-specific factors		0;	

@@ -9160,6 +9160,14 @@ def report_alteration_sex_hormones_by_female_menopause(
 # TODO: "years_since_last_birth" will be a bit more complex because females
 # TODO: who only had 1 single birth need different data field than multi-parous
 
+# TODO: TCW, 30 March 2022
+# TODO: "birth_recent" values 0 and 1 (any birth still or live within 3 years)
+# data-field "2754" "Age at first live birth"
+# data-field "2764" "Age at last live birth"
+# data-field "3872" "Age of primiparous women at birth of child"
+# If all 3 data-fields are non-missing, take the greatest value of the 3.
+# We're interested in the MOST RECENT birth
+
 
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
@@ -9266,6 +9274,18 @@ def organize_female_menstruation_pregnancy_menopause_variables(
             determine_female_parity_births_any(
                 sex_text=row["sex_text"],
                 births=row["births"], # count live or still births
+            ),
+        axis="columns", # apply function to each row
+    )
+
+    # Determine whether female person experienced recent birth.
+    table["birth_live_recent"] = table.apply(
+        lambda row:
+            determine_female_birth_live_recent(
+                sex_text=row["sex_text"],
+                field_2754=row["2754-0.0"], # age at first live birth
+                field_2764=row["2764-0.0"], # age at last live birth
+                field_3872=row["3872-0.0"], # age at only live birth
             ),
         axis="columns", # apply function to each row
     )
