@@ -7096,6 +7096,59 @@ def interpret_pregnancy_terminations_miscarriages_stillbirths(
     return value
 
 
+# review: TCW, __ March 2022
+def interpret_age_at_live_birth(
+    field_code_100586=None,
+):
+    """
+    Intepret UK Biobank's data-coding 100586 for multiple data-fields.
+
+    Data-Field "2754": "Age at first live birth"
+    Data-Field "2764": "Age at last live birth"
+    Data-Field "3872": "Age of primiparous women at birth of child"
+    UK Biobank data-coding "100586" for multiple data-fields.
+    [8 - 65]: "Age in years"
+    -4: "Do not remember"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_code_4917 (float): UK Biobank fields in coding 4917, representing
+            biochemistry reportability
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_code_100586)) and
+        (-4.5 <= field_code_100586 and field_code_100586 < 70.5)
+    ):
+        # The variable has a valid value.
+        if (7.5 <= field_code_100586 and field_code_100586 < 70.5):
+            # [8 - 65]: "Age in years"
+            value = float(field_code_100586)
+        elif (-3.5 <= field_code_100586 and field_code_100586 < -2.5):
+            # -3: "Prefer not to answer"
+            value = float("nan")
+        elif (-4.5 <= field_code_100586 and field_code_100586 < -3.5):
+            # -4: "Do not remember"
+            value = float("nan")
+        else:
+            # uninterpretable
+            value = float("nan")
+    else:
+        # null
+        value = float("nan")
+    # Return.
+    return value
+
+
 # review: TCW on 18 January 2022
 def determine_female_menstruation_days(
     sex_text=None,
@@ -8334,6 +8387,110 @@ def determine_female_parity_births_any(
     return value
 
 
+#determine_female_birth_live_recent(
+#    sex_text=row["sex_text"],
+#    field_2754=row["2754-0.0"], # age at first live birth
+#    field_2764=row["2764-0.0"], # age at last live birth
+#    field_3872=row["3872-0.0"], # age at only live birth
+#)
+
+
+# review: TCW on __ March 2022
+def determine_female_birth_live_recent(
+    sex_text=None,
+    field_2754=None,
+    field_2764=None,
+    field_3872=None,
+    age=None,
+    threshold=None,
+):
+    """
+    Determine whether person experienced a live birth within specific threshold
+    duration (in years) of current age (in years).
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        field_2754 (float): UK Biobank field 2754, age at first live birth
+        field_2764 (float): UK Biobank field 2764, age at last live birth
+        field_3872 (float): UK Biobank field 3872, age at only live birth
+        age (float): age of person in years
+        threshold (float): threshold duration in years from current age within
+            which a birth must have occurred to have been recent
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpretation.
+    age_first = interpret_age_at_live_birth(
+        field_code_100586=field_2754,
+    )
+    age_last = interpret_age_at_live_birth(
+        field_code_100586=field_2764,
+    )
+    age_only = interpret_age_at_live_birth(
+        field_code_100586=field_3872,
+    )
+    # Combine ages.
+    
+    # Comparison.
+    if (
+        (sex_text == "female")
+    ):
+        # Determine count of still births.
+        if (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 1)
+        ):
+            # Female person experienced a pregnancy loss.
+            # Determine the count of pregnancies that ended in still birth.
+            if (not pandas.isna(births_still)):
+                count_still = births_still
+            else:
+                # There is inadequate explanation of the pregnancy loss.
+                # Do not make any assumptions.
+                # Lost pregnancy might have ended early in termination or
+                # abortion or might have ended late in still birth.
+                count_still = float("nan")
+        elif (
+            (not pandas.isna(pregnancy_loss)) and
+            (pregnancy_loss == 0)
+        ):
+            # Female person did not experience any pregnancy loss.
+            # Hence female person did not experience any still births.
+            count_still = 0
+        else:
+            count_still = float("nan")
+        # Determine count of live births.
+        if (not pandas.isna(births_live)):
+            count_live = births_live
+        else:
+            count_live = float("nan")
+        # Determine count of total still and live births.
+        if (
+            (not pandas.isna(count_still)) and
+            (not pandas.isna(count_live))
+        ):
+            value = (count_still + count_live)
+        elif (not pandas.isna(count_still)):
+            value = count_still
+        elif (not pandas.isna(count_live)):
+            value = count_live
+        else:
+            value = float("nan")
+    else:
+        # Pregnancy undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+
+
+
 # review: TCW on 23 February 2022
 def determine_female_pregnancies_early_count(
     sex_text=None,
@@ -9286,6 +9443,8 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_2754=row["2754-0.0"], # age at first live birth
                 field_2764=row["2764-0.0"], # age at last live birth
                 field_3872=row["3872-0.0"], # age at only live birth
+                age=row["age"],
+                threshold=5,
             ),
         axis="columns", # apply function to each row
     )
