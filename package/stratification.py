@@ -4318,6 +4318,20 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     # Sex
 
     record = dict()
+    record["name"] = "female_all"
+    record["cohort"] = "female_all"
+    record["cohort_model"] = "female_all"
+    record["category"] = "sex"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table["sex_text"] == "female")
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
     record["name"] = "female"
     record["cohort"] = "female"
     record["cohort_model"] = "female"
