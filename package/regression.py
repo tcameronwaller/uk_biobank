@@ -181,7 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         #"table_age_alcohol_assessment_month_site.tsv",
-        "table_oestradiol_testosterone_female_basis.tsv",
+        "table_oestradiol_testosterone_female_basis_2022-03-31.tsv",
         #"table_depression_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
@@ -886,7 +886,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_oestradiol_testosterone_female_basis"]
+                    source_reference["table_oestradiol_testosterone_female_basis_2022-03-31"]
                 ),
                 independences_summary=[
                     "season",
@@ -903,7 +903,7 @@ def execute_procedure(
             drive_linear_logistic_regressions_cohorts_dependences_models(
                 table=source["table_phenotypes"],
                 table_cohorts_models=(
-                    source_reference["table_oestradiol_testosterone_female_basis"]
+                    source_reference["table_oestradiol_testosterone_female_basis_2022-03-31"]
                 ),
                 independences_summary=[
                     #"sex_y",
