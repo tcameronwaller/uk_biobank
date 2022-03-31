@@ -7096,7 +7096,7 @@ def interpret_pregnancy_terminations_miscarriages_stillbirths(
     return value
 
 
-# review: TCW, __ March 2022
+# review: TCW, 31 March 2022
 def interpret_age_at_live_birth(
     field_code_100586=None,
 ):
@@ -7114,8 +7114,8 @@ def interpret_age_at_live_birth(
     Accommodate inexact float values.
 
     arguments:
-        field_code_4917 (float): UK Biobank fields in coding 4917, representing
-            biochemistry reportability
+        field_code_100586 (float): UK Biobank fields in coding 100586,
+            representing age at live birth
 
     raises:
 
@@ -7127,10 +7127,10 @@ def interpret_age_at_live_birth(
     # Interpret field code.
     if (
         (not pandas.isna(field_code_100586)) and
-        (-4.5 <= field_code_100586 and field_code_100586 < 70.5)
+        (-4.5 <= field_code_100586 and field_code_100586 < 65.5)
     ):
         # The variable has a valid value.
-        if (7.5 <= field_code_100586 and field_code_100586 < 70.5):
+        if (7.5 <= field_code_100586 and field_code_100586 < 65.5):
             # [8 - 65]: "Age in years"
             value = float(field_code_100586)
         elif (-3.5 <= field_code_100586 and field_code_100586 < -2.5):
@@ -8387,35 +8387,24 @@ def determine_female_parity_births_any(
     return value
 
 
-#determine_female_birth_live_recent(
-#    sex_text=row["sex_text"],
-#    field_2754=row["2754-0.0"], # age at first live birth
-#    field_2764=row["2764-0.0"], # age at last live birth
-#    field_3872=row["3872-0.0"], # age at only live birth
-#)
-
-
-# review: TCW on __ March 2022
-def determine_female_birth_live_recent(
+# review: TCW on 31 March 2022
+def determine_female_age_at_most_recent_live_birth(
     sex_text=None,
     field_2754=None,
     field_2764=None,
     field_3872=None,
-    age=None,
-    threshold=None,
 ):
     """
-    Determine whether person experienced a live birth within specific threshold
-    duration (in years) of current age (in years).
+    Determine the age in years at which female person experienced most recent
+    live birth.
+
+    UK Biobank does not include information about age at still birth.
 
     arguments:
         sex_text (str): textual representation of sex selection
         field_2754 (float): UK Biobank field 2754, age at first live birth
         field_2764 (float): UK Biobank field 2764, age at last live birth
         field_3872 (float): UK Biobank field 3872, age at only live birth
-        age (float): age of person in years
-        threshold (float): threshold duration in years from current age within
-            which a birth must have occurred to have been recent
 
     raises:
 
@@ -8434,61 +8423,139 @@ def determine_female_birth_live_recent(
     age_only = interpret_age_at_live_birth(
         field_code_100586=field_3872,
     )
+
     # Combine ages.
-    
-    # Comparison.
     if (
-        (sex_text == "female")
+        (not pandas.isna(age_first)) or
+        (not pandas.isna(age_last)) or
+        (not pandas.isna(age_only))
     ):
-        # Determine count of still births.
-        if (
-            (not pandas.isna(pregnancy_loss)) and
-            (pregnancy_loss == 1)
-        ):
-            # Female person experienced a pregnancy loss.
-            # Determine the count of pregnancies that ended in still birth.
-            if (not pandas.isna(births_still)):
-                count_still = births_still
-            else:
-                # There is inadequate explanation of the pregnancy loss.
-                # Do not make any assumptions.
-                # Lost pregnancy might have ended early in termination or
-                # abortion or might have ended late in still birth.
-                count_still = float("nan")
-        elif (
-            (not pandas.isna(pregnancy_loss)) and
-            (pregnancy_loss == 0)
-        ):
-            # Female person did not experience any pregnancy loss.
-            # Hence female person did not experience any still births.
-            count_still = 0
-        else:
-            count_still = float("nan")
-        # Determine count of live births.
-        if (not pandas.isna(births_live)):
-            count_live = births_live
-        else:
-            count_live = float("nan")
-        # Determine count of total still and live births.
-        if (
-            (not pandas.isna(count_still)) and
-            (not pandas.isna(count_live))
-        ):
-            value = (count_still + count_live)
-        elif (not pandas.isna(count_still)):
-            value = count_still
-        elif (not pandas.isna(count_live)):
-            value = count_live
-        else:
-            value = float("nan")
+        #array = numpy.array([age_first, age_last, age_only])
+        #value = numpy.nanmax(array)
+        ages = list(filter(
+            lambda age: (not math.isnan(age)),
+            [age_first, age_last, age_only]
+        ))
+        value = max(ages)
     else:
-        # Pregnancy undefined for males.
         value = float("nan")
     # Return information.
     return value
 
 
+# review: TCW on 31 March 2022
+def determine_female_years_since_most_recent_live_birth(
+    sex_text=None,
+    age=None,
+    age_last_live_birth=None,
+):
+    """
+    Determine duration in years since female person experienced their most
+    recent live birth.
 
+    This function assigns missing values for female persons for whom information
+    was missing about their age at most recent live birth.
+
+    UK Biobank does not include information about age at still birth.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        age (float): age of person in years
+        age_last_live_birth (float): age of female person at most recent live
+            birth
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (
+        (sex_text == "female")
+    ):
+        # Determine whether there is sufficient information to determine
+        # duration in years since most recent live birth.
+        if (
+            (not pandas.isna(age)) and
+            (not pandas.isna(age_last_live_birth)) and
+            (age_last_live_birth <= age)
+        ):
+            value = (age - age_last_live_birth)
+        else:
+            # There is insufficient information.
+            value = float("nan")
+    else:
+        # Pregnancy and birth undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# review: TCW on 31 March 2022
+def determine_female_birth_live_recent(
+    sex_text=None,
+    births_any=None,
+    years_since_live_birth=None,
+    threshold=None,
+):
+    """
+    Determine whether female person experienced a live birth within specific
+    threshold duration (in years) of current age (in years) at assessment.
+
+    If a female person never experienced any still or live births, then that
+    person also did not experience any recent live births.
+
+    arguments:
+        sex_text (str): textual representation of sex selection
+        births_any (float): whether person had experienced any births, still or
+            live
+        years_since_live_birth (float): duration in years since most recent live
+            birth
+        threshold (float): threshold duration in years since a recent live birth
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    if (
+        (sex_text == "female")
+    ):
+        # Determine whether person had experienced any births (live or still).
+        if (
+            (not pandas.isna(births_any)) and
+            (births_any == 1)
+        ):
+            # Female person had experienced one or more births (live or still).
+            # Determine whether there is sufficient information to determine
+            # whether any live births were recent.
+            if (not pandas.isna(years_since_live_birth)):
+                if (years_since_live_birth < threshold):
+                    value = 1
+                else:
+                    value = 0
+            else:
+                # There is insufficient information.
+                value = float("nan")
+        elif (
+            (not pandas.isna(births_any)) and
+            (births_any == 0)
+        ):
+            # Female person had not experienced any births (live or still).
+            # Hence female person had not experienced a recent birth.
+            value = 0
+        else:
+            value = float("nan")
+    else:
+        # Pregnancy and birth undefined for males.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 # review: TCW on 23 February 2022
@@ -8705,6 +8772,19 @@ def report_female_pregnancies_births(
         ), :
     ]
 
+    table_birth_recent_0 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["birth_live_recent"] == 0)
+        ), :
+    ]
+    table_birth_recent_1 = table.loc[
+        (
+            (table["sex_text"] == "female") &
+            (table["birth_live_recent"] == 1)
+        ), :
+    ]
+
     # Counts.
     count_female = table_female.shape[0]
 
@@ -8720,6 +8800,9 @@ def report_female_pregnancies_births(
 
     count_births_any_0 = table_births_any_0.shape[0]
     count_births_any_1 = table_births_any_1.shape[0]
+
+    count_birth_recent_0 = table_birth_recent_0.shape[0]
+    count_birth_recent_1 = table_birth_recent_1.shape[0]
 
     # Report.
     utility.print_terminal_partition(level=2)
@@ -8748,6 +8831,11 @@ def report_female_pregnancies_births(
     utility.print_terminal_partition(level=4)
     print("0: " + str(count_births_any_0))
     print("1: " + str(count_births_any_1))
+    utility.print_terminal_partition(level=4)
+    print("Recent Live Birth...")
+    utility.print_terminal_partition(level=4)
+    print("0: " + str(count_birth_recent_0))
+    print("1: " + str(count_birth_recent_1))
     pass
 
 
@@ -9312,20 +9400,6 @@ def report_alteration_sex_hormones_by_female_menopause(
     pass
 
 
-# TODO: TCW, 23 February 2022
-# TODO: "years_since_last_birth"
-# TODO: "years_since_last_birth" will be a bit more complex because females
-# TODO: who only had 1 single birth need different data field than multi-parous
-
-# TODO: TCW, 30 March 2022
-# TODO: "birth_recent" values 0 and 1 (any birth still or live within 3 years)
-# data-field "2754" "Age at first live birth"
-# data-field "2764" "Age at last live birth"
-# data-field "3872" "Age of primiparous women at birth of child"
-# If all 3 data-fields are non-missing, take the greatest value of the 3.
-# We're interested in the MOST RECENT birth
-
-
 def organize_female_menstruation_pregnancy_menopause_variables(
     table=None,
     report=None,
@@ -9436,15 +9510,32 @@ def organize_female_menstruation_pregnancy_menopause_variables(
     )
 
     # Determine whether female person experienced recent birth.
-    table["birth_live_recent"] = table.apply(
+    table["age_last_live_birth"] = table.apply(
         lambda row:
-            determine_female_birth_live_recent(
+            determine_female_age_at_most_recent_live_birth(
                 sex_text=row["sex_text"],
                 field_2754=row["2754-0.0"], # age at first live birth
                 field_2764=row["2764-0.0"], # age at last live birth
                 field_3872=row["3872-0.0"], # age at only live birth
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["years_since_live_birth"] = table.apply(
+        lambda row:
+            determine_female_years_since_most_recent_live_birth(
+                sex_text=row["sex_text"],
                 age=row["age"],
-                threshold=5,
+                age_last_live_birth=row["age_last_live_birth"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["birth_live_recent"] = table.apply(
+        lambda row:
+            determine_female_birth_live_recent(
+                sex_text=row["sex_text"],
+                births_any=row["births_any"],
+                years_since_live_birth=row["years_since_live_birth"],
+                threshold=4,
             ),
         axis="columns", # apply function to each row
     )

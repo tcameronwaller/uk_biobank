@@ -353,6 +353,21 @@ def define_variables_description_table_attribution():
     records.append(record)
 
 
+    # Variable: "birth_live_recent"
+
+    record = dict()
+    record["name"] = "birth_live_recent_0"
+    record["variable"] = "birth_live_recent" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "birth_live_recent_1"
+    record["variable"] = "birth_live_recent" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+
     # Variable: "hysterectomy"
 
     record = dict()
