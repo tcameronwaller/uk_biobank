@@ -62,7 +62,7 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.regression as pro_regression
+import promiscuity.regression as pro_reg
 import promiscuity.decomposition as decomp
 import uk_biobank.stratification as ukb_strat # problem when executing uk_biobank not as sub-directory...
 
@@ -181,7 +181,7 @@ def read_source_cohort_model_reference(
     # Iterate on tables.
     file_names = [
         #"table_age_alcohol_assessment_month_site.tsv",
-        "table_oestradiol_testosterone_female_basis_2022-03-31.tsv",
+        "table_alcohol_frequency.tsv",
         #"table_depression_hormones_proteins.tsv",
         #"table_oestradiol_basis.tsv",
         #"table_testosterone_basis.tsv",
@@ -219,6 +219,7 @@ def read_source_cohort_model_reference(
                 "dependence_type": "string",
                 "model": "string",
                 "model_sort": "int",
+                "model_note": "string",
                 "independence": "string",
             },
         )
@@ -319,9 +320,6 @@ def define_model_dependence_records_hormones():
 
     ]
     return records
-
-
-
 
 
 def drive_regressions_female_cohorts_models_hormones(
@@ -502,138 +500,6 @@ def drive_linear_regressions_hormones_alcoholism(
     return pail
 
 
-
-# TODO: 5 January 2022
-# TODO: ... make this function very versatile...
-# TODO: "filter_execution" Boolean whether to filter cohort-dep-model table first...
-# TODO: also.. only specification of relevant cohorts ought to come from the table...
-
-# TODO: TCW 9 November 2021
-# TODO: this function is ALMOST identical to "drive_linear_regressions_hormones_alcoholism"
-# TODO: consolidate these functions by passing an argument for the main independent
-# TODO: variable of interest
-
-
-def drive_linear_logistic_regressions_cohorts_dependences_models(
-    table=None,
-    table_cohorts_models=None,
-    independences_summary=None,
-    filter_execution=None,
-    type=None,
-    report=None,
-):
-    """
-    Organize linear regressions.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        table_cohorts_models (object): Pandas data frame that specifies cohorts,
-            dependent variables, and independent variables (models) for
-            regression
-        independences_summary (list<str>): names of independent variables for
-            which to include statistics in the summary table
-        filter_execution (bool): whether to filter records in cohort-model table
-            by logical binary "execution" variable
-        type (str): type of regression analysis, either 'linear' or 'logistic'
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): information from regressions
-
-    """
-
-    # Filter relevant cohorts-dependences-models by "execution" flag.
-    if filter_execution:
-        table_cohorts_models = table_cohorts_models.loc[
-            (
-                (table_cohorts_models["execution"] == 1)
-            ), :
-        ]
-        pass
-    # Filter relevant cohorts-dependences-models by "dependence_type".
-    table_cohorts_models = table_cohorts_models.loc[
-        (
-            (table_cohorts_models["dependence_type"] == type)
-        ), :
-    ]
-    # Stratify phenotypes in cohorts.
-    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
-        table=table,
-    )
-    entries_cohorts = (
-        ukb_strat.organize_dictionary_entries_stratification_cohorts(
-            records=records_cohorts,
-    ))
-    # Iterate on records that specify cohors, dependent variables, and
-    # independent variables for regressions.
-    records_cohorts_models = table_cohorts_models.to_dict(
-        orient="records",
-    )
-
-    # Collect summary records for each regression.
-    records_regressions = list()
-    # Iterate across cohorts.
-    for record_cohort_model in records_cohorts_models:
-        cohort = record_cohort_model["cohort"]
-        dependence = record_cohort_model["dependence"]
-        model = record_cohort_model["model"]
-        table_cohort = entries_cohorts[cohort]["table"]
-        if report:
-            utility.print_terminal_partition(level=2)
-            print("cohort: " + cohort)
-            print("dependent variable: " + dependence)
-            print("model: " + model)
-            #print(table_cohort)
-        # Organize record.
-        record = dict()
-        record["cohort"] = cohort
-        record["dependence"] = dependence
-        record["model"] = model
-        record["name"] = str(
-            record["cohort"] + "_" +
-            record["dependence"] + "_" +
-            record["model"]
-        )
-        # Drive regression.
-        pail_regression = (
-            pro_regression.drive_cohort_model_linear_logistic_regression(
-                table=table_cohort,
-                table_cohorts_models=table_cohorts_models,
-                cohort=cohort,
-                model=model,
-                dependence=dependence,
-                type=type,
-                report=report,
-        ))
-        record.update(pail_regression["summary"])
-        # Collect records.
-        records_regressions.append(record)
-        pass
-
-    # Organize table.
-    table_regressions_raw = pandas.DataFrame(data=records_regressions)
-    table_regressions = pro_regression.organize_table_regression_summaries(
-        independence=independences_summary,
-        table=table_regressions_raw,
-        type=type,
-        report=report,
-    )
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("drive_linear_regressions_cohorts_dependences_models")
-        utility.print_terminal_partition(level=5)
-        print(table_regressions)
-    # Compile information.
-    pail = dict()
-    pail["table"] = table_regressions
-    # Return information.
-    return pail
-
-
 def organize_regressions_site_month(
     table=None,
     report=None,
@@ -743,6 +609,74 @@ def organize_regressions_site_month(
 
     # Compile information.
     pail = dict()
+    # Return information.
+    return pail
+
+
+
+##########
+# Driver
+
+
+def stratify_cohorts_call_run_regressions(
+    table=None,
+    table_cohorts_models=None,
+    independences_summary=None,
+    filter_execution=None,
+    type=None,
+    report=None,
+):
+    """
+    Stratify cohorts for phenotype tables and call driver for regressions.
+
+    Format of "table"...
+    Pandas data frame with variables (features) across columns and
+    their samples (cases, observations) across rows, with an explicit index
+
+    Format of "table_cohorts_models"...
+    columns: "execution", "cohort", "cohort_sort", "dependence",
+    "dependence_sort", "dependence_type", "model", "model_sort", "independence",
+    "model_note"
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        table_cohorts_models (object): Pandas data frame that specifies cohorts,
+            dependent variables, and independent variables (models) for
+            regression
+        independences_summary (list<str>): names of independent variables for
+            which to include information in the summary table, or "None" to
+            include information for all original independent variables
+        filter_execution (bool): whether to filter records in cohort-model table
+            by logical binary "execution" variable
+        type (str): type of regression analysis, either 'linear' or 'logistic'
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information from regressions
+
+    """
+
+    # Stratify phenotypes in cohorts.
+    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
+        table=table,
+    )
+    entries_cohorts = (
+        ukb_strat.organize_dictionary_entries_stratification_cohorts(
+            records=records_cohorts,
+    ))
+    # Call driver for regressions.
+    pail = (
+        pro_reg.drive_linear_logistic_regressions_cohorts_models(
+            entries_cohorts=entries_cohorts,
+            table_cohorts_models=table_cohorts_models,
+            independences_summary=independences_summary,
+            filter_execution=filter_execution,
+            type=type,
+            report=report,
+    ))
     # Return information.
     return pail
 
@@ -882,53 +816,29 @@ def execute_procedure(
 
     # Drive regressions.
     if False:
-        pail_logistic_1 = (
-            drive_linear_logistic_regressions_cohorts_dependences_models(
-                table=source["table_phenotypes"],
-                table_cohorts_models=(
-                    source_reference["table_oestradiol_testosterone_female_basis_2022-03-31"]
-                ),
-                independences_summary=[
-                    "season",
-                    "region",
-                ],
-                filter_execution=True,
-                type="logistic",
-                report=True,
-        ))
+        pail_logistic_1 = stratify_cohorts_call_run_regressions(
+            table=source["table_phenotypes"],
+            table_cohorts_models=(
+                source_reference["table_oestradiol_testosterone_female_basis_2022-03-31"]
+            ),
+            independences_summary=None, # "None" or list of variables
+            filter_execution=True,
+            type="logistic",
+            report=True,
+        )
         pass
 
     if True:
-        pail_linear_1 = (
-            drive_linear_logistic_regressions_cohorts_dependences_models(
-                table=source["table_phenotypes"],
-                table_cohorts_models=(
-                    source_reference["table_oestradiol_testosterone_female_basis_2022-03-31"]
-                ),
-                independences_summary=[
-                    #"sex_y",
-                    #"menstruation_phase_cycle",
-                    #"menopause_ordinal",
-                    #"oophorectomy",
-                    #"hysterectomy",
-                    #"pregnancies", "births",
-                    #"age",
-                    #"body_log",
-                    "season",
-                    #"day_length",
-                    "region",
-                    #"medication_vitamin_d", "alteration_sex_hormone",
-                    #"cholesterol_imputation",
-                    #"vitamin_d_imputation",
-                    #"oestradiol_imputation",
-                    #"testosterone_imputation",
-                    #"steroid_globulin_imputation",
-                    #"albumin_imputation",
-                ],
-                filter_execution=True,
-                type="linear",
-                report=True,
-        ))
+        pail_linear_1 = stratify_cohorts_call_run_regressions(
+            table=source["table_phenotypes"],
+            table_cohorts_models=(
+                source_reference["table_alcohol_frequency"]
+            ),
+            independences_summary=None, # "None" or list of variables
+            filter_execution=True,
+            type="linear",
+            report=True,
+        )
         pass
 
     # Collect information.
@@ -938,7 +848,7 @@ def execute_procedure(
     #information["tables"]["table_oestradiol_female_basis"] = (
     #    pail_logistic_1["table"]
     #)
-    information["tables"]["table_oestradiol_testosterone_female_basis"] = (
+    information["tables"]["table_alcohol_frequency"] = (
         pail_linear_1["table"]
     )
     #information["tables"]["table_regressions_linear_testosterone_basis"] = (
