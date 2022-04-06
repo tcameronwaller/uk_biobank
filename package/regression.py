@@ -187,10 +187,12 @@ def read_source_cohort_model_reference(
             "dependence": "string",
             "dependence_sort": "int",
             "dependence_type": "string",
+            "independence": "string",
             "model": "string",
             "model_sort": "int",
+            "model_context": "string",
+            "model_adjustment": "string",
             "model_note": "string",
-            "independence": "string",
         },
         report=report,
     )
@@ -735,6 +737,17 @@ def write_product(
 
 ###############################################################################
 # Procedure
+
+
+# alcohol_frequency ("alcohol_frequency")
+# alcohol_auditc ("alcohol_auditc")
+# alcohol_quantity ("alcohol_drinks_monthly_combination_log")
+# alcohol_use_disorder ("alcoholism_control_case_1")
+
+
+# TODO: TCW, 06 April 2022
+# TODO: 1. iterate on regression summary tables
+# TODO: 2. organize tables for Forest Plots...
 
 
 def execute_procedure(

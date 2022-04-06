@@ -1,91 +1,91 @@
-execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	model	model_sort	independence	model_note
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	1	1	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	3	3	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	4	4	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	5	5	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	6	6	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_female	1	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	1	1	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	3	3	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	4	4	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	5	5	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	6	6	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	1	1	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	3	3	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	4	4	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	5	5	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	6	6	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	1	1	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	3	3	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	4	4	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	5	5	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	6	6	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	1	1	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	3	3	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	4	4	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	5	5	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	6	6	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	1	1	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	3	3	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	4	4	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	5	5	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	6	6	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_male	6	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	1	1	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	3	3	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	4	4	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	5	5	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	6	6	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	1	1	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	3	3	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	4	4	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	5	5	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	6	6	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	1	1	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint adjust
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	2	2	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	joint unadjust
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	3	3	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	marginal adjust oestradiol
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	4	4	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	marginal adjust testosterone
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	5	5	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	marginal adjust steroid globulin
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	6	6	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	marginal adjust albumin
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	7	7	oestradiol_imputation	marginal unadjust oestradiol
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	8	8	testosterone_imputation	marginal unadjust testosterone
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	9	9	steroid_globulin_imputation	marginal unadjust steroid globulin
-1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	10	10	albumin_imputation	marginal unadjust albumin
+execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independence	model	model_sort	model_context	model_adjustment	model_note
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_female	1	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;menopause_ordinal;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_female_menstruation_regular	2	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	menstruation_phase_cycle;birth_live_recent;births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_female_premenopause	3	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	births;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_female_perimenopause	4	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	births;oophorectomy;hysterectomy;age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_female_postmenopause	5	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_male	6	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_male_age_low	7	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_male_age_middle	8	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	1	1	joint	adjust	joint adjust
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	joint	unadjust	joint unadjust
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	marginal	adjust	marginal adjust oestradiol
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;testosterone_imputation	4	4	marginal	adjust	marginal adjust testosterone
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;steroid_globulin_imputation	5	5	marginal	adjust	marginal adjust steroid globulin
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	age;body_log;region;season;alteration_sex_hormone;albumin_imputation	6	6	marginal	adjust	marginal adjust albumin
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	oestradiol_imputation	7	7	marginal	unadjust	marginal unadjust oestradiol
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	testosterone_imputation	8	8	marginal	unadjust	marginal unadjust testosterone
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	steroid_globulin_imputation	9	9	marginal	unadjust	marginal unadjust steroid globulin
+1	alcohol_yes_male_age_high	9	alcohol_frequency	1	linear	albumin_imputation	10	10	marginal	unadjust	marginal unadjust albumin
