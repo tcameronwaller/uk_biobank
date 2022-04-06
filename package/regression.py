@@ -155,82 +155,45 @@ def read_source(
 
 def read_source_cohort_model_reference(
     path_dock=None,
+    report=None,
 ):
     """
     Reads and organizes source information from file.
 
-    Notice that Pandas does not accommodate missing values within series of
-    integer variable types.
-
-    The UK Biobank "eid" designates unique persons in the cohort.
-    The UK Biobank "IID" matches persons to their genotype information.
-
     arguments:
         path_dock (str): path to dock directory for source and product
             directories and files
+        report (bool): whether to print reports
 
     raises:
 
     returns:
-        (object): source information
+        (dict<object>): collection of Pandas data-frame tables with entry names
+            (keys) derived from original names of files
 
     """
 
-    # Collect tables.
-    pail = dict()
-    # Iterate on tables.
-    file_names = [
-        #"table_age_alcohol_assessment_month_site.tsv",
-        "table_alcohol_frequency.tsv",
-        #"table_depression_hormones_proteins.tsv",
-        #"table_oestradiol_basis.tsv",
-        #"table_testosterone_basis.tsv",
-        #"table_logistic_alcoholism_1.tsv",
-        #"table_linear_hormones_sex_age_menopause.tsv",
-        #"table_linear_vitamin_d_basis.tsv",
-        #"table_linear_testosterone_basis.tsv",
-        #"table_linear_steroid_globulin_basis.tsv",
-        #"table_linear_albumin_basis.tsv",
-        #"table_linear_vitamin_d_psychiatry.tsv",
-        #"table_linear_hormones_alcoholism_any.tsv",
-        #"table_linear_hormones_alcoholism_1.tsv",
-        #"table_linear_hormones_bipolar_loose.tsv",
-        #"table_linear_hormones_bipolar_strict.tsv",
-    ]
-    for file_name in file_names:
-        # Determine table name.
-        name = file_name.replace(".tsv", "")
-        # Specify directories and files.
-        path_table = os.path.join(
-            path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
-            file_name,
-        )
-        # Read information from file.
-        table = pandas.read_csv(
-            path_table,
-            sep="\t",
-            header=0,
-            dtype={
-                "execution": "int",
-                "cohort": "string",
-                "cohort_sort": "int",
-                "dependence": "string",
-                "dependence_sort": "int",
-                "dependence_type": "string",
-                "model": "string",
-                "model_sort": "int",
-                "model_note": "string",
-                "independence": "string",
-            },
-        )
-        table.reset_index(
-            level=None,
-            inplace=True,
-            drop=True,
-        )
-        # Collect table.
-        pail[name] = table.copy(deep=True)
-        pass
+    # Define path to parent directory.
+    path_directory_parent = os.path.join(
+        path_dock, "parameters", "uk_biobank", "regression_cohorts_models",
+    )
+    # Read all files within parent directory and organize tables.
+    pail = utility.read_all_pandas_tables_files_within_parent_directory(
+        path_directory_parent=path_directory_parent,
+        types_pandas_table_read={
+            "execution": "int",
+            "cohort": "string",
+            "cohort_sort": "int",
+            "dependence": "string",
+            "dependence_sort": "int",
+            "dependence_type": "string",
+            "model": "string",
+            "model_sort": "int",
+            "model_note": "string",
+            "independence": "string",
+        },
+        report=report,
+    )
     # Return information.
     return pail
 
@@ -810,6 +773,7 @@ def execute_procedure(
     )
     source_reference = read_source_cohort_model_reference(
         path_dock=path_dock,
+        report=True,
     )
 
     # table_linear_vitamin-d_sex_age_body
