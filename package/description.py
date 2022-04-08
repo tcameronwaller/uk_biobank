@@ -2099,6 +2099,20 @@ def organize_phenotypes_parameters_for_plots_histogram():
     records.append(record)
 
     record = dict()
+    record["name"] = "oestradiol"
+    record["variable"] = "oestradiol"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_log"
+    record["variable"] = "oestradiol_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
     record["name"] = "oestradiol_imputation"
     record["variable"] = "oestradiol_imputation"
     record["threshold"] = None # None or upper threshold
@@ -2136,6 +2150,20 @@ def organize_phenotypes_parameters_for_plots_histogram():
     record = dict()
     record["name"] = "oestradiol_free_imputation_log"
     record["variable"] = "oestradiol_free_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone"
+    record["variable"] = "testosterone"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_log"
+    record["variable"] = "testosterone_log"
     record["threshold"] = None # None or upper threshold
     record["bins"] = 70 # None or count of bins
     records.append(record)
