@@ -312,7 +312,8 @@ def read_source_table_stratification_cohorts_models(
 
     # Specify directories and files.
     path_table = os.path.join(
-        path_dock, "parameters", "uk_biobank", "stratification_cohorts_models",
+        path_dock, "parameters", "uk_biobank",
+        "stratification_genotype_cohorts_models",
         "table_genotype_stratification_cohorts_models.tsv",
     )
     # Read information from file.
@@ -4046,6 +4047,69 @@ def stratify_genotype_cohort_model_instance(
                 table=table,
                 report=False,
         ))
+    elif (cohort == "male_age_low"):
+        record["table"] = (
+            select_records_by_ancestry_sex_specific_valid_variables_values(
+                name=record["name"],
+                priority_values=[],
+                priority_variable=None,
+                white_british=[1,],
+                female=False,
+                female_pregnancy=[0,],
+                female_menstruation_regular=[0, 1,],
+                female_menopause_ordinal=[0, 1, 2,],
+                female_variables=independence_female,
+                female_prefixes=["genotype_pc_",],
+                male=True,
+                age_grade_male=[0,],
+                male_variables=independence_male,
+                male_prefixes=["genotype_pc_",],
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=False,
+        ))
+    elif (cohort == "male_age_middle"):
+        record["table"] = (
+            select_records_by_ancestry_sex_specific_valid_variables_values(
+                name=record["name"],
+                priority_values=[],
+                priority_variable=None,
+                white_british=[1,],
+                female=False,
+                female_pregnancy=[0,],
+                female_menstruation_regular=[0, 1,],
+                female_menopause_ordinal=[0, 1, 2,],
+                female_variables=independence_female,
+                female_prefixes=["genotype_pc_",],
+                male=True,
+                age_grade_male=[1,],
+                male_variables=independence_male,
+                male_prefixes=["genotype_pc_",],
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=False,
+        ))
+    elif (cohort == "male_age_high"):
+        record["table"] = (
+            select_records_by_ancestry_sex_specific_valid_variables_values(
+                name=record["name"],
+                priority_values=[],
+                priority_variable=None,
+                white_british=[1,],
+                female=False,
+                female_pregnancy=[0,],
+                female_menstruation_regular=[0, 1,],
+                female_menopause_ordinal=[0, 1, 2,],
+                female_variables=independence_female,
+                female_prefixes=["genotype_pc_",],
+                male=True,
+                age_grade_male=[2,],
+                male_variables=independence_male,
+                male_prefixes=["genotype_pc_",],
+                table_kinship_pairs=table_kinship_pairs,
+                table=table,
+                report=False,
+        ))
         pass
     # Report.
     if report:
@@ -4317,6 +4381,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
 
     # Sex
 
+    # Females including current pregnancy.
     record = dict()
     record["name"] = "female_all"
     record["cohort"] = "female_all"
@@ -5061,9 +5126,6 @@ def stratify_phenotype_cohorts_set_season_sex_age_menopause(
 
     # Return information
     return records
-
-
-
 
 
 def stratify_phenotype_cohorts_set_sex_body(

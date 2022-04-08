@@ -2000,11 +2000,17 @@ def organize_phenotypes_parameters_for_plots_histogram():
     #"age",
     #"body",
     #"month",
-    #"albumin", "albumin_imputation",
-    #"steroid_globulin", "steroid_globulin_imputation",
-    #"oestradiol", "oestradiol_imputation",
-    #"oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-    #"oestradiol_free", "oestradiol_free_imputation",
+    #"albumin",
+    #"albumin_imputation",
+    #"steroid_globulin",
+    #"steroid_globulin_imputation", "steroid_globulin_imputation_log",
+    #"oestradiol",
+    #"oestradiol_imputation", "oestradiol_imputation_log",
+    #"oestradiol_bioavailable",
+    #"oestradiol_bioavailable_imputation",
+    #"oestradiol_bioavailable_imputation_log",
+    #"oestradiol_free",
+    #"oestradiol_free_imputation", "oestradiol_free_imputation_log",
     #"testosterone", "testosterone_imputation",
     #"testosterone_bioavailable", "testosterone_bioavailable_imputation",
     #"testosterone_free", "testosterone_free_imputation",
@@ -2014,52 +2020,164 @@ def organize_phenotypes_parameters_for_plots_histogram():
     #"alcohol_drinks_monthly",
     #"alcohol_drinks_monthly_combination",
 
-    record = dict()
-    record["name"] = "alcohol_frequency"
-    record["variable"] = "alcohol_frequency"
-    record["threshold"] = 15 # None or upper threshold
-    record["bins"] = None # None or count of bins
-    records.append(record)
+    #record = dict()
+    #record["name"] = "alcohol_frequency"
+    #record["variable"] = "alcohol_frequency"
+    #record["threshold"] = 15 # None or upper threshold
+    #record["bins"] = None # None or count of bins
+    #records.append(record)
 
 
-    record = dict()
-    record["name"] = "alcohol_drinks_weekly"
-    record["variable"] = "alcohol_drinks_weekly"
-    record["threshold"] = 100 # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+    #record = dict()
+    #record["name"] = "alcohol_drinks_weekly"
+    #record["variable"] = "alcohol_drinks_weekly"
+    #record["threshold"] = 100 # None or upper threshold
+    #record["bins"] = 70 # None or count of bins
+    #records.append(record)
+
+    #record = dict()
+    #record["name"] = "alcohol_drinks_monthly"
+    #record["variable"] = "alcohol_drinks_monthly"
+    #record["threshold"] = 40 # None or upper threshold
+    #record["bins"] = 40 # None or count of bins
+    #records.append(record)
+
+    #record = dict()
+    #record["name"] = "alcohol_drinks_monthly_combination"
+    #record["variable"] = "alcohol_drinks_monthly_combination"
+    #record["threshold"] = 400 # None or upper threshold
+    #record["bins"] = 70 # None or count of bins
+    #records.append(record)
+
+    #record = dict()
+    #record["name"] = "alcohol_drinks_weekly_log"
+    #record["variable"] = "alcohol_drinks_weekly_log"
+    #record["threshold"] = None # None or upper threshold
+    #record["bins"] = 70 # None or count of bins
+    #records.append(record)
+
+    #record = dict()
+    #record["name"] = "alcohol_drinks_monthly_log"
+    #record["variable"] = "alcohol_drinks_monthly_log"
+    #record["threshold"] = None # None or upper threshold
+    #record["bins"] = 40 # None or count of bins
+    #records.append(record)
+
+    #record = dict()
+    #record["name"] = "alcohol_drinks_monthly_combination_log"
+    #record["variable"] = "alcohol_drinks_monthly_combination_log"
+    #record["threshold"] = None # None or upper threshold
+    #record["bins"] = 70 # None or count of bins
+    #records.append(record)
 
     record = dict()
-    record["name"] = "alcohol_drinks_monthly"
-    record["variable"] = "alcohol_drinks_monthly"
-    record["threshold"] = 40 # None or upper threshold
-    record["bins"] = 40 # None or count of bins
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_drinks_monthly_combination"
-    record["variable"] = "alcohol_drinks_monthly_combination"
-    record["threshold"] = 400 # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_drinks_weekly_log"
-    record["variable"] = "alcohol_drinks_weekly_log"
+    record["name"] = "albumin_imputation"
+    record["variable"] = "albumin_imputation"
     record["threshold"] = None # None or upper threshold
     record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
-    record["name"] = "alcohol_drinks_monthly_log"
-    record["variable"] = "alcohol_drinks_monthly_log"
+    record["name"] = "albumin_imputation_log"
+    record["variable"] = "albumin_imputation_log"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = 40 # None or count of bins
+    record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
-    record["name"] = "alcohol_drinks_monthly_combination_log"
-    record["variable"] = "alcohol_drinks_monthly_combination_log"
+    record["name"] = "steroid_globulin_imputation"
+    record["variable"] = "steroid_globulin_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "steroid_globulin_imputation_log"
+    record["variable"] = "steroid_globulin_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_imputation"
+    record["variable"] = "oestradiol_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_imputation_log"
+    record["variable"] = "oestradiol_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_bioavailable_imputation"
+    record["variable"] = "oestradiol_bioavailable_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_bioavailable_imputation_log"
+    record["variable"] = "oestradiol_bioavailable_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_free_imputation"
+    record["variable"] = "oestradiol_free_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_free_imputation_log"
+    record["variable"] = "oestradiol_free_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_imputation"
+    record["variable"] = "testosterone_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_imputation_log"
+    record["variable"] = "testosterone_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_bioavailable_imputation"
+    record["variable"] = "testosterone_bioavailable_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_bioavailable_imputation_log"
+    record["variable"] = "testosterone_bioavailable_imputation_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_free_imputation"
+    record["variable"] = "testosterone_free_imputation"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = 70 # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_free_imputation_log"
+    record["variable"] = "testosterone_free_imputation_log"
     record["threshold"] = None # None or upper threshold
     record["bins"] = 70 # None or count of bins
     records.append(record)
@@ -2068,17 +2186,16 @@ def organize_phenotypes_parameters_for_plots_histogram():
     return records
 
 
-def organize_phenotypes_plots_histogram(
-    threshold=None,
-    table=None,
+def organize_plots_histogram(
+    records_cohorts=None,
+    report=None,
 ):
     """
-    Organizes information and plots.
+    Organizes description histogram plots.
 
     arguments:
-        threshold (float): upper threshold on phenotype values for histogram
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
 
     raises:
 
@@ -2087,32 +2204,7 @@ def organize_phenotypes_plots_histogram(
 
     """
 
-    # TODO: (TCW, 3 August 2021) Consider histograms for alcohol variables...
-    # "alcohol_frequency", "alcohol_previous", "alcohol_drinks_monthly",
-    # "alcoholism"
-
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Prepare table to summarize phenotype variables across cohorts and models.
-    # These cohorts and models are simple and do not include multiple covariates
-    # for genetic analyses.
-    # Collect records of information about each cohort and model.
-    records_cohorts = list()
-    #records_novel = (
-    #    ukb_strat.stratify_phenotype_cohorts_regression(
-    #        table=table,
-    #    )
-    #)
-    #records.extend(records_novel)
-    records_novel = (
-        ukb_strat.stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
-            table=table,
-        )
-    )
-    records_cohorts.extend(records_novel)
-
-    # Organize phenotypes and parameters.
+    # Organize phenotypes and parameters for plots.
     records_phenotypes = organize_phenotypes_parameters_for_plots_histogram()
 
     # Collect information for plots.
@@ -2359,127 +2451,11 @@ def write_product_tables(
     pass
 
 
-def write_product_plot_figure(
-    name=None,
-    figure=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        name (str): base name for file
-        figure (object): figure object to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Specify directories and files.
-    path_file = os.path.join(
-        path_parent, str(name + ".png")
-    )
-    # Write information to file.
-    plot.write_figure(
-        figure=figure,
-        format="png",
-        resolution=300,
-        path=path_file,
-    )
-    pass
-
-
-def write_product_plots(
-    information=None,
-    path_parent=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-
-    raises:
-
-    returns:
-
-    """
-
-    # Structure of "plots" collection is "dict<dict<object>>".
-    # First level of plots dictionary tree gives names for child directories.
-    # Second level of plots dictionary tree gives names of plots.
-    # Iterate across child directories.
-    for name_directory in information.keys():
-        # Define paths to directories.
-        path_child = os.path.join(
-            path_parent, name_directory
-        )
-        # Initialize directories.
-        utility.create_directories(
-            path=path_child
-        )
-        # Iterate across charts.
-        for name_file in information[name_directory].keys():
-            # Write chart object to file in child directory.
-            write_product_plot_figure(
-                name=name_file,
-                figure=information[name_directory][name_file],
-                path_parent=path_child,
-            )
-            pass
-        pass
-    pass
-
-
-# TODO: this function not needed anymore...
-def write_product(
-    information=None,
-    paths=None,
-):
-    """
-    Writes product information to file.
-
-    arguments:
-        information (object): information to write to file
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-
-    raises:
-
-    returns:
-
-    """
-
-    # Export information.
-    write_product_description(
-        information=information["description"],
-        path_parent=paths["description"],
-    )
-    # Plots.
-    write_product_plots(
-        information=information["plots"],
-        path_parent=paths["plots"],
-    )
-    pass
-
-
-
-
-
 ###############################################################################
 # Drivers
 # The purpose of these driver functions is to make the module's functionality
 # accessible in modular parts.
 
-
-# TODO: TCW, 23 March 2022
-# TODO: include cohorts for females without exclusion of pregnancy...
-# TODO: report in legend for Table 1 the counts of females excluded for pregnancy...
-# TODO: maybe just include 1 new cohort for females WITHOUT exclusion of pregnancy...
 
 def execute_description_tables(
     set_cohorts=None,
@@ -2488,7 +2464,8 @@ def execute_description_tables(
     report=None,
 ):
     """
-    Organizes information about persons' sex hormones across UK Biobank.
+    Drive creation of descriptive summary tables about phenotypes across cohorts
+    from the UK Biobank.
 
     1. define stratified Cohort Tables
     1.1. read Cohort Tables from File in Stratification directory, such as to use same specific Cohort Tables from GWAS
@@ -2592,6 +2569,92 @@ def execute_description_tables(
     pass
 
 
+def execute_description_plots(
+    set_cohorts=None,
+    set_plots=None,
+    paths=None,
+    report=None,
+):
+    """
+    Drive creation of descriptive charts about phenotypes across cohorts from
+    the UK Biobank.
+
+    arguments:
+        set_cohorts (str): name of the set of cohorts for which to create
+            description tables; "genotype", "phenotype", or "read"
+        set_plots (list<str>): names of description plots to create
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Define new or read old stratified cohort tables.
+    if (set_cohorts == "phenotype"):
+        # Read source information from file.
+        source = read_source(
+            path_dock=paths["dock"],
+            report=True,
+        )
+        # TODO: TCW, 08 April 2022
+        # TODO: switch from alcohol "current" to alcohol "ever"
+        # ukb_strat.stratify_phenotype_cohorts_alcohol_current_sex_age_menopause
+        records_cohorts = (
+            ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
+                table=source["table_phenotypes"],
+        ))
+        pass
+
+    # Create description plots across cohorts.
+
+    # Histograms.
+    if ("histogram" in set_plots):
+        pail_histogram = organize_plots_histogram(
+            records_cohorts=records_cohorts,
+            report=report,
+        )
+    else:
+        pail_histogram = dict()
+        pass
+
+    # Box plots.
+    # TODO: TCW 3 August 2021
+    # TODO: box plots for hormones in different groups (assessment center?)
+
+    # Dot plots of phenotypes ordinal variables.
+    #pail["dot_trajectory_month"] = (
+    #    organize_phenotypes_plots_dot_trajectory_month(
+    #        table=table,
+    #))
+    #pail["dot_trajectory_menstruation"] = (
+    #    organize_phenotypes_plots_dot_trajectory_menstruation(
+    #        table=table,
+    #))
+
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: execute_description_tables()")
+        utility.print_terminal_partition(level=3)
+
+    # Collect information.
+    pail_write = dict()
+    pail_write["histogram"] = pail_histogram
+    # Write product information to file.
+    plot.write_product_plots_child_directories(
+        pail_write=pail_write,
+        path_parent=paths["description_plots"],
+    )
+    pass
+
+
 ################################################################################
 # Procedure
 
@@ -2628,18 +2691,23 @@ def execute_procedure(
     # Create description tables.
     execute_description_tables(
         set_cohorts="phenotype",
-        set_tables=["attribution", "missingness", "threshold", "quantitation"],
+        set_tables=["attribution", "missingness", "threshold", "quantitation",],
         paths=paths,
         report=True,
     )
 
     # Create description plots.
-
+    execute_description_plots(
+        set_cohorts="phenotype",
+        set_tables=["histogram",],
+        paths=paths,
+        report=True,
+    )
 
     pass
 
 
-# TODO: old? maybe still useful...
+# TODO: old? maybe still useful... probably OBSOLETE
 def execute_describe_cohorts_models_phenotypes(
     table=None,
     genotype_cohorts=None,
@@ -2777,66 +2845,6 @@ def execute_describe_cohorts_models_phenotypes(
     pail["table_summary_cohorts_models_genotypes"] = table_genotypes
     # Return information.
     return pail
-
-
-# Plots
-
-# TODO: old, but still need to implement new version...
-def execute_plot_cohorts_models_phenotypes(
-    table=None,
-    report=None,
-):
-    """
-    Organizes information and plots.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<object>): collection of collections of plot objects
-
-    """
-
-    # TODO: match the cohorts-models to the phenotypes and chart type...
-
-    # Collect plots.
-    #pail.update(pail_collection)
-    pail = dict()
-    # Histograms.
-    pail["histogram"] = organize_phenotypes_plots_histogram(
-        threshold=None, # None or upper threshold on values for histogram
-        table=table,
-    )
-    # Box plots.
-    # TODO: TCW 3 August 2021
-    # TODO: box plots for hormones in different groups (assessment center?)
-
-
-    # Dot plots of phenotypes ordinal variables.
-    #pail["dot_trajectory_month"] = (
-    #    organize_phenotypes_plots_dot_trajectory_month(
-    #        table=table,
-    #))
-    #pail["dot_trajectory_menstruation"] = (
-    #    organize_phenotypes_plots_dot_trajectory_menstruation(
-    #        table=table,
-    #))
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: execute_plot_cohorts_models_phenotypes()")
-        utility.print_terminal_partition(level=3)
-
-    # Return information.
-    return pail
-
-
-
 
 
 #

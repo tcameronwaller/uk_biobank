@@ -1,0 +1,197 @@
+execution	set	set_sort	dependence	dependence_sort	dependence_binary	cohort	cohort_sort	model	model_sort	independence_extra_female	independence	model_note
+0	albumin	1	albumin_imputation	1	0	female_male_priority_male	1	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+0	albumin	1	albumin_imputation	1	0	female_male_priority_male	1	joint_1	2	pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	albumin	1	albumin_imputation	1	0	female	2	unadjust	1	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female	2	joint_1	2	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_menstruation_regular	3	unadjust	1	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_menstruation_regular	3	joint_1	2	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_premenopause	4	unadjust	1	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_premenopause	4	joint_1	2	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_perimenopause	5	unadjust	1	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_perimenopause	5	joint_1	2	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_postmenopause	6	unadjust	1	pregnancy		
+1	albumin	1	albumin_imputation	1	0	female_postmenopause	6	joint_1	2	pregnancy		
+1	albumin	1	albumin_imputation	1	0	male	7	unadjust	1			
+1	albumin	1	albumin_imputation	1	0	male	7	joint_1	2			
+1	albumin	1	albumin_imputation	1	0	male_age_low	8	unadjust	1			
+1	albumin	1	albumin_imputation	1	0	male_age_low	8	joint_1	2			
+1	albumin	1	albumin_imputation	1	0	male_age_middle	9	unadjust	1			
+1	albumin	1	albumin_imputation	1	0	male_age_middle	9	joint_1	2			
+1	albumin	1	albumin_imputation	1	0	male_age_high	10	unadjust	1			
+1	albumin	1	albumin_imputation	1	0	male_age_high	10	joint_1	2			
+												
+0	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_male_priority_male	1	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+0	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_male_priority_male	1	joint_1	2	pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_low	8	unadjust	1			
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_low	8	joint_1	2			
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_middle	9	unadjust	1			
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_middle	9	joint_1	2			
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_high	10	unadjust	1			
+1	steroid_globulin	2	steroid_globulin_imputation_log	2	0	male_age_high	10	joint_1	2			
+												
+1	oestradiol	3	oestradiol_detection	3	1	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_detection	3	1	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_detection	3	1	male_age_low	8	unadjust	1			
+1	oestradiol	3	oestradiol_detection	3	1	male_age_low	8	joint_1	2			
+1	oestradiol	3	oestradiol_detection	3	1	male_age_middle	9	unadjust	1			
+1	oestradiol	3	oestradiol_detection	3	1	male_age_middle	9	joint_1	2			
+1	oestradiol	3	oestradiol_detection	3	1	male_age_high	10	unadjust	1			
+1	oestradiol	3	oestradiol_detection	3	1	male_age_high	10	joint_1	2			
+												
+1	oestradiol	3	oestradiol_imputation_log	4	0	female	2	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female	2	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_menstruation_regular	3	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_menstruation_regular	3	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_premenopause	4	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_premenopause	4	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_perimenopause	5	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_perimenopause	5	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_postmenopause	6	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	female_postmenopause	6	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male	7	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male	7	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_low	8	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_low	8	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_middle	9	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_middle	9	joint_1	2			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_high	10	unadjust	1			
+1	oestradiol	3	oestradiol_imputation_log	4	0	male_age_high	10	joint_1	2			
+												
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_low	8	unadjust	1			
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_low	8	joint_1	2			
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_middle	9	unadjust	1			
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_middle	9	joint_1	2			
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_high	10	unadjust	1			
+1	oestradiol	3	oestradiol_bioavailable_imputation_log	5	0	male_age_high	10	joint_1	2			
+												
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_low	8	unadjust	1			
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_low	8	joint_1	2			
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_middle	9	unadjust	1			
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_middle	9	joint_1	2			
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_high	10	unadjust	1			
+1	oestradiol	3	oestradiol_free_imputation_log	6	0	male_age_high	10	joint_1	2			
+												
+0	testosterone	4	testosterone_detection	7	1	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+0	testosterone	4	testosterone_detection	7	1	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+0	testosterone	4	testosterone_detection	7	1	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+0	testosterone	4	testosterone_detection	7	1	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+0	testosterone	4	testosterone_detection	7	1	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+0	testosterone	4	testosterone_detection	7	1	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+0	testosterone	4	testosterone_detection	7	1	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+0	testosterone	4	testosterone_detection	7	1	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+0	testosterone	4	testosterone_detection	7	1	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+0	testosterone	4	testosterone_detection	7	1	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+0	testosterone	4	testosterone_detection	7	1	male	7	unadjust	1			
+0	testosterone	4	testosterone_detection	7	1	male	7	joint_1	2			
+0	testosterone	4	testosterone_detection	7	1	male_age_low	8	unadjust	1			
+0	testosterone	4	testosterone_detection	7	1	male_age_low	8	joint_1	2			
+0	testosterone	4	testosterone_detection	7	1	male_age_middle	9	unadjust	1			
+0	testosterone	4	testosterone_detection	7	1	male_age_middle	9	joint_1	2			
+0	testosterone	4	testosterone_detection	7	1	male_age_high	10	unadjust	1			
+0	testosterone	4	testosterone_detection	7	1	male_age_high	10	joint_1	2			
+												
+1	testosterone	4	testosterone_imputation_log	8	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_imputation_log	8	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_low	8	unadjust	1			
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_low	8	joint_1	2			
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_middle	9	unadjust	1			
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_middle	9	joint_1	2			
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_high	10	unadjust	1			
+1	testosterone	4	testosterone_imputation_log	8	0	male_age_high	10	joint_1	2			
+												
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_low	8	unadjust	1			
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_low	8	joint_1	2			
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_middle	9	unadjust	1			
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_middle	9	joint_1	2			
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_high	10	unadjust	1			
+1	testosterone	4	testosterone_bioavailable_imputation_log	9	0	male_age_high	10	joint_1	2			
+												
+1	testosterone	4	testosterone_free_imputation_log	10	0	female	2	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female	2	joint_1	2	menopause_ordinal;oophorectomy;hysterectomy;pregnancies;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_menstruation_regular	3	unadjust	1	menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_menstruation_regular	3	joint_1	2	menstruation_phase_cycle;menopause_ordinal;oophorectomy;hysterectomy;pregnancies;menstruation_regular_range;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_premenopause	4	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_premenopause	4	joint_1	2	menstruation_phase_cycle;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_perimenopause	5	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_perimenopause	5	joint_1	2	hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_postmenopause	6	unadjust	1	menopause_ordinal;pregnancy	sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	female_postmenopause	6	joint_1	2	oophorectomy;hysterectomy;pregnancies;menopause_ordinal;pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	male	7	unadjust	1		sex_y;sex_x;sex_text	
+1	testosterone	4	testosterone_free_imputation_log	10	0	male	7	joint_1	2		sex_y;sex_x;sex_text;age;body;body_log;region;season;alteration_sex_hormone	
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_low	8	unadjust	1			
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_low	8	joint_1	2			
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_middle	9	unadjust	1			
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_middle	9	joint_1	2			
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_high	10	unadjust	1			
+1	testosterone	4	testosterone_free_imputation_log	10	0	male_age_high	10	joint_1	2			
+												
+0	vitamin_d	5	vitamin_d_imputation	1	0	female_male_priority_male	1	unadjust	1	pregnancy	sex_y;sex_x;sex_text	
+0	vitamin_d	5	vitamin_d_imputation	1	0	female_male_priority_male	1	joint_1	2	pregnancy	sex_y;sex_x;sex_text;age;body;body_log;region;season;medication_vitamin_d	
