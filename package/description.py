@@ -2699,7 +2699,7 @@ def execute_procedure(
     # Create description plots.
     execute_description_plots(
         set_cohorts="phenotype",
-        set_tables=["histogram",],
+        set_plots=["histogram",],
         paths=paths,
         report=True,
     )
