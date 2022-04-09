@@ -332,8 +332,9 @@ def read_source_table_stratification_cohorts_models(
             "cohort_sort": "int",
             "model": "string",
             "model_sort": "int",
-            "independence_extra_female": "string",
-            "independence": "string",
+            "independence_female": "string",
+            "independence_male": "string",
+            "independence_both": "string",
             "model_note": "string",
         },
     )
@@ -4173,23 +4174,33 @@ def stratify_genotype_cohorts_models_set(
     for record_strat in records_stratification:
         # Extract names of independent variables.
         if (
-            (not pandas.isna(record_strat["independence"]))
+            (not pandas.isna(record_strat["independence_both"]))
         ):
-            independence_male = copy.deepcopy(
-                record_strat["independence"].split(";")
+            independence_both = copy.deepcopy(
+                record_strat["independence_both"].split(";")
             )
         else:
-            independence_male = []
+            independence_both = []
         if (
-            (not pandas.isna(record_strat["independence_extra_female"]))
+            (not pandas.isna(record_strat["independence_female"]))
         ):
             independence_extra_female = copy.deepcopy(
-                record_strat["independence_extra_female"].split(";")
+                record_strat["independence_female"].split(";")
             )
-            independence_female = copy.deepcopy(independence_male)
+            independence_female = copy.deepcopy(independence_both)
             independence_female.extend(independence_extra_female)
         else:
-            independence_female = copy.deepcopy(independence_male)
+            independence_female = copy.deepcopy(independence_both)
+        if (
+            (not pandas.isna(record_strat["independence_male"]))
+        ):
+            independence_extra_male = copy.deepcopy(
+                record_strat["independence_male"].split(";")
+            )
+            independence_male = copy.deepcopy(independence_both)
+            independence_male.extend(independence_extra_male)
+        else:
+            independence_male = copy.deepcopy(independence_both)
         # Stratify cohorts and models.
         record_instance = (
             stratify_genotype_cohort_model_instance(
