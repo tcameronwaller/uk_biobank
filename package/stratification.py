@@ -135,7 +135,7 @@ def read_source(
 
     # Specify directories and files.
     path_table_phenotypes = os.path.join(
-        path_dock, "organization",
+        path_dock, "organization_2022-04-09",
         "table_phenotypes.pickle",
     )
 
