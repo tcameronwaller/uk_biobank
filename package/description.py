@@ -2687,6 +2687,13 @@ def execute_description_plots(
 # Procedure
 
 
+# TODO: TCW, 12 April 2022
+# TODO: read regression summary tables
+# TODO: implement the regression summary table format drivers from "scratch" repository
+# TODO: instead for writing out the individual plot tables, create the plots directly...
+
+
+
 def execute_procedure(
     path_dock=None,
 ):
