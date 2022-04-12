@@ -4634,6 +4634,10 @@ def stratify_phenotype_cohorts_set_special_sex_age_menopause(
     Organizes information and plots for sex hormones.
 
     arguments:
+        column_special (str): name of column in table for variable in special
+            selection
+        values_special (list): values of variable for special selection
+        name_special (str): prefix for cohort names
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
 
@@ -5421,7 +5425,7 @@ def stratify_phenotype_cohorts_regression(
     records.extend(records_novel)
 
     records_novel = (
-        stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
+        stratify_phenotype_cohorts_alcohol_ever_sex_age_menopause(
             table=table,
         )
     )
@@ -5477,7 +5481,11 @@ def stratify_phenotype_cohorts_season_sex_age_menopause(
     return records
 
 
-def stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
+# TODO: TCW, 11 April 2022
+# TODO: change from 'alcohol_current' to 'alcohol_ever'
+
+
+def stratify_phenotype_cohorts_alcohol_ever_sex_age_menopause(
     table=None,
 ):
     """
@@ -5510,7 +5518,7 @@ def stratify_phenotype_cohorts_alcohol_current_sex_age_menopause(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="alcohol_current",
+            column_special="alcohol_ever",
             values_special=[1,],
             name_special="alcohol_yes",
             table=table,
