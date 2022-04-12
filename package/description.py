@@ -2770,21 +2770,21 @@ def define_parameters_regression_summaries():
     record = dict()
     record["name"] = "alcohol_frequency"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.13
-    record["abscissa_maximum"] = 0.18
+    record["abscissa_minimum"] = -0.15
+    record["abscissa_maximum"] = 0.19
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_auditc"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.4
-    record["abscissa_maximum"] = 0.3
+    record["abscissa_minimum"] = -0.30
+    record["abscissa_maximum"] = 0.25
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.10
+    record["abscissa_minimum"] = -0.11
     record["abscissa_maximum"] = 0.12
     records.append(record)
 
