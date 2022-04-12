@@ -3019,7 +3019,7 @@ def create_description_plots_from_summaries(
     pail_write = dict()
     pail_write["forest_regressions"] = pail_forest_regressions
     # Write product information to file.
-    plot.write_product_plots_child_directories(
+    plot.write_product_plots_child_child_directories(
         pail_write=pail_write,
         path_parent=paths["description_plots"],
     )
