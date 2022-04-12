@@ -2997,7 +2997,7 @@ def create_description_plots_from_summaries(
         # Create Forest Plots.
         pail_forest_regressions = (
             read_organize_regression_summaries_create_forest_plots(
-                path_dock=paths["dock"],
+                paths=paths,
                 report=True,
             )
         )
