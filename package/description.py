@@ -3105,22 +3105,24 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
-    # Create description tables.
-    execute_description_tables(
-        set_cohorts="phenotype",
-        set_tables=["attribution", "missingness", "threshold", "quantitation",],
-        paths=paths,
-        report=True,
-    )
+    if False:
+        # Create description tables.
+        execute_description_tables(
+            set_cohorts="phenotype",
+            set_tables=["attribution", "missingness", "threshold", "quantitation",],
+            paths=paths,
+            report=True,
+        )
 
-    # Create description plots.
-    execute_description_plots(
-        set_cohorts="phenotype",
-        set_cohort_plots=[], # ["histogram",]
-        set_summary_plots=["forest_regressions", "forest_correlations",],
-        paths=paths,
-        report=True,
-    )
+    if True:
+        # Create description plots.
+        execute_description_plots(
+            set_cohorts="phenotype",
+            set_cohort_plots=[], # ["histogram",]
+            set_summary_plots=["forest_regressions", "forest_correlations",],
+            paths=paths,
+            report=True,
+        )
 
     pass
 
