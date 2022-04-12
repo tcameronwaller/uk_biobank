@@ -2532,7 +2532,7 @@ def execute_description_tables(
             report=True,
         )
         records_cohorts = (
-            ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
+            ukb_strat.stratify_phenotype_cohorts_set_description_tables(
                 table=source["table_phenotypes"],
         ))
     elif (set_cohorts == "read"):

@@ -4868,281 +4868,6 @@ def stratify_phenotype_cohorts_set_special_sex_age_menopause(
     return records
 
 
-def stratify_phenotype_cohorts_set_season_sex_age_menopause(
-    column_season=None,
-    values_season=None,
-    name_season=None,
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (list<dict>): records with information about cohorts
-
-    """
-
-    # Copy information in table.
-    table = table.copy(deep=True)
-    # Collect records of information about each cohort and model.
-    records = list()
-
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_bipolar_disorder_loose")
-    record["cohort"] = str(str(name_season) + "_bipolar_disorder_loose")
-    record["cohort_model"] = "bipolar_disorder_loose"
-    record["category"] = "sex_together"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    #record["table"] = table
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
-            (table["bipolar_control_case_loose"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_bipolar_disorder_strict")
-    record["cohort"] = str(str(name_season) + "_bipolar_disorder_strict")
-    record["cohort_model"] = "bipolar_disorder_strict"
-    record["category"] = "sex_together"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    #record["table"] = table
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
-            (table["bipolar_control_case_strict"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_male")
-    record["cohort"] = str(str(name_season) + "_female_male")
-    record["cohort_model"] = "female_male"
-    record["category"] = "sex_together"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    #record["table"] = table
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
-        ), :
-    ]
-    records.append(record)
-
-    # Sex
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female")
-    record["cohort"] = str(str(name_season) + "_female")
-    record["cohort_model"] = "female"
-    record["category"] = "sex"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_male")
-    record["cohort"] = str(str(name_season) + "_male")
-    record["cohort_model"] = "male"
-    record["category"] = "sex"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "male")
-        ), :
-    ]
-    records.append(record)
-
-    # Menstruation
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_menstruation_regular")
-    record["cohort"] = "female_menstruation_regular"
-    record["cohort_model"] = "female_menstruation_regular"
-    record["category"] = "menstruation"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_regular_range"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    # Menopause
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_premenopause")
-    record["cohort"] = "female_premenopause"
-    record["cohort_model"] = "female_premenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_perimenopause")
-    record["cohort"] = "female_perimenopause"
-    record["cohort_model"] = "female_perimenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_postmenopause")
-    record["cohort"] = "female_postmenopause"
-    record["cohort_model"] = "female_postmenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    # Age
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_age_low")
-    record["cohort"] = "female_age_low"
-    record["cohort_model"] = "female_age_low"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_age_middle")
-    record["cohort"] = "female_age_middle"
-    record["cohort_model"] = "female_age_middle"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_female_age_high")
-    record["cohort"] = "female_age_high"
-    record["cohort_model"] = "female_age_high"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_male_age_low")
-    record["cohort"] = "male_age_low"
-    record["cohort_model"] = "male_age_low"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_male_age_middle")
-    record["cohort"] = "male_age_middle"
-    record["cohort_model"] = "male_age_middle"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 1)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = str(str(name_season) + "_male_age_high")
-    record["cohort"] = "male_age_high"
-    record["cohort_model"] = "male_age_high"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table[column_season].isin(values_season)) &
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    # Return information
-    return records
-
-
 def stratify_phenotype_cohorts_set_sex_body(
     table=None,
 ):
@@ -5258,131 +4983,7 @@ def stratify_phenotype_cohorts_set_sex_body(
     return records
 
 
-def stratify_phenotype_cohorts_set_sex_season(
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (list<dict>): records with information about cohorts
-
-    """
-
-    # Copy information in table.
-    table = table.copy(deep=True)
-    # Collect records of information about each cohort and model.
-    records = list()
-
-    # Females and males together in seasons
-
-    record = dict()
-    record["name"] = "female_male_winter"
-    record["cohort"] = "female_male_winter"
-    record["cohort_model"] = "female_male_winter"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
-            (table["season_stratification"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = "female_male_summer"
-    record["cohort"] = "female_male_summer"
-    record["cohort_model"] = "female_male_summer"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0)) &
-            (table["season_stratification"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    # Females in seasons
-
-    record = dict()
-    record["name"] = "female_winter"
-    record["cohort"] = "female_winter"
-    record["cohort_model"] = "female_winter"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["season_stratification"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = "female_summer"
-    record["cohort"] = "female_summer"
-    record["cohort_model"] = "female_summer"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["season_stratification"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    # Males in seasons
-
-    record = dict()
-    record["name"] = "male_winter"
-    record["cohort"] = "male_winter"
-    record["cohort_model"] = "male_winter"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "male") &
-            (table["season_stratification"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    record = dict()
-    record["name"] = "male_summer"
-    record["cohort"] = "male_summer"
-    record["cohort_model"] = "male_summer"
-    record["category"] = "season"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "male") &
-            (table["season_stratification"] == 2)
-        ), :
-    ]
-    records.append(record)
-
-    # Return information
-    return records
-
-
-def stratify_phenotype_cohorts_regression(
+def stratify_phenotype_cohorts_set_regression(
     table=None,
 ):
     """
@@ -5411,116 +5012,30 @@ def stratify_phenotype_cohorts_regression(
     records.extend(records_novel)
 
     records_novel = (
-        stratify_phenotype_cohorts_set_sex_body(
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="season_summer_autumn",
+            values_special=[1,],
+            name_special="season_summer_autumn",
             table=table,
         )
     )
     records.extend(records_novel)
 
     records_novel = (
-        stratify_phenotype_cohorts_set_sex_season(
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="season_summer_autumn",
+            values_special=[0,],
+            name_special="season_fall_winter",
             table=table,
         )
     )
     records.extend(records_novel)
-
-    records_novel = (
-        stratify_phenotype_cohorts_alcohol_ever_sex_age_menopause(
-            table=table,
-        )
-    )
-    records.extend(records_novel)
-
-
-    # Return information
-    return records
-
-
-def stratify_phenotype_cohorts_season_sex_age_menopause(
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Collect records of information about each cohort and model.
-    records = list()
-    records_novel = (
-        stratify_phenotype_cohorts_set_season_sex_age_menopause(
-            column_season="season_stratification",
-            values_season=[0,],
-            name_season="winter",
-            table=table,
-        )
-    )
-    records.extend(records_novel)
-
-    records_novel = (
-        stratify_phenotype_cohorts_set_season_sex_age_menopause(
-            column_season="season_stratification",
-            values_season=[2,],
-            name_season="summer",
-            table=table,
-        )
-    )
-    records.extend(records_novel)
-
-    # Return information
-    return records
-
-
-# TODO: TCW, 11 April 2022
-# TODO: change from 'alcohol_current' to 'alcohol_ever'
-
-
-def stratify_phenotype_cohorts_alcohol_ever_sex_age_menopause(
-    table=None,
-):
-    """
-    Organizes information and plots for sex hormones.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Collect records of information about each cohort and model.
-    records = list()
-    #records_novel = (
-    #    stratify_phenotype_cohorts_set_special_sex_age_menopause(
-    #        column_special="alcohol_current",
-    #        values_special=[0,],
-    #        name_special="alcohol_no",
-    #        table=table,
-    #    )
-    #)
-    #records.extend(records_novel)
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
             column_special="alcohol_ever",
             values_special=[1,],
-            name_special="alcohol_yes",
+            name_special="alcohol_ever",
             table=table,
         )
     )
@@ -5530,8 +5045,86 @@ def stratify_phenotype_cohorts_alcohol_ever_sex_age_menopause(
     return records
 
 
+def stratify_phenotype_cohorts_set_description_tables(
+    table=None,
+):
+    """
+    Stratify phenotype records in cohorts specifically for description tables.
 
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
 
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Collect records of information about each cohort and model.
+    records = list()
+    records_novel = (
+        stratify_phenotype_cohorts_set_sex_age_menopause(
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="alcohol_ever",
+            values_special=[1,],
+            name_special="alcohol_ever",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="alcoholism_control_case_1",
+            values_special=[1,],
+            name_special="alcoholism_case",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="alcoholism_control_case_1",
+            values_special=[0,],
+            name_special="alcoholism_control",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="bipolar_control_case_strict",
+            values_special=[1,],
+            name_special="bipolar_case",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="bipolar_control_case_strict",
+            values_special=[0,],
+            name_special="bipolar_control",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    # Return information
+    return records
 
 
 def organize_dictionary_entries_stratification_cohorts(

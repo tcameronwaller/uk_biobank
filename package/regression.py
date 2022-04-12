@@ -625,7 +625,7 @@ def stratify_cohorts_call_run_regressions(
     """
 
     # Stratify phenotypes in cohorts.
-    records_cohorts = ukb_strat.stratify_phenotype_cohorts_regression(
+    records_cohorts = ukb_strat.stratify_phenotype_cohorts_set_regression(
         table=table,
     )
     entries_cohorts = (
