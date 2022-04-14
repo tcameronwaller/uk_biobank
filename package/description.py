@@ -2882,11 +2882,40 @@ def define_parameters_correlation_summaries():
     records.append(record)
 
     record = dict()
+    record["name"] = "depression"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.5
+    record["abscissa_maximum"] = 0.5
+    records.append(record)
+
+    record = dict()
+    record["name"] = "schizophrenia"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.5
+    record["abscissa_maximum"] = 0.5
+    records.append(record)
+
+    record = dict()
     record["name"] = "bipolar_disorder"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
     records.append(record)
+
+    record = dict()
+    record["name"] = "bipolar_disorder_type_1"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.5
+    record["abscissa_maximum"] = 0.5
+    records.append(record)
+
+    record = dict()
+    record["name"] = "bipolar_disorder_type_2"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.5
+    record["abscissa_maximum"] = 0.5
+    records.append(record)
+
 
     # Return information
     return records
