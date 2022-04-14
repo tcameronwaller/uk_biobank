@@ -2884,8 +2884,8 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "bipolar_disorder"
     record["regression_type"] = "logistic"
-    record["abscissa_minimum"] = -1.0
-    record["abscissa_maximum"] = 1.0
+    record["abscissa_minimum"] = -0.5
+    record["abscissa_maximum"] = 0.5
     records.append(record)
 
     # Return information
@@ -2972,6 +2972,14 @@ def organize_regression_summary_tables_for_forest_plots(
     # Return information.
     return pail
 
+
+# TODO: TCW; 14 April 2022
+# TODO: Implement new functions to read the genetic correlation tables from "collection" procedure.
+# TODO: Aggregate the tables and parse 1. cohort 2. model_adjustment 3. phenotype_secondary.
+# TODO: Also need to interpret "phenotype_primary". (simple translation)
+# TODO: Introduce new columns to fit the organization function for regression summary tables.
+# TODO: Stratify by phenotype_primary.
+# TODO: Write out tables with missing values represented as "nan".
 
 def organize_correlation_summary_tables_for_forest_plots(
     pail_correlation_tables=None,
