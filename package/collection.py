@@ -1094,7 +1094,8 @@ def write_product_study_table(
         path_or_buf=path_table,
         sep="\t",
         header=True,
-        index=True,
+        index=False,
+        na_rep="nan",
     )
     pass
 
