@@ -639,6 +639,39 @@ def read_collect_organize_heritability_designs_studies(
 # Read genetic correlation estimates
 
 
+def define_cohort_names_to_extract_from_table_names():
+    """
+    Defines names of cohorts for extraction from names of tables.
+
+    I do not know that I want to implement this because it will decrease the
+    versatility of the collection procedure.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<str>): names of cohorts
+
+    """
+
+    # Collect names of cohorts.
+    cohorts = list()
+    cohorts.append("female_male_priority_male")
+    cohorts.append("female")
+    cohorts.append("female_menstruation_regular")
+    cohorts.append("female_premenopause")
+    cohorts.append("female_perimenopause")
+    cohorts.append("female_postmenopause")
+    cohorts.append("male")
+    cohorts.append("male_age_low")
+    cohorts.append("male_age_middle")
+    cohorts.append("male_age_high")
+
+    # Return information
+    return cohorts
+
+
 def read_extract_correlation_design_study_pair_detail(
     file_name=None,
     file_prefix=None,
@@ -679,6 +712,7 @@ def read_extract_correlation_design_study_pair_detail(
     variants = float("nan")
     correlation = float("nan")
     correlation_error = float("nan")
+    interval_95 = float("nan")
     confidence_95_low = float("nan")
     confidence_95_high = float("nan")
     confidence_95_not_one = float("nan")
@@ -761,8 +795,9 @@ def read_extract_correlation_design_study_pair_detail(
         (not pandas.isna(correlation)) and
         (not pandas.isna(correlation_error))
     ):
-        confidence_95_low = (correlation - (1.96 * correlation_error))
-        confidence_95_high = (correlation + (1.96 * correlation_error))
+        interval_95 = float(1.96 * correlation_error)
+        confidence_95_low = (correlation - interval_95)
+        confidence_95_high = (correlation + interval_95)
         if (
             (confidence_95_low < 1.0) and (confidence_95_high < 1.0)
         ):
@@ -793,6 +828,7 @@ def read_extract_correlation_design_study_pair_detail(
     record["summary"] = summary
     record["correlation"] = correlation
     record["standard_error"] = correlation_error
+    record["interval_95"] = interval_95
     record["confidence_95_low"] = confidence_95_low
     record["confidence_95_high"] = confidence_95_high
     record["confidence_95_range"] = confidence_95
@@ -895,7 +931,7 @@ def read_collect_organize_correlation_design_pairs(
         "study_primary",
         "study_secondary",
         "variants", "summary",
-        "correlation", "standard_error", "confidence_95_range",
+        "correlation", "standard_error", "interval_95", "confidence_95_range",
         "probability",
         "confidence_95_low", "confidence_95_high",
         "confidence_95_not_one", "confidence_95_not_zero",
