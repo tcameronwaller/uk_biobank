@@ -3009,6 +3009,7 @@ def organize_regression_summary_tables_for_forest_plots(
 # TODO: Introduce new columns to fit the organization function for regression summary tables.
 # TODO: Stratify by phenotype_primary.
 # TODO: Write out tables with missing values represented as "nan".
+# TODO: I probably will still need to edit the table(s) manually.
 
 def organize_correlation_summary_tables_for_forest_plots(
     pail_correlation_tables=None,
