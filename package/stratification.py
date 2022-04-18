@@ -1275,7 +1275,6 @@ def translate_biological_sex_plink(
     return interpretation
 
 
-
 def organize_phenotype_covariate_table_plink_format(
     boolean_variables=None,
     binary_variables=None,

@@ -93,6 +93,9 @@ def initialize_directories(
     paths["collection_correlation"] = os.path.join(
         path_dock, "collection", "correlation"
     )
+    paths["collection_correlation_combination"] = os.path.join(
+        path_dock, "collection", "correlation_combination"
+    )
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
@@ -109,6 +112,9 @@ def initialize_directories(
     )
     utility.create_directories(
         path=paths["collection_correlation"]
+    )
+    utility.create_directories(
+        path=paths["collection_correlation_combination"]
     )
 
     # Return information.
@@ -976,7 +982,7 @@ def read_collect_organize_correlation_designs_study_pairs(
     raises:
 
     returns:
-        (dict): collection of Pandas data frames
+        (dict<object>): collection of Pandas data-frame tables
 
     """
 
@@ -1060,6 +1066,119 @@ def read_collect_organize_source(
     pail["heritability"] = pail_heritability
     pail["correlation"] = pail_correlation
     return pail
+
+
+def define_search_string_extraction_parameters():
+    """
+    Defines parameters for multiple two-tier searches and extractions on longer
+    main character strings within a single column of a table.
+
+    Example main string: 'female_premenopause_unadjust_oestradiol_bioavailable'
+    Example 'cohort' tier 1 search string: 'female_premenopause'
+    Example 'cohort' tier 2 search string: 'female'
+    Example 'phenotype' tier 1 search string: 'oestradiol_bioavailable'
+    Example 'phenotype' tier 2 search string: 'oestradiol'
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<dict<list<str>>>): collection of tier 1 and tier 2 shorter, search
+            character strings across multiple variables of interest
+
+    """
+
+    pail = dict()
+    pail["cohort"] = dict()
+    pail["cohort"]["search_1"] = [
+        "female_menstruation_regular",
+        "female_premenopause",
+        "female_perimenopause",
+        "female_postmenopause",
+        "male_age_low",
+        "male_age_middle",
+        "male_age_high",
+    ]
+    pail["cohort"]["search_2"] = [
+        "female",
+        "male",
+    ]
+    pail["model"] = dict() # variable 'model' indicates context and adjustment
+    pail["model"]["search_1"] = [
+        "joint_1",
+        "unadjust",
+    ]
+    pail["model"]["search_2"] = []
+    pail["phenotype_secondary"] = dict()
+    pail["phenotype_secondary"]["search_1"] = [
+        "albumin_imputation",
+        "steroid_globulin_imputation_log",
+        "oestradiol_detection",
+        "oestradiol_log",
+        "oestradiol_imputation_log",
+        "oestradiol_bioavailable_imputation_log",
+        "oestradiol_free_imputation_log",
+        "testosterone_detection",
+        "testosterone_log",
+        "testosterone_imputation_log",
+        "testosterone_bioavailable_imputation_log",
+        "testosterone_free_imputation_log",
+    ]
+    pail["phenotype_secondary"]["search_2"] = [
+        "oestradiol_imputation",
+        "testosterone_imputation",
+    ]
+
+    # Return.
+    return pail
+
+
+def combine_organize_correlation_tables(
+    pail_correlation_tables=None,
+):
+    """
+    Combines and organizes information from estimates of genetic correlations.
+
+    arguments:
+        pail_correlation_tables (dict<object>): collection of Pandas data-frame
+            tables for estimates of genetic correlations
+
+    raises:
+
+    returns:
+        (object): Pandas data-frame table
+
+    """
+
+    # Concatenate separate tables for estimates of genetic correlations.
+    table_combination = pandas.concat(
+        list(pail_correlation_tables.values()),
+        axis="index",
+        join="outer",
+        ignore_index=True,
+    )
+    # Define parameters for extraction of information from character string
+    # names.
+    pail_extractions = define_search_string_extraction_parameters()
+    # Extract information from character string names.
+    table_extraction = (
+        utility.drive_extract_search_strings_from_table_columns_main_strings(
+            pail_extractions=pail_extractions,
+            temporary_column_prefix="correlation_extraction",
+            column_source="study_secondary",
+            table=table_combination,
+            report=None,
+    ))
+
+    # Organize information.
+    pail = dict()
+    pail["table_combination"] = table_combination
+    pail["table_extraction"] = table_extraction
+
+    # Return information.
+    return pail
+
 
 
 ##########
@@ -1157,7 +1276,10 @@ def write_product(
         information=information["correlation"],
         path_parent=paths["collection_correlation"],
     )
-
+    write_product_tables(
+        information=information["correlation_combination"],
+        path_parent=paths["collection_correlation_combination"],
+    )
     pass
 
 
@@ -1892,15 +2014,20 @@ def execute_procedure(
     )
     # Read source information from file.
     # Exclusion identifiers are "eid".
-    source = read_collect_organize_source(
+    pail_source = read_collect_organize_source(
         paths=paths,
         report=True,
     )
-
+    # Read and organize information from Genetic Correlation estimates for
+    # further analyses.
+    pail_source["correlation_combination"] = (
+        combine_organize_correlation_tables(
+            pail_correlation_tables=pail_source["correlation"],
+    ))
     # Write product information to file.
     write_product(
         paths=paths,
-        information=source
+        information=pail_source,
     )
 
     pass
