@@ -3002,7 +3002,10 @@ def organize_regression_summary_tables_for_forest_plots(
     return pail
 
 
-# TODO: TCW; 14 April 2022
+# TODO: TCW; 18 April 2022
+# TODO: 1. read in the combined and extracted correlation table from collection procedure
+# TODO: 2. new function(s) to automate 
+
 # TODO: Implement new functions to read the genetic correlation tables from "collection" procedure.
 # TODO: Aggregate the tables and parse 1. cohort 2. model_adjustment 3. phenotype_secondary.
 # TODO: Also need to interpret "phenotype_primary". (simple translation)

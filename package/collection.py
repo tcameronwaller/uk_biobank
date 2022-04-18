@@ -96,6 +96,9 @@ def initialize_directories(
     paths["collection_correlation_combination"] = os.path.join(
         path_dock, "collection", "correlation_combination"
     )
+    paths["correlation_format_split"] = os.path.join(
+        path_dock, "collection", "correlation_format_split"
+    )
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
@@ -116,7 +119,9 @@ def initialize_directories(
     utility.create_directories(
         path=paths["collection_correlation_combination"]
     )
-
+    utility.create_directories(
+        path=paths["correlation_format_split"]
+    )
     # Return information.
     return paths
 
@@ -1020,52 +1025,65 @@ def read_collect_organize_correlation_designs_study_pairs(
 
 
 ##########
-# Driver
+# Organize information about genetic correlations
 
 
-def read_collect_organize_source(
-    paths=None,
-    report=None,
+def read_source_gwas_primary_phenotypes(
+    path_dock=None,
 ):
     """
     Reads and organizes source information from file.
 
-    Each primary dictionary (such as "pail_stratification") has keys that
-    correspond to names of design tables with records for individual studies.
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
 
     arguments:
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-        report (bool): whether to print reports
+        path_dock (str): path to dock directory for source and product
+            directories and files
 
     raises:
 
     returns:
-        (object): source information
+        (dict): information about primary studies for genetic correlations
 
     """
 
-    # Stratification table sample counts.
-    pail_stratification = read_collect_organize_stratification_designs_studies(
-        path_parent_directory=paths["stratification"],
-        report=report,
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_dock, "parameters", "uk_biobank", "gwas_primary_phenotypes",
+        "table_gwas_primary_phenotypes.tsv"
     )
-    # Heritability estimates.
-    pail_heritability = read_collect_organize_heritability_designs_studies(
-        path_parent_directory=paths["heritability"],
-        report=report,
+    # Read file.
+    table = pandas.read_csv(
+        path_table,
+        sep="\t",
+        header=0,
+        dtype={
+            "gwas_study": "string",
+            "primary_phenotype": "string",
+            "dependence_type": "string",
+        },
     )
-    # Genetic correlation estimates.
-    pail_correlation = read_collect_organize_correlation_designs_study_pairs(
-        path_parent_directory=paths["genetic_correlation"],
-        report=report,
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
     )
-    # Collect information.
-    pail = dict()
-    pail["stratification"] = pail_stratification
-    pail["heritability"] = pail_heritability
-    pail["correlation"] = pail_correlation
-    return pail
+    table.set_index(
+        "gwas_study",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    pail_primaries = table.to_dict(
+        orient="index",
+    )
+
+    # Return information.
+    return pail_primaries
 
 
 def define_search_string_extraction_parameters():
@@ -1174,15 +1192,193 @@ def combine_organize_correlation_tables(
             table=table_combination,
             report=True,
     ))
-
     # Organize information.
     pail = dict()
-    pail["table_combination"] = table_combination
-    pail["table_extraction"] = table_extraction
-
+    pail["combination"] = table_combination
+    pail["extraction"] = table_extraction
     # Return information.
     return pail
 
+
+def select_split_genetic_correlation_table_by_primary_phenotypes(
+    column_phenotype_primary=None,
+    phenotypes_primary=None,
+    table=None,
+    report=None,
+):
+    """
+    Select relevant primary phenotypes and split genetic correlation records
+    by these primary phenotypes.
+
+    arguments:
+        column_phenotype_primary (str): name of table's column for name of
+            primary phenotype
+        phenotypes_primary (list<str>): names of primary phenotypes to include
+        table (object): Pandas data frame of summary information from multiple
+            regressions
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of Pandas data-frame tables
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+    # Filter records by primary phenotype.
+    table = table.loc[
+        (table[column_phenotype_primary].isin(phenotypes_primary)), :
+    ]
+    # Stratify records in the table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    table.set_index(
+        [column_phenotype_primary],
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    tables_stratification = table.groupby(
+        level=column_phenotype_primary,
+        axis="index",
+    )
+    # Collect stratification tables for each group.
+    pail_tables = dict()
+    for name, table_stratification in tables_stratification:
+        table_stratification.reset_index(
+            level=None,
+            inplace=True,
+            drop=True,
+        )
+        # Collect table.
+        pail_tables[name] = table_stratification
+        pass
+    # Return information.
+    return pail_tables
+
+
+def adjust_format_split_genetic_correlation_tables(
+    table=None,
+    path_dock=None,
+):
+    """
+    Combines and organizes information from estimates of genetic correlations.
+
+    arguments:
+        pail_correlation_tables (dict<object>): collection of Pandas data-frame
+            tables for estimates of genetic correlations
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (dict<object>): collection of Pandas data-frame tables
+
+    """
+
+    # Read reference table of interpretations of variable codes.
+    pail_primaries = read_source_gwas_primary_phenotypes(
+        path_dock=path_dock,
+    )
+    # Copy information.
+    table = table.copy(deep=True)
+    # Primary phenotype.
+    table["phenotype_primary"] = table.apply(
+        lambda row: pail_primaries[row["study_primary"]]["phenotype"],
+        axis="columns", # apply function to each row
+    )
+    # Dependence type.
+    table["dependence_type"] = table.apply(
+        lambda row: pail_primaries[row["study_primary"]]["dependence_type"],
+        axis="columns", # apply function to each row
+    )
+    # Model context.
+    table["model_context"] = "joint"
+    # Model adjustment.
+    table["model_adjustment"] = table.apply(
+        lambda row:
+            "unadjust" if (str(row["model"]) == "unadjust") else "adjust",
+        axis="columns", # apply function to each row
+    )
+    # Variable.
+    table["variable"] = table["phenotype_secondary"]
+    # Create fill records with missing values.
+
+    # Split table records by specific primary phenotypes.
+    pail = select_split_genetic_correlation_table_by_primary_phenotypes(
+        column_phenotype_primary="phenotype_primary",
+        phenotypes_primary=[
+            "alcohol_dependence",
+            "alcohol_dependence_genotype",
+            "alcohol_quantity",
+            "depression",
+            "bipolar",
+            "bipolar_type_1",
+            "bipolar_type_2",
+            "schizophrenia",
+        ],
+        table=table,
+        report=report,
+    )
+    # Return information.
+    return pail
+
+
+
+
+##########
+# Driver
+
+
+def read_collect_organize_source(
+    paths=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Each primary dictionary (such as "pail_stratification") has keys that
+    correspond to names of design tables with records for individual studies.
+
+    arguments:
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): source information
+
+    """
+
+    # Stratification table sample counts.
+    pail_stratification = read_collect_organize_stratification_designs_studies(
+        path_parent_directory=paths["stratification"],
+        report=report,
+    )
+    # Heritability estimates.
+    pail_heritability = read_collect_organize_heritability_designs_studies(
+        path_parent_directory=paths["heritability"],
+        report=report,
+    )
+    # Genetic correlation estimates.
+    pail_correlation = read_collect_organize_correlation_designs_study_pairs(
+        path_parent_directory=paths["genetic_correlation"],
+        report=report,
+    )
+    # Collect information.
+    pail = dict()
+    pail["stratification"] = pail_stratification
+    pail["heritability"] = pail_heritability
+    pail["correlation"] = pail_correlation
+    return pail
 
 
 ##########
@@ -1283,6 +1479,10 @@ def write_product(
     write_product_tables(
         information=information["correlation_combination"],
         path_parent=paths["collection_correlation_combination"],
+    )
+    write_product_tables(
+        information=information["correlation_format_split"],
+        path_parent=paths["correlation_format_split"],
     )
     pass
 
@@ -2022,11 +2222,17 @@ def execute_procedure(
         paths=paths,
         report=True,
     )
-    # Read and organize information from Genetic Correlation estimates for
+    # Organize information from Genetic Correlation estimates for
     # further analyses.
     pail_source["correlation_combination"] = (
         combine_organize_correlation_tables(
             pail_correlation_tables=pail_source["correlation"],
+    ))
+    # Adjust format of information about Genetic Correlation estimates.
+    pail_source["correlation_format_split"] = (
+        adjust_format_split_genetic_correlation_tables(
+            table=pail_source["correlation_combination"]["extraction"],
+            path_dock=path_dock,
     ))
     # Write product information to file.
     write_product(
