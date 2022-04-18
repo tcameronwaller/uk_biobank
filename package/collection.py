@@ -1168,7 +1168,7 @@ def combine_organize_correlation_tables(
             temporary_column_prefix="correlation_extraction",
             column_source="study_secondary",
             table=table_combination,
-            report=None,
+            report=True,
     ))
 
     # Organize information.
