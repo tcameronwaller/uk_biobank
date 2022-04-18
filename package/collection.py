@@ -1102,6 +1102,8 @@ def define_search_string_extraction_parameters():
     ]
     pail["cohort"]["search_2"] = [
         "female",
+    ]
+    pail["cohort"]["search_3"] = [
         "male",
     ]
     pail["model"] = dict() # variable 'model' indicates context and adjustment
@@ -1110,6 +1112,7 @@ def define_search_string_extraction_parameters():
         "unadjust",
     ]
     pail["model"]["search_2"] = []
+    pail["model"]["search_3"] = []
     pail["phenotype_secondary"] = dict()
     pail["phenotype_secondary"]["search_1"] = [
         "albumin_imputation",
@@ -1129,6 +1132,7 @@ def define_search_string_extraction_parameters():
         "oestradiol_imputation",
         "testosterone_imputation",
     ]
+    pail["phenotype_secondary"]["search_3"] = []
 
     # Return.
     return pail
