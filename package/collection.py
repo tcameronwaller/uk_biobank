@@ -1158,6 +1158,7 @@ def define_search_string_extraction_parameters():
 
 def combine_organize_correlation_tables(
     pail_correlation_tables=None,
+    report=None,
 ):
     """
     Combines and organizes information from estimates of genetic correlations.
@@ -1165,6 +1166,7 @@ def combine_organize_correlation_tables(
     arguments:
         pail_correlation_tables (dict<object>): collection of Pandas data-frame
             tables for estimates of genetic correlations
+        report (bool): whether to print reports
 
     raises:
 
@@ -1190,7 +1192,7 @@ def combine_organize_correlation_tables(
             temporary_column_prefix="correlation_extraction",
             column_source="study_secondary",
             table=table_combination,
-            report=True,
+            report=report,
     ))
     # Organize information.
     pail = dict()
@@ -1265,6 +1267,7 @@ def select_split_genetic_correlation_table_by_primary_phenotypes(
 def adjust_format_split_genetic_correlation_tables(
     table=None,
     path_dock=None,
+    report=None,
 ):
     """
     Combines and organizes information from estimates of genetic correlations.
@@ -1274,6 +1277,7 @@ def adjust_format_split_genetic_correlation_tables(
             tables for estimates of genetic correlations
         path_dock (str): path to dock directory for source and product
             directories and files
+        report (bool): whether to print reports
 
     raises:
 
@@ -2232,12 +2236,14 @@ def execute_procedure(
     pail_source["correlation_combination"] = (
         combine_organize_correlation_tables(
             pail_correlation_tables=pail_source["correlation"],
+            report=True,
     ))
     # Adjust format of information about Genetic Correlation estimates.
     pail_source["correlation_format_split"] = (
         adjust_format_split_genetic_correlation_tables(
             table=pail_source["correlation_combination"]["extraction"],
             path_dock=path_dock,
+            report=True,
     ))
     # Write product information to file.
     write_product(
