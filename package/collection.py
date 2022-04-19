@@ -1288,6 +1288,11 @@ def adjust_format_split_genetic_correlation_tables(
     )
     # Copy information.
     table = table.copy(deep=True)
+    # Filter records by primary phenotype.
+    # Select records for primary phenotypes with translations.
+    table = table.loc[
+        (table["study_primary"].isin(list(pail_primaries.keys()))), :
+    ]
     # Primary phenotype.
     table["phenotype_primary"] = table.apply(
         lambda row: pail_primaries[row["study_primary"]]["phenotype"],
