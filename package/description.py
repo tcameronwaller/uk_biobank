@@ -2886,22 +2886,22 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "alcohol_dependence"
     record["regression_type"] = "logistic"
-    record["abscissa_minimum"] = -0.7
+    record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_dependence_genotype"
     record["regression_type"] = "logistic"
-    record["abscissa_minimum"] = -0.7
+    record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.3
-    record["abscissa_maximum"] = 0.3
+    record["abscissa_minimum"] = -0.25
+    record["abscissa_maximum"] = 0.25
     records.append(record)
 
     record = dict()
@@ -3105,8 +3105,10 @@ def organize_correlation_summary_tables_for_forest_plots(
     # Return information.
     return pail
 
+# create_regression_summary_forest_plots
 
-def create_regression_summary_forest_plots(
+
+def create_correlation_summary_forest_plots(
     pail_plot_tables=None,
     records_parameters=None,
     report=None,
@@ -3252,7 +3254,7 @@ def read_organize_correlation_summaries_create_forest_plots(
         report=report,
     )
     # Create Forest Plots.
-    pail_plots = create_regression_summary_forest_plots(
+    pail_plots = create_correlation_summary_forest_plots(
         pail_plot_tables=pail_plot_tables,
         records_parameters=records_parameters,
         report=report,
