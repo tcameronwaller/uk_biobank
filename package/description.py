@@ -253,7 +253,8 @@ def read_source_correlation_summary_tables(
     pail = dict()
     # Define path to parent directory.
     path_directory_parent = os.path.join(
-        path_dock, "parameters", "uk_biobank", "genetic_correlation",
+        path_dock, "parameters", "uk_biobank",
+        "genetic_correlation_summary_tables",
     )
     # Read all files within parent directory and organize tables.
     pail = (
@@ -279,9 +280,6 @@ def read_source_correlation_summary_tables(
     ))
     # Return information.
     return pail
-
-
-
 
 
 # TODO: TCW, 23 March 2022
@@ -2876,7 +2874,14 @@ def define_parameters_correlation_summaries():
     records = list()
 
     record = dict()
-    record["name"] = "alcohol_use_disorder"
+    record["name"] = "alcohol_dependence"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.7
+    record["abscissa_maximum"] = 0.5
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_dependence_genotype"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.7
     record["abscissa_maximum"] = 0.5
@@ -2904,21 +2909,21 @@ def define_parameters_correlation_summaries():
     records.append(record)
 
     record = dict()
-    record["name"] = "bipolar_disorder"
+    record["name"] = "bipolar"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
     records.append(record)
 
     record = dict()
-    record["name"] = "bipolar_disorder_type_1"
+    record["name"] = "bipolar_type_1"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
     records.append(record)
 
     record = dict()
-    record["name"] = "bipolar_disorder_type_2"
+    record["name"] = "bipolar_type_2"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.5
