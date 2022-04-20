@@ -2833,7 +2833,7 @@ def define_parameters_regression_summaries():
     records = list()
 
     record = dict()
-    record["name"] = "alcohol_use_disorder"
+    record["name"] = "alcohol_dependence"
     record["regression_type"] = "logistic"
     record["abscissa_minimum"] = -0.6
     record["abscissa_maximum"] = 0.6
