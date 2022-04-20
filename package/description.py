@@ -260,6 +260,8 @@ def read_source_correlation_summary_tables(
         utility.read_all_pandas_tables_files_within_parent_directory(
             path_directory_parent=path_directory_parent,
             types_pandas_table_read={
+                "study_primary": "string",
+                "study_secondary": "string",
                 "cohort": "string",
                 "phenotype_primary": "string",
                 "dependence_type": "string",
@@ -271,6 +273,7 @@ def read_source_correlation_summary_tables(
                 "interval_95": "float32",
                 "confidence_95_low": "float32",
                 "confidence_95_high": "float32",
+                "probability": "float32",
             },
             report=report,
     ))

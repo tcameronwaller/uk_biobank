@@ -1317,7 +1317,7 @@ def select_split_genetic_correlation_table_by_primary_phenotypes(
         table_stratification.reset_index(
             level=None,
             inplace=True,
-            drop=True,
+            drop=False,
         )
         # Collect table.
         pail_tables[name] = table_stratification
