@@ -1053,7 +1053,8 @@ def read_source_gwas_primary_phenotypes(
 
     # Specify directories and files.
     path_table = os.path.join(
-        path_dock, "parameters", "uk_biobank", "gwas_primary_phenotypes",
+        path_dock, "parameters", "uk_biobank",
+        "gwas_format_primary_secondary_phenotypes",
         "table_gwas_primary_phenotypes.tsv"
     )
     # Read file.
@@ -1084,6 +1085,55 @@ def read_source_gwas_primary_phenotypes(
 
     # Return information.
     return pail_primaries
+
+
+def read_source_gwas_primary_secondary_missing_fill(
+    path_dock=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (object): Pandas data-frame table
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "gwas_format_primary_secondary_phenotypes",
+        "table_gwas_primary_secondary_missing_fill.tsv"
+    )
+    # Read file.
+    table = pandas.read_csv(
+        path_table,
+        sep="\t",
+        header=0,
+        dtype={
+            "study_primary": "string",
+            "study_secondary": "string",
+            "correlation": "float",
+            "standard_error": "float",
+            "interval_95": "float",
+            "probability": "float",
+        },
+    )
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+    # Return information.
+    return table
 
 
 def define_search_string_extraction_parameters():
@@ -1158,6 +1208,7 @@ def define_search_string_extraction_parameters():
 
 def combine_organize_correlation_tables(
     pail_correlation_tables=None,
+    path_dock=None,
     report=None,
 ):
     """
@@ -1166,6 +1217,8 @@ def combine_organize_correlation_tables(
     arguments:
         pail_correlation_tables (dict<object>): collection of Pandas data-frame
             tables for estimates of genetic correlations
+        path_dock (str): path to dock directory for source and product
+            directories and files
         report (bool): whether to print reports
 
     raises:
@@ -1175,9 +1228,18 @@ def combine_organize_correlation_tables(
 
     """
 
+    # Read parameter table of information to fill in missing values for missing
+    # records.
+    table_missing_fill = read_source_gwas_primary_secondary_missing_fill(
+        path_dock=path_dock,
+    )
+    # Append extra records to the genetic correlation tables to fill in missing
+    # values for incomplete comparisons.
+    tables_combination = list(pail_correlation_tables.values())
+    tables_combination.append(table_missing_fill)
     # Concatenate separate tables for estimates of genetic correlations.
     table_combination = pandas.concat(
-        list(pail_correlation_tables.values()),
+        tables_combination,
         axis="index",
         join="outer",
         ignore_index=True,
@@ -1286,12 +1348,14 @@ def adjust_format_split_genetic_correlation_tables(
 
     """
 
-    # Read reference table of interpretations of variable codes.
+    # Read parameter table of information about GWAS primary phenotypes.
     pail_primaries = read_source_gwas_primary_phenotypes(
         path_dock=path_dock,
     )
+
     # Copy information.
     table = table.copy(deep=True)
+
     # Filter records by primary phenotype.
     # Select records for primary phenotypes with translations.
     table = table.loc[
@@ -2236,6 +2300,7 @@ def execute_procedure(
     pail_source["correlation_combination"] = (
         combine_organize_correlation_tables(
             pail_correlation_tables=pail_source["correlation"],
+            path_dock=path_dock,
             report=True,
     ))
     # Adjust format of information about Genetic Correlation estimates.

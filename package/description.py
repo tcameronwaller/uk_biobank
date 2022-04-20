@@ -3004,7 +3004,7 @@ def organize_regression_summary_tables_for_forest_plots(
 
 # TODO: TCW; 18 April 2022
 # TODO: 1. read in the combined and extracted correlation table from collection procedure
-# TODO: 2. new function(s) to automate 
+# TODO: 2. new function(s) to automate
 
 # TODO: Implement new functions to read the genetic correlation tables from "collection" procedure.
 # TODO: Aggregate the tables and parse 1. cohort 2. model_adjustment 3. phenotype_secondary.
@@ -3013,6 +3013,14 @@ def organize_regression_summary_tables_for_forest_plots(
 # TODO: Stratify by phenotype_primary.
 # TODO: Write out tables with missing values represented as "nan".
 # TODO: I probably will still need to edit the table(s) manually.
+
+# TODO: TCW; 19 April 2022
+# TODO: variable 'oestradiol_priority' will depend on the cohort
+# TODO: use 'oestradiol_detection' for cohorts below...
+# TODO: 'female_postmenopause', 'male_age_low', 'male_age_middle', 'male_age_high'
+# TODO: use 'schmitz_2021' for cohorts below...
+# TODO: 'female', 'male'
+
 
 def organize_correlation_summary_tables_for_forest_plots(
     pail_correlation_tables=None,
