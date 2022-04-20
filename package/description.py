@@ -3180,6 +3180,15 @@ def create_regression_summary_forest_plots(
     return pail
 
 
+# TODO: TCW; 19 April 2022
+# TODO: use Blue-Yellow for Phenotype Regressions
+# TODO: use Purple-Green for Genetic Correlations
+# TODO: make labels larger on vertical and horizontal axes
+# TODO: make markers even larger
+# TODO: Consider removing the axis titles ("Sex Hormone or Protein" and "Marginal Model Coefficient (95% C.I.)")
+# TODO: Combine the groups of plots in InkScape
+
+
 def read_organize_regression_summaries_create_forest_plots(
     paths=None,
     report=None,
