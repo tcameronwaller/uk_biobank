@@ -2886,7 +2886,7 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "alcohol_dependence"
     record["regression_type"] = "logistic"
-    record["abscissa_minimum"] = -0.5
+    record["abscissa_minimum"] = -0.6
     record["abscissa_maximum"] = 0.5
     records.append(record)
 
@@ -2900,7 +2900,7 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.25
+    record["abscissa_minimum"] = -0.3
     record["abscissa_maximum"] = 0.25
     records.append(record)
 
