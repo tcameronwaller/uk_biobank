@@ -3144,17 +3144,20 @@ def create_regression_summary_forest_plots(
                 column_abscissa_value="value",
                 column_abscissa_interval_below="interval_below",
                 column_abscissa_interval_above="interval_above",
-                group_one="adjust", # markers for group one are above center
-                group_two="unadjust", # markers for group two are below center
+                group_one="adjust", # group one markers: circles above center
+                group_two="unadjust", # group two markers: triangles below
                 abscissa_minimum=record_parameter["abscissa_minimum"],
                 abscissa_maximum=record_parameter["abscissa_maximum"],
                 ordinate_title="", # "Sex Hormone or Protein"
                 abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
+                print_label_on_chart=False,
                 label_chart_prefix=str(record_parameter["name"]),
                 label_size_ordinate_categories="one",
                 label_size_abscissa_values="one",
-                size_marker=50,
-                space_groups=0.09, # vertical space between groups' markers
+                size_marker=70,
+                color_marker_one="blue_ukraine",
+                color_marker_two="yellow_ukraine",
+                space_groups=0.13, # vertical space between groups' markers
         ))
         pass
     # Return information.
