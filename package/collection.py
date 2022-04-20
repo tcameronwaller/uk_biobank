@@ -1025,7 +1025,7 @@ def read_collect_organize_correlation_designs_study_pairs(
 
 
 ##########
-# Organize information about genetic correlations
+# Organize summary information about genetic correlations
 
 
 def read_source_gwas_primary_phenotypes(
@@ -1401,8 +1401,6 @@ def adjust_format_split_genetic_correlation_tables(
     )
     # Return information.
     return pail
-
-
 
 
 ##########

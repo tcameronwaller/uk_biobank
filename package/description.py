@@ -225,11 +225,16 @@ def read_source_correlation_summary_tables(
     """
     Reads and organizes source information from file.
 
+    Summary tables about Genetic Correlations between pairs of studies.
+
+    Genetic Correlation summary tables from collection procedure need some
+    manual editing.
+    1. Designate secondary study '34255042_schmitz_2021_female' as cohort
+        'female', model context 'joint', and model adjustment 'adjust'.
+    2. Designate cohort-specific phenotypes for variable 'oestradiol_priority'.
+
     Notice that Pandas does not accommodate missing values within series of
     integer variable types.
-
-    The UK Biobank "eid" designates unique persons in the cohort.
-    The UK Biobank "IID" matches persons to their genotype information.
 
     arguments:
         path_dock (str): path to dock directory for source and product
