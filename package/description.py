@@ -3422,7 +3422,7 @@ def execute_procedure(
         execute_description_plots(
             set_cohorts="phenotype",
             set_cohort_plots=[], # ["histogram",]
-            set_summary_plots=["forest_regressions", "forest_correlations",],
+            set_summary_plots=["forest_correlations",], # "forest_regressions",
             paths=paths,
             report=True,
         )
