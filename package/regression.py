@@ -796,7 +796,7 @@ def execute_procedure(
         pail_logistic_1 = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
-                source_reference["table_alcohol_use_disorder"]
+                source_reference["table_alcohol_dependence"]
             ),
             independences_summary=None, # "None" or list of variables
             filter_execution=True,
@@ -846,7 +846,7 @@ def execute_procedure(
     pail_write = dict()
     pail_write["tables"] = dict()
 
-    pail_write["tables"]["table_alcohol_use_disorder"] = (
+    pail_write["tables"]["table_alcohol_dependence"] = (
         pail_logistic_1["table"]
     )
     pail_write["tables"]["table_alcohol_frequency"] = (

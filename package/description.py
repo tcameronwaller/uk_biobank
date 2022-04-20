@@ -2856,8 +2856,8 @@ def define_parameters_regression_summaries():
     record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.13
-    record["abscissa_maximum"] = 0.13
+    record["abscissa_minimum"] = -0.149
+    record["abscissa_maximum"] = 0.149
     records.append(record)
 
     # Return information
@@ -3152,7 +3152,7 @@ def create_regression_summary_forest_plots(
                 abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
                 print_label_on_chart=False,
                 label_chart_prefix=str(record_parameter["name"]),
-                label_size_ordinate_categories="one",
+                label_size_ordinate_categories="two",
                 label_size_abscissa_values="one",
                 size_marker=70,
                 color_marker_one="purple",
@@ -3210,7 +3210,7 @@ def create_correlation_summary_forest_plots(
                 abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
                 print_label_on_chart=False,
                 label_chart_prefix=str(record_parameter["name"]),
-                label_size_ordinate_categories="one",
+                label_size_ordinate_categories="two",
                 label_size_abscissa_values="one",
                 size_marker=70,
                 color_marker_one="blue_ukraine", # "purple"
