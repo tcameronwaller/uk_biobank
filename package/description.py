@@ -3025,26 +3025,6 @@ def organize_regression_summary_tables_for_forest_plots(
     return pail
 
 
-# TODO: TCW; 18 April 2022
-# TODO: 1. read in the combined and extracted correlation table from collection procedure
-# TODO: 2. new function(s) to automate
-
-# TODO: Implement new functions to read the genetic correlation tables from "collection" procedure.
-# TODO: Aggregate the tables and parse 1. cohort 2. model_adjustment 3. phenotype_secondary.
-# TODO: Also need to interpret "phenotype_primary". (simple translation)
-# TODO: Introduce new columns to fit the organization function for regression summary tables.
-# TODO: Stratify by phenotype_primary.
-# TODO: Write out tables with missing values represented as "nan".
-# TODO: I probably will still need to edit the table(s) manually.
-
-# TODO: TCW; 19 April 2022
-# TODO: variable 'oestradiol_priority' will depend on the cohort
-# TODO: use 'oestradiol_detection' for cohorts below...
-# TODO: 'female_postmenopause', 'male_age_low', 'male_age_middle', 'male_age_high'
-# TODO: use 'schmitz_2021' for cohorts below...
-# TODO: 'female', 'male'
-
-
 def organize_correlation_summary_tables_for_forest_plots(
     pail_correlation_tables=None,
     records_parameters=None,
@@ -3082,7 +3062,7 @@ def organize_correlation_summary_tables_for_forest_plots(
                 model_adjustments=["adjust", "unadjust",],
                 column_variable="variable",
                 variables=[
-                    "oestradiol_priority",
+                    "oestradiol_detection",
                     "oestradiol_bioavailable_imputation_log",
                     "oestradiol_free_imputation_log",
                     "testosterone_imputation_log",
@@ -3098,7 +3078,7 @@ def organize_correlation_summary_tables_for_forest_plots(
                     "interval_95": "interval_below",
                 },
                 labels_categories={
-                    "oestradiol_priority": "ESTR-T",
+                    "oestradiol_detection": "ESTR-T",
                     "oestradiol_bioavailable_imputation_log": "ESTR-B",
                     "oestradiol_free_imputation_log": "ESTR-F",
                     "testosterone_imputation_log": "TEST-T",
@@ -3108,7 +3088,7 @@ def organize_correlation_summary_tables_for_forest_plots(
                     "albumin_imputation": "ALBU",
                 },
                 sorts_categories={
-                    "oestradiol_priority": 1,
+                    "oestradiol_detection": 1,
                     "oestradiol_bioavailable_imputation_log": 2,
                     "oestradiol_free_imputation_log": 3,
                     "testosterone_imputation_log": 4,
@@ -3181,8 +3161,8 @@ def create_regression_summary_forest_plots(
 
 
 # TODO: TCW; 19 April 2022
-# TODO: use Blue-Yellow for Phenotype Regressions
-# TODO: use Purple-Green for Genetic Correlations
+# TODO: use Purple-Green for Phenotype Regressions
+# TODO: use Blue-Yellow for Genetic Correlations
 # TODO: make labels larger on vertical and horizontal axes
 # TODO: make markers even larger
 # TODO: Consider removing the axis titles ("Sex Hormone or Protein" and "Marginal Model Coefficient (95% C.I.)")
