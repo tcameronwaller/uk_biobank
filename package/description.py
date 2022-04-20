@@ -232,6 +232,16 @@ def read_source_correlation_summary_tables(
     1. Designate secondary study '34255042_schmitz_2021_female' as cohort
         'female', model context 'joint', and model adjustment 'adjust'.
     2. Designate cohort-specific phenotypes for variable 'oestradiol_priority'.
+        Cohorts 'female_menstruation_regular', 'female_premenopause', and
+        'female_perimenopause' have sufficient non-missing measurements for
+        linear GWAS on oestradiol measurements with imputation.
+        All other cohorts ought to use the logistic GWAS on detectability of
+        oestradiol.
+    3. Fill in missing values for comparisons that did not complete
+        successfully.
+        For some reason, several comparisons did not complete for primary
+        phenotype 'schizophrenia' and secondary phenotype bioavailable
+        oestradiol.
 
     Notice that Pandas does not accommodate missing values within series of
     integer variable types.
