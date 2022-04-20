@@ -2842,15 +2842,15 @@ def define_parameters_regression_summaries():
     record = dict()
     record["name"] = "alcohol_frequency"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.15
-    record["abscissa_maximum"] = 0.19
+    record["abscissa_minimum"] = -0.2
+    record["abscissa_maximum"] = 0.2
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_auditc"
     record["regression_type"] = "linear"
     record["abscissa_minimum"] = -0.30
-    record["abscissa_maximum"] = 0.25
+    record["abscissa_maximum"] = 0.24
     records.append(record)
 
     record = dict()
@@ -3105,7 +3105,63 @@ def organize_correlation_summary_tables_for_forest_plots(
     # Return information.
     return pail
 
-# create_regression_summary_forest_plots
+
+def create_regression_summary_forest_plots(
+    pail_plot_tables=None,
+    records_parameters=None,
+    report=None,
+):
+    """
+    Drive creation of descriptive charts about phenotypes across cohorts from
+    the UK Biobank.
+
+    arguments:
+        pail_plot_tables (dict<dict<object>>): collection tree of Pandas
+            data-frame tables for plots
+        records_parameters (list<dict>): records with information about plots
+            for regression summaries
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<dict<object>>): collection tree of figures
+
+    """
+
+    # Collect tables for plots.
+    pail = dict()
+    # Iterate on phenotypes.
+    for record_parameter in records_parameters:
+        # Organize tables.
+        name_table = str("table_" + record_parameter["name"])
+        pail[record_parameter["name"]] = (
+            plot.drive_iterate_plot_forest_two_groups(
+                pail_tables=pail_plot_tables[record_parameter["name"]],
+                column_group="group",
+                column_ordinate_label="category_label",
+                column_ordinate_sort="category_sort",
+                column_abscissa_value="value",
+                column_abscissa_interval_below="interval_below",
+                column_abscissa_interval_above="interval_above",
+                group_one="adjust", # group one markers: circles above center
+                group_two="unadjust", # group two markers: triangles below
+                abscissa_minimum=record_parameter["abscissa_minimum"],
+                abscissa_maximum=record_parameter["abscissa_maximum"],
+                ordinate_title="", # "Sex Hormone or Protein"
+                abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
+                print_label_on_chart=False,
+                label_chart_prefix=str(record_parameter["name"]),
+                label_size_ordinate_categories="one",
+                label_size_abscissa_values="one",
+                size_marker=70,
+                color_marker_one="purple",
+                color_marker_two="green",
+                space_groups=0.13, # vertical space between groups' markers
+        ))
+        pass
+    # Return information.
+    return pail
 
 
 def create_correlation_summary_forest_plots(
@@ -3157,22 +3213,13 @@ def create_correlation_summary_forest_plots(
                 label_size_ordinate_categories="one",
                 label_size_abscissa_values="one",
                 size_marker=70,
-                color_marker_one="blue_ukraine",
-                color_marker_two="yellow_ukraine",
+                color_marker_one="blue_ukraine", # "purple"
+                color_marker_two="yellow_ukraine", # "green"
                 space_groups=0.13, # vertical space between groups' markers
         ))
         pass
     # Return information.
     return pail
-
-
-# TODO: TCW; 19 April 2022
-# TODO: use Purple-Green for Phenotype Regressions
-# TODO: use Blue-Yellow for Genetic Correlations
-# TODO: make labels larger on vertical and horizontal axes
-# TODO: make markers even larger
-# TODO: Consider removing the axis titles ("Sex Hormone or Protein" and "Marginal Model Coefficient (95% C.I.)")
-# TODO: Combine the groups of plots in InkScape
 
 
 def read_organize_regression_summaries_create_forest_plots(
@@ -3427,7 +3474,7 @@ def execute_procedure(
         execute_description_plots(
             set_cohorts="phenotype",
             set_cohort_plots=[], # ["histogram",]
-            set_summary_plots=["forest_correlations",], # "forest_regressions",
+            set_summary_plots=["forest_regressions", "forest_correlations",],
             paths=paths,
             report=True,
         )
