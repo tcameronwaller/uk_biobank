@@ -3154,10 +3154,11 @@ def create_regression_summary_forest_plots(
                 label_chart_prefix=str(record_parameter["name"]),
                 label_size_ordinate_categories="one",
                 label_size_abscissa_values="one",
-                size_marker=70,
+                size_marker_one=70,
+                size_marker_two=35,
                 color_marker_one="purple",
-                color_marker_two="green",
-                space_groups=0.13, # vertical space between groups' markers
+                color_marker_two="orange", # "green"
+                space_groups=0.15, # vertical space between groups' markers
         ))
         pass
     # Return information.
@@ -3212,10 +3213,11 @@ def create_correlation_summary_forest_plots(
                 label_chart_prefix=str(record_parameter["name"]),
                 label_size_ordinate_categories="one",
                 label_size_abscissa_values="one",
-                size_marker=70,
-                color_marker_one="blue_ukraine", # "purple"
-                color_marker_two="yellow_ukraine", # "green"
-                space_groups=0.13, # vertical space between groups' markers
+                size_marker_one=70,
+                size_marker_two=35,
+                color_marker_one="blue_navy", # "purple"
+                color_marker_two="orange", # "green"
+                space_groups=0.15, # vertical space between groups' markers
         ))
         pass
     # Return information.
