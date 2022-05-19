@@ -1909,7 +1909,8 @@ def organize_description_table_quantitation(
         "testosterone_free", "testosterone_free_imputation",
         "menstruation_days", "menstruation_duration",
         "pregnancies", "pregnancies_early", "births",
-        "age_menarche", "age_menopause_self_report",
+        #"age_menarche", # necessary data-field is unavailable
+        "age_menopause_self_report",
         "age_menopause_never_oophorectomy",
         "age_oophorectomy", "age_hysterectomy",
         "neuroticism",

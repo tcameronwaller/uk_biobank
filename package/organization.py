@@ -8776,6 +8776,10 @@ def organize_female_ages_major_events_relevant_to_menstruation(
     Organizes ages of female persons at major life events that are relevant to
     menstruation.
 
+    TCW; 19 May 2022
+    It was necessary to exclude "age_menopause" as the necessary data-field
+    from UK Biobank was not available.
+
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
             Biobank cohort
