@@ -574,6 +574,22 @@ def define_variables_description_table_attribution():
     record["value"] = 2 # categorical or discrete value of variable
     records.append(record)
 
+    # Variable: "menstruation_phase"
+    # 0: follicular phase of menstruation
+    # 1: luteal phase of menstruation
+
+    record = dict()
+    record["name"] = "menstruation_follicular"
+    record["variable"] = "menstruation_phase" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "menstruation_luteal"
+    record["variable"] = "menstruation_phase" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
     # Variable: "alcohol_ever"
 
     record = dict()
@@ -1856,6 +1872,15 @@ def organize_quantitation_record(
 
     # Return information.
     return record
+
+
+# TODO: TCW; 19 May 2022
+# TODO: new variables:
+# "age_menarche",
+# "age_menopause_self_report",
+# "age_menopause_never_oophorectomy"
+# "age_oophorectomy"
+# "age_hysterectomy"
 
 
 def organize_description_table_quantitation(

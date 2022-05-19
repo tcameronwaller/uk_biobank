@@ -598,6 +598,14 @@ def interpret_ancestry_white_british(
 
     Accommodate inexact float values.
 
+    Note:
+    "
+    Genetic ethnic group.
+    Indicates samples who self-identified as 'White British' according to Field
+    21000 and have very similar genetic ancestry based on a principal components
+    analysis of the genotypes.
+    "
+
     arguments:
         field_22006 (float): UK Biobank field 22006, whether person is in
             categorical ancestral group, "white british"
@@ -1421,17 +1429,17 @@ def interpret_sex_chromosome_aneuploidy(
 
 
 def interpret_age(
-    field_21022=None,
+    field_raw=None,
 ):
     """
-    Intepret UK Biobank's data-coding for data-field 21022.
+    Intepret UK Biobank's data-coding for a data-field for an age.
 
     Accommodate inexact float values.
 
     Note:
 
     arguments:
-        field_21022 (float): UK Biobank field 21022, age
+        field_raw (float): UK Biobank data-field for an age
 
     raises:
 
@@ -1442,11 +1450,11 @@ def interpret_age(
 
     # Interpret field code.
     if (
-        (not pandas.isna(field_21022))
+        (not pandas.isna(field_raw))
     ):
         # The variable has a valid value.
         # Interpret the value.
-        interpretation = float(field_21022)
+        interpretation = float(field_raw)
     else:
         # Missing or uninterpretable value
         interpretation = float("nan")
@@ -2105,13 +2113,13 @@ def determine_biological_sex_text(
 
 
 def determine_age(
-    field_21022=None,
+    field_raw=None,
 ):
     """
     Determine age with consideration of possible range.
 
     arguments:
-        field_21022 (float): UK Biobank field 21022, age
+        field_raw (float): UK Biobank data-field for an age
 
     raises:
 
@@ -2122,7 +2130,7 @@ def determine_age(
 
     # Interpret age.
     age = interpret_age(
-        field_21022=field_21022,
+        field_raw=field_raw,
     )
     # Comparison.
     if (
@@ -3086,7 +3094,7 @@ def organize_assessment_basis_variables(
     table["age"] = table.apply(
         lambda row:
             determine_age(
-                field_21022=row["21022-0.0"],
+                field_raw=row["21022-0.0"],
             ),
         axis="columns", # apply function to each row
     )
@@ -8681,6 +8689,162 @@ def determine_female_pregnancies_total_count(
     return value
 
 
+def determine_female_age_event_simple(
+    sex_text=None,
+    field_raw_age=None,
+):
+    """
+    Determines the age of a female person at a major life event.
+
+    arguments:
+        sex_text (str): textual representation of sex, 'female' or 'male'
+        field_raw_age (float): raw data field for age at event
+
+    raises:
+
+    returns:
+        (float): age of female person at event
+
+    """
+
+    if (sex_text == "female"):
+        # Determine age.
+        interpretation = determine_age(
+            field_raw=field_raw_age,
+        )
+    elif (sex_text == "male"):
+        # Interpretation is specific to female sex.
+        interpretation = float("nan")
+    else:
+        # Interpretation is null without definition of sex.
+        interpretation = float("nan")
+        pass
+    # Return information.
+    return interpretation
+
+
+def determine_female_age_menopause_never_oophorectomy(
+    sex_text=None,
+    oophorectomy=None,
+    field_raw_age=None,
+):
+    """
+    Determines the age of a female person at their self report of menopause,
+    with consideration only of female persons who never experienced bilateral
+    oophorectomy.
+
+    arguments:
+        sex_text (str): textual representation of sex, 'female' or 'male'
+        oophorectomy (float): whether female person experienced oophorectomy
+        field_raw_age (float): raw data field for age at event
+
+    raises:
+
+    returns:
+        (float): age of female person at event
+
+    """
+
+    if (sex_text == "female"):
+        if (oophorectomy == 0):
+            # Female person who never experienced oophorectomy.
+            # Determine age.
+            interpretation = determine_age(
+                field_raw=field_raw_age,
+            )
+        else:
+            # Interpretation is null in female persons who experienced
+            # oophorectomy.
+            interpretation = float("nan")
+    elif (sex_text == "male"):
+        # Interpretation is specific to female sex.
+        interpretation = float("nan")
+    else:
+        # Interpretation is null without definition of sex.
+        interpretation = float("nan")
+        pass
+    # Return information.
+    return interpretation
+
+
+# review: TCW on 19 May 2022
+def organize_female_ages_major_events_relevant_to_menstruation(
+    table=None,
+    report=None,
+):
+    """
+    Organizes ages of female persons at major life events that are relevant to
+    menstruation.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Determine simple ages at events.
+    table["age_menarche"] = table.apply(
+        lambda row:
+            determine_female_age_event_simple(
+                sex_text=row["sex_text"],
+                field_raw_age=row["2714-0.0"], # age at menarche
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["age_menopause_self_report"] = table.apply(
+        lambda row:
+            determine_female_age_event_simple(
+                sex_text=row["sex_text"],
+                field_raw_age=row["3581-0.0"], # age at menopause
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["age_menopause_never_oophorectomy"] = table.apply(
+        lambda row:
+            determine_female_age_menopause_never_oophorectomy(
+                sex_text=row["sex_text"],
+                oophorectomy=row["oophorectomy"],
+                field_raw_age=row["3581-0.0"], # age at menopause
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["age_oophorectomy"] = table.apply(
+        lambda row:
+            determine_female_age_event_simple(
+                sex_text=row["sex_text"],
+                field_raw_age=row["3882-0.0"], # age at bilateral oophorectomy
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["age_hysterectomy"] = table.apply(
+        lambda row:
+            determine_female_age_event_simple(
+                sex_text=row["sex_text"],
+                field_raw_age=row["2824-0.0"], # age at hysterectomy
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_female_ages_major_events_relevant_to_menstruation()")
+        utility.print_terminal_partition(level=3)
+        # ...
+        pass
+    # Return information.
+    return table
+
+
 # review: TCW on 30 March 2022
 def report_female_pregnancies_births(
     table=None,
@@ -9721,6 +9885,14 @@ def organize_female_menstruation_pregnancy_menopause_variables(
                 field_3140=row["3140-0.0"],
             ),
         axis="columns", # apply function to each row
+    )
+
+    ##########
+    # Ages at major events relevant to menstruation
+
+    table = organize_female_ages_major_events_relevant_to_menstruation(
+        table=table,
+        report=report,
     )
 
     # Determine combination categories by menopause and hormone-atering therapy.
