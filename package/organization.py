@@ -8792,14 +8792,14 @@ def organize_female_ages_major_events_relevant_to_menstruation(
     # Copy information in table.
     table = table.copy(deep=True)
     # Determine simple ages at events.
-    table["age_menarche"] = table.apply(
-        lambda row:
-            determine_female_age_event_simple(
-                sex_text=row["sex_text"],
-                field_raw_age=row["2714-0.0"], # age at menarche
-            ),
-        axis="columns", # apply function to each row
-    )
+    #table["age_menarche"] = table.apply(
+    #    lambda row:
+    #        determine_female_age_event_simple(
+    #            sex_text=row["sex_text"],
+    #            field_raw_age=row["2714-0.0"], # age at menarche
+    #        ),
+    #    axis="columns", # apply function to each row
+    #)
     table["age_menopause_self_report"] = table.apply(
         lambda row:
             determine_female_age_event_simple(

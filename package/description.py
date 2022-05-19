@@ -1874,15 +1874,6 @@ def organize_quantitation_record(
     return record
 
 
-# TODO: TCW; 19 May 2022
-# TODO: new variables:
-# "age_menarche",
-# "age_menopause_self_report",
-# "age_menopause_never_oophorectomy"
-# "age_oophorectomy"
-# "age_hysterectomy"
-
-
 def organize_description_table_quantitation(
     records_cohorts=None,
     report=None,
@@ -1918,6 +1909,9 @@ def organize_description_table_quantitation(
         "testosterone_free", "testosterone_free_imputation",
         "menstruation_days", "menstruation_duration",
         "pregnancies", "pregnancies_early", "births",
+        "age_menarche", "age_menopause_self_report",
+        "age_menopause_never_oophorectomy",
+        "age_oophorectomy", "age_hysterectomy",
         "neuroticism",
         "alcohol_frequency",
         "alcohol_drinks_weekly", "alcohol_drinks_monthly",
@@ -3487,16 +3481,18 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
-    if False:
+    if True:
         # Create description tables.
         execute_description_tables(
             set_cohorts="phenotype",
-            set_tables=["attribution", "missingness", "threshold", "quantitation",],
+            set_tables=[
+                "attribution", "missingness", "threshold", "quantitation",
+            ],
             paths=paths,
             report=True,
         )
 
-    if True:
+    if False:
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",
