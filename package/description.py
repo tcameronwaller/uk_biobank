@@ -2619,12 +2619,12 @@ def create_plots_dot_trajectory_menstruation(
             name_label = str(str(record_cohort["name"]) + "_" + str(name))
             name_plot = str(name_label + "_dot_menstruation")
             pail[name_plot] = plot_variable_means_dot_trajectory(
-                label_title=name_label,
+                label_title="", # name_label
                 column_phenotype=variable,
                 column_trajectory="menstruation_days",
                 threshold_trajectory=31,
-                title_abscissa="days of menstrual cycle",
-                title_ordinate="mean concentration (95% C.I.)",
+                title_abscissa="", # "days of menstrual cycle",
+                title_ordinate="", # "mean concentration (95% C.I.)"
                 table=table_cohort,
             )
             pass
