@@ -2124,7 +2124,7 @@ def plot_variable_means_dot_trajectory(
         title_ordinate=title_ordinate,
         fonts=fonts,
         colors=colors,
-        size=15,
+        size_marker=25,
         label_title=label_title,
     )
     # Return.
