@@ -2364,7 +2364,7 @@ def organize_phenotypes_parameters_for_plots_histogram():
     return records
 
 
-def organize_plots_histogram(
+def create_plots_histogram(
     records_cohorts=None,
     report=None,
 ):
@@ -2406,7 +2406,7 @@ def organize_plots_histogram(
                 table_cohort = table_cohort.loc[
                     (table_cohort[variable] < threshold), :
                 ]
-            # Histogram.
+            # Histogram plot.
             name_label = str(str(record_cohort["name"]) + "_" + str(name))
             name_plot = str(name_label + "_histogram")
             pail[name_plot] = plot_variable_values_histogram(
@@ -2491,15 +2491,106 @@ def organize_phenotypes_plots_dot_trajectory_month(
     return pail
 
 
-def organize_phenotypes_plots_dot_trajectory_menstruation(
-    table=None,
-):
+def organize_phenotypes_parameters_for_plots_dot_trajectory_menstruation():
     """
-    Organizes information and plots.
+    Organizes parameters for histogram plots.
 
     arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    record = dict()
+    record["name"] = "albumin"
+    record["variable"] = "albumin"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "albumin_imputation"
+    record["variable"] = "albumin_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "steroid_globulin"
+    record["variable"] = "steroid_globulin"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "steroid_globulin_imputation"
+    record["variable"] = "steroid_globulin_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "vitamin_d"
+    record["variable"] = "vitamin_d"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "vitamin_d_imputation"
+    record["variable"] = "vitamin_d_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol"
+    record["variable"] = "oestradiol"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_imputation"
+    record["variable"] = "oestradiol_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_bioavailable_imputation"
+    record["variable"] = "oestradiol_bioavailable_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "oestradiol_free_imputation"
+    record["variable"] = "oestradiol_free_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone"
+    record["variable"] = "testosterone"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_imputation"
+    record["variable"] = "testosterone_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_bioavailable_imputation"
+    record["variable"] = "testosterone_bioavailable_imputation"
+    records.append(record)
+
+    record = dict()
+    record["name"] = "testosterone_free_imputation"
+    record["variable"] = "testosterone_free_imputation"
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def create_plots_dot_trajectory_menstruation(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Organizes description histogram plots.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
 
     raises:
 
@@ -2508,57 +2599,34 @@ def organize_phenotypes_plots_dot_trajectory_menstruation(
 
     """
 
-    # Copy information.
-    table = table.copy(deep=True)
-    # Prepare table to summarize phenotype variables across cohorts and models.
-    # These cohorts and models are simple and do not include multiple covariates
-    # for genetic analyses.
-    # Collect records of information about each cohort and model.
-    pails_cohorts = ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
-        table=table,
+    # Organize phenotypes and parameters for plots.
+    records_phenotypes = (
+        organize_phenotypes_parameters_for_plots_dot_trajectory_menstruation()
     )
 
     # Collect information for plots.
     pail = dict()
     # Iterate on tables for cohorts and models.
-    for pail_cohort in pails_cohorts:
-        # Determine whether the current cohort and model table is relevant to
-        # the plot of phenotypes across days of menstrual cycle.
-        if (pail_cohort["menstruation"]):
-            # Define phenotypes.
-            phenotypes = [
-                "cholesterol", "cholesterol_imputation",
-                "oestradiol", "oestradiol_imputation",
-                "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-                "oestradiol_free", "oestradiol_free_imputation",
-                "testosterone", "testosterone_imputation",
-                "testosterone_bioavailable",
-                "testosterone_bioavailable_imputation",
-                "testosterone_free", "testosterone_free_imputation",
-                "vitamin_d", "vitamin_d_imputation",
-                "steroid_globulin", "steroid_globulin_imputation",
-                "albumin", "albumin_imputation",
-                "alcohol_frequency",
-            ]
-
-            # Iterate on phenotypes.
-            for phenotype in phenotypes:
-                # Plot hormone trajectories across days of the menstrual cycle.
-                # Chart.
-                name_label = str(
-                    str(pail_cohort["name"]) + "_" + str(phenotype)
-                )
-                name_plot = str(name_label + "_dot_menstruation")
-                pail[name_plot] = plot_variable_means_dot_trajectory(
-                    label_title=name_label,
-                    column_phenotype=phenotype,
-                    column_trajectory="menstruation_days",
-                    threshold_trajectory=31,
-                    title_abscissa="days of menstrual cycle",
-                    title_ordinate="mean concentration (95% C.I.)",
-                    table=pail_cohort["table"],
-                )
-                pass
+    for record_cohort in records_cohorts:
+        # Iterate on phenotypes.
+        for record_phenotype in records_phenotypes:
+            # Organize information for plot.
+            name = record_phenotype["name"]
+            variable = record_phenotype["variable"]
+            # Copy information.
+            table_cohort = record_cohort["table"].copy(deep=True)
+            # Dot trajectory plot.
+            name_label = str(str(record_cohort["name"]) + "_" + str(name))
+            name_plot = str(name_label + "_dot_menstruation")
+            pail[name_plot] = plot_variable_means_dot_trajectory(
+                label_title=name_label,
+                column_phenotype=variable,
+                column_trajectory="menstruation_days",
+                threshold_trajectory=31,
+                title_abscissa="days of menstrual cycle",
+                title_ordinate="mean concentration (95% C.I.)",
+                table=table_cohort,
+            )
             pass
         pass
     # Return information.
@@ -2682,7 +2750,7 @@ def execute_description_tables(
             report=True,
         )
         records_cohorts = (
-            ukb_strat.stratify_phenotype_cohorts_set_description_tables(
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
                 table=source["table_phenotypes"],
         ))
     elif (set_cohorts == "read"):
@@ -2747,6 +2815,10 @@ def execute_description_tables(
     pass
 
 
+# TODO: TCW; 01 June 2022
+# TODO: Eventually, adapt this function so that it can create plots for cohors
+# TODO: from multiple sources, including genotype GWAS cohorts read from file.
+
 def create_description_plots_from_cohorts(
     set_cohorts=None,
     set_plots=None,
@@ -2780,25 +2852,34 @@ def create_description_plots_from_cohorts(
             path_dock=paths["dock"],
             report=True,
         )
-        # TODO: TCW, 08 April 2022
-        # TODO: switch from alcohol "current" to alcohol "ever"
-        # ukb_strat.stratify_phenotype_cohorts_alcohol_current_sex_age_menopause
-        records_cohorts = (
-            ukb_strat.stratify_phenotype_cohorts_set_sex_age_menopause(
-                table=source["table_phenotypes"],
-        ))
         pass
 
     # Create description plots across cohorts.
-
     # Histograms.
     if ("histogram" in set_plots):
-        pail_histogram = organize_plots_histogram(
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+                table=source["table_phenotypes"],
+        ))
+        pail_histogram = create_plots_histogram(
             records_cohorts=records_cohorts,
             report=report,
         )
     else:
         pail_histogram = dict()
+        pass
+    # Dot trajectory plots of menstrual cycle.
+    if ("dot_trajectory_menstruation" in set_plots):
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_female_menstruation(
+                table=source["table_phenotypes"],
+        ))
+        pail_dot_menstruation = create_plots_dot_trajectory_menstruation(
+            records_cohorts=records_cohorts,
+            report=report,
+        )
+    else:
+        pail_dot_menstruation = dict()
         pass
 
     # Box plots.
@@ -2808,10 +2889,6 @@ def create_description_plots_from_cohorts(
     # Dot plots of phenotypes ordinal variables.
     #pail["dot_trajectory_month"] = (
     #    organize_phenotypes_plots_dot_trajectory_month(
-    #        table=table,
-    #))
-    #pail["dot_trajectory_menstruation"] = (
-    #    organize_phenotypes_plots_dot_trajectory_menstruation(
     #        table=table,
     #))
 
@@ -2825,6 +2902,7 @@ def create_description_plots_from_cohorts(
     # Collect information.
     pail_write = dict()
     pail_write["histogram"] = pail_histogram
+    pail_write["dot_trajectory_menstruation"] = pail_dot_menstruation
     # Write product information to file.
     plot.write_product_plots_child_directories(
         pail_write=pail_write,
@@ -3452,6 +3530,12 @@ def execute_description_plots(
 ################################################################################
 # Procedure
 
+# TODO: TCW; 01 June 2022
+# TODO: activate description plots for cohorts
+# TODO: trajectory plots of estradiol, testosterone (total, bioavailable, free)
+# TODO: across female-premenopause and female-menstruation-regular cohorts
+# TODO: consider excluding persons who used hormone-altering contraception or therapy
+
 
 def execute_procedure(
     path_dock=None,
@@ -3482,7 +3566,7 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
-    if True:
+    if False:
         # Create description tables.
         execute_description_tables(
             set_cohorts="phenotype",
@@ -3493,12 +3577,12 @@ def execute_procedure(
             report=True,
         )
 
-    if False:
+    if True:
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",
-            set_cohort_plots=[], # ["histogram",]
-            set_summary_plots=["forest_regressions", "forest_correlations",],
+            set_cohort_plots=["dot_trajectory_menstruation"], # ["histogram",]
+            set_summary_plots=[], # ["forest_regressions", "forest_correlations",],
             paths=paths,
             report=True,
         )

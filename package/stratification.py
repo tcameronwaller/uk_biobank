@@ -4867,6 +4867,76 @@ def stratify_phenotype_cohorts_set_special_sex_age_menopause(
     return records
 
 
+def stratify_phenotype_cohorts_set_special_female_menstruation(
+    column_special=None,
+    values_special=None,
+    name_special=None,
+    table=None,
+):
+    """
+    Organizes phenotypes for stratification cohorts.
+
+    This collection of stratification cohorts is specific to include female sex,
+    to exclude current pregnancy, and to include regular menstruation.
+
+    arguments:
+        column_special (str): name of column in table for variable in special
+            selection
+        values_special (list): values of variable for special selection
+        name_special (str): prefix for cohort names
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_female_menstruation_regular")
+    record["cohort"] = "female_menstruation_regular"
+    record["cohort_model"] = "female_menstruation_regular"
+    record["category"] = "menstruation"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_female_premenopause")
+    record["cohort"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
+
+
 def stratify_phenotype_cohorts_set_sex_body(
     table=None,
 ):
@@ -5044,7 +5114,63 @@ def stratify_phenotype_cohorts_set_regression(
     return records
 
 
-def stratify_phenotype_cohorts_set_description_tables(
+
+# stratify_phenotype_cohorts_set_description_tables
+
+# TODO: TCW; 01 June 2022
+# TODO: this is the driver function for stratification cohorts for description summaries
+# TODO: introduce cohorts for female persons who did NOT use hormonal contraception or other therapy
+# TODO: also introduce cohorts for female persons who DID use hormonal contraception or other therapy
+# TODO: maybe use function "stratify_phenotype_cohorts_set_special_sex_age_menopause"
+
+
+def drive_stratify_phenotype_cohorts_set_female_menstruation(
+    table=None,
+):
+    """
+    Stratify phenotype records in cohorts.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_female_menstruation(
+            column_special="alteration_sex_hormone",
+            values_special=[0,],
+            name_special="alter_hormone_no",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_female_menstruation(
+            column_special="alteration_sex_hormone",
+            values_special=[1,],
+            name_special="alter_hormone_yes",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    # Return information
+    return records
+
+
+def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
 ):
     """
@@ -5124,6 +5250,9 @@ def stratify_phenotype_cohorts_set_description_tables(
 
     # Return information
     return records
+
+
+
 
 
 def organize_dictionary_entries_stratification_cohorts(
