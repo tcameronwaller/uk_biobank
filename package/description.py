@@ -365,6 +365,11 @@ def read_organize_cohorts(
 ##########
 
 
+# TODO: TCW; 07 June 2022
+# TODO: How do I set up combination attribution queries with two or more variables?
+# TODO: I suppose I need to do that at the level of the cohort stratifications...
+
+
 def define_variables_description_table_attribution():
     """
     Defines categorical or discrete variables and their values for description
@@ -3566,7 +3571,7 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
-    if False:
+    if True:
         # Create description tables.
         execute_description_tables(
             set_cohorts="phenotype",
@@ -3577,7 +3582,7 @@ def execute_procedure(
             report=True,
         )
 
-    if True:
+    if False:
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",

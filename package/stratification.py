@@ -5170,6 +5170,16 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
     return records
 
 
+# TODO: TCW; 07 June 2022
+# TODO: I need...
+# TODO: 1. cohort: female and genotype available; male and genotype available; etc
+# TODO: 2. cohort: female and "White British"; female and NOT "White British"; etc
+# TODO: 3. new organization variable: stratify Alcohol Consumption Quantity
+# TODO: 3.1. "never", "less than __", "__ - __ drinks", "more than __ drinks"
+# TODO: "alcohol_drinks_monthly_ordinal"
+
+
+
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
 ):

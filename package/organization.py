@@ -12157,7 +12157,7 @@ def determine_total_alcohol_consumption_monthly(
 
     arguments:
         alcohol_current (float): binary representation of whether person
-            consumes alcohol currently
+            consumed alcohol currently at time of recruitment, assessment
         drinks_weekly (float): sum of weekly drinks from weekly variables
         drinks_monthly (float): sum of monthly drinks from monthly variables
         weeks_per_month (float): factor to use for weeks per month
@@ -12193,6 +12193,112 @@ def determine_total_alcohol_consumption_monthly(
             alcohol_drinks_monthly = float("nan")
     # Return information.
     return alcohol_drinks_monthly
+
+
+# review: TCW; 07 June 2022
+def determine_alcohol_drinks_monthly_ordinal(
+    alcohol_ever=None,
+    alcohol_current=None,
+    alcohol_drinks_monthly=None,
+    threshold_low=None,
+    threshold_high=None,
+):
+    """
+    Determine ordinal representation of alcohol consumption quantity for
+    convenient use in cohort stratification.
+
+    This definition uses an ordinal code.
+    0: person had never consumed alcohol in life
+    1: person consumed alcohol previously in life but not current at recruitment
+    2: person consumed drinks of alcohol per month fewer than lower threshold
+    3: person consumed drinks of alcohol per month between thresholds
+    4: person consumed drinks of alcohol per month greater than higher threshold
+
+    arguments:
+        alcohol_ever (float): binary representation of whether person had ever
+            consumed alcohol in lifetime
+        alcohol_current (float): binary representation of whether person
+            consumed alcohol currently at time of recruitment, assessment
+        alcohol_drinks_monthly (float): person's monthly alcohol consumption in
+            drinks
+        threshold_low (int): threshold count of drinks per month
+        threshold_high (int): threshold count of drinks per month
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Consider ever alcohol consumption.
+    if (
+        (not pandas.isna(alcohol_ever)) and
+        (alcohol_ever == 0)
+    ):
+        # Person had never consumed any alcohol.
+        value = 0
+    # Consider previous but not current alcohol consumption.
+    elif (
+        (
+            (not pandas.isna(alcohol_ever)) and
+            (alcohol_ever == 1)
+        ) and
+        (
+            (not pandas.isna(alcohol_current)) and
+            (alcohol_current == 0)
+        )
+    ):
+        # Person had consumed alcohol previously but not currently.
+        value = 1
+    # Consider current alcohol consumption quantity.
+    elif (
+        (
+            (not pandas.isna(alcohol_current)) and
+            (alcohol_current == 1)
+        ) and
+        (
+            (not pandas.isna(alcohol_drinks_monthly)) and
+            (alcohol_drinks_monthly < threshold_low)
+        )
+    ):
+        # Person consumed alcohol currently at quantity less than lower
+        # threshold.
+        value = 2
+    elif (
+        (
+            (not pandas.isna(alcohol_current)) and
+            (alcohol_current == 1)
+        ) and
+        (
+            (not pandas.isna(alcohol_drinks_monthly)) and
+            (
+                (alcohol_drinks_monthly >= threshold_low) and
+                (alcohol_drinks_monthly < threshold_high)
+            )
+        )
+    ):
+        # Person consumed alcohol currently at quantity between the lower and
+        # higher thresholds.
+        value = 3
+    elif (
+        (
+            (not pandas.isna(alcohol_current)) and
+            (alcohol_current == 1)
+        ) and
+        (
+            (not pandas.isna(alcohol_drinks_monthly)) and
+            (alcohol_drinks_monthly >= threshold_high)
+        )
+    ):
+        # Person consumed alcohol currently at quantity greater than higher
+        # threshold.
+        value = 4
+    else:
+        # Ambiguous or missing information.
+        value = float("nan")
+    # Return information.
+    return value
 
 
 def organize_alcohol_consumption_quantity_variables(
@@ -12263,6 +12369,21 @@ def organize_alcohol_consumption_quantity_variables(
                 drinks_weekly=row["alcohol_drinks_weekly"],
                 drinks_monthly=row["alcohol_drinks_monthly"],
                 weeks_per_month=4.345, # 52.143 weeks per year (12 months)
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine ordinal variable on alcohol consumption quantity for
+    # convenience in cohort stratification.
+    table["alcohol_drinks_monthly_ordinal"] = table.apply(
+        lambda row:
+            determine_alcohol_drinks_monthly_ordinal(
+                alcohol_ever=row["alcohol_ever"],
+                alcohol_current=row["alcohol_current"],
+                alcohol_drinks_monthly=(
+                    row["alcohol_drinks_monthly_combination"]
+                ),
+                threshold_low=31, #
+                threshold_high=61, #
             ),
         axis="columns", # apply function to each row
     )
