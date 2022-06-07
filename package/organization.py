@@ -761,6 +761,10 @@ def organize_genotype_principal_component_variables(
 ##########
 # General assessment
 
+# TODO: TCW; 07 June 2022
+# TODO: new interpretation function(s) for self-report ancestry/ethnicity
+
+
 
 # review: TCW, 25 January 2022
 # review: TCW, 27 January 2022; data-field "54" coding and site names

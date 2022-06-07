@@ -5176,8 +5176,13 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
 # TODO: 2. cohort: female and "White British"; female and NOT "White British"; etc
 # TODO: 3. new organization variable: stratify Alcohol Consumption Quantity
 # TODO: 3.1. "never", "less than __", "__ - __ drinks", "more than __ drinks"
-# TODO: "alcohol_drinks_monthly_ordinal"
 
+# TODO: "alcohol_drinks_monthly_ordinal"
+#    0: person had never consumed alcohol in life
+#    1: person consumed alcohol previously in life but not current at recruitment
+#    2: person consumed drinks of alcohol per month fewer than lower threshold
+#    3: person consumed drinks of alcohol per month between thresholds
+#    4: person consumed drinks of alcohol per month greater than higher threshold
 
 
 def drive_stratify_phenotype_cohorts_set_description_tables(
@@ -5207,6 +5212,18 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         )
     )
     records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="genotype_availability",
+            values_special=[1,],
+            name_special="genotype_1",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
