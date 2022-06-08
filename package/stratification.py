@@ -5184,6 +5184,9 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
 #    3: person consumed drinks of alcohol per month between thresholds
 #    4: person consumed drinks of alcohol per month greater than higher threshold
 
+# ancestry_self_white
+
+
 
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,

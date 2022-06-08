@@ -761,9 +761,6 @@ def organize_genotype_principal_component_variables(
 ##########
 # General assessment
 
-# TODO: TCW; 07 June 2022
-# TODO: new interpretation function(s) for self-report ancestry/ethnicity
-
 
 
 # review: TCW, 25 January 2022
@@ -1498,6 +1495,59 @@ def interpret_body_mass_index(
     return interpretation
 
 
+# review: TCW, 08 June 2022
+def interpret_self_report_ancestry_ethnicity(
+    field_21000=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field "21000".
+
+    Data-Field "21000": "Ethnic background"
+    UK Biobank data-coding "1001" for data-field "21000".
+    ...
+    6: "Other ethnic group"
+    -1: "Do not know"
+    -3: "Prefer not to answer"
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_21000 (float): UK Biobank data-field 21000, person's self-report
+            of ancestry and or ethnicity
+
+    raises:
+
+    returns:
+        (str): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_21000)) and
+        (-3.5 <= field_21000 and field_21000 < 5000)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (0.5 <= field_21000 and field_21000 < 5000):
+            # Value is one of many interpretable codes.
+            value = str(int(copy.deepcopy(field_21000)))
+        elif (-1.5 <= field_21000 and field_21000 < -0.5):
+            # -1: "Do not know"
+            value = "NA"
+        elif (-3.5 <= field_21000 and field_21000 < -2.5):
+            # -3: "Prefer not to answer"
+            value = "NA"
+        else:
+            # Uninterpretable value
+            value = "NA"
+    else:
+        # Missing or uninterpretable value
+        value = "NA"
+    # Return.
+    return value
+
+
 def interpret_genotype_batch(
     field_22000=None,
     codes_interpretations=None,
@@ -2184,6 +2234,62 @@ def determine_body_mass_index(
         value = body
     else:
         # Lack of information or unreasonable information.
+        value = float("nan")
+    # Return information.
+    return value
+
+
+# review: TCW; 08 June 2022
+def determine_self_report_ancestry_ethnicity(
+    field_21000=None,
+):
+    """
+    Determine whether person self reported ancestry and or ethnicity as
+    "white" or other.
+
+    Code.
+    0: "other"
+    1: "white"
+
+    arguments:
+        field_21000 (float): UK Biobank data-field 21000, person's self-report
+            of ancestry and or ethnicity
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Define codes.
+    codes_white = ["1", "1001", "1002", "1003"]
+    codes_other = [
+        "2", "2001", "2002", "2003", "2004",
+        "3", "3001", "3002", "3003", "3004",
+        "4", "4001", "4002", "4003", "5", "6"
+    ]
+
+    # Interpret self report of biological sex.
+    code = interpret_self_report_ancestry_ethnicity(
+        field_21000=field_21000,
+    )
+    # Interpret code.
+    if (
+        (not pandas.isna(code)) and
+        (code in codes_white)
+    ):
+        # Person self reported ancestry and or ethnicity as "white".
+        value = 1
+    elif (
+        (not pandas.isna(code)) and
+        (code in codes_other)
+    ):
+        # Person self reported ancestry and or ethnicity in one of several
+        # categories "other".
+        value = 0
+    else:
+        # Ambiguous or missing information.
         value = float("nan")
     # Return information.
     return value
@@ -3107,6 +3213,14 @@ def organize_assessment_basis_variables(
         lambda row:
             determine_body_mass_index(
                 field_21001=row["21001-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Determine self report of ancestry and or ethnicity.
+    table["ancestry_self_white"] = table.apply(
+        lambda row:
+            determine_self_report_ancestry_ethnicity(
+                field_21000=row["21000-0.0"],
             ),
         axis="columns", # apply function to each row
     )
