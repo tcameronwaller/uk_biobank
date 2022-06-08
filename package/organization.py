@@ -11775,6 +11775,13 @@ def determine_alcohol_consumption_frequency(
     """
     Determine frequency of alcohol consumption.
 
+    # 0: "Never"
+    # 1: "Special occasions only"
+    # 2: "One to three times a month"
+    # 3: "Once or twice a week"
+    # 4: "Three or four times a week"
+    # 5: "Daily or almost daily"
+
     arguments:
         field_1558 (float): UK Biobank field 1558, frequency of alcohol
             consumption

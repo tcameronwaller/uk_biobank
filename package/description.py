@@ -387,18 +387,33 @@ def define_variables_description_table_attribution():
     # Collect records of information about each categorical varialbe and value.
     records = list()
 
-    # Variable: "white_british"
+    # Variable: "sex_text"
 
     record = dict()
-    record["name"] = "white_british_0"
-    record["variable"] = "white_british" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
+    record["name"] = "sex_text_female"
+    record["variable"] = "sex_text" # categorical or discrete variable
+    record["value"] = "female" # categorical or discrete value of variable
     records.append(record)
 
     record = dict()
-    record["name"] = "white_british_1"
-    record["variable"] = "white_british" # categorical or discrete variable
+    record["name"] = "sex_text_male"
+    record["variable"] = "sex_text" # categorical or discrete variable
+    record["value"] = "male" # categorical or discrete value of variable
+    records.append(record)
+
+
+    # Variable: "ancestry_self_white"
+
+    record = dict()
+    record["name"] = "ancestry_white"
+    record["variable"] = "ancestry_self_white" # cat. or discrete variable
     record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "ancestry_other"
+    record["variable"] = "ancestry_self_white" # cat. or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
     records.append(record)
 
     # Variable: "genotype_availability"
@@ -429,18 +444,18 @@ def define_variables_description_table_attribution():
     record["value"] = "bileve" # categorical or discrete value of variable
     records.append(record)
 
-    # Variable: "sex_text"
+    # Variable: "white_british"
 
     record = dict()
-    record["name"] = "sex_text_female"
-    record["variable"] = "sex_text" # categorical or discrete variable
-    record["value"] = "female" # categorical or discrete value of variable
+    record["name"] = "white_british_0"
+    record["variable"] = "white_british" # categorical or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
     records.append(record)
 
     record = dict()
-    record["name"] = "sex_text_male"
-    record["variable"] = "sex_text" # categorical or discrete variable
-    record["value"] = "male" # categorical or discrete value of variable
+    record["name"] = "white_british_1"
+    record["variable"] = "white_british" # categorical or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
     records.append(record)
 
     # Variable: "alteration_sex_hormone"
@@ -598,18 +613,24 @@ def define_variables_description_table_attribution():
     # Variable: "alcohol_ever"
 
     record = dict()
-    record["name"] = "alcohol_ever_0"
+    record["name"] = "alcohol_never"
     record["variable"] = "alcohol_ever" # categorical or discrete variable
     record["value"] = 0 # categorical or discrete value of variable
     records.append(record)
 
     record = dict()
-    record["name"] = "alcohol_ever_1"
+    record["name"] = "alcohol_ever"
     record["variable"] = "alcohol_ever" # categorical or discrete variable
     record["value"] = 1 # categorical or discrete value of variable
     records.append(record)
 
     # Variable: "alcohol_frequency"
+    # 0: "Never"
+    # 1: "Special occasions only"
+    # 2: "One to three times a month"
+    # 3: "Once or twice a week"
+    # 4: "Three or four times a week"
+    # 5: "Daily or almost daily"
 
     record = dict()
     record["name"] = "alcohol_frequency_0"
@@ -645,6 +666,43 @@ def define_variables_description_table_attribution():
     record["name"] = "alcohol_frequency_5"
     record["variable"] = "alcohol_frequency" # categorical or discrete variable
     record["value"] = 5 # categorical or discrete value of variable
+    records.append(record)
+
+    # Variable: "alcohol_drinks_monthly_ordinal"
+    # 0: person had never consumed alcohol in life
+    # 1: person consumed alcohol previously in life but not current at recruitment
+    # 2: person consumed 30 or fewer drinks of alcohol per month
+    # 3: person consumed 31 to 60 drinks of alcohol per month
+    # 4: person consumed 61 or more drinks of alcohol per month
+
+    record = dict()
+    record["name"] = "alcohol_consumption_0"
+    record["variable"] = "alcohol_drinks_monthly_ordinal" # cat. or discrete variable
+    record["value"] = 0 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_consumption_1"
+    record["variable"] = "alcohol_drinks_monthly_ordinal" # cat. or discrete variable
+    record["value"] = 1 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_consumption_2"
+    record["variable"] = "alcohol_drinks_monthly_ordinal" # cat. or discrete variable
+    record["value"] = 2 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_consumption_3"
+    record["variable"] = "alcohol_drinks_monthly_ordinal" # cat. or discrete variable
+    record["value"] = 3 # categorical or discrete value of variable
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_consumption_4"
+    record["variable"] = "alcohol_drinks_monthly_ordinal" # cat. or discrete variable
+    record["value"] = 4 # categorical or discrete value of variable
     records.append(record)
 
     # Variable: "alcoholism_control_case_1"
