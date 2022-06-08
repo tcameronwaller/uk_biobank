@@ -5184,9 +5184,6 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
 #    3: person consumed drinks of alcohol per month between thresholds
 #    4: person consumed drinks of alcohol per month greater than higher threshold
 
-# ancestry_self_white
-
-
 
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
@@ -5218,14 +5215,33 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="genotype_availability",
+            column_special="ancestry_self_white",
             values_special=[1,],
-            name_special="genotype_1",
+            name_special="ancestry_white",
             table=table,
         )
     )
     records.extend(records_novel)
 
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="ancestry_self_white",
+            values_special=[0,],
+            name_special="ancestry_other",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
+
+    records_novel = (
+        stratify_phenotype_cohorts_set_special_sex_age_menopause(
+            column_special="genotype_availability",
+            values_special=[1,],
+            name_special="genotype_available",
+            table=table,
+        )
+    )
+    records.extend(records_novel)
 
 
     records_novel = (
