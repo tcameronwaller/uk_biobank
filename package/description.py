@@ -369,6 +369,13 @@ def read_organize_cohorts(
 # TODO: How do I set up combination attribution queries with two or more variables?
 # TODO: I suppose I need to do that at the level of the cohort stratifications...
 
+# TODO: TCW; 08 June 2022
+# TODO: I need to know about non-missing measurements of each hormone, protein, alcohol-drinks-per-month (combination),
+# TODO: for female persons of either "White" or "Other" ancestry who also have genotypes available
+# TODO: 1. I need new cohorts that combine genotype-available with ancestry and then have the sex-age-menopause stratifications
+
+# TODO: TCW; 09 June 2022
+# TODO: select relevant cohorts and categorical variables to make it easier to transfer to tables for article
 
 def define_variables_description_table_attribution():
     """
@@ -1837,6 +1844,21 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
     return record
 
 
+# TODO: TCW; 09 June 2022
+# TODO: in counts of "non-missing" values for the quantitative variable and
+# TODO: in counts of "genotypes" for the quantitative variable
+# TODO: report percentages relative to the cohort table
+
+#    percentage_missing = round(
+#        ((count_missing / count_total) * 100), 3
+#    )
+#    record["missing"] = str(
+#        str(count_missing) +
+#        " (" + str(percentage_missing) + "%)"
+#    )
+
+
+
 def organize_quantitation_record(
     name_cohort=None,
     variable=None,
@@ -1881,7 +1903,9 @@ def organize_quantitation_record(
 
     # Initialize missing values.
     count_variable = float("nan")
+    percentage_variable = float("nan")
     count_genotype_variable = float("nan")
+    percentage_genotype_variable = float("nan")
     mean = float("nan")
     standard_error = float("nan")
     interval_95 = float("nan")
