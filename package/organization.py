@@ -14731,16 +14731,17 @@ def scrap_organize_auditc_questionnaire_alcoholism_variables(
 
 
 def write_product_organization(
-    information=None,
-    path_parent=None,
+    pail_write=None,
+    path_directory=None,
 ):
     """
     Writes product information to file.
 
     arguments:
-        information (object): information to write to file
-        path_parent (str): path to parent directory
-            raises:
+        pail_write (dict): collection of information to write to file
+        path_directory (str): path to parent directory
+
+    raises:
 
     returns:
 
@@ -14748,16 +14749,16 @@ def write_product_organization(
 
     # Specify directories and files.
     path_table_phenotypes = os.path.join(
-        path_parent, "table_phenotypes.pickle"
+        path_directory, "table_phenotypes.pickle"
     )
     path_table_phenotypes_text = os.path.join(
-        path_parent, "table_phenotypes.tsv"
+        path_directory, "table_phenotypes.tsv"
     )
     # Write information to file.
-    information["table_phenotypes"].to_pickle(
+    pail_write["table_phenotypes"].to_pickle(
         path_table_phenotypes
     )
-    information["table_phenotypes"].to_csv(
+    pail_write["table_phenotypes"].to_csv(
         path_or_buf=path_table_phenotypes_text,
         sep="\t",
         header=True,
@@ -14767,14 +14768,14 @@ def write_product_organization(
 
 
 def write_product(
-    information=None,
+    pail_write=None,
     paths=None,
 ):
     """
     Writes product information to file.
 
     arguments:
-        information (object): information to write to file
+        pail_write (dict): collection of information to write to file
         paths (dict<str>): collection of paths to directories for procedure's
             files
 
@@ -14786,8 +14787,8 @@ def write_product(
 
     # Organization procedure main information.
     write_product_organization(
-        information=information["organization"],
-        path_parent=paths["organization"],
+        pail_write=pail_write["organization"],
+        path_directory=paths["organization"],
     )
     pass
 
@@ -15128,6 +15129,7 @@ def execute_procedure(
     # Read source information from file.
     # Exclusion identifiers are "eid".
     source = read_source(
+        source="importation",
         path_dock=path_dock,
         report=True,
     )
@@ -15138,32 +15140,38 @@ def execute_procedure(
         path_dock=path_dock,
         report=True,
     )
-    # Organize variables for female menstruation across the UK Biobank.
-    pail_female = execute_female_menstruation(
-        table=pail_basis["table"],
-        report=True,
-    )
-    # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = execute_sex_hormones(
-        table=pail_female["table"], # pail_basis["table_clean"]
-        report=True,
-    )
 
-    # Organize variables for persons' alcohol consumption across the UK Biobank.
-    pail_alcohol = execute_alcohol(
+    # Organize variables for persons' sex hormones across the UK Biobank.
+    pail_hormone = ukb_organization.execute_sex_hormones(
+        table=pail_basis["table"],
+        path_dock=path_dock,
+        report=True,
+    )
+    # Organize variables for female menstruation across the UK Biobank.
+    pail_female = ukb_organization.execute_female_menstruation(
         table=pail_hormone["table"],
+        report=True,
+    )
+    # Organize variables for persons' alcohol consumption across the UK Biobank.
+    pail_alcohol = ukb_organization.execute_alcohol(
+        table=pail_female["table"],
+        report=True,
+    )
+    # Organize variables for persons' mental health across the UK Biobank.
+    pail_psychology = ukb_organization.execute_psychology_psychiatry(
+        table=pail_alcohol["table"],
+        path_dock=path_dock,
         report=True,
     )
 
     # Collect information.
-    information = dict()
-    information["organization"] = dict()
-    #information["organization"]["table_phenotypes"] = pail_basis["table"]
-    information["organization"]["table_phenotypes"] = pail_alcohol["table"]
+    pail_write = dict()
+    pail_write["organization"] = dict()
+    pail_write["organization"]["table_phenotypes"] = pail_psychology["table"]
     # Write product information to file.
     write_product(
+        pail_write=pail_write,
         paths=paths,
-        information=information
     )
     pass
 

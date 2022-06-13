@@ -1226,6 +1226,10 @@ def write_product(
 ###############################################################################
 # Procedure
 
+# TODO: TCW; 10 June 2022
+# TODO: Currently this routine drops any records with missing values in the column: "31-0.0"
+# TODO: maybe better to leave this out?
+
 
 def execute_procedure(
     path_dock=None,
