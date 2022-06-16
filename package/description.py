@@ -365,18 +365,6 @@ def read_organize_cohorts(
 ##########
 
 
-# TODO: TCW; 07 June 2022
-# TODO: How do I set up combination attribution queries with two or more variables?
-# TODO: I suppose I need to do that at the level of the cohort stratifications...
-
-# TODO: TCW; 08 June 2022
-# TODO: I need to know about non-missing measurements of each hormone, protein, alcohol-drinks-per-month (combination),
-# TODO: for female persons of either "White" or "Other" ancestry who also have genotypes available
-# TODO: 1. I need new cohorts that combine genotype-available with ancestry and then have the sex-age-menopause stratifications
-
-# TODO: TCW; 09 June 2022
-# TODO: select relevant cohorts and categorical variables to make it easier to transfer to tables for article
-
 def define_variables_description_table_attribution():
     """
     Defines categorical or discrete variables and their values for description
@@ -438,18 +426,19 @@ def define_variables_description_table_attribution():
     records.append(record)
 
     # Variable: "genotype_array"
+    if False:
 
-    record = dict()
-    record["name"] = "genotype_array_axiom"
-    record["variable"] = "genotype_array" # cat. or discrete variable
-    record["value"] = "axiom" # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "genotype_array_axiom"
+        record["variable"] = "genotype_array" # cat. or discrete variable
+        record["value"] = "axiom" # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "genotype_array_bileve"
-    record["variable"] = "genotype_array" # cat. or discrete variable
-    record["value"] = "bileve" # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "genotype_array_bileve"
+        record["variable"] = "genotype_array" # cat. or discrete variable
+        record["value"] = "bileve" # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "white_british"
 
@@ -466,156 +455,166 @@ def define_variables_description_table_attribution():
     records.append(record)
 
     # Variable: "alteration_sex_hormone"
+    if False:
 
-    record = dict()
-    record["name"] = "alteration_sex_hormone_0"
-    record["variable"] = "alteration_sex_hormone" # cat. or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "alteration_sex_hormone_0"
+        record["variable"] = "alteration_sex_hormone" # cat. or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "alteration_sex_hormone_1"
-    record["variable"] = "alteration_sex_hormone" # cat. or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "alteration_sex_hormone_1"
+        record["variable"] = "alteration_sex_hormone" # cat. or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
 
     # Variable: "pregnancy"
+    if False:
 
-    record = dict()
-    record["name"] = "pregnancy_0"
-    record["variable"] = "pregnancy" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "pregnancy_0"
+        record["variable"] = "pregnancy" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "pregnancy_1"
-    record["variable"] = "pregnancy" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "pregnancy_1"
+        record["variable"] = "pregnancy" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
 
     # Variable: "births_any"
+    if False:
 
-    record = dict()
-    record["name"] = "births_any_0"
-    record["variable"] = "births_any" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "births_any_0"
+        record["variable"] = "births_any" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "births_any_1"
-    record["variable"] = "births_any" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "births_any_1"
+        record["variable"] = "births_any" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
 
     # Variable: "birth_live_recent"
+    if False:
 
-    record = dict()
-    record["name"] = "birth_live_recent_0"
-    record["variable"] = "birth_live_recent" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "birth_live_recent_0"
+        record["variable"] = "birth_live_recent" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "birth_live_recent_1"
-    record["variable"] = "birth_live_recent" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "birth_live_recent_1"
+        record["variable"] = "birth_live_recent" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
 
     # Variable: "hysterectomy"
+    if False:
 
-    record = dict()
-    record["name"] = "hysterectomy_0"
-    record["variable"] = "hysterectomy" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "hysterectomy_0"
+        record["variable"] = "hysterectomy" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "hysterectomy_1"
-    record["variable"] = "hysterectomy" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "hysterectomy_1"
+        record["variable"] = "hysterectomy" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "oophorectomy"
+    if False:
 
-    record = dict()
-    record["name"] = "oophorectomy_0"
-    record["variable"] = "oophorectomy" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "oophorectomy_0"
+        record["variable"] = "oophorectomy" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oophorectomy_1"
-    record["variable"] = "oophorectomy" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "oophorectomy_1"
+        record["variable"] = "oophorectomy" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "hysterectomy_or_oophorectomy"
+    if False:
 
-    record = dict()
-    record["name"] = "hysterectomy_or_oophorectomy_0"
-    record["variable"] = "hysterectomy_or_oophorectomy"
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "hysterectomy_or_oophorectomy_0"
+        record["variable"] = "hysterectomy_or_oophorectomy"
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "hysterectomy_or_oophorectomy_1"
-    record["variable"] = "hysterectomy_or_oophorectomy"
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "hysterectomy_or_oophorectomy_1"
+        record["variable"] = "hysterectomy_or_oophorectomy"
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "menstruation_regular_range"
+    if False:
 
-    record = dict()
-    record["name"] = "menstruation_regular_range_0"
-    record["variable"] = "menstruation_regular_range"
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menstruation_regular_range_0"
+        record["variable"] = "menstruation_regular_range"
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "menstruation_regular_range_1"
-    record["variable"] = "menstruation_regular_range"
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menstruation_regular_range_1"
+        record["variable"] = "menstruation_regular_range"
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "menopause_ordinal"
+    if False:
 
-    record = dict()
-    record["name"] = "menopause_ordinal_0"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menopause_ordinal_0"
+        record["variable"] = "menopause_ordinal" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "menopause_ordinal_1"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menopause_ordinal_1"
+        record["variable"] = "menopause_ordinal" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "menopause_ordinal_2"
-    record["variable"] = "menopause_ordinal" # categorical or discrete variable
-    record["value"] = 2 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menopause_ordinal_2"
+        record["variable"] = "menopause_ordinal" # categorical or discrete variable
+        record["value"] = 2 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "menstruation_phase"
     # 0: follicular phase of menstruation
     # 1: luteal phase of menstruation
+    if False:
 
-    record = dict()
-    record["name"] = "menstruation_follicular"
-    record["variable"] = "menstruation_phase" # categorical or discrete variable
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menstruation_follicular"
+        record["variable"] = "menstruation_phase" # categorical or discrete variable
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "menstruation_luteal"
-    record["variable"] = "menstruation_phase" # categorical or discrete variable
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "menstruation_luteal"
+        record["variable"] = "menstruation_phase" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "alcohol_ever"
 
@@ -741,32 +740,34 @@ def define_variables_description_table_attribution():
     records.append(record)
 
     # Variable: "depression_control_case_loose"
+    if False:
 
-    record = dict()
-    record["name"] = "depression_control_case_loose_0"
-    record["variable"] = "depression_control_case_loose"
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "depression_control_case_loose_0"
+        record["variable"] = "depression_control_case_loose"
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "depression_control_case_loose_1"
-    record["variable"] = "depression_control_case_loose"
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "depression_control_case_loose_1"
+        record["variable"] = "depression_control_case_loose"
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Variable: "depression_control_case_strict"
+    if False:
 
-    record = dict()
-    record["name"] = "depression_control_case_strict_0"
-    record["variable"] = "depression_control_case_strict"
-    record["value"] = 0 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "depression_control_case_strict_0"
+        record["variable"] = "depression_control_case_strict"
+        record["value"] = 0 # categorical or discrete value of variable
+        records.append(record)
 
-    record = dict()
-    record["name"] = "depression_control_case_strict_1"
-    record["variable"] = "depression_control_case_strict"
-    record["value"] = 1 # categorical or discrete value of variable
-    records.append(record)
+        record = dict()
+        record["name"] = "depression_control_case_strict_1"
+        record["variable"] = "depression_control_case_strict"
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
     # Return information
     return records
@@ -1392,8 +1393,6 @@ def organize_description_table_missingness(
 # for the main cohort tables from "stratification" procedure...
 
 
-
-
 def organize_cohort_hormone_deficiency_record(
     name_cohort=None,
     name_variable=None,
@@ -1568,6 +1567,237 @@ def organize_cohorts_hormone_deficiency(
 ##########
 # Quantitation Table
 # Cohort, model, phenotype description
+##########
+
+
+def organize_quantitation_record(
+    name_cohort=None,
+    variable=None,
+    table=None,
+):
+    """
+    Organize a record (single row in table) to describe for measures on
+    quantitative variables across cohorts.
+
+    Report percentages relative to the total count of records in the cohort.
+
+    arguments:
+        name_cohort (str): name of cohort
+        variable (str): name of table's column for variable
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Collect information for record.
+    record = dict()
+    record["cohort"] = str(name_cohort)
+    record["variable"] = str(variable)
+    # Copy information.
+    table = table.copy(deep=True)
+
+    # Stratify table.
+    # Select relevant rows of the table.
+    table_genotype = table.loc[
+        (
+            (~pandas.isna(table["genotype_availability"])) &
+            (table["genotype_availability"] == 1)
+        ), :
+    ]
+
+    # Count records.
+    count_total = int(table.shape[0])
+    count_total_genotype = int(table_genotype.shape[0])
+    percentage_total_genotype = round(
+        ((count_total_genotype / count_total) * 100), 3
+    )
+    # Initialize missing values.
+    count_variable = float("nan")
+    percentage_variable = float("nan")
+    count_genotype_variable = float("nan")
+    percentage_genotype_variable = float("nan")
+    mean = float("nan")
+    standard_error = float("nan")
+    interval_95 = float("nan")
+    confidence_95_low = float("nan")
+    confidence_95_high = float("nan")
+    median = float("nan")
+    standard_deviation = float("nan")
+    minimum = float("nan")
+    maximum = float("nan")
+    # Determine whether table has the column.
+    if (variable in table.columns.to_list()):
+        array = copy.deepcopy(table[variable].dropna().to_numpy()) # non-missing
+        array_genotype = copy.deepcopy(
+            table_genotype[variable].dropna().to_numpy()
+        ) # non-missing variable values with genotypes
+        # Determine count of valid values.
+        count_variable = int(array.size)
+        percentage_variable = round(
+            ((count_variable / count_total) * 100), 3
+        )
+        count_genotype_variable = int(array_genotype.size)
+        percentage_genotype_variable = round(
+            ((count_genotype_variable / count_total) * 100), 3
+        )
+        if (count_variable > 10):
+            # Determine mean, median, standard deviation, and standard error of
+            # values in array.
+            mean = numpy.nanmean(array)
+            standard_error = scipy.stats.sem(array)
+            interval_95 = (1.96 * standard_error)
+            confidence_95_low = (mean - interval_95)
+            confidence_95_high = (mean + interval_95)
+            median = numpy.nanmedian(array)
+            standard_deviation = numpy.nanstd(array)
+            minimum = numpy.nanmin(array)
+            maximum = numpy.nanmax(array)
+            pass
+        pass
+    # Collect information for record.
+    record["count_cohort_total_records"] = count_total
+    record["count_cohort_total_genotypes"] = count_total_genotype
+    record["percentage_cohort_total_genotypes"] = str(
+        str(count_total_genotype) + " (" +
+        str(percentage_total_genotype) + "%)"
+    )
+    record["count_variable_non_missing"] = str(count_variable)
+    record["percentage_variable_non_missing"] = str(
+        str(count_variable) + " (" + str(percentage_variable) + "%)"
+    )
+    record["count_variable_genotypes"] = str(count_genotype_variable)
+    record["percentage_variable_genotypes"] = str(
+        str(count_genotype_variable) + " (" +
+        str(percentage_genotype_variable) + "%)"
+    )
+    record["median"] = str(round(median, 7))
+    record["minimum"] = str(round(minimum, 7))
+    record["maximum"] = str(round(maximum, 7))
+
+
+    record["mean"] = str(round(mean, 7))
+    record["standard_deviation"] = str(round(standard_deviation, 7))
+    record["range_confidence_95"] = str(
+        str(round(confidence_95_low, 3)) + " ... " +
+        str(round(confidence_95_high, 3))
+    )
+    record["standard_error"] = str(round(standard_error, 7))
+    record["interval_95"] = str(round(interval_95, 7))
+    record["confidence_95_low"] = str(round(confidence_95_low, 7))
+    record["confidence_95_high"] = str(round(confidence_95_high, 7))
+
+    # Return information.
+    return record
+
+
+def organize_description_table_quantitation(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Organizes a description table for measures on quantitative variables. Most
+    relevant for quantitative variables of Ratio Scale, but also informative for
+    Interval and Ordinal Scales.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of missingness of hormones in cohorts
+
+    """
+
+    # Define variables.
+    variables = [
+        "age", "body",
+        "albumin", "albumin_imputation",
+        "steroid_globulin", "steroid_globulin_imputation",
+        #"cholesterol", "cholesterol_imputation",
+        #"vitamin_d", "vitamin_d_imputation",
+        "oestradiol", "oestradiol_imputation",
+        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
+        "oestradiol_free", "oestradiol_free_imputation",
+        "testosterone", "testosterone_imputation",
+        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
+        "testosterone_free", "testosterone_free_imputation",
+        #"menstruation_days", "menstruation_duration",
+        #"pregnancies", "pregnancies_early", "births",
+        #"age_menarche", # necessary data-field is unavailable
+        #"age_menopause_self_report",
+        #"age_menopause_never_oophorectomy",
+        #"age_oophorectomy", "age_hysterectomy",
+        #"neuroticism",
+        "alcohol_frequency",
+        "alcohol_drinks_weekly", "alcohol_drinks_monthly",
+        "alcohol_drinks_monthly_combination",
+        "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
+    ]
+
+    # Collect summary records for rows within description table.
+    records_description = list()
+    # Iterate on cohorts.
+    for record_cohort in records_cohorts:
+        # Iterate on variables.
+        for variable in variables:
+            # Organize information for description record.
+            record_description = organize_quantitation_record(
+                name_cohort=record_cohort["name"],
+                variable=variable,
+                table=record_cohort["table"],
+            )
+            # Collect records.
+            records_description.append(record_description)
+            pass
+        pass
+    # Organize table.
+    table = pandas.DataFrame(data=records_description)
+    # Select and sort relevant columns from table.
+    columns = [
+        "count_cohort_total_records",
+        "count_cohort_total_genotypes",
+        "percentage_cohort_total_genotypes",
+        "count_variable_non_missing",
+        "percentage_variable_non_missing",
+        "count_variable_genotypes",
+        "percentage_variable_genotypes",
+        "median",
+        "minimum",
+        "maximum",
+        "mean",
+        "standard_deviation",
+        "range_confidence_95",
+        "standard_error",
+        "interval_95",
+        "confidence_95_low",
+        "confidence_95_high",
+    ]
+    table = table.loc[
+        :, table.columns.isin(columns)
+    ]
+    table = table[[*columns]]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_description_table_quantitation()")
+        utility.print_terminal_partition(level=3)
+        print(table)
+        pass
+    # Return information.
+    return table
+
+
+##########
+# Other Tables
+# Not currently in use
 ##########
 
 
@@ -1842,199 +2072,6 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 
     # Return information.
     return record
-
-
-# TODO: TCW; 09 June 2022
-# TODO: in counts of "non-missing" values for the quantitative variable and
-# TODO: in counts of "genotypes" for the quantitative variable
-# TODO: report percentages relative to the cohort table
-
-#    percentage_missing = round(
-#        ((count_missing / count_total) * 100), 3
-#    )
-#    record["missing"] = str(
-#        str(count_missing) +
-#        " (" + str(percentage_missing) + "%)"
-#    )
-
-
-
-def organize_quantitation_record(
-    name_cohort=None,
-    variable=None,
-    table=None,
-):
-    """
-    Organize a record (single row in table) to describe for measures on
-    quantitative variables across cohorts.
-
-    arguments:
-        name_cohort (str): name of cohort
-        variable (str): name of table's column for variable
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): information for summary table record on cohort
-
-    """
-
-    # Collect information for record.
-    record = dict()
-    record["cohort"] = str(name_cohort)
-    record["variable"] = str(variable)
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Stratify table.
-    # Select relevant rows of the table.
-    table_genotype = table.loc[
-        (
-            (~pandas.isna(table["genotype_availability"])) &
-            (table["genotype_availability"] == 1)
-        ), :
-    ]
-
-    # Count records.
-    count_total = int(table.shape[0])
-    count_total_genotype = int(table_genotype.shape[0])
-
-    # Initialize missing values.
-    count_variable = float("nan")
-    percentage_variable = float("nan")
-    count_genotype_variable = float("nan")
-    percentage_genotype_variable = float("nan")
-    mean = float("nan")
-    standard_error = float("nan")
-    interval_95 = float("nan")
-    confidence_95_low = float("nan")
-    confidence_95_high = float("nan")
-    median = float("nan")
-    standard_deviation = float("nan")
-    minimum = float("nan")
-    maximum = float("nan")
-    # Determine whether table has the column.
-    if (variable in table.columns.to_list()):
-        array = copy.deepcopy(table[variable].dropna().to_numpy())
-        array_genotype = copy.deepcopy(
-            table_genotype[variable].dropna().to_numpy()
-        )
-        # Determine count of valid values.
-        count_variable = int(array.size)
-        count_genotype_variable = int(array_genotype.size)
-        if (count_variable > 10):
-            # Determine mean, median, standard deviation, and standard error of
-            # values in array.
-            mean = numpy.nanmean(array)
-            standard_error = scipy.stats.sem(array)
-            interval_95 = (1.96 * standard_error)
-            confidence_95_low = (mean - interval_95)
-            confidence_95_high = (mean + interval_95)
-            median = numpy.nanmedian(array)
-            standard_deviation = numpy.nanstd(array)
-            minimum = numpy.nanmin(array)
-            maximum = numpy.nanmax(array)
-            pass
-        pass
-    # Collect information for record.
-    record["count_cohort_total_records"] = count_total
-    record["count_cohort_total_genotypes"] = count_total_genotype
-    record["count_variable_non_missing"] = str(count_variable)
-    record["count_variable_genotypes"] = str(count_genotype_variable)
-    record["mean"] = str(round(mean, 7))
-    record["standard_error"] = str(round(standard_error, 7))
-    record["interval_95"] = str(round(interval_95, 7))
-    record["confidence_95_low"] = str(round(confidence_95_low, 7))
-    record["confidence_95_high"] = str(round(confidence_95_high, 7))
-    record["range_confidence_95"] = str(
-        str(round(confidence_95_low, 3)) + " ... " +
-        str(round(confidence_95_high, 3))
-    )
-    record["median"] = str(round(median, 7))
-    record["standard_deviation"] = str(round(standard_deviation, 7))
-    record["minimum"] = str(round(minimum, 7))
-    record["maximum"] = str(round(maximum, 7))
-
-    # Return information.
-    return record
-
-
-def organize_description_table_quantitation(
-    records_cohorts=None,
-    report=None,
-):
-    """
-    Organizes a description table for measures on quantitative variables. Most
-    relevant for quantitative variables of Ratio Scale, but also informative for
-    Interval and Ordinal Scales.
-
-    arguments:
-        records_cohorts (list<dict>): records with information about cohorts
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of missingness of hormones in cohorts
-
-    """
-
-    # Define variables.
-    variables = [
-        "age", "body",
-        "albumin", "albumin_imputation",
-        "steroid_globulin", "steroid_globulin_imputation",
-        "cholesterol", "cholesterol_imputation",
-        "vitamin_d", "vitamin_d_imputation",
-        "oestradiol", "oestradiol_imputation",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-        "oestradiol_free", "oestradiol_free_imputation",
-        "testosterone", "testosterone_imputation",
-        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
-        "testosterone_free", "testosterone_free_imputation",
-        "menstruation_days", "menstruation_duration",
-        "pregnancies", "pregnancies_early", "births",
-        #"age_menarche", # necessary data-field is unavailable
-        "age_menopause_self_report",
-        "age_menopause_never_oophorectomy",
-        "age_oophorectomy", "age_hysterectomy",
-        "neuroticism",
-        "alcohol_frequency",
-        "alcohol_drinks_weekly", "alcohol_drinks_monthly",
-        "alcohol_drinks_monthly_combination",
-        "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
-    ]
-
-    # Collect summary records for rows within description table.
-    records_description = list()
-    # Iterate on cohorts.
-    for record_cohort in records_cohorts:
-        # Iterate on variables.
-        for variable in variables:
-            # Organize information for description record.
-            record_description = organize_quantitation_record(
-                name_cohort=record_cohort["name"],
-                variable=variable,
-                table=record_cohort["table"],
-            )
-            # Collect records.
-            records_description.append(record_description)
-            pass
-        pass
-    # Organize table.
-    table_description = pandas.DataFrame(data=records_description)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: ")
-        print("organize_description_table_quantitation()")
-        utility.print_terminal_partition(level=3)
-        print(table_description)
-        pass
-    # Return information.
-    return table_description
 
 
 ##########

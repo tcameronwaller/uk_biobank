@@ -4867,6 +4867,265 @@ def stratify_phenotype_cohorts_set_special_sex_age_menopause(
     return records
 
 
+def stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
+    column_special=None,
+    values_special=None,
+    name_special=None,
+    table=None,
+):
+    """
+    Organizes information and plots for sex hormones.
+
+    arguments:
+        column_special (str): name of column in table for variable in special
+            selection
+        values_special (list): values of variable for special selection
+        name_special (str): prefix for cohort names
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Collect records of information about each cohort and model.
+    records = list()
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_male")
+    record["cohort"] = str(str(name_special) + "_genotype_female_male")
+    record["cohort_model"] = "female_male"
+    record["category"] = "sex_together"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    #record["table"] = table
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
+        ), :
+    ]
+    records.append(record)
+
+    # Sex
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female")
+    record["cohort"] = str(str(name_special) + "_genotype_female")
+    record["cohort_model"] = "female"
+    record["category"] = "sex"
+    record["phenotype"] = "null"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_male")
+    record["cohort"] = str(str(name_special) + "_genotype_male")
+    record["cohort_model"] = "male"
+    record["category"] = "sex"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "male")
+        ), :
+    ]
+    records.append(record)
+
+    # Menstruation
+
+    record = dict()
+    record["name"] = str(
+        str(name_special) + "_genotype_female_menstruation_regular"
+    )
+    record["cohort"] = "female_menstruation_regular"
+    record["cohort_model"] = "female_menstruation_regular"
+    record["category"] = "menstruation"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menstruation_regular_range"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    # Menopause
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_premenopause")
+    record["cohort"] = "female_premenopause"
+    record["cohort_model"] = "female_premenopause"
+    record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_perimenopause")
+    record["cohort"] = "female_perimenopause"
+    record["cohort_model"] = "female_perimenopause"
+    record["category"] = "menopause_ordinal"
+    record["menstruation"] = True
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_postmenopause")
+    record["cohort"] = "female_postmenopause"
+    record["cohort_model"] = "female_postmenopause"
+    record["category"] = "menopause_ordinal"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["menopause_ordinal"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Age
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_age_low")
+    record["cohort"] = "female_age_low"
+    record["cohort_model"] = "female_age_low"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_age_middle")
+    record["cohort"] = "female_age_middle"
+    record["cohort_model"] = "female_age_middle"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_female_age_high")
+    record["cohort"] = "female_age_high"
+    record["cohort_model"] = "female_age_high"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "female") &
+            (table["pregnancy"] == 0) &
+            (table["age_grade_female"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_male_age_low")
+    record["cohort"] = "male_age_low"
+    record["cohort_model"] = "male_age_low"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 0)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_male_age_middle")
+    record["cohort"] = "male_age_middle"
+    record["cohort_model"] = "male_age_middle"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 1)
+        ), :
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name"] = str(str(name_special) + "_genotype_male_age_high")
+    record["cohort"] = "male_age_high"
+    record["cohort_model"] = "male_age_high"
+    record["category"] = "age"
+    record["menstruation"] = False
+    record["table"] = table.loc[
+        (
+            (table[column_special].isin(values_special)) &
+            (table["genotype_availability"] == 1) &
+            (table["sex_text"] == "male") &
+            (table["age_grade_male"] == 2)
+        ), :
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
 def stratify_phenotype_cohorts_set_special_female_menstruation(
     column_special=None,
     values_special=None,
@@ -4933,8 +5192,6 @@ def stratify_phenotype_cohorts_set_special_female_menstruation(
 
     # Return information
     return records
-
-
 
 
 def stratify_phenotype_cohorts_set_sex_body(
@@ -5114,14 +5371,8 @@ def stratify_phenotype_cohorts_set_regression(
     return records
 
 
-
-# stratify_phenotype_cohorts_set_description_tables
-
-# TODO: TCW; 01 June 2022
-# TODO: this is the driver function for stratification cohorts for description summaries
-# TODO: introduce cohorts for female persons who did NOT use hormonal contraception or other therapy
-# TODO: also introduce cohorts for female persons who DID use hormonal contraception or other therapy
-# TODO: maybe use function "stratify_phenotype_cohorts_set_special_sex_age_menopause"
+##########
+# Driver functions that combine stratifications of multiple relevant cohorts
 
 
 def drive_stratify_phenotype_cohorts_set_female_menstruation(
@@ -5170,21 +5421,7 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
     return records
 
 
-# TODO: TCW; 07 June 2022
-# TODO: I need...
-# TODO: 1. cohort: female and genotype available; male and genotype available; etc
-# TODO: 2. cohort: female and "White British"; female and NOT "White British"; etc
-# TODO: 3. new organization variable: stratify Alcohol Consumption Quantity
-# TODO: 3.1. "never", "less than __", "__ - __ drinks", "more than __ drinks"
-
-# TODO: "alcohol_drinks_monthly_ordinal"
-#    0: person had never consumed alcohol in life
-#    1: person consumed alcohol previously in life but not current at recruitment
-#    2: person consumed drinks of alcohol per month fewer than lower threshold
-#    3: person consumed drinks of alcohol per month between thresholds
-#    4: person consumed drinks of alcohol per month greater than higher threshold
-
-
+# review: TCW; 15 June 2022
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
 ):
@@ -5201,10 +5438,12 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     """
 
-    # Copy information.
+    # Copy information in table.
     table = table.copy(deep=True)
 
-    # Collect records of information about each cohort and model.
+    # Collect records of information about each cohort.
+
+    # Standard stratifications by sex, age, and menopause.
     records = list()
     records_novel = (
         stratify_phenotype_cohorts_set_sex_age_menopause(
@@ -5233,72 +5472,118 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
     )
     records.extend(records_novel)
 
+    # Standard stratifications by sex, age, and menopause in records with
+    # genotypes available.
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
             column_special="genotype_availability",
             values_special=[1,],
-            name_special="genotype_available",
+            name_special="genotype",
             table=table,
         )
     )
     records.extend(records_novel)
 
-
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="alcohol_ever",
+            column_special="white_british",
             values_special=[1,],
-            name_special="alcohol_ever",
+            name_special="white_british",
             table=table,
         )
     )
     records.extend(records_novel)
 
+    # Standard stratifications by sex, age, and menopause in records with
+    # genotypes available and with consideration of special categories.
+
     records_novel = (
-        stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="alcoholism_control_case_1",
+        stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
+            column_special="ancestry_self_white",
             values_special=[1,],
-            name_special="alcoholism_case",
+            name_special="ancestry_white",
             table=table,
         )
     )
     records.extend(records_novel)
 
     records_novel = (
-        stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="alcoholism_control_case_1",
+        stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
+            column_special="ancestry_self_white",
             values_special=[0,],
-            name_special="alcoholism_control",
+            name_special="ancestry_other",
             table=table,
         )
     )
     records.extend(records_novel)
 
     records_novel = (
-        stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="bipolar_control_case_strict",
+        stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
+            column_special="white_british",
             values_special=[1,],
-            name_special="bipolar_case",
+            name_special="white_british",
             table=table,
         )
     )
     records.extend(records_novel)
 
-    records_novel = (
-        stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="bipolar_control_case_strict",
-            values_special=[0,],
-            name_special="bipolar_control",
-            table=table,
+
+    if False:
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="alcohol_ever",
+                values_special=[1,],
+                name_special="alcohol_ever",
+                table=table,
+            )
         )
-    )
-    records.extend(records_novel)
+        records.extend(records_novel)
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="alcoholism_control_case_1",
+                values_special=[1,],
+                name_special="alcoholism_case",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="alcoholism_control_case_1",
+                values_special=[0,],
+                name_special="alcoholism_control",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
+
+    if False:
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="bipolar_control_case_strict",
+                values_special=[1,],
+                name_special="bipolar_case",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="bipolar_control_case_strict",
+                values_special=[0,],
+                name_special="bipolar_control",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
 
     # Return information
     return records
-
-
-
 
 
 def organize_dictionary_entries_stratification_cohorts(
@@ -5327,6 +5612,10 @@ def organize_dictionary_entries_stratification_cohorts(
     # Return information
     return entries
 
+
+#############
+# Old stratification functions now mostly obsolete
+##############
 
 # TODO: TCW, 09 February 2022
 # TODO: some of the functions below might be obsolete

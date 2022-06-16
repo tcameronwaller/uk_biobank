@@ -2157,11 +2157,11 @@ def determine_biological_sex_text(
             # sex_y: 1, "male"
             sex_text = "male"
         else:
-            # Uninterpretable value
-            sex_text = "nan"
+            # Ambiguous, uninterpretable, or missing information.
+            sex_text = ""
     else:
-        # null
-        sex_text = "nan"
+        # Ambiguous, uninterpretable, or missing information.
+        sex_text = ""
     # Return information.
     return sex_text
 
@@ -2289,7 +2289,7 @@ def determine_self_report_ancestry_ethnicity(
         # categories "other".
         value = 0
     else:
-        # Ambiguous or missing information.
+        # Ambiguous, uninterpretable, or missing information.
         value = float("nan")
     # Return information.
     return value
@@ -3467,6 +3467,26 @@ def convert_hormone_concentration_units_moles_per_liter(
     """
     Converts hormone concentrations to units of moles per liter (mol/L).
 
+    Molar Mass, Molecular Weight
+    Species     ...     Molar Mass     ...     Reference
+    estradiol           272.4 g/mol            PubChem
+    testosterone        288.4 g/mol            PubChem
+    SHBG
+    albumin             69,367 g/mol           UniProt
+    albumin             66,500 g/mol           Drug Bank
+    - use 66.5 kDa molar mass for albumin (anticipate post-translational
+    - - cleavage)
+
+    Metric Prefixes
+    (https://www.nist.gov/pml/weights-and-measures/metric-si-prefixes)
+    Prefix     ...     Abbreviation     ...     Factor
+    deci               d                        1E-1
+    centi              c                        1E-2
+    milli              m                        1E-3
+    micro              u                        1E-6
+    nano               n                        1E-9
+    pico               p                        1E-12
+
     UK Biobank data-field 30600, concentration in grams per liter (g/L) of
     albumin in blood
 
@@ -3542,6 +3562,7 @@ def convert_hormone_concentration_units_moles_per_liter(
     ) # 1 mol = 1E3 millimole
     # Return information.
     return table
+
 
 # TODO: TCW 30 July 2021
 # TODO: I'm working on replacing this function with a function that returns a text report
@@ -12420,7 +12441,7 @@ def determine_alcohol_drinks_monthly_ordinal(
         # threshold.
         value = 4
     else:
-        # Ambiguous or missing information.
+        # Ambiguous, uninterpretable, or missing information.
         value = float("nan")
     # Return information.
     return value
