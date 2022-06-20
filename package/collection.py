@@ -650,6 +650,7 @@ def read_collect_organize_heritability_designs_studies(
 # Read genetic correlation estimates
 
 
+# I think this is obsolete
 def define_cohort_names_to_extract_from_table_names():
     """
     Defines names of cohorts for extraction from names of tables.
@@ -824,8 +825,8 @@ def read_extract_correlation_design_study_pair_detail(
             confidence_95_not_zero = 0
         pass
     confidence_95 = str(
-        str(round(confidence_95_low, 3)) + " ... " +
-        str(round(confidence_95_high, 3))
+        str(round(confidence_95_low, 5)) + " ... " +
+        str(round(confidence_95_high, 5))
     )
     summary = str(
         "(rg: " + str(correlation) + "; 95% CI: " + str(confidence_95) + ")"
