@@ -1678,8 +1678,6 @@ def organize_quantitation_record(
     record["median"] = str(round(median, 7))
     record["minimum"] = str(round(minimum, 7))
     record["maximum"] = str(round(maximum, 7))
-
-
     record["mean"] = str(round(mean, 7))
     record["standard_deviation"] = str(round(standard_deviation, 7))
     record["range_confidence_95"] = str(
@@ -1761,6 +1759,8 @@ def organize_description_table_quantitation(
     table = pandas.DataFrame(data=records_description)
     # Select and sort relevant columns from table.
     columns = [
+        "cohort",
+        "variable",
         "count_cohort_total_records",
         "count_cohort_total_genotypes",
         "percentage_cohort_total_genotypes",
