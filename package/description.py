@@ -2117,8 +2117,8 @@ def define_parameters_for_plots_groups_box():
     record = dict()
     record["name_figure"] = "estradiol_total_female"
     record["variable"] = "oestradiol_imputation"
-    record["title_ordinate"] = "Estradiol-Total (pmol/L)"
-    record["title_abscissa"] = "Cohorts"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "Estradiol-Total (pmol/L)"
     record["cohorts_groups"] = [
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
@@ -2210,7 +2210,7 @@ def create_plot_box(
         titles_abscissa_groups=titles_abscissa_groups,
         colors_groups=colors_groups,
         label_top_center="",
-        label_top_left=name_figure,
+        label_top_left="", # name_figure
         label_top_right="",
         orientation="landscape", # 'portrait' or 'landscape'
         fonts=fonts,
