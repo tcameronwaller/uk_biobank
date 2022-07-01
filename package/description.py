@@ -2187,7 +2187,7 @@ def create_plot_box(
             records=records_cohorts,
     ))
     # Collect values of variable for each group.
-    values_groups = dict()
+    values_groups = list()
     # Iterate on cohorts for groups in figure.
     for cohort_group in cohorts_groups:
         # Access cohort table for current group.
