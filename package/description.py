@@ -2079,6 +2079,189 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 ##########
 
 
+# TODO: TCW; 24 June 2022
+# TODO: Box Plots
+# 1. Estradiol-Total in Female, Female-Premenopause, Female-Peri, Female-Post, Female-Menstruation, Male, Male-Age-Low, Male-Age-Middle, Male-Age-High
+# - - 1.1. define parameters for each plot
+# - - specify any titles, axes titles, labels, file name, etc
+# - - specify the variable: "oestradiol_imputation"
+# - - specify the name or title of the variable: "Estradiol-Total"
+# - - specify the cohorts for which to collect and plot values of the variable
+# - - specify the colors and labels for each group
+# - - 1.2. organize a list of dictionaries <-- this is unnecessary... I'd just need to un-pack it again...
+# - - each record: 1. name or label of cohort 2. NumPy array of non-missing values for the variable
+# - - 1.3.
+# 2. Testosterone-Total in Female, Female-Premenopause, Female-Peri, Female-Post, Female-Menstruation
+#
+
+#        ordinate_title (str): title for ordinate or vertical axis
+#        abscissa_title (str): title for abscissa or horizontal axis
+
+
+def define_parameters_for_plots_groups_box():
+    """
+    Organizes parameters for box plots.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information for each plot.
+    records = list()
+
+    record = dict()
+    record["name_figure"] = "estradiol_total_female"
+    record["variable"] = "oestradiol_imputation"
+    record["title_ordinate"] = "Estradiol-Total (pmol/L)"
+    record["title_abscissa"] = "Cohorts"
+    record["cohorts_groups"] = [
+        "ancestry_white_female",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_menstruation_regular",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female",
+        "Female-Premenopause",
+        "Female-Perimenopause",
+        "Female-Postmenopause",
+        "Female-Menstruation",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def create_plot_box(
+    name_figure=None,
+    variable=None,
+    title_ordinate=None,
+    title_abscissa=None,
+    cohorts_groups=None,
+    records_cohorts=None,
+    titles_abscissa_groups=None,
+    colors_groups=None,
+):
+    """
+    Drive creation of box plots for comparison of a quantitative variable across
+    categorical groups.
+
+    arguments:
+        name_figure (str): name of figure
+        variable (str): name of quantitative continuous variable for values on
+            plot
+        title_ordinate (str): title for ordinate or vertical axis
+        title_abscissa (str): title for abscissa or horizontal axis
+        cohorts_groups (list<str>): names of stratification cohorts from which
+            to collect values of variable for groups on plot
+        records_cohorts (list<dict>): records with information about cohorts
+        titles_abscissa_groups (list<str>): titles for groups on abscissa or
+            horizontal axis in same sort order as 'cohorts_groups'
+        colors_groups (list<tuple>): color parameters for boxes of groups in
+            same sort order as 'cohorts_groups'
+
+    raises:
+
+    returns:
+        (dict<object>): collection of plot objects
+
+    """
+
+    # Organize records and entries for cohorts.
+    entries_cohorts = (
+        ukb_strat.organize_dictionary_entries_stratification_cohorts(
+            records=records_cohorts,
+    ))
+    # Collect values of variable for each group.
+    values_groups = dict()
+    # Iterate on cohorts for groups in figure.
+    for cohort_group in cohorts_groups:
+        # Access cohort table for current group.
+        # Copy information.
+        table_cohort = (entries_cohorts[cohort_group]["table"]).copy(deep=True)
+        # Extract values of variable for cohort.
+        values = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
+        # Collect values for variable for group cohort.
+        values_groups.append(values)
+        pass
+    # Define fonts.
+    fonts = plot.define_font_properties()
+    # Define colors.
+    colors = plot.define_color_properties()
+    # Create figure.
+    figure = plot.plot_boxes_groups(
+        values_groups=values_groups,
+        title_ordinate=title_ordinate,
+        title_abscissa=title_abscissa,
+        titles_abscissa_groups=titles_abscissa_groups,
+        colors_groups=colors_groups,
+        label_top_center="",
+        label_top_left=name_figure,
+        label_top_right="",
+        orientation="landscape", # 'portrait' or 'landscape'
+        fonts=fonts,
+        colors=colors,
+    )
+    # Return information.
+    return figure
+
+
+def drive_create_plots_box(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Drive creation of box plots for comparison of a quantitative variable across
+    categorical groups.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of plot objects
+
+    """
+
+    # Organize parameters for plotting figures.
+    records_parameters = define_parameters_for_plots_groups_box()
+    # Collect information for figures.
+    pail = dict()
+    # Iterate on tables for cohorts and models.
+    for record_parameter in records_parameters:
+        # Create box plot for a specific cohort, specific groups within that
+        # cohort, and other specific parameters.
+        pail[record_parameter["name_figure"]] = create_plot_box(
+            name_figure=record_parameter["name_figure"],
+            variable=record_parameter["variable"],
+            title_ordinate=record_parameter["title_ordinate"],
+            title_abscissa=record_parameter["title_abscissa"],
+            cohorts_groups=record_parameter["cohorts_groups"],
+            records_cohorts=records_cohorts,
+            titles_abscissa_groups=record_parameter["titles_abscissa_groups"],
+            colors_groups=record_parameter["colors_groups"],
+        )
+        pass
+    # Return information.
+    return pail
+
+
 def plot_variable_values_histogram(
     label_title=None,
     array=None,
@@ -2992,6 +3175,19 @@ def create_description_plots_from_cohorts(
     else:
         pail_histogram = dict()
         pass
+    # Box plots for groups.
+    if ("box" in set_plots):
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+                table=source["table_phenotypes"],
+        ))
+        pail_box = drive_create_plots_box(
+            records_cohorts=records_cohorts,
+            report=report,
+        )
+    else:
+        pail_box = dict()
+        pass
     # Dot trajectory plots of menstrual cycle.
     if ("dot_trajectory_menstruation" in set_plots):
         records_cohorts = (
@@ -3005,10 +3201,6 @@ def create_description_plots_from_cohorts(
     else:
         pail_dot_menstruation = dict()
         pass
-
-    # Box plots.
-    # TODO: TCW 3 August 2021
-    # TODO: box plots for hormones in different groups (assessment center?)
 
     # Dot plots of phenotypes ordinal variables.
     #pail["dot_trajectory_month"] = (
@@ -3026,6 +3218,7 @@ def create_description_plots_from_cohorts(
     # Collect information.
     pail_write = dict()
     pail_write["histogram"] = pail_histogram
+    pail_write["box"] = pail_box
     pail_write["dot_trajectory_menstruation"] = pail_dot_menstruation
     # Write product information to file.
     plot.write_product_plots_child_directories(
@@ -3690,7 +3883,7 @@ def execute_procedure(
         path_dock=path_dock,
     )
 
-    if True:
+    if False:
         # Create description tables.
         execute_description_tables(
             set_cohorts="phenotype",
@@ -3701,11 +3894,11 @@ def execute_procedure(
             report=True,
         )
 
-    if False:
+    if True:
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",
-            set_cohort_plots=["dot_trajectory_menstruation"], # ["histogram",]
+            set_cohort_plots=["box"], # ["histogram", "dot_trajectory_menstruation",]
             set_summary_plots=[], # ["forest_regressions", "forest_correlations",],
             paths=paths,
             report=True,
