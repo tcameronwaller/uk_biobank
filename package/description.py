@@ -2120,18 +2120,18 @@ def define_parameters_for_plots_groups_box():
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Estradiol-Total (pmol/L)"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
         "ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
     ]
     record["titles_abscissa_groups"] = [
-        "Female",
-        "Female-Premenopause",
-        "Female-Perimenopause",
-        "Female-Postmenopause",
         "Female-Menstruation",
+        "Female-Postmenopause",
+        "Female-Perimenopause",
+        "Female-Premenopause",
+        "Female",
     ]
     record["colors_groups"] = [
         (0.1, 0.25, 0.7, 1.0), # "blue_navy"
@@ -2193,6 +2193,8 @@ def create_plot_box(
         # Access cohort table for current group.
         # Copy information.
         table_cohort = (entries_cohorts[cohort_group]["table"]).copy(deep=True)
+        print(cohort_group)
+        print(table_cohort)
         # Extract values of variable for cohort.
         values = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
         # Collect values for variable for group cohort.
