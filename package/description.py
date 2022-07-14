@@ -2098,6 +2098,14 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 #        abscissa_title (str): title for abscissa or horizontal axis
 
 
+# TODO: TCW; 01 July 2022
+# TODO: I think that the box plots are "flat" for "female" and "female_postmenopause"
+# TODO: because these cohorts have so many missing values that they have less
+# TODO: variance...
+# TODO: perhaps I could plot the values without imputation for Estradiol?
+# TODO: or perhaps violin plots would represent the distribution more effectively?
+
+
 def define_parameters_for_plots_groups_box():
     """
     Organizes parameters for box plots.
@@ -2193,8 +2201,8 @@ def create_plot_box(
         # Access cohort table for current group.
         # Copy information.
         table_cohort = (entries_cohorts[cohort_group]["table"]).copy(deep=True)
-        print(cohort_group)
-        print(table_cohort)
+        #print(cohort_group)
+        #print(table_cohort)
         # Extract values of variable for cohort.
         values = copy.deepcopy(table_cohort[variable].dropna().to_numpy())
         # Collect values for variable for group cohort.

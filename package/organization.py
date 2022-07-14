@@ -3459,6 +3459,10 @@ def define_biochemistry_fields_measurement_reportability_missingness():
     return records
 
 
+# TODO: TCW; 07 July 2022
+# TODO: "convert_biochemical_concentration_units_moles_per_liter()"
+# TODO: use 66,500 g/mol for Albumin?
+
 # review: TCW, 09 February 2022
 def convert_hormone_concentration_units_moles_per_liter(
     table=None,

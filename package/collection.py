@@ -47,6 +47,9 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
+# TODO: TCW; 14 July 2022
+# TODO: For convenience in preparing the table(s) for the article, I'd like to change the format of the summaries, especially for heritability.
+# TODO: Refer to notes on the heritability table for the article.
 
 ##########
 # Initialization
