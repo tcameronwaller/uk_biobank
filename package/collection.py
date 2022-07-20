@@ -415,18 +415,22 @@ def read_extract_heritability_design_study_detail(
         confidence_95_high = (heritability + (1.96 * heritability_error))
         pass
     confidence_95 = str(
-        str(round(confidence_95_low, 3)) + " ... " +
-        str(round(confidence_95_high, 3))
+        str(round(confidence_95_low, 4)) + " ... " +
+        str(round(confidence_95_high, 4))
     )
-    summary = str(
+    summary_error = str(
+        str(heritability) + " (" + str(round(heritability_error, 4)) + ")"
+    )
+    summary_interval = str(
         "(h2: " + str(heritability) + "; 95% CI: " + str(confidence_95) + ")"
     )
     # Collect information.
     record = dict()
     record["design"] = design
     record["study"] = study
+    record["summary_error"] = summary_error
+    record["summary_interval"] = summary_interval
     record["variants"] = variants
-    record["summary"] = summary
     record["heritability"] = heritability
     record["standard_error"] = heritability_error
     record["confidence_95_low"] = confidence_95_low
@@ -571,7 +575,8 @@ def read_collect_organize_heritability_design(
     columns = [
         "design",
         "study",
-        "variants", "summary",
+        "summary_error", "summary_interval",
+        "variants",
         "heritability", "standard_error", "confidence_95_range",
         "confidence_95_low", "confidence_95_high",
         "ratio",
