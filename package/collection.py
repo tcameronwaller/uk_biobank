@@ -657,6 +657,10 @@ def read_collect_organize_heritability_designs_studies(
 ##########
 # Read genetic correlation estimates
 
+# TODO: TCW; 20 July 2022
+# report genetic correlation estimates and their 95% CIs to 4 decimal places
+
+
 
 # I think this is obsolete
 def define_cohort_names_to_extract_from_table_names():
@@ -844,8 +848,8 @@ def read_extract_correlation_design_study_pair_detail(
     record["design"] = design
     record["study_primary"] = study_primary
     record["study_secondary"] = study_secondary
-    record["variants"] = variants
     record["summary"] = summary
+    record["variants"] = variants
     record["correlation"] = correlation
     record["standard_error"] = correlation_error
     record["interval_95"] = interval_95
@@ -950,7 +954,8 @@ def read_collect_organize_correlation_design_pairs(
         "design",
         "study_primary",
         "study_secondary",
-        "variants", "summary",
+        "summary",
+        "variants",
         "correlation", "standard_error", "interval_95", "confidence_95_range",
         "probability",
         "confidence_95_low", "confidence_95_high",
