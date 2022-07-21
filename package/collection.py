@@ -837,10 +837,13 @@ def read_extract_correlation_design_study_pair_detail(
             confidence_95_not_zero = 0
         pass
     confidence_95 = str(
-        str(round(confidence_95_low, 5)) + " ... " +
-        str(round(confidence_95_high, 5))
+        str(round(confidence_95_low, 4)) + " ... " +
+        str(round(confidence_95_high, 4))
     )
-    summary = str(
+    summary_error = str(
+        str(correlation) + " (" + str(round(correlation_error, 4)) + ")"
+    )
+    summary_interval = str(
         "(rg: " + str(correlation) + "; 95% CI: " + str(confidence_95) + ")"
     )
     # Collect information.
@@ -848,7 +851,8 @@ def read_extract_correlation_design_study_pair_detail(
     record["design"] = design
     record["study_primary"] = study_primary
     record["study_secondary"] = study_secondary
-    record["summary"] = summary
+    record["summary_error"] = summary_error
+    record["summary_interval"] = summary_interval
     record["variants"] = variants
     record["correlation"] = correlation
     record["standard_error"] = correlation_error
@@ -954,7 +958,8 @@ def read_collect_organize_correlation_design_pairs(
         "design",
         "study_primary",
         "study_secondary",
-        "summary",
+        "summary_error",
+        "summary_interval",
         "variants",
         "correlation", "standard_error", "interval_95", "confidence_95_range",
         "probability",
