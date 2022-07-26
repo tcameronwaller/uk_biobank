@@ -1,6 +1,9 @@
 """
 Organize information and define variables from data of the U.K. Biobank.
 
+Importation paths within this package "uk_biobank" require this package to be a
+subpackage within a higher-level package that manages execution.
+
 Author:
 
     T. Cameron Waller
@@ -14,7 +17,7 @@ License:
     (https://github.com/tcameronwaller/uk_biobank/).
 
     UK_Biobank supports analyses on data from the U.K. Biobank.
-    Copyright (C) 2021 Thomas Cameron Waller
+    Copyright (C) 2022 Thomas Cameron Waller
 
     UK_Biobank is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -15200,8 +15203,9 @@ def execute_procedure(
     )
     pass
 
-
-
+if (__name__ == "__main__"):
+    print("procedure needs path to a dock directory...")
+    #execute_procedure()
 
 
 #
