@@ -3571,58 +3571,6 @@ def convert_hormone_concentration_units_moles_per_liter(
     return table
 
 
-# TODO: TCW 30 July 2021
-# TODO: I'm working on replacing this function with a function that returns a text report
-
-def organize_report_column_pair_correlations(
-    column_one=None,
-    column_two=None,
-    table=None,
-):
-    """
-    Organizes information about previous and current alcohol consumption.
-
-    arguments:
-        column_one (str): name of first column
-        column_two (str): name of second column
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-
-    """
-
-    table = table.copy(deep=True)
-    table.dropna(
-        axis="index",
-        how="any",
-        subset=[column_one, column_two],
-        inplace=True,
-    )
-    pearson_correlation, pearson_probability = scipy.stats.pearsonr(
-        table[column_one].to_numpy(),
-        table[column_two].to_numpy(),
-    )
-    spearman_correlation, spearman_probability = scipy.stats.spearmanr(
-        table[column_one].to_numpy(),
-        table[column_two].to_numpy(),
-    )
-    # Report.
-    utility.print_terminal_partition(level=2)
-    print("Correlations between pair of columns")
-    print("valid value pairs for correlation: " + str(table.shape[0]))
-    print("column one: " + str(column_one))
-    print("column_two: " + str(column_two))
-    print("Pearson correlation: " + str(pearson_correlation))
-    print("Pearson probability: " + str(pearson_probability))
-    print("Spearman correlation: " + str(spearman_correlation))
-    print("Spearman probability: " + str(spearman_probability))
-
-    pass
-
-
 # Imputation of missing biochemical measurements
 
 
@@ -6431,60 +6379,71 @@ def organize_sex_hormone_variables(
             (table_correlation["sex_text"] == "male"), :
         ]
         utility.print_terminal_partition(level=3)
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_free",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_bioavailable",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone_free",
             column_two="testosterone_bioavailable",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_free",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_bioavailable",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol_free",
             column_two="oestradiol_bioavailable",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="vitamin_d",
             column_two="oestradiol",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="vitamin_d",
             column_two="testosterone",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="vitamin_d",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="oestradiol",
             table=table_male,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="testosterone",
             table=table_male,
+            report=True,
         )
 
 
@@ -6494,60 +6453,71 @@ def organize_sex_hormone_variables(
             (table_correlation["sex_text"] == "female"), :
         ]
         utility.print_terminal_partition(level=3)
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_free",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone",
             column_two="testosterone_bioavailable",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="testosterone_free",
             column_two="testosterone_bioavailable",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_free",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol",
             column_two="oestradiol_bioavailable",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="oestradiol_free",
             column_two="oestradiol_bioavailable",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="vitamin_d",
             column_two="oestradiol",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="vitamin_d",
             column_two="testosterone",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="vitamin_d",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="oestradiol",
             table=table_female,
+            report=True,
         )
-        organize_report_column_pair_correlations(
+        utility.calculate_table_column_pair_correlations(
             column_one="cholesterol",
             column_two="testosterone",
             table=table_female,
+            report=True,
         )
 
     # Collect information.
