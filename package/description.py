@@ -2126,7 +2126,91 @@ def define_parameters_for_plots_groups_box():
     record["name_figure"] = "estradiol_total_female"
     record["variable"] = "oestradiol_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Estradiol-Total (pmol/L)"
+    record["title_abscissa"] = "Estradiol, Total (pmol/L)"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Menstruation",
+        "Female-Postmenopause",
+        "Female-Perimenopause",
+        "Female-Premenopause",
+        "Female",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_total_female"
+    record["variable"] = "testosterone_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "Testosterone, Total (pmol/L)"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Menstruation",
+        "Female-Postmenopause",
+        "Female-Perimenopause",
+        "Female-Premenopause",
+        "Female",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "steroid_globulin_female"
+    record["variable"] = "steroid_globulin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "SHBG (nmol/L)"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Menstruation",
+        "Female-Postmenopause",
+        "Female-Perimenopause",
+        "Female-Premenopause",
+        "Female",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "albumin_female"
+    record["variable"] = "albumin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "Albumin (umol/L)"
     record["cohorts_groups"] = [
         "ancestry_white_female_menstruation_regular",
         "ancestry_white_female_postmenopause",
