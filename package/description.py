@@ -2132,8 +2132,8 @@ def define_parameters_for_plots_groups_box():
         "ancestry_white_female_premenopause",
     ]
     record["titles_abscissa_groups"] = [
-        "Female-Perimenopause",
-        "Female-Premenopause",
+        "Female-Peri...",
+        "Female-Pre...",
     ]
     record["colors_groups"] = [
         (0.1, 0.25, 0.7, 1.0), # "blue_navy"
@@ -2155,9 +2155,9 @@ def define_parameters_for_plots_groups_box():
     ]
     record["titles_abscissa_groups"] = [
         #"Female-Menstruation",
-        "Female-Postmenopause",
-        "Female-Perimenopause",
-        "Female-Premenopause",
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
         "Female-All",
     ]
     record["colors_groups"] = [
@@ -2181,9 +2181,9 @@ def define_parameters_for_plots_groups_box():
         "ancestry_white_female",
     ]
     record["titles_abscissa_groups"] = [
-        "Female-Postmenopause",
-        "Female-Perimenopause",
-        "Female-Premenopause",
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
         "Female-All",
     ]
     record["colors_groups"] = [
@@ -2206,9 +2206,9 @@ def define_parameters_for_plots_groups_box():
         "ancestry_white_female",
     ]
     record["titles_abscissa_groups"] = [
-        "Female-Postmenopause",
-        "Female-Perimenopause",
-        "Female-Premenopause",
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
         "Female-All",
     ]
     record["colors_groups"] = [
