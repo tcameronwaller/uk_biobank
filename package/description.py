@@ -2106,7 +2106,7 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 # TODO: or perhaps violin plots would represent the distribution more effectively?
 
 
-def define_parameters_for_plots_groups_box():
+def define_parameters_box_plots_female_male():
     """
     Organizes parameters for box plots.
 
@@ -2122,11 +2122,15 @@ def define_parameters_for_plots_groups_box():
     # Collect records of information for each plot.
     records = list()
 
+    # Plots of Female and Male cohorts together.
+
     record = dict()
-    record["name_figure"] = "estradiol_total_female"
+    record["name_figure"] = "estradiol_total_female_male"
     record["variable"] = "oestradiol_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Estradiol, Total (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2166,12 +2170,13 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "oestradiol_bioavailable_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Estradiol, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
         "ancestry_white_male_age_low",
         "ancestry_white_male",
-        #"ancestry_white_female_menstruation_regular",
         "ancestry_white_female_postmenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_premenopause",
@@ -2182,7 +2187,6 @@ def define_parameters_for_plots_groups_box():
         "Male-Age-Middle",
         "Male-Age-Low",
         "Male-All",
-        #"Female-Menstruation",
         "Female-Post...",
         "Female-Peri...",
         "Female-Pre...",
@@ -2205,6 +2209,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "oestradiol_free_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Estradiol, Free (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2242,6 +2248,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "testosterone_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Testosterone, Total (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2279,6 +2287,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "testosterone_bioavailable_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Testosterone, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2316,6 +2326,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "testosterone_free_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Testosterone, Free (pmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2353,6 +2365,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "steroid_globulin_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "SHBG (nmol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2390,6 +2404,8 @@ def define_parameters_for_plots_groups_box():
     record["variable"] = "albumin_imputation"
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Albumin (umol/L)"
+    record["aspect"] = "landscape"
+    record["orientation_box"] = "horizontal"
     record["cohorts_groups"] = [
         "ancestry_white_male_age_high",
         "ancestry_white_male_age_middle",
@@ -2426,15 +2442,527 @@ def define_parameters_for_plots_groups_box():
     return records
 
 
+def define_parameters_box_plots_female():
+    """
+    Organizes parameters for box plots.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information for each plot.
+    records = list()
+
+    # Plots of Female and Male cohorts together.
+
+    record = dict()
+    record["name_figure"] = "estradiol_total_female"
+    record["variable"] = "oestradiol_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Total (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        #"Female-Menstruation",
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "estradiol_bioavailable_female"
+    record["variable"] = "oestradiol_bioavailable_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "estradiol_free_female"
+    record["variable"] = "oestradiol_free_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Free (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_total_female"
+    record["variable"] = "testosterone_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Total (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_bioavailable_female"
+    record["variable"] = "testosterone_bioavailable_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_free_female"
+    record["variable"] = "testosterone_free_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Free (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "steroid_globulin_female"
+    record["variable"] = "steroid_globulin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "SHBG (nmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "albumin_female"
+    record["variable"] = "albumin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Albumin (umol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_female_postmenopause",
+        "ancestry_white_female_perimenopause",
+        "ancestry_white_female_premenopause",
+        "ancestry_white_female",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Female-Post...",
+        "Female-Peri...",
+        "Female-Pre...",
+        "Female-All",
+    ]
+    record["colors_groups"] = [
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def define_parameters_box_plots_male():
+    """
+    Organizes parameters for box plots.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information for each plot.
+    records = list()
+
+    # Plots of Female and Male cohorts together.
+
+    record = dict()
+    record["name_figure"] = "estradiol_total_male"
+    record["variable"] = "oestradiol_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Total (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "estradiol_bioavailable_male"
+    record["variable"] = "oestradiol_bioavailable_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "estradiol_free_male"
+    record["variable"] = "oestradiol_free_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Estradiol, Free (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_total_male"
+    record["variable"] = "testosterone_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Total (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_bioavailable_male"
+    record["variable"] = "testosterone_bioavailable_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Bioavailable (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "testosterone_free_male"
+    record["variable"] = "testosterone_free_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Testosterone, Free (pmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "steroid_globulin_male"
+    record["variable"] = "steroid_globulin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "SHBG (nmol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    record = dict()
+    record["name_figure"] = "albumin_male"
+    record["variable"] = "albumin_imputation"
+    record["title_ordinate"] = ""
+    record["title_abscissa"] = "" # "Albumin (umol/L)"
+    record["aspect"] = "landscape_half_height"
+    record["orientation_box"] = "horizontal"
+    record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+    ]
+    record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+    ]
+    record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+    ]
+    records.append(record)
+
+    # Return information
+    return records
+
+
+def define_parameters_for_plots_groups_box():
+    """
+    Organizes parameters for box plots.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (dict<object>): collection of parameters for plots
+
+    """
+
+    # Collect records of information for each plot.
+    records = list()
+
+    # Plots of Female and Male cohorts together.
+    records_both = define_parameters_box_plots_female_male()
+    records.extend(records_both)
+
+    # Plots of Female cohorts separate.
+    records_female = define_parameters_box_plots_female()
+    records.extend(records_female)
+
+    # Plots of Male cohorts separate.
+    records_male = define_parameters_box_plots_male()
+    records.extend(records_male)
+
+    # Return information
+    return records
+
+
 def create_plot_box(
     name_figure=None,
     variable=None,
     title_ordinate=None,
     title_abscissa=None,
     cohorts_groups=None,
-    records_cohorts=None,
     titles_abscissa_groups=None,
+    aspect=None,
+    orientation_box=None,
     colors_groups=None,
+    records_cohorts=None,
 ):
     """
     Drive creation of box plots for comparison of a quantitative variable across
@@ -2448,11 +2976,15 @@ def create_plot_box(
         title_abscissa (str): title for abscissa or horizontal axis
         cohorts_groups (list<str>): names of stratification cohorts from which
             to collect values of variable for groups on plot
-        records_cohorts (list<dict>): records with information about cohorts
         titles_abscissa_groups (list<str>): titles for groups on abscissa or
             horizontal axis in same sort order as 'cohorts_groups'
+        aspect (str): orientation and aspect ratio of figure: either 'portrait',
+            'landscape', or 'landscape_half_height'
+        orientation_box (str): whether the orientation of boxes is 'horizontal'
+            or 'vertical'
         colors_groups (list<tuple>): color parameters for boxes of groups in
             same sort order as 'cohorts_groups'
+        records_cohorts (list<dict>): records with information about cohorts
 
     raises:
 
@@ -2494,7 +3026,8 @@ def create_plot_box(
         label_top_center="",
         label_top_left="", # name_figure
         label_top_right="",
-        orientation="landscape", # 'portrait' or 'landscape'
+        aspect=aspect,
+        orientation_box=orientation_box,
         fonts=fonts,
         colors=colors,
     )
@@ -2535,11 +3068,14 @@ def drive_create_plots_box(
             title_ordinate=record_parameter["title_ordinate"],
             title_abscissa=record_parameter["title_abscissa"],
             cohorts_groups=record_parameter["cohorts_groups"],
-            records_cohorts=records_cohorts,
             titles_abscissa_groups=record_parameter["titles_abscissa_groups"],
+            aspect=record_parameter["aspect"],
+            orientation_box=record_parameter["orientation_box"],
             colors_groups=record_parameter["colors_groups"],
+            records_cohorts=records_cohorts,
         )
         pass
+
     # Return information.
     return pail
 
