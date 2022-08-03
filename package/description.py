@@ -2128,14 +2128,34 @@ def define_parameters_for_plots_groups_box():
     record["title_ordinate"] = ""
     record["title_abscissa"] = "Estradiol, Total (pmol/L)"
     record["cohorts_groups"] = [
+        "ancestry_white_male_age_high",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_female_postmenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_premenopause",
+        "ancestry_white_female",
     ]
     record["titles_abscissa_groups"] = [
+        "Male-Age-High",
+        "Male-Age-Middle",
+        "Male-Age-Low",
+        "Male-All",
+        #"Female-Menstruation",
+        "Female-Post...",
         "Female-Peri...",
         "Female-Pre...",
+        "Female-All",
     ]
     record["colors_groups"] = [
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.5, 0.5, 0.5, 1.0), # "gray"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
+        (0.1, 0.25, 0.7, 1.0), # "blue_navy"
         (0.1, 0.25, 0.7, 1.0), # "blue_navy"
         (0.1, 0.25, 0.7, 1.0), # "blue_navy"
     ]
