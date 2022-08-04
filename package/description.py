@@ -2162,9 +2162,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2201,9 +2201,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2240,9 +2240,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2279,9 +2279,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2318,9 +2318,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2357,9 +2357,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2396,9 +2396,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2435,9 +2435,9 @@ def define_parameters_box_plots_female_male():
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.7, 0.7, 0.7, 1.0), # "gray_light"
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2486,9 +2486,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2513,9 +2513,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2540,9 +2540,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2567,9 +2567,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2594,9 +2594,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2621,9 +2621,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2648,9 +2648,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2675,9 +2675,9 @@ def define_parameters_box_plots_female():
     ]
     record["colors_groups"] = [
         (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
-        (0.1, 0.6, 0.9, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
