@@ -816,8 +816,6 @@ def execute_procedure(
             type="linear",
             report=True,
         )
-        pass
-    if True:
         pail_linear_2 = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
@@ -828,8 +826,6 @@ def execute_procedure(
             type="linear",
             report=True,
         )
-        pass
-    if True:
         pail_linear_3 = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
