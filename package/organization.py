@@ -15325,23 +15325,23 @@ def execute_procedure(
     )
 
     # Organize variables for persons' sex hormones across the UK Biobank.
-    pail_hormone = ukb_organization.execute_sex_hormones(
+    pail_hormone = execute_sex_hormones(
         table=pail_basis["table"],
         path_dock=path_dock,
         report=True,
     )
     # Organize variables for female menstruation across the UK Biobank.
-    pail_female = ukb_organization.execute_female_menstruation(
+    pail_female = execute_female_menstruation(
         table=pail_hormone["table"],
         report=True,
     )
     # Organize variables for persons' alcohol consumption across the UK Biobank.
-    pail_substance_use = ukb_organization.execute_substance_use(
+    pail_substance_use = execute_substance_use(
         table=pail_female["table"],
         report=True,
     )
     # Organize variables for persons' mental health across the UK Biobank.
-    pail_psychology = ukb_organization.execute_psychology_psychiatry(
+    pail_psychology = execute_psychology_psychiatry(
         table=pail_substance_use["table"],
         path_dock=path_dock,
         report=True,
