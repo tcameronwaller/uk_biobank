@@ -14507,9 +14507,187 @@ def organize_alcoholism_case_control_definitions(
 
 
 ##########
-# Smoking, use of tobacco
+# Smoking, use of tobacco smoke
 
 
+# review: TCW; 08 August 2022
+def interpret_tobacco_smoke_ever(
+    field_20160=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field '20160'.
+
+    Data-Field '20160': "Ever smoked"
+    UK Biobank data-coding '7' for data-field '20160'.
+    1: 'Yes'
+    0: 'No'
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_20160 (float): UK Biobank data-field '20160', whether person ever
+            used tobacco smoke
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_20160)) and
+        (-0.5 <= field_20160 and field_20160 < 1.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (0.5 <= field_20160 and field_20160 < 1.5):
+            # 1: "Yes"
+            interpretation = 1
+        elif (-0.5 <= field_20160 and field_20160 < 0.5):
+            # 0: "No"
+            interpretation = 0
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+# review: TCW; 08 August 2022
+def interpret_tobacco_smoke_status(
+    field_20116=None,
+):
+    """
+    Intepret UK Biobank's data-coding for data-field '20116'.
+
+    Data-Field '20116': "Smoking status"
+    UK Biobank data-coding '90' for data-field '20116'.
+    2: 'Current'
+    1: 'Previous'
+    0: 'Never'
+    -3: 'Prefer not to answer'
+
+    Accommodate inexact float values.
+
+    arguments:
+        field_20116 (float): UK Biobank data-field '20116', person's status of
+            using tobacco smoke
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(field_20116)) and
+        (-3.5 <= field_20116 and field_20116 < 2.5)
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (-0.5 <= field_20116 and field_20116 < 0.5):
+            # 0: "Never"
+            interpretation = 0
+        elif (0.5 <= field_20116 and field_20116 < 1.5):
+            # 1: "Previous"
+            interpretation = 1
+        elif (1.5 <= field_20116 and field_20116 < 2.5):
+            # 2: "Current"
+            interpretation = 2
+        elif (-3.5 <= field_20116 and field_20116 < -2.5):
+            # -3: "Prefer not to answer"
+            interpretation = float("nan")
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return.
+    return interpretation
+
+
+def organize_tobacco_smoke_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes information about previous and current alcohol consumption.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collection of information about quantity of alcohol consumption
+
+    """
+
+    # Copy data.
+    table = table.copy(deep=True)
+    # Convert variable types.
+    columns_type = [
+        "20160-0.0", "20116-0.0", "1239-0.0", "1249-0.0",
+    ]
+    table = utility.convert_table_columns_variables_types_float(
+        columns=columns_type,
+        table=table,
+    )
+    # Determine person's use of tobacco smoke.
+    table["smoke_ever"] = table.apply(
+        lambda row:
+            interpret_tobacco_smoke_ever(
+                field_20160=row["20160-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["smoke_status"] = table.apply(
+        lambda row:
+            interpret_tobacco_smoke_status(
+                field_20160=row["20116-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+
+    # Remove columns for variables that are not necessary anymore.
+    table_clean = table.copy(deep=True)
+    table_clean.drop(
+        labels=["20160-0.0", "20116-0.0", "1239-0.0", "1249-0.0",],
+        axis="columns",
+        inplace=True
+    )
+    # Organize data for report.
+    table_report = table.copy(deep=True)
+    table_report = table_report.loc[
+        :, table_report.columns.isin([
+            "eid", "IID",
+            "20160-0.0", "20116-0.0", "1239-0.0", "1249-0.0",
+            "smoke_ever",
+            "smoke_status",
+        ])
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("Summary of tobacco smoking variables: ")
+        print(table_report)
+    # Collect information.
+    pail = dict()
+    pail["table"] = table
+    pail["table_clean"] = table_clean
+    pail["table_report"] = table_report
+    # Return information.
+    return pail
 
 
 
@@ -14988,53 +15166,13 @@ def execute_female_menstruation(
     return pail_female
 
 
-def execute_psychology_psychiatry(
-    table=None,
-    path_dock=None,
-    report=None,
-):
-    """
-    Organizes information about persons' mental health across UK Biobank.
-
-    arguments:
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-        path_dock (str): path to dock directory for source and product
-            directories and files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict): collecton of Pandas data frames of phenotype variables across
-            UK Biobank cohort
-
-    """
-
-    # Organize information about neuroticism.
-    pail_psychology = organize_psychology_variables(
-        table=table,
-        path_dock=path_dock,
-        report=report,
-    )
-    # Report.
-    if report:
-        # Column name translations.
-        utility.print_terminal_partition(level=2)
-        print("report: execute_psychology_psychiatry()")
-        utility.print_terminal_partition(level=3)
-        print(pail_psychology["table_clean"])
-    # Return information.
-    return pail_psychology
-
-
-def execute_alcohol(
+def execute_substance_use(
     table=None,
     report=None,
 ):
     """
-    Organizes information about persons' alcohol consumption and dependence
-    across UK Biobank.
+    Organizes information about person's use of alcohol and tobacco smoke in
+    UK Biobank.
 
     arguments:
         table (object): Pandas data frame of phenotype variables across UK
@@ -15082,15 +15220,60 @@ def execute_alcohol(
     )
     #print(pail_alcoholism["table_clean"])
 
+    # Organize information about use of tobacco smoke.
+    pail_tobacco_smoke = organize_tobacco_smoke_variables(
+        table=pail_alcoholism["table"],
+        report=True,
+    )
+
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("report: execute_alcohol()")
+        print("report: execute_substance_use()")
         utility.print_terminal_partition(level=3)
-        print(pail_alcoholism["table_report"])
+        print(pail_tobacco_smoke["table_report"])
     # Return information.
-    return pail_alcoholism
+    return pail_tobacco_smoke
 
+
+def execute_psychology_psychiatry(
+    table=None,
+    path_dock=None,
+    report=None,
+):
+    """
+    Organizes information about persons' mental health across UK Biobank.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): collecton of Pandas data frames of phenotype variables across
+            UK Biobank cohort
+
+    """
+
+    # Organize information about neuroticism.
+    pail_psychology = organize_psychology_variables(
+        table=table,
+        path_dock=path_dock,
+        report=report,
+    )
+    # Report.
+    if report:
+        # Column name translations.
+        utility.print_terminal_partition(level=2)
+        print("report: execute_psychology_psychiatry()")
+        utility.print_terminal_partition(level=3)
+        print(pail_psychology["table_clean"])
+    # Return information.
+    return pail_psychology
 
 
 
@@ -15153,13 +15336,13 @@ def execute_procedure(
         report=True,
     )
     # Organize variables for persons' alcohol consumption across the UK Biobank.
-    pail_alcohol = ukb_organization.execute_alcohol(
+    pail_substance_use = ukb_organization.execute_substance_use(
         table=pail_female["table"],
         report=True,
     )
     # Organize variables for persons' mental health across the UK Biobank.
     pail_psychology = ukb_organization.execute_psychology_psychiatry(
-        table=pail_alcohol["table"],
+        table=pail_substance_use["table"],
         path_dock=path_dock,
         report=True,
     )
