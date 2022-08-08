@@ -109,6 +109,10 @@ include	field	type	category	name	coverage	scale	ukb_description	ukb_category	arr
 1	20408	string	alcohol_questionnaire	audit_8	85196	ordinal				0;	
 1	20411	string	alcohol_questionnaire	audit_9	157339	ordinal				0;	
 1	20405	string	alcohol_questionnaire	audit_10	157339	ordinal				0;	
+1	20160	string	smoking	smoking_ever		ordinal	Ever smoked	Smoking		0;	
+1	20116	string	smoking	smoking_status		ordinal	Smoking status	Smoking		0;	
+1	1239	string	smoking	smoking_current		ordinal	Current tobacco smoking	Smoking		0;	
+1	1249	string	smoking	smoking_past		ordinal	Past tobacco smoking	Smoking		0;	
 1	41271	string	diagnosis	icd9_summary	20302	nominal	Diagnoses - ICD9	Summary Diagnoses	yes	0;	single instance; combination of fields “41203” and “41205”
 1	41203	string	diagnosis	icd9_primary	20302	nominal	Diagnoses - main ICD9	Summary Diagnoses	yes	0;	single instance; field “41281” indicates date of diagnosis
 1	41205	string	diagnosis	icd9_secondary	8714	nominal	Diagnoses - secondary ICD9	Summary Diagnoses	yes	0;	single instance; field “41281” indicates date of diagnosis

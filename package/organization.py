@@ -13324,10 +13324,7 @@ def specify_self_alcoholism_diagnosis_codes():
 
 # TODO: TCW 14 September 2021
 # TODO: I could possibly rewrite this more efficiently using "any()" and "filter()"
-
-# TODO: TCW, 11 January 2022
-# TODO: I'd like to follow this basic pattern of text array matching in interpretation
-# TODO: of medications
+# TODO: the matching driver function in 'promiscuity.utility' could return TRUE as soon as it finds the first match
 
 
 def parse_interpret_match_diagnosis_codes(
@@ -14509,16 +14506,21 @@ def organize_alcoholism_case_control_definitions(
     return pail
 
 
+##########
+# Smoking, use of tobacco
 
 
-##########
-##########
-##########
-##########
-##########
-# ... in progress...
 
-# Scrap now...
+
+
+
+
+##########
+##########
+##########
+##########
+##########
+# Scrap...
 
 
 def scrap_translate_alcohol_none_auditc(
