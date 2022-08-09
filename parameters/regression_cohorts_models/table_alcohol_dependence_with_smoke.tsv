@@ -1,5 +1,5 @@
 execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independence	model	model_sort	model_adjustment	model_context	model_note
-1	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -18,8 +18,8 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_female	1	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
-1	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint; exclude ‘birth_live_recent’ due to complete separation of values with dependent variable
+0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
+0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint; exclude ‘birth_live_recent’ due to complete separation of values with dependent variable
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_free_imputation	5	5	adjust	marginal	adjust marginal oestradiol free
@@ -37,7 +37,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_female_menstruation_regular	2	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint; exclude ‘birth_live_recent’ due to complete separation of values with dependent variable
 0	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	menstruation_phase_cycle;births;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -56,7 +56,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_female_premenopause	3	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	births;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	births;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	births;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	births;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	births;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -75,7 +75,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_female_perimenopause	4	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	births;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	births;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	births;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	births;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	births;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -94,7 +94,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_female_postmenopause	5	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -113,7 +113,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_male	6	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -132,7 +132,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_male_age_low	7	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
@@ -151,7 +151,7 @@ execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independ
 0	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	testosterone_free_imputation	17	17	unadjust	marginal	unadjust marginal testosterone free
 0	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	steroid_globulin_imputation	18	18	unadjust	marginal	unadjust marginal steroid globulin
 0	white_alcohol_ever_male_age_middle	8	alcoholism_control_case_1	1	logistic	albumin_imputation	19	19	unadjust	marginal	unadjust marginal albumin
-1	white_alcohol_ever_male_age_high	9	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null	adjust null
+1	white_alcohol_ever_male_age_high	9	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever	1	1	adjust	null_hypothesis	adjust null
 1	white_alcohol_ever_male_age_high	9	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	white_alcohol_ever_male_age_high	9	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
 0	white_alcohol_ever_male_age_high	9	alcoholism_control_case_1	1	logistic	age;body;region;season;alteration_sex_hormone;smoke_ever;oestradiol_bioavailable_imputation	4	4	adjust	marginal	adjust marginal oestradiol bioavailable
