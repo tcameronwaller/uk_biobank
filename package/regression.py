@@ -804,9 +804,19 @@ def execute_procedure(
             type="logistic",
             report=True,
         )
+        pail_logistic_2 = stratify_cohorts_call_run_regressions(
+            table=source["table_phenotypes"],
+            table_cohorts_models=(
+                source_reference["table_alcohol_dependence_with_smoke"]
+            ),
+            independences_summary=None, # "None" or list of variables
+            filter_execution=True,
+            type="logistic",
+            report=True,
+        )
         pass
 
-    if True:
+    if False:
         pail_linear_1 = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
@@ -846,15 +856,18 @@ def execute_procedure(
     pail_write["tables"]["table_alcohol_dependence"] = (
         pail_logistic_1["table"]
     )
-    pail_write["tables"]["table_alcohol_frequency"] = (
-        pail_linear_1["table"]
+    pail_write["tables"]["table_alcohol_dependence_with_smoke"] = (
+        pail_logistic_2["table"]
     )
-    pail_write["tables"]["table_alcohol_auditc"] = (
-        pail_linear_2["table"]
-    )
-    pail_write["tables"]["table_alcohol_quantity"] = (
-        pail_linear_3["table"]
-    )
+    #pail_write["tables"]["table_alcohol_frequency"] = (
+    #    pail_linear_1["table"]
+    #)
+    #pail_write["tables"]["table_alcohol_auditc"] = (
+    #    pail_linear_2["table"]
+    #)
+    #pail_write["tables"]["table_alcohol_quantity"] = (
+    #    pail_linear_3["table"]
+    #)
     # Write product information to file.
     write_product(
         pail_write=pail_write,
