@@ -12125,7 +12125,7 @@ def organize_alcohol_consumption_frequency_variables(
     )
     # Determine whether person consumes alcohol not currently but previously.
     #table["alcohol_previous"]
-    # Determine whether person never consumes any alcohol.
+    # Determine whether person ever consumed any alcohol.
     table["alcohol_ever"] = table.apply(
         lambda row:
             determine_alcohol_consumption_ever(
@@ -14654,7 +14654,7 @@ def organize_tobacco_smoke_variables(
     table["smoke_status"] = table.apply(
         lambda row:
             interpret_tobacco_smoke_status(
-                field_20160=row["20116-0.0"],
+                field_20116=row["20116-0.0"],
             ),
         axis="columns", # apply function to each row
     )

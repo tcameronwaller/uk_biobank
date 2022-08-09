@@ -625,11 +625,12 @@ def stratify_cohorts_call_run_regressions(
     """
 
     # Stratify phenotypes in cohorts.
-    records_cohorts = ukb_strat.stratify_phenotype_cohorts_set_regression(
-        table=table,
-    )
+    records_cohorts = (
+        ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+            table=table,
+    ))
     entries_cohorts = (
-        ukb_strat.organize_dictionary_entries_stratification_cohorts(
+        utility.organize_dictionary_entries_stratification_cohorts(
             records=records_cohorts,
     ))
     # Call driver for regressions.
