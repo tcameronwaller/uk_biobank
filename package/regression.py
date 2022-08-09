@@ -828,7 +828,7 @@ def execute_procedure(
         )
         pass
 
-    if True:
+    if False:
         pail_regression = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
@@ -843,7 +843,7 @@ def execute_procedure(
             pail_regression["table"]
         )
         pass
-    if False:
+    if True:
         pail_regression = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
