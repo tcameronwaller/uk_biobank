@@ -772,7 +772,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW, 18 August 2021")
+    print("version check: TCW, 12 August 2022")
     # Pause procedure.
     time.sleep(5.0)
 
