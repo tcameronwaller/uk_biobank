@@ -3545,7 +3545,7 @@ def convert_hormone_concentration_units_moles_per_liter(
     ) # 1 mol = 1E9 nanomole
     table["oestradiol"] = table.apply(
         lambda row: float(
-            (row["30800-0.0"] / 1E12) * factors_concentration["oestradiol"]
+            (row["30800-0.0"] / 1E12) * factors_concentration["estradiol"]
         ),
         axis="columns", # apply function to each row
     ) # 1 mol = 1E12 picomole
@@ -4638,7 +4638,7 @@ def calculate_estimation_free_oestradiol(
     # Raw values are stored with a concentration factor.
     # Convert concentrations to unit of moles per liter (mol/L).
     oestradiol_unit = float(
-        oestradiol / factors_concentration["oestradiol"]
+        oestradiol / factors_concentration["estradiol"]
     )
     testosterone_free_unit = float(
         testosterone_free / factors_concentration["testosterone_free"]
@@ -4671,7 +4671,7 @@ def calculate_estimation_free_oestradiol(
     ) / (2 * a)
     # Convert units by factor.
     oestradiol_free = float(
-        oestradiol_free_unit * factors_concentration["oestradiol_free"]
+        oestradiol_free_unit * factors_concentration["estradiol_free"]
     )
     # Return information.
     return oestradiol_free
@@ -4745,10 +4745,10 @@ def calculate_estimation_bioavailable_oestradiol(
     # Raw values are stored with a concentration factor.
     # Convert concentrations to unit of moles per liter (mol/L).
     oestradiol_unit = float(
-        oestradiol / factors_concentration["oestradiol"]
+        oestradiol / factors_concentration["estradiol"]
     )
     oestradiol_free_unit = float(
-        oestradiol_free / factors_concentration["oestradiol_free"]
+        oestradiol_free / factors_concentration["estradiol_free"]
     )
     testosterone_free_unit = float(
         testosterone_free / factors_concentration["testosterone_free"]
@@ -4775,7 +4775,7 @@ def calculate_estimation_bioavailable_oestradiol(
     # Convert units by factor.
     oestradiol_bioavailable = float(
         oestradiol_bioavailable_unit *
-        factors_concentration["oestradiol_bioavailable"]
+        factors_concentration["estradiol_bioavailable"]
     )
     # Return information.
     return oestradiol_bioavailable
@@ -6222,9 +6222,9 @@ def organize_sex_hormone_variables(
     factors_concentration = dict()
     factors_concentration["albumin"] = 1E6 # 1 umol / L
     factors_concentration["steroid_globulin"] = 1E9 # 1 nmol / L
-    factors_concentration["oestradiol"] = 1E12 # 1 pmol / L
-    factors_concentration["oestradiol_free"] = 1E12 # 1 pmol / L
-    factors_concentration["oestradiol_bioavailable"] = 1E12 # 1 pmol / L
+    factors_concentration["estradiol"] = 1E12 # 1 pmol / L
+    factors_concentration["estradiol_free"] = 1E12 # 1 pmol / L
+    factors_concentration["estradiol_bioavailable"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_free"] = 1E12 # 1 pmol / L
     factors_concentration["testosterone_bioavailable"] = 1E12 # 1 pmol / L
