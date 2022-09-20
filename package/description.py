@@ -2158,7 +2158,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2199,7 +2199,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2240,7 +2240,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2281,7 +2281,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2322,7 +2322,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2363,7 +2363,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2404,7 +2404,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2445,7 +2445,7 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2734,7 +2734,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2761,7 +2761,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2788,7 +2788,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2815,7 +2815,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2842,7 +2842,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2869,7 +2869,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2896,7 +2896,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
@@ -2923,7 +2923,7 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.510, 0.039, 0.510, 1.0), # "purple"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
         (0.784, 0.275, 0.784, 1.0), # "magenta"
