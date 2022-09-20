@@ -2154,7 +2154,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2195,7 +2195,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2236,7 +2236,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2277,7 +2277,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2318,7 +2318,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2359,7 +2359,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2400,7 +2400,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2441,7 +2441,7 @@ def define_parameters_box_plots_female_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2496,7 +2496,7 @@ def define_parameters_box_plots_female():
         #"Female-Menstruation",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2523,7 +2523,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2550,7 +2550,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2577,7 +2577,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2604,7 +2604,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2631,7 +2631,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2658,7 +2658,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
@@ -2685,7 +2685,7 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.039, 0.196, 0.588, 1.0), # "blue_navy"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
