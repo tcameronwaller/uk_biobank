@@ -2169,6 +2169,7 @@ def determine_biological_sex_text(
     return sex_text
 
 
+# I copied this functionality to "utility.determine_human_physiology_age"
 def determine_age(
     field_raw=None,
 ):
@@ -2203,6 +2204,7 @@ def determine_age(
     return value
 
 
+# I copied this functionality to "utility.determine_human_physiology_body_mass_index"
 def determine_body_mass_index(
     field_21001=None,
 ):

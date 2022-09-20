@@ -2106,9 +2106,6 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 # TODO: or perhaps violin plots would represent the distribution more effectively?
 
 
-# TODO: TCW; 3 August 2022
-# TODO: I need to reverse the order of groups... like all of them...
-
 def define_parameters_box_plots_female_male():
     """
     Organizes parameters for box plots.
@@ -2131,40 +2128,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "estradiol_total_female_male"
     record["variable"] = "oestradiol_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Estradiol, Total (pmol/L)"
+    record["title_abscissa"] = "" # "Estradiol, Total (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
         #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
         #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2172,38 +2169,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "estradiol_bioavailable_female_male"
     record["variable"] = "oestradiol_bioavailable_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Estradiol, Bioavailable (pmol/L)"
+    record["title_abscissa"] = "" # "Estradiol, Bioavailable (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2211,38 +2210,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "estradiol_free_female_male"
     record["variable"] = "oestradiol_free_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Estradiol, Free (pmol/L)"
+    record["title_abscissa"] = "" # "Estradiol, Free (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2250,38 +2251,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "testosterone_total_female_male"
     record["variable"] = "testosterone_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Testosterone, Total (pmol/L)"
+    record["title_abscissa"] = "" # "Testosterone, Total (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2289,38 +2292,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "testosterone_bioavailable_female_male"
     record["variable"] = "testosterone_bioavailable_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Testosterone, Bioavailable (pmol/L)"
+    record["title_abscissa"] = "" # "Testosterone, Bioavailable (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2328,38 +2333,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "testosterone_free_female_male"
     record["variable"] = "testosterone_free_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Testosterone, Free (pmol/L)"
+    record["title_abscissa"] = "" # "Testosterone, Free (pmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2367,38 +2374,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "steroid_globulin_female_male"
     record["variable"] = "steroid_globulin_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "SHBG (nmol/L)"
+    record["title_abscissa"] = "" # "SHBG (nmol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2406,38 +2415,40 @@ def define_parameters_box_plots_female_male():
     record["name_figure"] = "albumin_female_male"
     record["variable"] = "albumin_imputation"
     record["title_ordinate"] = ""
-    record["title_abscissa"] = "Albumin (umol/L)"
+    record["title_abscissa"] = "" # "Albumin (umol/L)"
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
         "ancestry_white_female",
         "ancestry_white_female_premenopause",
         "ancestry_white_female_perimenopause",
         "ancestry_white_female_postmenopause",
+        #"ancestry_white_female_menstruation_regular",
+        "ancestry_white_male",
+        "ancestry_white_male_age_low",
+        "ancestry_white_male_age_middle",
+        "ancestry_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
-        "Male-All",
-        "Male-Age-Low",
-        "Male-Age-Middle",
-        "Male-Age-High",
         "Female-All",
         "Female-Pre...",
         "Female-Peri...",
         "Female-Post...",
+        #"Female-Menstruation",
+        "Male-All",
+        "Male-Age-Low",
+        "Male-Age-Middle",
+        "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2485,10 +2496,10 @@ def define_parameters_box_plots_female():
         #"Female-Menstruation",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2512,10 +2523,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2539,10 +2550,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2566,10 +2577,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2593,10 +2604,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2620,10 +2631,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2647,10 +2658,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2674,10 +2685,10 @@ def define_parameters_box_plots_female():
         "Female-Post...",
     ]
     record["colors_groups"] = [
-        (0.1, 0.3, 0.7, 1.0), # "blue_navy_light"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
-        (0.1, 0.6, 1.0, 1.0), # "blue_sky"
+        (0.118, 0.314, 0.706, 1.0), # "blue_navy_light"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
+        (0.196, 0.588, 1.0, 1.0), # "blue_sky"
     ]
     records.append(record)
 
@@ -2723,10 +2734,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2750,10 +2761,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2777,10 +2788,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2804,10 +2815,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2831,10 +2842,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2858,10 +2869,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2885,10 +2896,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2912,10 +2923,10 @@ def define_parameters_box_plots_male():
         "Male-Age-High",
     ]
     record["colors_groups"] = [
-        (0.5, 0.5, 0.5, 1.0), # "gray"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
-        (0.7, 0.7, 0.7, 1.0), # "gray_light"
+        (0.588, 0.196, 0.588, 1.0), # "purple"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
+        (0.784, 0.275, 0.784, 1.0), # "magenta"
     ]
     records.append(record)
 
@@ -2964,6 +2975,7 @@ def create_plot_box(
     titles_abscissa_groups=None,
     aspect=None,
     orientation_box=None,
+    axis_linear_minimum=None,
     colors_groups=None,
     records_cohorts=None,
 ):
@@ -2985,6 +2997,7 @@ def create_plot_box(
             'portrait_half_width', 'landscape', or 'landscape_half_height'
         orientation_box (str): whether the orientation of boxes is 'horizontal'
             or 'vertical'
+        axis_linear_minimum (float): minimal value for range of linear axis
         colors_groups (list<tuple>): color parameters for boxes of groups in
             same sort order as 'cohorts_groups'
         records_cohorts (list<dict>): records with information about cohorts
@@ -3031,6 +3044,7 @@ def create_plot_box(
         label_top_right="",
         aspect=aspect,
         orientation_box=orientation_box,
+        axis_linear_minimum=axis_linear_minimum,
         fonts=fonts,
         colors=colors,
     )
@@ -3074,6 +3088,7 @@ def drive_create_plots_box(
             titles_abscissa_groups=record_parameter["titles_abscissa_groups"],
             aspect=record_parameter["aspect"],
             orientation_box=record_parameter["orientation_box"],
+            axis_linear_minimum=0.0,
             colors_groups=record_parameter["colors_groups"],
             records_cohorts=records_cohorts,
         )
