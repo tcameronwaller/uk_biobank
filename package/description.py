@@ -3313,195 +3313,210 @@ def organize_phenotypes_parameters_for_plots_histogram():
     #"alcohol_drinks_monthly",
     #"alcohol_drinks_monthly_combination",
 
-    #record = dict()
-    #record["name"] = "alcohol_frequency"
-    #record["variable"] = "alcohol_frequency"
-    #record["threshold"] = 15 # None or upper threshold
-    #record["bins"] = None # None or count of bins
-    #records.append(record)
-
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_weekly"
-    #record["variable"] = "alcohol_drinks_weekly"
-    #record["threshold"] = 100 # None or upper threshold
-    #record["bins"] = 70 # None or count of bins
-    #records.append(record)
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_monthly"
-    #record["variable"] = "alcohol_drinks_monthly"
-    #record["threshold"] = 40 # None or upper threshold
-    #record["bins"] = 40 # None or count of bins
-    #records.append(record)
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_monthly_combination"
-    #record["variable"] = "alcohol_drinks_monthly_combination"
-    #record["threshold"] = 400 # None or upper threshold
-    #record["bins"] = 70 # None or count of bins
-    #records.append(record)
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_weekly_log"
-    #record["variable"] = "alcohol_drinks_weekly_log"
-    #record["threshold"] = None # None or upper threshold
-    #record["bins"] = 70 # None or count of bins
-    #records.append(record)
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_monthly_log"
-    #record["variable"] = "alcohol_drinks_monthly_log"
-    #record["threshold"] = None # None or upper threshold
-    #record["bins"] = 40 # None or count of bins
-    #records.append(record)
-
-    #record = dict()
-    #record["name"] = "alcohol_drinks_monthly_combination_log"
-    #record["variable"] = "alcohol_drinks_monthly_combination_log"
-    #record["threshold"] = None # None or upper threshold
-    #record["bins"] = 70 # None or count of bins
-    #records.append(record)
-
     record = dict()
-    record["name"] = "albumin_imputation"
-    record["variable"] = "albumin_imputation"
+    record["name"] = "age"
+    record["variable"] = "age"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
+    record["bins"] = None # None or count of bins
     records.append(record)
 
     record = dict()
-    record["name"] = "albumin_imputation_log"
-    record["variable"] = "albumin_imputation_log"
+    record["name"] = "body"
+    record["variable"] = "body"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
+    record["bins"] = None # None or count of bins
     records.append(record)
 
-    record = dict()
-    record["name"] = "steroid_globulin_imputation"
-    record["variable"] = "steroid_globulin_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+    if False:
 
-    record = dict()
-    record["name"] = "steroid_globulin_imputation_log"
-    record["variable"] = "steroid_globulin_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_frequency"
+        record["variable"] = "alcohol_frequency"
+        record["threshold"] = 15 # None or upper threshold
+        record["bins"] = None # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol"
-    record["variable"] = "oestradiol"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_weekly"
+        record["variable"] = "alcohol_drinks_weekly"
+        record["threshold"] = 100 # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_log"
-    record["variable"] = "oestradiol_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_monthly"
+        record["variable"] = "alcohol_drinks_monthly"
+        record["threshold"] = 40 # None or upper threshold
+        record["bins"] = 40 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_imputation"
-    record["variable"] = "oestradiol_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_monthly_combination"
+        record["variable"] = "alcohol_drinks_monthly_combination"
+        record["threshold"] = 400 # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_imputation_log"
-    record["variable"] = "oestradiol_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_weekly_log"
+        record["variable"] = "alcohol_drinks_weekly_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_bioavailable_imputation"
-    record["variable"] = "oestradiol_bioavailable_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_monthly_log"
+        record["variable"] = "alcohol_drinks_monthly_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 40 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_bioavailable_imputation_log"
-    record["variable"] = "oestradiol_bioavailable_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "alcohol_drinks_monthly_combination_log"
+        record["variable"] = "alcohol_drinks_monthly_combination_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_free_imputation"
-    record["variable"] = "oestradiol_free_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "albumin_imputation"
+        record["variable"] = "albumin_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "oestradiol_free_imputation_log"
-    record["variable"] = "oestradiol_free_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "albumin_imputation_log"
+        record["variable"] = "albumin_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone"
-    record["variable"] = "testosterone"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "steroid_globulin_imputation"
+        record["variable"] = "steroid_globulin_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_log"
-    record["variable"] = "testosterone_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "steroid_globulin_imputation_log"
+        record["variable"] = "steroid_globulin_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_imputation"
-    record["variable"] = "testosterone_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol"
+        record["variable"] = "oestradiol"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_imputation_log"
-    record["variable"] = "testosterone_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol_log"
+        record["variable"] = "oestradiol_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_bioavailable_imputation"
-    record["variable"] = "testosterone_bioavailable_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol_imputation"
+        record["variable"] = "oestradiol_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_bioavailable_imputation_log"
-    record["variable"] = "testosterone_bioavailable_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol_imputation_log"
+        record["variable"] = "oestradiol_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_free_imputation"
-    record["variable"] = "testosterone_free_imputation"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol_bioavailable_imputation"
+        record["variable"] = "oestradiol_bioavailable_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
-    record = dict()
-    record["name"] = "testosterone_free_imputation_log"
-    record["variable"] = "testosterone_free_imputation_log"
-    record["threshold"] = None # None or upper threshold
-    record["bins"] = 70 # None or count of bins
-    records.append(record)
+        record = dict()
+        record["name"] = "oestradiol_bioavailable_imputation_log"
+        record["variable"] = "oestradiol_bioavailable_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "oestradiol_free_imputation"
+        record["variable"] = "oestradiol_free_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "oestradiol_free_imputation_log"
+        record["variable"] = "oestradiol_free_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone"
+        record["variable"] = "testosterone"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_log"
+        record["variable"] = "testosterone_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_imputation"
+        record["variable"] = "testosterone_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_imputation_log"
+        record["variable"] = "testosterone_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_bioavailable_imputation"
+        record["variable"] = "testosterone_bioavailable_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_bioavailable_imputation_log"
+        record["variable"] = "testosterone_bioavailable_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_free_imputation"
+        record["variable"] = "testosterone_free_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "testosterone_free_imputation_log"
+        record["variable"] = "testosterone_free_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
 
     # Return information
     return records
@@ -3553,7 +3568,7 @@ def create_plots_histogram(
             name_label = str(str(record_cohort["name"]) + "_" + str(name))
             name_plot = str(name_label + "_histogram")
             pail[name_plot] = plot_variable_values_histogram(
-                label_title=name_label,
+                label_title="", # name_label,
                 array=table_cohort[variable].dropna().to_numpy(),
                 bins=bins, # None or count of bins
             )
@@ -4734,7 +4749,7 @@ def execute_procedure(
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",
-            set_cohort_plots=["box"], # ["histogram", "dot_trajectory_menstruation",]
+            set_cohort_plots=["histogram", "box"], # ["histogram", "dot_trajectory_menstruation",]
             set_summary_plots=[], # ["forest_regressions", "forest_correlations",],
             paths=paths,
             report=True,
