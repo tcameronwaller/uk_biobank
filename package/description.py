@@ -3140,7 +3140,7 @@ def plot_variable_values_histogram(
         line=True,
         line_position=numpy.nanmean(array),
         label_title=label_title, # ""
-        label_report=True,
+        label_report=False, # report count, median, and mean on plot
     )
     # Return.
     return figure
@@ -3324,7 +3324,7 @@ def organize_phenotypes_parameters_for_plots_histogram():
     record["name"] = "body"
     record["variable"] = "body"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = None # None or count of bins
+    record["bins"] = 70 # None or count of bins
     records.append(record)
 
     if False:
@@ -4749,7 +4749,7 @@ def execute_procedure(
         # Create description plots.
         execute_description_plots(
             set_cohorts="phenotype",
-            set_cohort_plots=["histogram", "box"], # ["histogram", "dot_trajectory_menstruation",]
+            set_cohort_plots=["histogram",], # ["box", "histogram", "dot_trajectory_menstruation",]
             set_summary_plots=[], # ["forest_regressions", "forest_correlations",],
             paths=paths,
             report=True,
