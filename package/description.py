@@ -3011,7 +3011,7 @@ def create_plot_box(
 
     # Organize records and entries for cohorts.
     entries_cohorts = (
-        utility.organize_dictionary_entries_stratification_cohorts(
+        utility.structure_from_records_to_entries(
             records=records_cohorts,
     ))
     # Collect values of variable for each group.

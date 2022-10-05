@@ -630,7 +630,7 @@ def stratify_cohorts_call_run_regressions(
             table=table,
     ))
     entries_cohorts = (
-        utility.organize_dictionary_entries_stratification_cohorts(
+        utility.structure_from_records_to_entries(
             records=records_cohorts,
     ))
     # Call driver for regressions.

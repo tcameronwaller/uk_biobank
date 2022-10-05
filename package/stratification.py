@@ -4235,6 +4235,7 @@ def stratify_genotype_cohorts_models_set(
     return records_set
 
 
+############
 # TODO: TCW; 5 October 2022
 # TODO: I need to rework some of this cohort stratification for GWAS
 # TODO: in particular, I need to introduce new scale transformations on DEPENDENT variables AFTER stratification
