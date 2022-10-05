@@ -65,6 +65,7 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
+import promiscuity.scale as pscale
 import promiscuity.decomposition as decomp
 import uk_biobank.stratification as ukb_strat # problem when executing uk_biobank not as sub-directory...
 
@@ -3240,8 +3241,9 @@ def organize_assessment_basis_variables(
         report=report,
     )
     # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_table_continuous_ratio_variables(
+    table = pscale.drive_transform_variables_distribution_scale_logarithm(
         columns=["body"],
+        suffix="_log",
         table=table,
     )
 
@@ -6307,8 +6309,9 @@ def organize_sex_hormone_variables(
         "albumin", "albumin_imputation",
         "cholesterol", "cholesterol_imputation",
     ]
-    table = utility.transform_normalize_table_continuous_ratio_variables(
+    table = pscale.drive_transform_variables_distribution_scale_logarithm(
         columns=columns_hormones_normalization,
+        suffix="_log",
         table=table,
     )
     # Remove columns for variables that are not necessary anymore.
@@ -11222,8 +11225,9 @@ def organize_psychology_variables(
         axis="columns", # apply function to each row
     )
     # Transform variables' values to normalize distributions.
-    table = utility.transform_normalize_table_continuous_ratio_variables(
+    table = pscale.drive_transform_variables_distribution_scale_logarithm(
         columns=["neuroticism"],
+        suffix="_log",
         table=table,
     )
 
@@ -12520,8 +12524,9 @@ def organize_alcohol_consumption_quantity_variables(
         "alcohol_drinks_monthly",
         "alcohol_drinks_monthly_combination",
     ]
-    table = utility.transform_normalize_table_continuous_ratio_variables(
+    table = pscale.drive_transform_variables_distribution_scale_logarithm(
         columns=columns_normalization,
+        suffix="_log",
         table=table,
     )
 

@@ -62,6 +62,7 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
+import promiscuity.scale as pscale
 
 ###############################################################################
 # Functionality
@@ -4234,6 +4235,13 @@ def stratify_genotype_cohorts_models_set(
     return records_set
 
 
+# TODO: TCW; 5 October 2022
+# TODO: I need to rework some of this cohort stratification for GWAS
+# TODO: in particular, I need to introduce new scale transformations on DEPENDENT variables AFTER stratification
+# TODO: I might also want to apply Z-Score to all INDEPENDENT variables (without changing their variable names)
+# TODO: - - I could also let PLINK2 do this for me...
+
+
 def execute_organize_stratification_genotype_cohorts_models(
     table=None,
     table_kinship_pairs=None,
@@ -4307,7 +4315,7 @@ def execute_organize_stratification_genotype_cohorts_models(
                 copy.deepcopy(record["table"].columns.to_list())
             ))
             record["table_scale"] = (
-                utility.standardize_scale_values_specific_table_columns(
+                pscale.drive_transform_variables_distribution_scale_z_score(
                     table=record["table"],
                     columns=scale_variables,
                     report=False,
