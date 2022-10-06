@@ -2121,16 +2121,27 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         ))
         # Filter relevant cohorts.
         names_cohorts = [
-            "ancestry_white_female_male",
-            "ancestry_white_female",
-            "ancestry_white_female_menstruation_regular",
-            "ancestry_white_female_premenopause",
-            "ancestry_white_female_perimenopause",
-            "ancestry_white_female_postmenopause",
-            "ancestry_white_male",
-            "ancestry_white_male_age_low",
-            "ancestry_white_male_age_middle",
-            "ancestry_white_male_age_high",
+            #"ancestry_white_female_male",
+            #"ancestry_white_female",
+            #"ancestry_white_female_menstruation_regular",
+            #"ancestry_white_female_premenopause",
+            #"ancestry_white_female_perimenopause",
+            #"ancestry_white_female_postmenopause",
+            #"ancestry_white_male",
+            #"ancestry_white_male_age_low",
+            #"ancestry_white_male_age_middle",
+            #"ancestry_white_male_age_high",
+            "white_alcohol_ever_female_male",
+            "white_alcohol_ever_female",
+            "white_alcohol_ever_female_menstruation_regular",
+            "white_alcohol_ever_female_premenopause",
+            "white_alcohol_ever_female_perimenopause",
+            "white_alcohol_ever_female_postmenopause",
+            "white_alcohol_ever_male",
+            "white_alcohol_ever_male_age_low",
+            "white_alcohol_ever_male_age_middle",
+            "white_alcohol_ever_male_age_high",
+
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
@@ -2280,8 +2291,6 @@ def create_plots_for_phenotype_variables_in_cohorts(
 
 
 
-
-
 def create_plots_for_analysis_summaries(
     set_plots=None,
     paths=None,
@@ -2347,7 +2356,7 @@ def create_plots_for_analysis_summaries(
     # Write product information to file.
     plot.write_product_plots_child_child_directories(
         pail_write=pail_write,
-        path_parent=paths["description_plots"],
+        path_parent=paths["plot"],
     )
     pass
 

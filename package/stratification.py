@@ -5135,6 +5135,11 @@ def stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
     return records
 
 
+
+# TODO: TCW; 6 October 2022
+# TODO: just use the same simple prefix method with "white_alcohol_ever_" as
+# TODO: the prefix.
+
 def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     column_special=None,
     values_special=None,
