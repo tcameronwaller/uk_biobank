@@ -63,8 +63,9 @@ import networkx
 
 # Custom
 import promiscuity.utility as utility
-import promiscuity.regression as pro_reg
 import promiscuity.plot as plot
+import promiscuity.scale as scale
+import promiscuity.regression as pro_reg
 import uk_biobank.stratification as ukb_strat
 import uk_biobank.organization as ukb_organization
 
