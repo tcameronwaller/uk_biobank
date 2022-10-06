@@ -51,6 +51,7 @@ import uk_biobank.importation
 import uk_biobank.organization
 import uk_biobank.stratification
 import uk_biobank.description
+import uk_biobank.plot
 import uk_biobank.regression
 import uk_biobank.collection
 
