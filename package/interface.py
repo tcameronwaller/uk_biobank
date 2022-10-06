@@ -133,8 +133,15 @@ def define_subparser_main(subparsers=None):
         dest="description",
         action="store_true",
         help=(
-            "Description of cohorts and phenotypes with summary statistics " +
-            "and plots."
+            "Description of cohorts and phenotypes with summary statistics."
+        )
+    )
+    parser.add_argument(
+        "-plot", "--plot",
+        dest="plot",
+        action="store_true",
+        help=(
+            "Preparation of plots."
         )
     )
     parser.add_argument(
@@ -264,6 +271,13 @@ def evaluate_parameters_main(arguments):
         print("... executing 'description' procedure ...")
         # Execute procedure.
         uk_biobank.description.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.plot:
+        # Report status.
+        print("... executing 'plot' procedure ...")
+        # Execute procedure.
+        uk_biobank.plot.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.regression:
