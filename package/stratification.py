@@ -5716,6 +5716,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
     raises:
 
     returns:
+        (list<dict>): records with information about cohorts
 
     """
 
