@@ -2116,7 +2116,7 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
-                table=source["table_phenotypes"],
+                table=table,
         ))
         # Filter relevant cohorts.
         names_cohorts = [
