@@ -459,6 +459,20 @@ def define_phenotypes_parameters_for_plots_histogram():
     records.append(record)
 
     record = dict()
+    record["name"] = "alcohol_drinks_monthly_combination_log"
+    record["variable"] = "alcohol_drinks_monthly_combination_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_drinks_monthly_combination_z"
+    record["variable"] = "alcohol_drinks_monthly_combination_z"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
     record["name"] = "alcohol_drinks_monthly_combination_rank"
     record["variable"] = "alcohol_drinks_monthly_combination_rank"
     record["threshold"] = None # None or upper threshold
@@ -473,6 +487,20 @@ def define_phenotypes_parameters_for_plots_histogram():
     records.append(record)
 
     record = dict()
+    record["name"] = "alcohol_frequency_log"
+    record["variable"] = "alcohol_frequency_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_frequency_z"
+    record["variable"] = "alcohol_frequency_z"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
     record["name"] = "alcohol_frequency_rank"
     record["variable"] = "alcohol_frequency_rank"
     record["threshold"] = None # None or upper threshold
@@ -483,6 +511,20 @@ def define_phenotypes_parameters_for_plots_histogram():
     record["name"] = "alcohol_auditc"
     record["variable"] = "alcohol_auditc"
     record["threshold"] = 15 # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_auditc_log"
+    record["variable"] = "alcohol_auditc_log"
+    record["threshold"] = None # None or upper threshold
+    record["bins"] = None # None or count of bins
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_auditc_z"
+    record["variable"] = "alcohol_auditc_z"
+    record["threshold"] = None # None or upper threshold
     record["bins"] = None # None or count of bins
     records.append(record)
 
@@ -2086,6 +2128,16 @@ def create_plots_dot_trajectory_menstruation(
 ##########
 
 
+# TODO: TCW; 7 October 2022
+# 1. plot histograms for alcohol measures within CURRENT consumers
+# - - raw, log, z, rank
+# 2. plot histograms for hormones in relevant cohorts (ancestry white)
+# - -
+
+
+# TODO: not "alcohol_ever"
+# TODO: use "alcohol_current" <-- TCW; 7 October 2022
+
 def prepare_phenotype_variables_in_stratification_cohorts(
     set_plots=None,
     table=None,
@@ -2131,17 +2183,16 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             #"ancestry_white_male_age_low",
             #"ancestry_white_male_age_middle",
             #"ancestry_white_male_age_high",
-            "white_alcohol_ever_female_male",
-            "white_alcohol_ever_female",
-            "white_alcohol_ever_female_menstruation_regular",
-            "white_alcohol_ever_female_premenopause",
-            "white_alcohol_ever_female_perimenopause",
-            "white_alcohol_ever_female_postmenopause",
-            "white_alcohol_ever_male",
-            "white_alcohol_ever_male_age_low",
-            "white_alcohol_ever_male_age_middle",
-            "white_alcohol_ever_male_age_high",
-
+            "self_white_alcohol_current_female_male",
+            "self_white_alcohol_current_female",
+            "self_white_alcohol_current_female_menstruation_regular",
+            "self_white_alcohol_current_female_premenopause",
+            "self_white_alcohol_current_female_perimenopause",
+            "self_white_alcohol_current_female_postmenopause",
+            "self_white_alcohol_current_male",
+            "self_white_alcohol_current_male_age_low",
+            "self_white_alcohol_current_male_age_middle",
+            "self_white_alcohol_current_male_age_high",
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
