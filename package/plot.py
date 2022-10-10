@@ -462,21 +462,21 @@ def define_phenotypes_parameters_for_plots_histogram():
     record["name"] = "alcohol_drinks_monthly_combination_log"
     record["variable"] = "alcohol_drinks_monthly_combination_log"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = None # None or count of bins
+    record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_drinks_monthly_combination_z"
     record["variable"] = "alcohol_drinks_monthly_combination_z"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = None # None or count of bins
+    record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
     record["name"] = "alcohol_drinks_monthly_combination_rank"
     record["variable"] = "alcohol_drinks_monthly_combination_rank"
     record["threshold"] = None # None or upper threshold
-    record["bins"] = None # None or count of bins
+    record["bins"] = 70 # None or count of bins
     records.append(record)
 
     record = dict()
