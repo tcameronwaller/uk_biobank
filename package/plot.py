@@ -395,6 +395,7 @@ def create_plot_histogram(
         title="",
         bin_method=bin_method, # "auto" or "count"
         bin_count=bins,
+        bar_width=0.5, # 0.35, 0.50
         label_bins="values",
         label_counts="counts per bin",
         fonts=fonts,
