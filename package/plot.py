@@ -512,7 +512,6 @@ def define_phenotypes_parameters_for_plots_histogram():
         record["bins"] = 70 # None or count of bins
         records.append(record)
 
-
         record = dict()
         record["name"] = "oestradiol_free_imputation"
         record["variable"] = "oestradiol_free_imputation"
@@ -625,7 +624,72 @@ def define_phenotypes_parameters_for_plots_histogram():
         record["bins"] = 70 # None or count of bins
         records.append(record)
 
+        pass
+
     if True:
+
+        # Binding Proteins for Sex-steroid hormones.
+
+        record = dict()
+        record["name"] = "albumin_imputation"
+        record["variable"] = "albumin_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "albumin_imputation_log"
+        record["variable"] = "albumin_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "albumin_imputation_z"
+        record["variable"] = "albumin_imputation_z"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "albumin_imputation_rank"
+        record["variable"] = "albumin_imputation_rank"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "steroid_globulin_imputation"
+        record["variable"] = "steroid_globulin_imputation"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "steroid_globulin_imputation_log"
+        record["variable"] = "steroid_globulin_imputation_log"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "steroid_globulin_imputation_z"
+        record["variable"] = "steroid_globulin_imputation_z"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        record = dict()
+        record["name"] = "steroid_globulin_imputation_rank"
+        record["variable"] = "steroid_globulin_imputation_rank"
+        record["threshold"] = None # None or upper threshold
+        record["bins"] = 70 # None or count of bins
+        records.append(record)
+
+        pass
+
+
+    if False:
 
         # Measures of alcohol consumption.
 
@@ -767,34 +831,6 @@ def define_phenotypes_parameters_for_plots_histogram():
         records.append(record)
 
         record = dict()
-        record["name"] = "albumin_imputation"
-        record["variable"] = "albumin_imputation"
-        record["threshold"] = None # None or upper threshold
-        record["bins"] = 70 # None or count of bins
-        records.append(record)
-
-        record = dict()
-        record["name"] = "albumin_imputation_log"
-        record["variable"] = "albumin_imputation_log"
-        record["threshold"] = None # None or upper threshold
-        record["bins"] = 70 # None or count of bins
-        records.append(record)
-
-        record = dict()
-        record["name"] = "steroid_globulin_imputation"
-        record["variable"] = "steroid_globulin_imputation"
-        record["threshold"] = None # None or upper threshold
-        record["bins"] = 70 # None or count of bins
-        records.append(record)
-
-        record = dict()
-        record["name"] = "steroid_globulin_imputation_log"
-        record["variable"] = "steroid_globulin_imputation_log"
-        record["threshold"] = None # None or upper threshold
-        record["bins"] = 70 # None or count of bins
-        records.append(record)
-
-        record = dict()
         record["name"] = "oestradiol"
         record["variable"] = "oestradiol"
         record["threshold"] = None # None or upper threshold
@@ -821,6 +857,8 @@ def define_phenotypes_parameters_for_plots_histogram():
         record["threshold"] = None # None or upper threshold
         record["bins"] = 70 # None or count of bins
         records.append(record)
+
+        pass
 
     # Return information
     return records
@@ -2259,26 +2297,26 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         ))
         # Filter relevant cohorts.
         names_cohorts = [
-            #"self_white_female_male",
-            #"self_white_female",
-            #"self_white_female_menstruation_regular",
-            #"self_white_female_premenopause",
-            #"self_white_female_perimenopause",
-            #"self_white_female_postmenopause",
-            #"self_white_male",
-            #"self_white_male_age_low",
-            #"self_white_male_age_middle",
-            #"self_white_male_age_high",
-            "self_white_alcohol_current_female_male",
-            "self_white_alcohol_current_female",
-            "self_white_alcohol_current_female_menstruation_regular",
-            "self_white_alcohol_current_female_premenopause",
-            "self_white_alcohol_current_female_perimenopause",
-            "self_white_alcohol_current_female_postmenopause",
-            "self_white_alcohol_current_male",
-            "self_white_alcohol_current_male_age_low",
-            "self_white_alcohol_current_male_age_middle",
-            "self_white_alcohol_current_male_age_high",
+            "self_white_female_male",
+            "self_white_female",
+            "self_white_female_menstruation_regular",
+            "self_white_female_premenopause",
+            "self_white_female_perimenopause",
+            "self_white_female_postmenopause",
+            "self_white_male",
+            "self_white_male_age_low",
+            "self_white_male_age_middle",
+            "self_white_male_age_high",
+            #"self_white_alcohol_current_female_male",
+            #"self_white_alcohol_current_female",
+            #"self_white_alcohol_current_female_menstruation_regular",
+            #"self_white_alcohol_current_female_premenopause",
+            #"self_white_alcohol_current_female_perimenopause",
+            #"self_white_alcohol_current_female_postmenopause",
+            #"self_white_alcohol_current_male",
+            #"self_white_alcohol_current_male_age_low",
+            #"self_white_alcohol_current_male_age_middle",
+            #"self_white_alcohol_current_male_age_high",
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
@@ -2291,9 +2329,9 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             scale.drive_transformations_on_multiple_variables_in_cohorts(
                 variables=[
                     #"body",
-                    "alcohol_drinks_monthly_combination",
-                    "alcohol_frequency",
-                    "alcohol_auditc",
+                    #"alcohol_drinks_monthly_combination",
+                    #"alcohol_frequency",
+                    #"alcohol_auditc",
                     #"vitamin_d_imputation",
                     #"oestradiol_imputation",
                     #"oestradiol_bioavailable_imputation",
@@ -2301,8 +2339,8 @@ def prepare_phenotype_variables_in_stratification_cohorts(
                     #"testosterone_imputation",
                     #"testosterone_bioavailable_imputation",
                     #"testosterone_free_imputation",
-                    #"steroid_globulin_imputation",
-                    #"albumin_imputation",
+                    "steroid_globulin_imputation",
+                    "albumin_imputation",
                 ],
                 records_cohorts=records_cohorts,
                 report=True,
