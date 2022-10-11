@@ -689,28 +689,28 @@ def define_phenotypes_parameters_for_plots_histogram():
         record["name"] = "alcohol_auditc"
         record["variable"] = "alcohol_auditc"
         record["threshold"] = 15 # None or upper threshold
-        record["bins"] = 10 # None or count of bins
+        record["bins"] = 15 # None or count of bins
         records.append(record)
 
         record = dict()
         record["name"] = "alcohol_auditc_log"
         record["variable"] = "alcohol_auditc_log"
         record["threshold"] = None # None or upper threshold
-        record["bins"] = 10 # None or count of bins
+        record["bins"] = 15 # None or count of bins
         records.append(record)
 
         record = dict()
         record["name"] = "alcohol_auditc_z"
         record["variable"] = "alcohol_auditc_z"
         record["threshold"] = None # None or upper threshold
-        record["bins"] = 10 # None or count of bins
+        record["bins"] = 15 # None or count of bins
         records.append(record)
 
         record = dict()
         record["name"] = "alcohol_auditc_rank"
         record["variable"] = "alcohol_auditc_rank"
         record["threshold"] = None # None or upper threshold
-        record["bins"] = 10 # None or count of bins
+        record["bins"] = 15 # None or count of bins
         records.append(record)
 
         pass

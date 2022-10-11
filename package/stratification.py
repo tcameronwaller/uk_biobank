@@ -67,6 +67,18 @@ import promiscuity.scale as pscale
 ###############################################################################
 # Functionality
 
+# TODO: TCW; 11 October 2022
+# TODO: I think it would be helpful to have a new module named "genotype".
+# TODO: Within this module, control the stratification of phenotype records with matching gentoype records...
+# TODO: Try to keep the stratification and preparation of these genotype cohort tables modular and versatile.
+# TODO: 1. stratify the tables with selection of non-missing values for variables of interest.
+# TODO: - - drive this stratification for a group of cohort tables AND variables of interest... "stratification parameter" records?
+# TODO: - - each record should include a list of variables to include in the table
+# TODO: - - each record should also include information about selection of female or male cohorts (menopause, stage of life, pregnancy, etc)
+# TODO: - - this should probably look like a separate dictionary with variable names (keys) and acceptable values within a list
+# TODO: - - or this could include a specific and set collection of cohort variables (sex, pregnancy, menopause, life stage)
+# TODO: - - each record should also include a flag for whether or not to select unrelated persons to represent the cohort
+
 
 ##########
 # Initialization
@@ -5713,11 +5725,6 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         pass
     # Return information
     return records
-
-
-
-
-
 
 
 #############
