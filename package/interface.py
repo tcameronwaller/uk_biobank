@@ -50,6 +50,7 @@ import uk_biobank.assembly
 import uk_biobank.importation
 import uk_biobank.organization
 import uk_biobank.stratification
+import uk_biobank.genotype
 import uk_biobank.description
 import uk_biobank.plot
 import uk_biobank.regression
@@ -125,8 +126,17 @@ def define_subparser_main(subparsers=None):
         dest="stratification",
         action="store_true",
         help=(
-            "Stratification of cohorts and formatting tables of phenotypes " +
-            "and covariates for genetic analyses (especially GWAS in PLINK2)."
+            "Stratification of phenotype records within cohorts and tables " +
+            "for descriptions and analyses on phenotypes."
+        )
+    )
+    parser.add_argument(
+        "-genotype", "--genotype",
+        dest="genotype",
+        action="store_true",
+        help=(
+            "Stratification of phenotype and genotype records within cohorts " +
+            "and tables for analyses on genotypes, especially GWAS in PLINK2."
         )
     )
     parser.add_argument(
@@ -265,6 +275,13 @@ def evaluate_parameters_main(arguments):
         print("... executing 'stratification' procedure ...")
         # Execute procedure.
         uk_biobank.stratification.execute_procedure(
+            path_dock=arguments.path_dock
+        )
+    if arguments.genotype:
+        # Report status.
+        print("... executing 'genotype' procedure ...")
+        # Execute procedure.
+        uk_biobank.genotype.execute_procedure(
             path_dock=arguments.path_dock
         )
     if arguments.description:
