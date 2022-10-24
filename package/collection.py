@@ -1337,7 +1337,7 @@ def read_source_correlation_table_after_combination_extraction(
             "correlation_absolute": "float",
             "cohort": "string",
             "model": "string",
-            "phenotype_secondary",
+            "phenotype_secondary": "string",
         },
     )
     table.reset_index(
