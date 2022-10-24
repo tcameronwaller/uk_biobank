@@ -251,7 +251,8 @@ def read_source_table_stratification_cohorts_models(
             "execution": "int", # logical binary of whether to execute
             "group": "string",
             "name": "string", # name of cohort table
-            "white_british": "string", # 'None' or stratification values
+            "identity_self_white": "string", # 'None' or strat values
+            "ancestry_white_british": "string", # 'None' or strat values
             "bipolar_disorder": "string", # 'None' or stratification values
             "alcohol_ever": "string", # 'None' or stratification values
             "alcohol_current": "string", # 'None' or stratification values
@@ -416,7 +417,7 @@ def extract_stratification_record_parameters(
         if (
             (not pandas.isna(field)) and
             (len(str(field)) > 0) and
-            (str(field) != "None")
+            (str(field).strip() != "None")
         ):
             values = str(field).split(";")
         else:
@@ -442,8 +443,11 @@ def extract_stratification_record_parameters(
     pail = dict()
     pail["group"] = str(record["group"])
     pail["name"] = str(record["name"])
-    pail["white_british"] = extract_variable_values_integer(
-        field=record["white_british"]
+    pail["identity_self_white"] = extract_variable_values_integer(
+        field=record["identity_self_white"]
+    )
+    pail["ancestry_white_british"] = extract_variable_values_integer(
+        field=record["ancestry_white_british"]
     )
     pail["bipolar_disorder"] = extract_variable_values_integer(
         field=record["bipolar_disorder"]
@@ -502,11 +506,85 @@ def extract_stratification_record_parameters(
     return pail
 
 
+##########
+# Selections on samples for both sexes
+
+
+
+def control_stratify_by_sex_together_categories(
+    identity_self_white=None,
+    ancestry_white_british=None,
+    bipolar_disorder=None,
+    alcohol_ever=None,
+    alcohol_current=None,
+    alcohol_moderate=None,
+    table=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on all samples (rows) within a
+    table regardless of sex.
+
+    arguments:
+        identity_self_white (list<int>): categorical values for selection
+        ancestry_white_british (list<int>): categorical values for selection
+        bipolar_disorder (list<int>): categorical values for selection
+        alcohol_ever (list<int>): categorical values for selection
+        alcohol_current (list<int>): categorical values for selection
+        alcohol_moderate (list<int>): categorical values for selection
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict): information for summary table record on cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Select samples (rows) within a table.
+    selections = dict()
+    selections["ancestry_self_white"] = identity_self_white
+    selections["white_british"] = ancestry_white_british
+    selections["bipolar_control_case_strict"] = bipolar_disorder
+    selections["alcohol_ever"] = alcohol_ever
+    selections["alcohol_current"] = alcohol_current
+    selections["alcohol_moderate"] = alcohol_moderate
+    for selection in selections.keys():
+        if (
+            (not pandas.isna(selections[selection])) and
+            (selections[selection] is not None)
+        ):
+            table = table.loc[
+                (table[selection].isin(selections[selection])), :
+            ]
+            pass
+        pass
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "control_stratify_by_sex_together_categories()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+
 
 ##########
 # Control
 
-# 2. select records by ancestry ("white_british") if variable is not None.
+# 2. select records by ancestry ("ancestry_white_british") if variable is not None.
 # 2. select records by sex (variable column "sex_text")
 # 3. select records by other variable values on both sexes
 # - - Remember that the selection parameters are strings! Convert these strings to int before comparison.
@@ -529,7 +607,8 @@ def extract_stratification_record_parameters(
 def control_stratify_genotype_cohorts(
     group=None,
     name=None,
-    white_british=None,
+    identity_self_white=None,
+    ancestry_white_british=None,
     bipolar_disorder=None,
     alcohol_ever=None,
     alcohol_current=None,
@@ -560,7 +639,8 @@ def control_stratify_genotype_cohorts(
     arguments:
         group (str): name of group of stratification cohort tables
         name (str): name of stratification cohort table
-        white_british (list<int>): categorical values for selection
+        identity_self_white (list<int>): categorical values for selection
+        ancestry_white_british (list<int>): categorical values for selection
         bipolar_disorder (list<int>): categorical values for selection
         alcohol_ever (list<int>): categorical values for selection
         alcohol_current (list<int>): categorical values for selection
@@ -607,13 +687,11 @@ def control_stratify_genotype_cohorts(
     record["group"] = str(group)
     record["name"] = str(name)
 
-    # Copy information in table.
-    #table = table.copy(deep=True)
-
     # Control filters, selections, stratifications on all samples (rows)
     # regardless of sex.
     table = control_stratify_by_sex_together_categories(
-        white_british=white_british,
+        identity_self_white=identity_self_white,
+        ancestry_white_british=ancestry_white_british,
         bipolar_disorder=bipolar_disorder,
         alcohol_ever=alcohol_ever,
         alcohol_current=alcohol_current,
@@ -624,6 +702,16 @@ def control_stratify_genotype_cohorts(
 
     # Control filters, selections, stratifications on samples (rows) that are
     # specific to female or male sex.
+    table = control_stratify_by_sex_separate_categories(
+        sex_text=sex_text,
+        female_age_grade=female_age_grade,
+        female_menopause=female_menopause,
+        female_menstruation=female_menstruation,
+        female_pregnancy=pregnancy,
+        male_age_grade=male_age_grade,
+        table=table,
+        report=report,
+    )
 
 
     # Control filters, selections, stratifications on samples (rows) by the
@@ -735,7 +823,8 @@ def execute_procedure(
         record_cohort = control_stratify_genotype_cohorts(
             group=pail["group"],
             name=pail["name"],
-            white_british=pail["white_british"],
+            identity_self_white=pail["identity_self_white"],
+            ancestry_white_british=pail["ancestry_white_british"],
             bipolar_disorder=pail["bipolar_disorder"],
             alcohol_ever=pail["alcohol_ever"],
             alcohol_current=pail["alcohol_current"],

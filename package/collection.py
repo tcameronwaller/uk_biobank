@@ -1283,6 +1283,76 @@ def combine_organize_correlation_tables(
     return pail
 
 
+def read_source_correlation_table_after_combination_extraction(
+    path_dock=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    The purpose of this function is to read the correlation table from file
+    after a previous run through the combination step.
+
+    Specifically, this function reads the file "table_extraction.tsv" that the
+    previous procedure writes to directory "correlation_combination".
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+
+    raises:
+
+    returns:
+        (dict): collection of information
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_dock, "parameters", "uk_biobank",
+        "temporary_custom",
+        "table_extraction.tsv"
+    )
+    # Read file.
+    table = pandas.read_csv(
+        path_table,
+        sep="\t",
+        header=0,
+        dtype={
+            "design": "string",
+            "study_primary": "string",
+            "study_secondary": "string",
+            "summary_error": "float",
+            "summary_interval": "float",
+            "variants": "float",
+            "correlation": "float",
+            "standard_error": "float",
+            "interval_95": "float",
+            #"interval_99": "float",
+            "confidence_95_range": "float",
+            "probability": "float",
+            "confidence_95_low": "float",
+            "confidence_95_high": "float",
+            "confidence_95_not_one": "float",
+            "confidence_95_not_zero": "float",
+            "correlation_absolute": "float",
+            "cohort": "string",
+            "model": "string",
+            "phenotype_secondary",
+        },
+    )
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True,
+    )
+
+    # Organize information.
+    pail = dict()
+    pail["extraction"] = table
+    # Return information.
+    return pail
+
+
 def select_split_genetic_correlation_table_by_primary_phenotypes(
     column_phenotype_primary=None,
     phenotypes_primary=None,
@@ -2306,32 +2376,68 @@ def execute_procedure(
         restore=True,
         path_dock=path_dock,
     )
-    # Read source information from file.
-    # Exclusion identifiers are "eid".
-    pail_source = read_collect_organize_source(
-        paths=paths,
-        report=True,
-    )
-    # Organize information from Genetic Correlation estimates for
-    # further analyses.
-    pail_source["correlation_combination"] = (
-        combine_organize_correlation_tables(
-            pail_correlation_tables=pail_source["correlation"],
-            path_dock=path_dock,
+
+    # Collect information.
+    pail_product = dict()
+
+    if False:
+
+        # Read source information from file.
+        # Exclusion identifiers are "eid".
+        pail_source = read_collect_organize_source(
+            paths=paths,
             report=True,
+        )
+        # Organize information from Genetic Correlation estimates for
+        # further analyses.
+        pail_source["correlation_combination"] = (
+            combine_organize_correlation_tables(
+                pail_correlation_tables=pail_source["correlation"],
+                path_dock=path_dock,
+                report=True,
+        ))
+        pass
+
+    # TODO: TCW; 24 October 2022
+    # TODO: I need to start here with the new "alcohol_quantity_no_ukb"
+
+    # TODO: TCW; 24 October 2022
+    # TODO: I also need to calculate the "interval_99"
+
+    # Read source information for the table of correlations after combination.
+    pail_product["correlation_combination"] = (
+        read_source_correlation_table_after_combination_extraction(
+            path_dock=paths["dock"],
     ))
+    # Calculate 99% Confidence Intervals from the Standard Error of the estimate
+    # of Genetic Correlation.
+    # https://www.mathsisfun.com/data/confidence-interval.html
+    # 90% Confidence Interval: (1.645 * standard_error)
+    # 95% Confidence Interval: (1.960 * standard_error)
+    # 99% Confidence Interval: (2.576 * standard_error)
+    # Copy information in table.
+    table_99 = (
+        pail_product["correlation_combination"]["extraction"].copy(deep=True)
+    )
+    table_99["interval_99"] = table_99.apply(
+        lambda row: float(2.576 * row["standard_error"),
+        axis="columns", # apply function to each row
+    )
+    pail_product["correlation_combination"]["extraction"] = table_99
+
     # Adjust format of information about Genetic Correlation estimates.
-    pail_source["correlation_format_split"] = (
+    pail_product["correlation_format_split"] = (
         adjust_format_split_genetic_correlation_tables(
-            table=pail_source["correlation_combination"]["extraction"],
+            table=pail_product["correlation_combination"]["extraction"],
             path_dock=path_dock,
             report=True,
     ))
     # Write product information to file.
-    write_product(
-        paths=paths,
-        information=pail_source,
-    )
+    if False:
+        write_product(
+            paths=paths,
+            information=pail_source,
+        )
 
     pass
 

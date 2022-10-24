@@ -3600,7 +3600,7 @@ def stratify_genotype_cohorts_models_set_reference_population(
 
 # TODO: TCW; 11 October 2022
 # TODO: this is where the business really starts to happen
-
+# TODO: but the functional stuff starts within "select_records_by_ancestry_sex_specific_valid_variables_values()"
 def stratify_genotype_cohort_model_instance(
     dependence=None,
     dependence_binary=None,
@@ -3941,6 +3941,8 @@ def stratify_genotype_cohort_model_instance(
     return record
 
 
+# TODO: TCW; 13 October 2022
+# TODO: I think this function and the awkward data structure (table records within hierarchical dicts) it supported are obsolete.
 def stratify_genotype_cohorts_models_set(
     table=None,
     table_kinship_pairs=None,
@@ -4053,7 +4055,8 @@ def stratify_genotype_cohorts_models_set(
 # TODO: I might also want to apply Z-Score to all INDEPENDENT variables (without changing their variable names)
 # TODO: - - I could also let PLINK2 do this for me...
 
-
+# TODO: TCW; 13 October 2022
+# TODO: I also think this function is obsolete... I'm implementing a new structure to the work-flow.
 def execute_organize_stratification_genotype_cohorts_models(
     table=None,
     table_kinship_pairs=None,
