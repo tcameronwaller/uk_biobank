@@ -2457,6 +2457,7 @@ def read_source_correlation_summary_tables(
                 "correlation": "float32",
                 "standard_error": "float32",
                 "interval_95": "float32",
+                "interval_99": "float32",
                 "confidence_95_low": "float32",
                 "confidence_95_high": "float32",
                 "probability": "float32",
@@ -2690,16 +2691,13 @@ def create_correlation_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="blue_sky", # "blue_navy", "blue_sky", "purple", "magenta"
+                color_marker_one="blue_navy", # "blue_navy", "blue_sky", "purple", "magenta"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
         pass
     # Return information.
     return pail
-
-
-
 
 
 def read_organize_correlation_summaries_create_forest_plots(
