@@ -696,6 +696,9 @@ def define_cohort_names_to_extract_from_table_names():
     return cohorts
 
 
+# TODO: TCW; 24 October 2022
+# TODO: introduce "interval_99"
+
 def read_extract_correlation_design_study_pair_detail(
     file_name=None,
     file_prefix=None,
@@ -2420,7 +2423,7 @@ def execute_procedure(
         pail_product["correlation_combination"]["extraction"].copy(deep=True)
     )
     table_99["interval_99"] = table_99.apply(
-        lambda row: float(2.576 * row["standard_error"),
+        lambda row: float(2.576 * row["standard_error"]),
         axis="columns", # apply function to each row
     )
     pail_product["correlation_combination"]["extraction"] = table_99
