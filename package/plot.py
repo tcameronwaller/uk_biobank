@@ -2510,8 +2510,8 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "alcohol_quantity_no_ukb"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.24
-    record["abscissa_maximum"] = 0.24
+    record["abscissa_minimum"] = -0.3
+    record["abscissa_maximum"] = 0.3
     records.append(record)
 
     if False:
@@ -2690,7 +2690,7 @@ def create_correlation_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="blue_navy", # "blue_sky", "purple", "magenta"
+                color_marker_one="blue_sky", # "blue_navy", "blue_sky", "purple", "magenta"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
