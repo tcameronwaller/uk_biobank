@@ -1482,6 +1482,7 @@ def adjust_format_split_genetic_correlation_tables(
             "alcohol_dependence",
             "alcohol_dependence_genotype",
             "alcohol_quantity",
+            "alcohol_quantity_no_ukb",
             "depression",
             "bipolar",
             "bipolar_type_1",
@@ -1608,6 +1609,9 @@ def write_product_tables(
     pass
 
 
+# TODO: TCW; 24 October 2022
+# TODO: I temporarily turned of writes of several tables
+
 def write_product(
     information=None,
     paths=None,
@@ -1627,22 +1631,23 @@ def write_product(
     """
 
     # Cohort tables in PLINK format.
-    write_product_tables(
-        information=information["stratification"],
-        path_parent=paths["collection_stratification"],
-    )
-    write_product_tables(
-        information=information["heritability"],
-        path_parent=paths["collection_heritability"],
-    )
-    write_product_tables(
-        information=information["correlation"],
-        path_parent=paths["collection_correlation"],
-    )
-    write_product_tables(
-        information=information["correlation_combination"],
-        path_parent=paths["collection_correlation_combination"],
-    )
+    if False:
+        write_product_tables(
+            information=information["stratification"],
+            path_parent=paths["collection_stratification"],
+        )
+        write_product_tables(
+            information=information["heritability"],
+            path_parent=paths["collection_heritability"],
+        )
+        write_product_tables(
+            information=information["correlation"],
+            path_parent=paths["collection_correlation"],
+        )
+        write_product_tables(
+            information=information["correlation_combination"],
+            path_parent=paths["collection_correlation_combination"],
+        )
     write_product_tables(
         information=information["correlation_format_split"],
         path_parent=paths["correlation_format_split"],
@@ -2407,6 +2412,9 @@ def execute_procedure(
     # TODO: TCW; 24 October 2022
     # TODO: I also need to calculate the "interval_99"
 
+    # TODO: TCW; 24 October 2022
+    # TODO: It might be necessary to introduce missing values for several "alcohol_quantity_no_ukb"
+
     # Read source information for the table of correlations after combination.
     pail_product["correlation_combination"] = (
         read_source_correlation_table_after_combination_extraction(
@@ -2436,11 +2444,10 @@ def execute_procedure(
             report=True,
     ))
     # Write product information to file.
-    if False:
-        write_product(
-            paths=paths,
-            information=pail_source,
-        )
+    write_product(
+        paths=paths,
+        information=pail_product,
+    )
 
     pass
 
