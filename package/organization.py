@@ -72,6 +72,9 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 ###############################################################################
 # Functionality
 
+# TODO: TCW; 24 October 2022
+# TODO: rename variable "ancestry_self_white" to "identity_self_white"
+
 
 ##########
 # Initialization

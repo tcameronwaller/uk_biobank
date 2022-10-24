@@ -200,6 +200,7 @@ def read_source_regression_summary_tables(
                 "parameter": "float32",
                 "error": "float32",
                 "interval_95": "float32",
+                "interval_99": "float32",
                 "range_95_below": "float32",
                 "range_95_above": "float32",
             },
@@ -2221,26 +2222,26 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         ))
         # Filter relevant cohorts.
         names_cohorts = [
-            "self_white_female_male",
-            "self_white_female",
-            "self_white_female_menstruation_regular",
-            "self_white_female_premenopause",
-            "self_white_female_perimenopause",
-            "self_white_female_postmenopause",
-            "self_white_male",
-            "self_white_male_age_low",
-            "self_white_male_age_middle",
-            "self_white_male_age_high",
-            #"self_white_alcohol_current_female_male",
-            #"self_white_alcohol_current_female",
-            #"self_white_alcohol_current_female_menstruation_regular",
-            #"self_white_alcohol_current_female_premenopause",
-            #"self_white_alcohol_current_female_perimenopause",
-            #"self_white_alcohol_current_female_postmenopause",
-            #"self_white_alcohol_current_male",
-            #"self_white_alcohol_current_male_age_low",
-            #"self_white_alcohol_current_male_age_middle",
-            #"self_white_alcohol_current_male_age_high",
+            "identity_white_female_male",
+            "identity_white_female",
+            "identity_white_female_menstruation_regular",
+            "identity_white_female_premenopause",
+            "identity_white_female_perimenopause",
+            "identity_white_female_postmenopause",
+            "identity_white_male",
+            "identity_white_male_age_low",
+            "identity_white_male_age_middle",
+            "identity_white_male_age_high",
+            #"identity_white_alcohol_current_female_male",
+            #"identity_white_alcohol_current_female",
+            #"identity_white_alcohol_current_female_menstruation_regular",
+            #"identity_white_alcohol_current_female_premenopause",
+            #"identity_white_alcohol_current_female_perimenopause",
+            #"identity_white_alcohol_current_female_postmenopause",
+            #"identity_white_alcohol_current_male",
+            #"identity_white_alcohol_current_male_age_low",
+            #"identity_white_alcohol_current_male_age_middle",
+            #"identity_white_alcohol_current_male_age_high",
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
@@ -2383,6 +2384,12 @@ def create_plots_for_phenotype_variables_in_cohorts(
         path_parent=paths["plot"],
     )
     pass
+
+
+
+##########
+# Management of plots on sumaries of phenotypic regression analyses
+##########
 
 
 
@@ -2899,25 +2906,29 @@ def define_parameters_regression_summaries():
     records.append(record)
 
     record = dict()
-    record["name"] = "alcohol_frequency"
-    record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.2
-    record["abscissa_maximum"] = 0.2
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_auditc"
-    record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.30
-    record["abscissa_maximum"] = 0.24
-    records.append(record)
-
-    record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
     record["abscissa_minimum"] = -0.149
     record["abscissa_maximum"] = 0.149
     records.append(record)
+
+    if False:
+
+        record = dict()
+        record["name"] = "alcohol_frequency"
+        record["regression_type"] = "linear"
+        record["abscissa_minimum"] = -0.2
+        record["abscissa_maximum"] = 0.2
+        records.append(record)
+
+        record = dict()
+        record["name"] = "alcohol_auditc"
+        record["regression_type"] = "linear"
+        record["abscissa_minimum"] = -0.30
+        record["abscissa_maximum"] = 0.24
+        records.append(record)
+
+        pass
 
     # Return information
     return records
@@ -2973,7 +2984,7 @@ def organize_regression_summary_tables_for_forest_plots(
                     "model_adjustment": "group",
                     "variable": "category",
                     "parameter": "value",
-                    "interval_95": "interval_below",
+                    "interval_99": "interval_below",
                 },
                 labels_categories={
                     "oestradiol_imputation": "EST-T",

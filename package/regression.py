@@ -772,7 +772,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW, 12 August 2022")
+    print("version check: TCW, 24 October 2022")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -797,38 +797,8 @@ def execute_procedure(
     pail_write["tables"] = dict()
 
     # Drive regressions.
-    if False:
-        pail_regression = stratify_cohorts_call_run_regressions(
-            table=source["table_phenotypes"],
-            table_cohorts_models=(
-                source_reference["table_alcohol_dependence"]
-            ),
-            independences_summary=None, # "None" or list of variables
-            filter_execution=True,
-            type="logistic",
-            report=True,
-        )
-        pail_write["tables"]["table_alcohol_dependence"] = (
-            pail_regression["table"]
-        )
-        pass
-    if False:
-        pail_regression = stratify_cohorts_call_run_regressions(
-            table=source["table_phenotypes"],
-            table_cohorts_models=(
-                source_reference["table_alcohol_dependence_with_smoke"]
-            ),
-            independences_summary=None, # "None" or list of variables
-            filter_execution=True,
-            type="logistic",
-            report=True,
-        )
-        pail_write["tables"]["table_alcohol_dependence_with_smoke"] = (
-            pail_regression["table"]
-        )
-        pass
 
-    if False:
+    if True:
         pail_regression = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
@@ -843,50 +813,19 @@ def execute_procedure(
             pail_regression["table"]
         )
         pass
+
     if True:
         pail_regression = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
-                source_reference["table_alcohol_quantity_with_smoke"]
+                source_reference["table_alcohol_dependence"]
             ),
             independences_summary=None, # "None" or list of variables
             filter_execution=True,
-            type="linear",
+            type="logistic",
             report=True,
         )
-        pail_write["tables"]["table_alcohol_quantity_with_smoke"] = (
-            pail_regression["table"]
-        )
-        pass
-
-    ######################
-    if False:
-        pail_regression = stratify_cohorts_call_run_regressions(
-            table=source["table_phenotypes"],
-            table_cohorts_models=(
-                source_reference["table_alcohol_frequency"]
-            ),
-            independences_summary=None, # "None" or list of variables
-            filter_execution=True,
-            type="linear",
-            report=True,
-        )
-        pail_write["tables"]["table_alcohol_frequency"] = (
-            pail_regression["table"]
-        )
-        pass
-    if False:
-        pail_regression = stratify_cohorts_call_run_regressions(
-            table=source["table_phenotypes"],
-            table_cohorts_models=(
-                source_reference["table_alcohol_auditc"]
-            ),
-            independences_summary=None, # "None" or list of variables
-            filter_execution=True,
-            type="linear",
-            report=True,
-        )
-        pail_write["tables"]["table_alcohol_auditc"] = (
+        pail_write["tables"]["table_alcohol_dependence"] = (
             pail_regression["table"]
         )
         pass

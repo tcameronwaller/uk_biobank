@@ -5323,7 +5323,7 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
     return records
 
 
-# review: TCW; 15 June 2022
+# review: TCW; 24 October 2022
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
     report=None,
@@ -5361,7 +5361,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
             column_special="ancestry_self_white",
             values_special=[1,],
-            prefix_name="self_white_",
+            prefix_name="identity_white_",
             table=table,
         )
     )
@@ -5371,7 +5371,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
             column_special="ancestry_self_white",
             values_special=[0,],
-            prefix_name="self_other_",
+            prefix_name="identity_other_",
             table=table,
         )
     )
@@ -5408,7 +5408,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
             column_special="alcohol_ever",
             values_special=[1,],
-            prefix_name="self_white_alcohol_ever_",
+            prefix_name="identity_white_alcohol_ever_",
             table=table,
         )
     )
@@ -5421,7 +5421,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
             column_special="alcohol_current",
             values_special=[1,],
-            prefix_name="self_white_alcohol_current_",
+            prefix_name="identity_white_alcohol_current_",
             table=table,
         )
     )
@@ -5434,7 +5434,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
         stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
             column_special="ancestry_self_white",
             values_special=[1,],
-            prefix_name="self_white_genotype_",
+            prefix_name="identity_white_genotype_",
             table=table,
         )
     )
