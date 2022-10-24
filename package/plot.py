@@ -2589,53 +2589,94 @@ def organize_correlation_summary_tables_for_forest_plots(
     for record_parameter in records_parameters:
         # Organize tables.
         name_table = str("table_" + record_parameter["name"])
-        pail[record_parameter["name"]] = (
-            pro_reg.organize_regression_summary_table_for_forest_plots(
-                type=record_parameter["regression_type"],
-                model_contexts=["joint"],
-                model_adjustments=["adjust", "unadjust",],
-                column_variable="variable",
-                variables=[
-                    "oestradiol_detection",
-                    "oestradiol_bioavailable_imputation_log",
-                    "oestradiol_free_imputation_log",
-                    "testosterone_imputation_log",
-                    "testosterone_bioavailable_imputation_log",
-                    "testosterone_free_imputation_log",
-                    "steroid_globulin_imputation_log",
-                    "albumin_imputation",
-                ],
-                columns_translations={
-                    "model_adjustment": "group",
-                    "variable": "category",
-                    "correlation": "value",
-                    #"interval_99": "interval_above",
-                    "interval_99": "interval_below",
-                },
-                labels_categories={
-                    "oestradiol_detection": "EST-T",
-                    "oestradiol_bioavailable_imputation_log": "EST-B",
-                    "oestradiol_free_imputation_log": "EST-F",
-                    "testosterone_imputation_log": "TST-T",
-                    "testosterone_bioavailable_imputation_log": "TST-B",
-                    "testosterone_free_imputation_log": "TST-F",
-                    "steroid_globulin_imputation_log": "SHBG",
-                    "albumin_imputation": "ALBU",
-                },
-                sorts_categories={
-                    "oestradiol_detection": 1,
-                    "oestradiol_bioavailable_imputation_log": 2,
-                    "oestradiol_free_imputation_log": 3,
-                    "testosterone_imputation_log": 4,
-                    "testosterone_bioavailable_imputation_log": 5,
-                    "testosterone_free_imputation_log": 6,
-                    "steroid_globulin_imputation_log": 7,
-                    "albumin_imputation": 8,
-                },
-                column_stratification="cohort",
-                table=pail_correlation_tables[name_table],
-                report=report,
-        ))
+        # All variables.
+        if False:
+            pail[record_parameter["name"]] = (
+                pro_reg.organize_regression_summary_table_for_forest_plots(
+                    type=record_parameter["regression_type"],
+                    model_contexts=["joint"],
+                    model_adjustments=["adjust", "unadjust",],
+                    column_variable="variable",
+                    variables=[
+                        "oestradiol_detection",
+                        "oestradiol_bioavailable_imputation_log",
+                        "oestradiol_free_imputation_log",
+                        "testosterone_imputation_log",
+                        "testosterone_bioavailable_imputation_log",
+                        "testosterone_free_imputation_log",
+                        "steroid_globulin_imputation_log",
+                        "albumin_imputation",
+                    ],
+                    columns_translations={
+                        "model_adjustment": "group",
+                        "variable": "category",
+                        "correlation": "value",
+                        #"interval_99": "interval_above",
+                        "interval_99": "interval_below",
+                    },
+                    labels_categories={
+                        "oestradiol_detection": "EST-T",
+                        "oestradiol_bioavailable_imputation_log": "EST-B",
+                        "oestradiol_free_imputation_log": "EST-F",
+                        "testosterone_imputation_log": "TST-T",
+                        "testosterone_bioavailable_imputation_log": "TST-B",
+                        "testosterone_free_imputation_log": "TST-F",
+                        "steroid_globulin_imputation_log": "SHBG",
+                        "albumin_imputation": "ALBU",
+                    },
+                    sorts_categories={
+                        "oestradiol_detection": 1,
+                        "oestradiol_bioavailable_imputation_log": 2,
+                        "oestradiol_free_imputation_log": 3,
+                        "testosterone_imputation_log": 4,
+                        "testosterone_bioavailable_imputation_log": 5,
+                        "testosterone_free_imputation_log": 6,
+                        "steroid_globulin_imputation_log": 7,
+                        "albumin_imputation": 8,
+                    },
+                    column_stratification="cohort",
+                    table=pail_correlation_tables[name_table],
+                    report=report,
+            ))
+            pass
+        # Priority variables.
+        if True:
+            pail[record_parameter["name"]] = (
+                pro_reg.organize_regression_summary_table_for_forest_plots(
+                    type=record_parameter["regression_type"],
+                    model_contexts=["joint"],
+                    model_adjustments=["adjust", "unadjust",],
+                    column_variable="variable",
+                    variables=[
+                        "oestradiol_detection",
+                        "testosterone_imputation_log",
+                        "steroid_globulin_imputation_log",
+                        "albumin_imputation",
+                    ],
+                    columns_translations={
+                        "model_adjustment": "group",
+                        "variable": "category",
+                        "correlation": "value",
+                        #"interval_99": "interval_above",
+                        "interval_99": "interval_below",
+                    },
+                    labels_categories={
+                        "oestradiol_detection": "EST-T",
+                        "testosterone_imputation_log": "TST-T",
+                        "steroid_globulin_imputation_log": "SHBG",
+                        "albumin_imputation": "ALBU",
+                    },
+                    sorts_categories={
+                        "oestradiol_detection": 1,
+                        "testosterone_imputation_log": 2,
+                        "steroid_globulin_imputation_log": 3,
+                        "albumin_imputation": 4,
+                    },
+                    column_stratification="cohort",
+                    table=pail_correlation_tables[name_table],
+                    report=report,
+            ))
+            pass
         pass
     # Return information.
     return pail
