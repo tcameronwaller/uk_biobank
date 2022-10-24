@@ -2414,6 +2414,9 @@ def execute_procedure(
 
     # TODO: TCW; 24 October 2022
     # TODO: It might be necessary to introduce missing values for several "alcohol_quantity_no_ukb"
+    # TODO: I did check on 24 October 2022, and I didn't recognize any need to fill in with missing values
+    # TODO: If it is necessary to fill in missing values, do so within "table_extraction.tsv" before
+    # TODO: reading this table in and splitting it by "primary_study".
 
     # Read source information for the table of correlations after combination.
     pail_product["correlation_combination"] = (
