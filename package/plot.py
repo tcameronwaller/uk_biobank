@@ -2281,6 +2281,8 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             ukb_strat.drive_stratify_phenotype_cohorts_set_female_menstruation(
                 table=table,
         ))
+    else:
+        records_cohorts = []
         pass
     # Return information
     return records_cohorts
@@ -2688,7 +2690,7 @@ def create_correlation_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="blue_navy", # "purple"
+                color_marker_one="blue_navy", # "blue_sky", "purple", "magenta"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
