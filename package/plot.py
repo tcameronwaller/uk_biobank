@@ -154,62 +154,6 @@ def read_source(
     }
 
 
-def read_source_regression_summary_tables(
-    path_dock=None,
-    report=None,
-):
-    """
-    Reads and organizes source information from file.
-
-    Notice that Pandas does not accommodate missing values within series of
-    integer variable types.
-
-    The UK Biobank "eid" designates unique persons in the cohort.
-    The UK Biobank "IID" matches persons to their genotype information.
-
-    arguments:
-        path_dock (str): path to dock directory for source and product
-            directories and files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<object>): collection of Pandas data-frame tables with entry names
-            (keys) derived from original names of files
-
-    """
-
-    # Collect tables.
-    pail = dict()
-    # Define path to parent directory.
-    path_directory_parent = os.path.join(
-        path_dock, "regression",
-    )
-    # Read all files within parent directory and organize tables.
-    pail = (
-        utility.read_all_pandas_tables_files_within_parent_directory(
-            path_directory_parent=path_directory_parent,
-            types_pandas_table_read={
-                "cohort": "string",
-                "dependence": "string",
-                "dependence_type": "string",
-                "model_adjustment": "string",
-                "model_context": "string",
-                "variable": "string",
-                "parameter": "float32",
-                "error": "float32",
-                "interval_95": "float32",
-                "interval_99": "float32",
-                "range_95_below": "float32",
-                "range_95_above": "float32",
-            },
-            report=report,
-    ))
-    # Return information.
-    return pail
-
-
 # TODO: TCW, 23 March 2022
 # TODO: the genotype cohort tables don't include all phenotype variables...
 # TODO: 1. read in the genotype cohort tables and then extract "eid" identifiers
@@ -2392,6 +2336,340 @@ def create_plots_for_phenotype_variables_in_cohorts(
 ##########
 
 
+def read_source_regression_summary_tables(
+    path_dock=None,
+    report=None,
+):
+    """
+    Reads and organizes source information from file.
+
+    Notice that Pandas does not accommodate missing values within series of
+    integer variable types.
+
+    The UK Biobank "eid" designates unique persons in the cohort.
+    The UK Biobank "IID" matches persons to their genotype information.
+
+    arguments:
+        path_dock (str): path to dock directory for source and product
+            directories and files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of Pandas data-frame tables with entry names
+            (keys) derived from original names of files
+
+    """
+
+    # Collect tables.
+    pail = dict()
+    # Define path to parent directory.
+    path_directory_parent = os.path.join(
+        path_dock, "regression",
+    )
+    # Read all files within parent directory and organize tables.
+    pail = (
+        utility.read_all_pandas_tables_files_within_parent_directory(
+            path_directory_parent=path_directory_parent,
+            types_pandas_table_read={
+                "cohort": "string",
+                "dependence": "string",
+                "dependence_type": "string",
+                "model_adjustment": "string",
+                "model_context": "string",
+                "variable": "string",
+                "parameter": "float32",
+                "error": "float32",
+                "interval_95": "float32",
+                "interval_99": "float32",
+                "range_95_below": "float32",
+                "range_95_above": "float32",
+            },
+            report=report,
+    ))
+    # Return information.
+    return pail
+
+
+def define_parameters_regression_summaries():
+    """
+    Defines parameters for organization of information from regression
+    summaries.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about plots for regression
+            summaries
+
+    """
+
+    # Collect records of information about regression summaries and their
+    # Forest Plots.
+    records = list()
+
+    record = dict()
+    record["name"] = "alcohol_dependence"
+    record["regression_type"] = "logistic"
+    record["abscissa_minimum"] = -0.6
+    record["abscissa_maximum"] = 0.6
+    records.append(record)
+
+    record = dict()
+    record["name"] = "alcohol_quantity"
+    record["regression_type"] = "linear"
+    record["abscissa_minimum"] = -0.149
+    record["abscissa_maximum"] = 0.149
+    records.append(record)
+
+    if False:
+
+        record = dict()
+        record["name"] = "alcohol_frequency"
+        record["regression_type"] = "linear"
+        record["abscissa_minimum"] = -0.2
+        record["abscissa_maximum"] = 0.2
+        records.append(record)
+
+        record = dict()
+        record["name"] = "alcohol_auditc"
+        record["regression_type"] = "linear"
+        record["abscissa_minimum"] = -0.30
+        record["abscissa_maximum"] = 0.24
+        records.append(record)
+
+        pass
+
+    # Return information
+    return records
+
+
+def organize_regression_summary_tables_for_forest_plots(
+    pail_regression_tables=None,
+    records_parameters=None,
+    report=None,
+):
+    """
+    Organize the format of regression summary tables for creation of Forest
+    Plots.
+
+    arguments:
+        pail_regression_tables (dict<object>): collection of Pandas data-frame
+            tables for regression summaries
+        records_parameters (list<dict>): records with information about plots
+            for regression summaries
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<dict<object>>): collection tree of Pandas data-frame tables for
+            plots
+
+    """
+
+    # Collect tables for plots.
+    pail = dict()
+    # Iterate on phenotypes.
+    for record_parameter in records_parameters:
+        # Organize tables.
+        name_table = str("table_" + record_parameter["name"])
+        # All variables.
+        if True:
+            pail[record_parameter["name"]] = (
+                pro_reg.organize_regression_summary_table_for_forest_plots(
+                    type=record_parameter["regression_type"],
+                    model_contexts=["marginal"],
+                    model_adjustments=["adjust", "unadjust",],
+                    column_variable="variable",
+                    variables=[
+                        "oestradiol_imputation",
+                        "oestradiol_bioavailable_imputation",
+                        "oestradiol_free_imputation",
+                        "testosterone_imputation",
+                        "testosterone_bioavailable_imputation",
+                        "testosterone_free_imputation",
+                        "steroid_globulin_imputation",
+                        "albumin_imputation",
+                    ],
+                    columns_translations={
+                        "model_adjustment": "group",
+                        "variable": "category",
+                        "parameter": "value",
+                        "interval_99": "interval_below",
+                    },
+                    labels_categories={
+                        "oestradiol_imputation": "EST-T",
+                        "oestradiol_bioavailable_imputation": "EST-B",
+                        "oestradiol_free_imputation": "EST-F",
+                        "testosterone_imputation": "TST-T",
+                        "testosterone_bioavailable_imputation": "TST-B",
+                        "testosterone_free_imputation": "TST-F",
+                        "steroid_globulin_imputation": "SHBG",
+                        "albumin_imputation": "ALBU",
+                    },
+                    sorts_categories={
+                        "oestradiol_imputation": 1,
+                        "oestradiol_bioavailable_imputation": 2,
+                        "oestradiol_free_imputation": 3,
+                        "testosterone_imputation": 4,
+                        "testosterone_bioavailable_imputation": 5,
+                        "testosterone_free_imputation": 6,
+                        "steroid_globulin_imputation": 7,
+                        "albumin_imputation": 8,
+                    },
+                    column_stratification="cohort",
+                    table=pail_regression_tables[name_table],
+                    report=report,
+            ))
+            pass
+        # Priority variables.
+        if False:
+            pail[record_parameter["name"]] = (
+                pro_reg.organize_regression_summary_table_for_forest_plots(
+                    type=record_parameter["regression_type"],
+                    model_contexts=["marginal"],
+                    model_adjustments=["adjust", "unadjust",],
+                    column_variable="variable",
+                    variables=[
+                        "oestradiol_imputation",
+                        "testosterone_imputation",
+                        "steroid_globulin_imputation",
+                        "albumin_imputation",
+                    ],
+                    columns_translations={
+                        "model_adjustment": "group",
+                        "variable": "category",
+                        "parameter": "value",
+                        "interval_99": "interval_below",
+                    },
+                    labels_categories={
+                        "oestradiol_imputation": "EST-T",
+                        "testosterone_imputation": "TST-T",
+                        "steroid_globulin_imputation": "SHBG",
+                        "albumin_imputation": "ALBU",
+                    },
+                    sorts_categories={
+                        "oestradiol_imputation": 1,
+                        "testosterone_imputation": 2,
+                        "steroid_globulin_imputation": 3,
+                        "albumin_imputation": 4,
+                    },
+                    column_stratification="cohort",
+                    table=pail_correlation_tables[name_table],
+                    report=report,
+            ))
+            pass
+        pass
+    # Return information.
+    return pail
+
+
+def create_regression_summary_forest_plots(
+    pail_plot_tables=None,
+    records_parameters=None,
+    report=None,
+):
+    """
+    Drive creation of descriptive charts about phenotypes across cohorts from
+    the UK Biobank.
+
+    arguments:
+        pail_plot_tables (dict<dict<object>>): collection tree of Pandas
+            data-frame tables for plots
+        records_parameters (list<dict>): records with information about plots
+            for regression summaries
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<dict<object>>): collection tree of figures
+
+    """
+
+    # Collect tables for plots.
+    pail = dict()
+    # Iterate on phenotypes.
+    for record_parameter in records_parameters:
+        # Organize tables.
+        name_table = str("table_" + record_parameter["name"])
+        pail[record_parameter["name"]] = (
+            plot.drive_iterate_plot_forest_two_groups(
+                pail_tables=pail_plot_tables[record_parameter["name"]],
+                column_group="group",
+                column_ordinate_label="category_label",
+                column_ordinate_sort="category_sort",
+                column_abscissa_value="value",
+                column_abscissa_interval_below="interval_below",
+                column_abscissa_interval_above="interval_above",
+                group_one="adjust", # group one markers: circles above center
+                group_two="unadjust", # group two markers: triangles below
+                abscissa_minimum=record_parameter["abscissa_minimum"],
+                abscissa_maximum=record_parameter["abscissa_maximum"],
+                ordinate_title="", # "Sex Hormone or Protein"
+                abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
+                print_label_on_chart=False,
+                label_chart_prefix=str(record_parameter["name"]),
+                label_size_ordinate_categories="one",
+                label_size_abscissa_values="one",
+                size_marker_one=70,
+                size_marker_two=35,
+                color_marker_one="purple", # "purple", "magenta"
+                color_marker_two="orange", # "green"
+                space_groups=0.15, # vertical space between groups' markers
+        ))
+        pass
+    # Return information.
+    return pail
+
+
+def read_organize_regression_summaries_create_forest_plots(
+    paths=None,
+    report=None,
+):
+    """
+    Drive creation of descriptive charts about phenotypes across cohorts from
+    the UK Biobank.
+
+    arguments:
+        set_plots (list<str>): names of plots to create
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<object>): collection of plots
+
+    """
+
+    # Read regression summary tables from file.
+    pail_regression_tables = read_source_regression_summary_tables(
+        path_dock=paths["dock"],
+        report=True,
+    )
+    # Define parameters for regression summaries.
+    records_parameters = define_parameters_regression_summaries()
+    # Organize tables for charts.
+    pail_plot_tables = organize_regression_summary_tables_for_forest_plots(
+        pail_regression_tables=pail_regression_tables,
+        records_parameters=records_parameters,
+        report=report,
+    )
+    # Create Forest Plots.
+    pail_plots = create_regression_summary_forest_plots(
+        pail_plot_tables=pail_plot_tables,
+        records_parameters=records_parameters,
+        report=report,
+    )
+    # Return information.
+    return pail_plots
+
 
 ##########
 # Management of plots on sumaries of genetic correlation analyses
@@ -2739,7 +3017,7 @@ def create_correlation_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="blue_navy", # "blue_navy", "blue_sky", "purple", "magenta"
+                color_marker_one="blue_navy", # "blue_navy", "blue_sky"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
@@ -2878,246 +3156,6 @@ def create_plots_for_analysis_summaries(
 # TODO: Eventually, adapt this function so that it can create plots for cohors
 # TODO: from multiple sources, including genotype GWAS cohorts read from file.
 
-
-def define_parameters_regression_summaries():
-    """
-    Defines parameters for organization of information from regression
-    summaries.
-
-    arguments:
-
-    raises:
-
-    returns:
-        (list<dict>): records with information about plots for regression
-            summaries
-
-    """
-
-    # Collect records of information about regression summaries and their
-    # Forest Plots.
-    records = list()
-
-    record = dict()
-    record["name"] = "alcohol_dependence"
-    record["regression_type"] = "logistic"
-    record["abscissa_minimum"] = -0.6
-    record["abscissa_maximum"] = 0.6
-    records.append(record)
-
-    record = dict()
-    record["name"] = "alcohol_quantity"
-    record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.149
-    record["abscissa_maximum"] = 0.149
-    records.append(record)
-
-    if False:
-
-        record = dict()
-        record["name"] = "alcohol_frequency"
-        record["regression_type"] = "linear"
-        record["abscissa_minimum"] = -0.2
-        record["abscissa_maximum"] = 0.2
-        records.append(record)
-
-        record = dict()
-        record["name"] = "alcohol_auditc"
-        record["regression_type"] = "linear"
-        record["abscissa_minimum"] = -0.30
-        record["abscissa_maximum"] = 0.24
-        records.append(record)
-
-        pass
-
-    # Return information
-    return records
-
-
-def organize_regression_summary_tables_for_forest_plots(
-    pail_regression_tables=None,
-    records_parameters=None,
-    report=None,
-):
-    """
-    Organize the format of regression summary tables for creation of Forest
-    Plots.
-
-    arguments:
-        pail_regression_tables (dict<object>): collection of Pandas data-frame
-            tables for regression summaries
-        records_parameters (list<dict>): records with information about plots
-            for regression summaries
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<dict<object>>): collection tree of Pandas data-frame tables for
-            plots
-
-    """
-
-    # Collect tables for plots.
-    pail = dict()
-    # Iterate on phenotypes.
-    for record_parameter in records_parameters:
-        # Organize tables.
-        name_table = str("table_" + record_parameter["name"])
-        pail[record_parameter["name"]] = (
-            pro_reg.organize_regression_summary_table_for_forest_plots(
-                type=record_parameter["regression_type"],
-                model_contexts=["marginal"],
-                model_adjustments=["adjust", "unadjust",],
-                column_variable="variable",
-                variables=[
-                    "oestradiol_imputation",
-                    "oestradiol_bioavailable_imputation",
-                    "oestradiol_free_imputation",
-                    "testosterone_imputation",
-                    "testosterone_bioavailable_imputation",
-                    "testosterone_free_imputation",
-                    "steroid_globulin_imputation",
-                    "albumin_imputation",
-                ],
-                columns_translations={
-                    "model_adjustment": "group",
-                    "variable": "category",
-                    "parameter": "value",
-                    "interval_99": "interval_below",
-                },
-                labels_categories={
-                    "oestradiol_imputation": "EST-T",
-                    "oestradiol_bioavailable_imputation": "EST-B",
-                    "oestradiol_free_imputation": "EST-F",
-                    "testosterone_imputation": "TST-T",
-                    "testosterone_bioavailable_imputation": "TST-B",
-                    "testosterone_free_imputation": "TST-F",
-                    "steroid_globulin_imputation": "SHBG",
-                    "albumin_imputation": "ALBU",
-                },
-                sorts_categories={
-                    "oestradiol_imputation": 1,
-                    "oestradiol_bioavailable_imputation": 2,
-                    "oestradiol_free_imputation": 3,
-                    "testosterone_imputation": 4,
-                    "testosterone_bioavailable_imputation": 5,
-                    "testosterone_free_imputation": 6,
-                    "steroid_globulin_imputation": 7,
-                    "albumin_imputation": 8,
-                },
-                column_stratification="cohort",
-                table=pail_regression_tables[name_table],
-                report=report,
-        ))
-        pass
-    # Return information.
-    return pail
-
-
-def create_regression_summary_forest_plots(
-    pail_plot_tables=None,
-    records_parameters=None,
-    report=None,
-):
-    """
-    Drive creation of descriptive charts about phenotypes across cohorts from
-    the UK Biobank.
-
-    arguments:
-        pail_plot_tables (dict<dict<object>>): collection tree of Pandas
-            data-frame tables for plots
-        records_parameters (list<dict>): records with information about plots
-            for regression summaries
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<dict<object>>): collection tree of figures
-
-    """
-
-    # Collect tables for plots.
-    pail = dict()
-    # Iterate on phenotypes.
-    for record_parameter in records_parameters:
-        # Organize tables.
-        name_table = str("table_" + record_parameter["name"])
-        pail[record_parameter["name"]] = (
-            plot.drive_iterate_plot_forest_two_groups(
-                pail_tables=pail_plot_tables[record_parameter["name"]],
-                column_group="group",
-                column_ordinate_label="category_label",
-                column_ordinate_sort="category_sort",
-                column_abscissa_value="value",
-                column_abscissa_interval_below="interval_below",
-                column_abscissa_interval_above="interval_above",
-                group_one="adjust", # group one markers: circles above center
-                group_two="unadjust", # group two markers: triangles below
-                abscissa_minimum=record_parameter["abscissa_minimum"],
-                abscissa_maximum=record_parameter["abscissa_maximum"],
-                ordinate_title="", # "Sex Hormone or Protein"
-                abscissa_title="", # "Marginal Model Coefficient (95% C.I.)"
-                print_label_on_chart=False,
-                label_chart_prefix=str(record_parameter["name"]),
-                label_size_ordinate_categories="one",
-                label_size_abscissa_values="one",
-                size_marker_one=70,
-                size_marker_two=35,
-                color_marker_one="purple",
-                color_marker_two="orange", # "green"
-                space_groups=0.15, # vertical space between groups' markers
-        ))
-        pass
-    # Return information.
-    return pail
-
-
-def read_organize_regression_summaries_create_forest_plots(
-    paths=None,
-    report=None,
-):
-    """
-    Drive creation of descriptive charts about phenotypes across cohorts from
-    the UK Biobank.
-
-    arguments:
-        set_plots (list<str>): names of plots to create
-        paths (dict<str>): collection of paths to directories for procedure's
-            files
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (dict<object>): collection of plots
-
-    """
-
-    # Read regression summary tables from file.
-    pail_regression_tables = read_source_regression_summary_tables(
-        path_dock=paths["dock"],
-        report=True,
-    )
-    # Define parameters for regression summaries.
-    records_parameters = define_parameters_regression_summaries()
-    # Organize tables for charts.
-    pail_plot_tables = organize_regression_summary_tables_for_forest_plots(
-        pail_regression_tables=pail_regression_tables,
-        records_parameters=records_parameters,
-        report=report,
-    )
-    # Create Forest Plots.
-    pail_plots = create_regression_summary_forest_plots(
-        pail_plot_tables=pail_plot_tables,
-        records_parameters=records_parameters,
-        report=report,
-    )
-    # Return information.
-    return pail_plots
-
-
 ################################################################################
 # Procedure
 
@@ -3166,7 +3204,7 @@ def execute_procedure(
     )
     # Create new description plots from summary tables for previous analyses.
     create_plots_for_analysis_summaries(
-        set_plots=["forest_correlations",], # ["forest_regressions", "forest_correlations",],
+        set_plots=["forest_regressions",], # ["forest_regressions", "forest_correlations",],
         paths=paths,
         report=True,
     )
