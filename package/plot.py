@@ -2421,8 +2421,8 @@ def define_parameters_regression_summaries():
     record = dict()
     record["name"] = "alcohol_quantity"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.149
-    record["abscissa_maximum"] = 0.149
+    record["abscissa_minimum"] = -0.12
+    record["abscissa_maximum"] = 0.12
     records.append(record)
 
     if False:
