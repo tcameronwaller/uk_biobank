@@ -2875,7 +2875,7 @@ def organize_correlation_summary_tables_for_forest_plots(
         # Organize tables.
         name_table = str("table_" + record_parameter["name"])
         # All variables.
-        if False:
+        if True:
             pail[record_parameter["name"]] = (
                 pro_reg.organize_regression_summary_table_for_forest_plots(
                     type=record_parameter["regression_type"],
@@ -2925,7 +2925,7 @@ def organize_correlation_summary_tables_for_forest_plots(
             ))
             pass
         # Priority variables.
-        if True:
+        if False:
             pail[record_parameter["name"]] = (
                 pro_reg.organize_regression_summary_table_for_forest_plots(
                     type=record_parameter["regression_type"],
