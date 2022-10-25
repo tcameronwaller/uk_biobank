@@ -2559,7 +2559,7 @@ def organize_regression_summary_tables_for_forest_plots(
                         "albumin_imputation": 4,
                     },
                     column_stratification="cohort",
-                    table=pail_correlation_tables[name_table],
+                    table=pail_regression_tables[name_table],
                     report=report,
             ))
             pass
