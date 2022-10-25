@@ -3017,7 +3017,7 @@ def create_correlation_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="blue_navy", # "blue_navy", "blue_sky"
+                color_marker_one="blue_sky", # "blue_navy", "blue_sky"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
