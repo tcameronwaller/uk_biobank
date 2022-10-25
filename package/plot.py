@@ -2796,7 +2796,7 @@ def define_parameters_correlation_summaries():
     record = dict()
     record["name"] = "alcohol_quantity_no_ukb"
     record["regression_type"] = "linear"
-    record["abscissa_minimum"] = -0.3
+    record["abscissa_minimum"] = -0.5
     record["abscissa_maximum"] = 0.3
     records.append(record)
 
@@ -3204,7 +3204,7 @@ def execute_procedure(
     )
     # Create new description plots from summary tables for previous analyses.
     create_plots_for_analysis_summaries(
-        set_plots=["forest_regressions",], # ["forest_regressions", "forest_correlations",],
+        set_plots=["forest_correlations",], # ["forest_regressions", "forest_correlations",],
         paths=paths,
         report=True,
     )
