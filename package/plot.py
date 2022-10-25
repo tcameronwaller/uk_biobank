@@ -2618,7 +2618,7 @@ def create_regression_summary_forest_plots(
                 label_size_abscissa_values="one",
                 size_marker_one=70,
                 size_marker_two=35,
-                color_marker_one="purple", # "purple", "magenta"
+                color_marker_one="magenta", # "purple", "magenta"
                 color_marker_two="orange", # "green"
                 space_groups=0.15, # vertical space between groups' markers
         ))
