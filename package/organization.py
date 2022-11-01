@@ -75,6 +75,10 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 # TODO: TCW; 24 October 2022
 # TODO: rename variable "ancestry_self_white" to "identity_self_white"
 
+# TODO: 28 October 2022
+# TODO: implement more versatile parsing of ICD9 and ICD10 diagnostic codes
+# TODO: read codes from file "table_diagnosis_icd_codes.tsv" within ".../parameters/uk_biobank/"
+# TODO: include Schizophrenia, Bipolar Disorder, Alcohol, etc
 
 ##########
 # Initialization

@@ -746,13 +746,6 @@ def write_product(
 # Procedure
 
 
-# alcohol_frequency ("alcohol_frequency")
-# alcohol_auditc ("alcohol_auditc")
-# alcohol_quantity ("alcohol_drinks_monthly_combination_log")
-# alcohol_use_disorder ("alcoholism_control_case_1")
-
-
-
 def execute_procedure(
     path_dock=None,
 ):
@@ -802,30 +795,14 @@ def execute_procedure(
         pail_regression = stratify_cohorts_call_run_regressions(
             table=source["table_phenotypes"],
             table_cohorts_models=(
-                source_reference["table_alcohol_quantity"]
+                source_reference["table_bipolar_disorder_sex_hormones"]
             ),
             independences_summary=None, # "None" or list of variables
             filter_execution=True,
-            type="linear",
+            type="logistic", # "linear" or "logistic"
             report=True,
         )
-        pail_write["tables"]["table_alcohol_quantity"] = (
-            pail_regression["table"]
-        )
-        pass
-
-    if True:
-        pail_regression = stratify_cohorts_call_run_regressions(
-            table=source["table_phenotypes"],
-            table_cohorts_models=(
-                source_reference["table_alcohol_dependence"]
-            ),
-            independences_summary=None, # "None" or list of variables
-            filter_execution=True,
-            type="logistic",
-            report=True,
-        )
-        pail_write["tables"]["table_alcohol_dependence"] = (
+        pail_write["tables"]["table_bipolar_disorder_sex_hormones"] = (
             pail_regression["table"]
         )
         pass

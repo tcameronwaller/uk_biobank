@@ -1,0 +1,10 @@
+diagnosis_name	note	diagnosis_icd10_codes	diagnosis_icd9_codes
+schizophrenia			
+bipolar_disorder			
+depression			
+anxiety			
+alcohol_dependence	Group A		
+alcohol_problem_vague	Group B		
+alcohol_abuse_mild	Group C		
+alcohol_organ_damage	Group D		
+alcohol_problem_self	Self Report		
