@@ -5399,6 +5399,27 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
     )
     records.extend(records_novel)
 
+    if True:
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="bipolar_control_case_strict",
+                values_special=[1,],
+                prefix_name="bipolar_case_",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
+
+        records_novel = (
+            stratify_phenotype_cohorts_set_special_sex_age_menopause(
+                column_special="bipolar_control_case_strict",
+                values_special=[0,],
+                prefix_name="bipolar_control_",
+                table=table,
+            )
+        )
+        records.extend(records_novel)
+
 
 
     # Stratify cohorts by sex and stage of life in addition to self report of
@@ -5488,28 +5509,6 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
                 column_special="alcoholism_control_case_1",
                 values_special=[0,],
                 prefix_name="alcoholism_control_",
-                table=table,
-            )
-        )
-        records.extend(records_novel)
-
-    if False:
-
-        records_novel = (
-            stratify_phenotype_cohorts_set_special_sex_age_menopause(
-                column_special="bipolar_control_case_strict",
-                values_special=[1,],
-                prefix_name="bipolar_case_",
-                table=table,
-            )
-        )
-        records.extend(records_novel)
-
-        records_novel = (
-            stratify_phenotype_cohorts_set_special_sex_age_menopause(
-                column_special="bipolar_control_case_strict",
-                values_special=[0,],
-                prefix_name="bipolar_control_",
                 table=table,
             )
         )
