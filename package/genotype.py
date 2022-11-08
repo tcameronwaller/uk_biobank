@@ -565,6 +565,8 @@ def stratify_by_sex_together_categories(
                 (table[selection].isin(selections[selection])), :
             ]
             pass
+        if (selections[selection] is None):
+            print(str(selection) + " is None!")
         pass
 
     # Report.
@@ -1789,19 +1791,6 @@ def control_report_unrelated_kinship_priority(
 ##########
 # Control
 
-# 2. select records by ancestry ("ancestry_white_british") if variable is not None.
-# 2. select records by sex (variable column "sex_text")
-# 3. select records by other variable values on both sexes
-# - - Remember that the selection parameters are strings! Convert these strings to int before comparison.
-# - - Example: Bipolar Disorder cases and controls
-# - - Only filter by these variables at all if they do not have values of "None" in the parameter table.
-# - - Important to avoid losing records due to any missing values in selection variables.
-# 3. if selection includes both sexes, then split phenotype table records by sex
-# 4. stratify cohorts by sex-specific variables and values (such as menopause)
-# - - Only filter by these variables at all if they do not have values of "None" in the parameter table.
-# - - Important to avoid losing records due to any missing values in selection variables.
-# - - Example: apply each filter selection sequentially after checking the parameter variable in an "if then" block.
-# 5. recombine records for female and male sex
 # 6. select columns from union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
 # 7. select records by non-missing values in union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
 # 8. select records for unrelated kinship with any priority in random selection
