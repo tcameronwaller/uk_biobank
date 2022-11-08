@@ -1814,7 +1814,7 @@ def control_stratify_genotype_cohorts(
         female_age_grade=female_age_grade,
         female_menopause=female_menopause,
         female_menstruation=female_menstruation,
-        female_pregnancy=pregnancy,
+        female_pregnancy=female_pregnancy,
         male_age_grade=male_age_grade,
         table=table,
         report=report,
