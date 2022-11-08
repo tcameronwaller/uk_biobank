@@ -1778,9 +1778,9 @@ def control_report_unrelated_kinship_priority(
         name="... Comparison of priority to female persons in population ...",
         priority_values=["female",],
         priority_variable="sex_text",
-        table_full=table,
-        table_simple=table_priority_none,
-        table_priority=table_priority_female,
+        table_full=table_full,
+        table_simple=table_simple,
+        table_priority=table_priority,
         report=report,
     )
     pass
@@ -1940,7 +1940,7 @@ def control_stratify_genotype_cohorts(
         priority_female=priority_female,
         table_kinship_pairs=table_kinship_pairs,
         table=table,
-        report=report,
+        report=True,
     )
 
     # Apply any transformations to the scale or distribution of values in
