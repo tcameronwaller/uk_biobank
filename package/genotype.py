@@ -507,11 +507,12 @@ def extract_stratification_record_parameters(
 
 
 ##########
-# Selections on samples for both sexes
+# Selections on samples for both sexes together
 
 
-
-def control_stratify_by_sex_together_categories(
+# TODO: TCW; 7 November 2022
+# TODO: change variable name "ancestry_self_white" to "identity_self_white"
+def stratify_by_sex_together_categories(
     identity_self_white=None,
     ancestry_white_british=None,
     bipolar_disorder=None,
@@ -539,7 +540,8 @@ def control_stratify_by_sex_together_categories(
     raises:
 
     returns:
-        (dict): information for summary table record on cohort
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
 
     """
 
@@ -570,7 +572,7 @@ def control_stratify_by_sex_together_categories(
         utility.print_terminal_partition(level=2)
         print("report: ")
         name_function = (
-            "control_stratify_by_sex_together_categories()"
+            "stratify_by_sex_together_categories()"
         )
         print(name_function)
         utility.print_terminal_partition(level=3)
@@ -579,6 +581,1107 @@ def control_stratify_by_sex_together_categories(
     return table
 
 
+##########
+# Selections on samples for both sexes separate
+
+
+def stratify_by_female_categories(
+    female_age_grade=None,
+    female_menopause=None,
+    female_menstruation=None,
+    female_pregnancy=None,
+    table=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on samples (rows) within a
+    table for persons of female sex.
+
+    arguments:
+        female_age_grade (list<int>): categorical values for selection
+        female_menopause (list<int>): categorical values for selection
+        female_menstruation (list<int>): categorical values for selection
+        female_pregnancy (list<int>): categorical values for selection
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Select records for females.
+    table = table.loc[
+        (table["sex_text"] == "female"), :
+    ]
+    # Select samples (rows) within a table.
+    selections = dict()
+    selections["age_grade_female"] = female_age_grade
+    selections["menopause_ordinal"] = female_menopause
+    selections["menstruation_regular_range"] = female_menstruation
+    selections["pregnancy"] = female_pregnancy
+    for selection in selections.keys():
+        if (
+            (not pandas.isna(selections[selection])) and
+            (selections[selection] is not None)
+        ):
+            table = table.loc[
+                (table[selection].isin(selections[selection])), :
+            ]
+            pass
+        pass
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False, # remove index; do not move to regular columns
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "stratify_by_female_categories()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+def stratify_by_male_categories(
+    male_age_grade=None,
+    table=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on samples (rows) within a
+    table for persons of male sex.
+
+    arguments:
+        male_age_grade (list<int>): categorical values for selection
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Select records for females.
+    table = table.loc[
+        (table["sex_text"] == "male"), :
+    ]
+    # Select samples (rows) within a table.
+    selections = dict()
+    selections["age_grade_male"] = male_age_grade
+    for selection in selections.keys():
+        if (
+            (not pandas.isna(selections[selection])) and
+            (selections[selection] is not None)
+        ):
+            table = table.loc[
+                (table[selection].isin(selections[selection])), :
+            ]
+            pass
+        pass
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False, # remove index; do not move to regular columns
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "stratify_by_male_categories()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+def control_stratify_by_sex_separate_categories(
+    sex_text=None,
+    female_age_grade=None,
+    female_menopause=None,
+    female_menstruation=None,
+    female_pregnancy=None,
+    male_age_grade=None,
+    table=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on samples (rows) within a
+    table separately by sex.
+
+    arguments:
+        sex_text (list<str>): categorical values for selection
+        female_age_grade (list<int>): categorical values for selection
+        female_menopause (list<int>): categorical values for selection
+        female_menstruation (list<int>): categorical values for selection
+        female_pregnancy (list<int>): categorical values for selection
+        male_age_grade (list<int>): categorical values for selection
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Collect records.
+    table_collection = pandas.DataFrame()
+    # Select records for females.
+    if ("female" in sex_text):
+        table_female = stratify_by_female_categories(
+            female_age_grade=female_age_grade,
+            female_menopause=female_menopause,
+            female_menstruation=female_menstruation,
+            female_pregnancy=female_pregnancy,
+            table=table,
+            report=report,
+        )
+        table_collection = table_collection.append(
+            table_female,
+            ignore_index=True,
+        )
+        pass
+    # Select records for males.
+    if ("male" in sex_text):
+        table_male = stratify_by_male_categories(
+            male_age_grade=male_age_grade,
+            table=table,
+            report=report,
+        )
+        table_collection = table_collection.append(
+            table_male,
+            ignore_index=True,
+        )
+        pass
+    # Organize table.
+    table_collection.reset_index(
+        level=None,
+        inplace=True,
+        drop=True, # remove index; do not move to regular columns
+    )
+    table_collection.set_index(
+        "eid",
+        append=False,
+        drop=True, # move regular column to index; remove original column
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "control_stratify_by_sex_separate_categories()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table_collection
+
+
+##########
+# Selections on samples by nonmissing values in specific variables
+
+
+def stratify_by_nonmissing_values_specific_variables(
+    names=None,
+    prefixes=None,
+    table=None,
+    drop_columns=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on samples (rows) within a
+    table by valid, non-missing values of specific variables.
+
+    arguments:
+        names (list<str>): explicit names of variables (columns) for which to
+            require nonmissing values in all samples (rows)
+        prefixes (list<str>): prefixes of names of variables (columns) for which
+            to require nonmissing values in all samples (rows)
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        drop_columns (bool): whether to drop variables (columns) other than
+            those for which to require nonmissing values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+    # Collect columns to keep.
+    columns_keep = list()
+    columns_names = list(filter(
+        lambda column: (str(column) in names),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+    for prefix in prefixes:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_keep.extend(columns_prefix)
+    # Select columns.
+    if drop_columns:
+        table = table.loc[
+            :, table.columns.isin(columns_keep)
+        ]
+    # Remove any rows with null missing values in specific columns.
+    table.dropna(
+        axis="index",
+        how="any",
+        subset=columns_keep,
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "stratify_by_nonmissing_values_specific_variables()"
+        )
+        print(name_function)
+        print("Columns for which to require nonmissing values: ")
+        print(columns_keep)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+##########
+# Selections on samples by nonmissing values in specific variables
+
+
+##########
+# Cohort, model selection: kinship
+
+
+def filter_kinship_pairs_by_threshold_relevance(
+    persons_relevance=None,
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Filters kinship pairs of related persons by a threshold on the Kinship
+    Coefficient and by genotype identifiers for persons who are relevant to a
+    specific cohort table.
+
+    This function returns a filtered table of kinship coefficients between pairs
+    of genotype identifiers. After filtering, this table only includes pairs of
+    genotypes that are:
+    1. relevant to a specific cohort for genetic analysis
+    2. related with a kinship coefficient beyond (greater than or equal to) a
+       specific threshold
+
+    Greater values of the Kinship Coefficient indicate a stronger genetic
+    relationship between a pair of persons.
+
+    Ignore kinship pairs of related persons if their Kinship Coefficient is
+    below the threshold.
+
+    This function returns pairs of related persons who are:
+    1. relevant to a specific analysis cohort
+    2. have Kinship Coefficient greater than or equal to (>=) threshold
+
+    arguments:
+        persons_relevance (list<str>): identifiers of persons who, on basis of
+            phenotypes and other filters, are relevant to a genetic analysis
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of kinship coefficients across pairs of
+            persons
+
+    """
+
+    # Copy information.
+    persons_relevance = copy.deepcopy(persons_relevance)
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    # Filter kinship pairs to exclude any redundant pairs.
+    table_kinship_pairs.drop_duplicates(
+        subset=["ID1", "ID2",],
+        keep="first",
+        inplace=True,
+    )
+    # Filter kinship pairs to exclude persons with kinship below threshold.
+    # These pairs do not have strong enough relation for further consideration.
+    table_kinship_pairs_below = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < threshold_kinship), :
+    ]
+    table_kinship_pairs_above = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] >= threshold_kinship), :
+    ]
+    # Filter kinship pairs to exclude persons who are not in the
+    # analysis-specific cohort table.
+    # Consider both persons from each kinship pair.
+    table_kinship_pairs_above.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs_above.set_index(
+        "ID1",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs_above.loc[
+        table_kinship_pairs_above.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs_relevance.set_index(
+        "ID2",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs_relevance.loc[
+        table_kinship_pairs_relevance.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Report.
+    if report:
+        # Organization information.
+        count_pairs_original = copy.deepcopy(table_kinship_pairs.shape[0])
+        count_pairs_kinship_below = copy.deepcopy(
+            table_kinship_pairs_below.shape[0]
+        )
+        count_pairs_kinship_above = copy.deepcopy(
+            table_kinship_pairs_above.shape[0]
+        )
+        count_pairs_relevance = copy.deepcopy(
+            table_kinship_pairs_relevance.shape[0]
+        )
+        persons_kin = copy.deepcopy(
+            table_kinship_pairs_relevance["ID1"].to_list()
+        )
+        persons_kin_second = copy.deepcopy(
+            table_kinship_pairs_relevance["ID2"].to_list()
+        )
+        persons_kin.extend(persons_kin_second)
+        persons_kin = list(map(str, persons_kin)) # string
+        persons_kin = list(set(persons_kin)) # unique
+        count_persons_kin_relevance = len(persons_kin)
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "filter_kinship_pairs_by_threshold_relevance()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... kinship pairs ...")
+        print("original pairs: " + str(count_pairs_original))
+        print("Kinship Coefficient threshold: " + str(threshold_kinship))
+        print("pairs kinship < threshold: " + str(count_pairs_kinship_below))
+        print("pairs kinship >= threshold: " + str(count_pairs_kinship_above))
+        print(
+            "pairs relevant to analysis cohort: " + str(count_pairs_relevance)
+        )
+        print("... persons ...")
+        print(
+            "persons relevant and with kinship beyond threshold: " +
+            str(count_persons_kin_relevance)
+        )
+        utility.print_terminal_partition(level=5)
+    # Return information.
+    return table_kinship_pairs_relevance
+
+
+def select_kinship_network_component_representatives(
+    persons_priority=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Selects persons who are priority representatives from distinct connected
+    components (families) in kinship network.
+
+    arguments:
+        persons_priority (list<str>): identifiers of persons to select
+            preferentially in kinship filter
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<str>): identifiers of persons who are priority representatives
+            from connected components of kinship network
+
+    """
+
+    # Copy information.
+    persons_priority = copy.deepcopy(persons_priority)
+    persons_priority_set = set(persons_priority)
+    # Define an unweighted, undirected network graph between pairs of related
+    # persons.
+    columns_pairs = ["ID1", "ID2"]
+    table_kinship_pairs = table_kinship_pairs.loc[
+        :, table_kinship_pairs.columns.isin(columns_pairs)
+    ]
+    table_kinship_pairs = table_kinship_pairs[[*columns_pairs]]
+    network = networkx.from_pandas_edgelist(
+        table_kinship_pairs,
+        "ID1",
+        "ID2",
+        edge_attr=None,
+        create_using=networkx.Graph(),
+    )
+    # Extract a single node (genotype) at random from each connected component
+    # from the network graph of kinship pairs.
+    # representative = random.choice(component.nodes())
+    representatives = list()
+    for component in networkx.connected_components(network):
+        network_component = network.subgraph(component).copy()
+        component_nodes = copy.deepcopy(list(network_component.nodes()))
+        component_nodes_set = set(component_nodes)
+        priority_nodes = list(
+            persons_priority_set.intersection(component_nodes_set)
+        )
+        if (len(priority_nodes) > 0):
+            representative = random.choice(priority_nodes)
+        else:
+            representative = random.choice(component_nodes)
+            pass
+        representatives.append(representative)
+        pass
+    # Convert genotype identifiers to strings.
+    persons_represent = list(map(str, representatives))
+    # Report.
+    if report:
+        # Organization information.
+        count_persons_represent = len(persons_represent)
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "select_kinship_network_component_representatives()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... kinship network graph ...")
+        print("network order: " + str(network.order()))
+        print("network size: " + str(network.size()))
+        print(
+            "count connected components: " +
+            str(networkx.number_connected_components(network))
+        )
+        print(
+            "count representative nodes: " + str(count_persons_represent)
+        )
+        pass
+    # Return information.
+    return persons_represent
+
+
+def filter_cohort_relevance_persons_by_priority_kinship(
+    persons_relevance=None,
+    persons_priority=None,
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Filters persons who are relevant to a cohort for genetic analysis on basis
+    of their kinship relatedness.
+
+    arguments:
+        persons_relevance (list<str>): identifiers of persons who, on basis of
+            phenotypes and other filters, are relevant to a genetic analysis
+        persons_priority (list<str>): identifiers of persons to select
+            preferentially in kinship filter
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<str>): identifiers of persons who are relevant to a cohort for
+            genetic analysis and are also "unrelated" on basis of threshold on
+            kinship
+
+    """
+
+    # Copy information.
+    persons_relevance = copy.deepcopy(persons_relevance)
+    # Filter kinship pairs.
+    # After filter, kinship pairs only include persons who are relevant to
+    # the specific cohort for genetic analysis and also have relatedness with
+    # other relevant persons at a kinship coefficient greater than or equal to
+    # a threshold.
+    table_kinship_pairs = filter_kinship_pairs_by_threshold_relevance(
+        persons_relevance=persons_relevance,
+        threshold_kinship=threshold_kinship,
+        table_kinship_pairs=table_kinship_pairs,
+        report=report, # report procedure is quite slow
+    )
+    persons_kin = copy.deepcopy(table_kinship_pairs["ID1"].to_list())
+    persons_kin_second = copy.deepcopy(table_kinship_pairs["ID2"].to_list())
+    persons_kin.extend(persons_kin_second)
+    persons_kin = list(map(str, persons_kin)) # string
+    persons_kin = list(set(persons_kin)) # unique
+    # Select priority representative persons from connected components
+    # (families) in kinship network.
+    persons_represent = select_kinship_network_component_representatives(
+        persons_priority=persons_priority,
+        table_kinship_pairs=table_kinship_pairs,
+        report=report,
+    )
+
+    # 1. persons_relevance: complete collection of persons relevant to cohort
+    #    and genetic analysis
+    # 2. persons_kin: persons relevant to cohort who also are related beyond
+    #    threshold
+    # 3. persons_represent: persons who are single representatives from each
+    #    family in "persons_kin"
+
+    # Exclude all related persons from the cohort, with the exception of a
+    # single representative from each family (connected component of the kinship
+    # pair network).
+
+    # Combination:
+    # - remove all "persons_kin" from "persons_relevance" with the exception of
+    #   "persons_represent"
+    # 1. remove "persons_represent" from "persons_kin"
+    # 2. remove "persons_kin" from "persons_relevance"
+
+    # Computation note:
+    # At this scale, computing a set difference is much more efficient than
+    # applying a filter across elements in two lists.
+    #persons_keep = list(filter(
+    #    lambda value: (value not in persons_exclusion),
+    #    persons_relevance
+    #))
+
+    # Remove "persons_represent" from "persons_kin".
+    persons_exclusion = list(set(persons_kin) - set(persons_represent))
+    # Remove "persons_exclusion" from "persons_relevance".
+    persons_keep = list(set(persons_relevance) - set(persons_exclusion))
+
+    # Report.
+    if report:
+        # Organization information.
+        count_persons_relevance = len(persons_relevance)
+        count_persons_priority = len(persons_priority)
+        count_persons_kin = len(persons_kin)
+        count_persons_represent = len(persons_represent)
+        count_persons_keep = len(persons_keep)
+
+        count_loss_kinship = (count_persons_kin - count_persons_represent)
+        percentage_loss_kinship = round(
+            ((count_loss_kinship / count_persons_relevance) * 100), 2
+        )
+        count_loss_check = (
+            count_persons_relevance - count_persons_keep
+        )
+        percentage_loss_check = round(
+            ((count_loss_check / count_persons_relevance) * 100), 2
+        )
+
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "filter_cohort_relevance_persons_by_priority_kinship()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... counts of persons ...")
+        print("count_persons_relevance: " + str(count_persons_relevance))
+        print("count_persons_priority: " + str(count_persons_priority))
+        print("count_persons_kin: " + str(count_persons_kin))
+        print("count_persons_represent: " + str(count_persons_represent))
+        print("count_persons_keep: " + str(count_persons_keep))
+        utility.print_terminal_partition(level=5)
+        print(
+            "cohort loss to kinship: " + str(count_loss_kinship) + " of " +
+            str(count_persons_relevance) + " (" + str(percentage_loss_kinship) +
+            "%)"
+        )
+        print(
+            "check cohort loss to kinship: " + str(count_loss_check) + " of " +
+            str(count_persons_relevance) + " (" + str(percentage_loss_check) +
+            "%)"
+        )
+
+        pass
+    # Return information.
+    return persons_keep
+
+
+def test_persons_relevance_maximal_kinship(
+    persons_relevance=None,
+    table_kinship_pairs=None,
+    report=None,
+):
+    """
+    Filters kinship pairs of related persons by genotype identifiers for persons
+    who are relevant to a specific cohort table. Returns the maximal value of
+    kinship coefficient between any pairs of these persons.
+
+    arguments:
+        persons_relevance (list<str>): identifiers of persons who, on basis of
+            phenotypes and other filters, are relevant to a genetic analysis
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (float): maximal value of Kinship Coefficient between pairs of persons
+            who are relevant to analysis cohort
+
+    """
+
+    # Copy information.
+    persons_relevance = copy.deepcopy(persons_relevance)
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    # Filter kinship pairs to exclude any redundant pairs.
+    table_kinship_pairs.drop_duplicates(
+        subset=["ID1", "ID2",],
+        keep="first",
+        inplace=True,
+    )
+    # Filter kinship pairs to exclude persons who are not in the
+    # analysis-specific cohort table.
+    # Consider both persons from each kinship pair.
+    table_kinship_pairs.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs.set_index(
+        "ID1",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs.loc[
+        table_kinship_pairs.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    table_kinship_pairs_relevance.set_index(
+        "ID2",
+        append=False,
+        drop=True,
+        inplace=True
+    )
+    table_kinship_pairs_relevance = table_kinship_pairs_relevance.loc[
+        table_kinship_pairs_relevance.index.isin(persons_relevance), :
+    ]
+    table_kinship_pairs_relevance.reset_index(
+        level=None,
+        inplace=True,
+        drop=False,
+    )
+    # Extract values of kinship coefficient.
+    array_kinship = copy.deepcopy(
+        table_kinship_pairs_relevance["Kinship"].dropna().to_numpy()
+    )
+    maximum_kinship = numpy.nanmax(array_kinship)
+    # Report.
+    if report:
+        # Organization information.
+        count_pairs_relevance = copy.deepcopy(
+            table_kinship_pairs_relevance.shape[0]
+        )
+        persons_kin = copy.deepcopy(
+            table_kinship_pairs_relevance["ID1"].to_list()
+        )
+        persons_kin_second = copy.deepcopy(
+            table_kinship_pairs_relevance["ID2"].to_list()
+        )
+        persons_kin.extend(persons_kin_second)
+        persons_kin = list(map(str, persons_kin)) # string
+        persons_kin = list(set(persons_kin)) # unique
+        count_persons_kin_relevance = len(persons_kin)
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "test_persons_relevance_maximal_kinship()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("... kinship pairs ...")
+        print(
+            "pairs relevant to analysis cohort: " + str(count_pairs_relevance)
+        )
+        print("... persons ...")
+        print(
+            "relevant persons with kinship: " +
+            str(count_persons_kin_relevance)
+        )
+        utility.print_terminal_partition(level=5)
+        print("... maximal value of kinship coefficient in cohort ...")
+        print("maximal kinship: " + str(maximum_kinship))
+    # Return information.
+    return maximum_kinship
+
+
+def filter_table_phenotype_persons_by_kinship(
+    name=None,
+    priority_values=None,
+    priority_variable=None,
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+    table=None,
+    report=None,
+):
+    """
+    Selects records of persons who are unrelated.
+
+    arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
+        priority_values (list<int>): which values of "priority_variable" to use
+            to select priority persons for kinship filter
+        priority_variable (list<str>): name of column for variable to consider
+            to select priority persons for kinship filter
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Report.
+    if report:
+        # Report.
+        utility.print_terminal_partition(level=2)
+        print("... Begin cohort filter for kinship ...")
+        utility.print_terminal_partition(level=5)
+        print("cohort: " + str(name))
+        utility.print_terminal_partition(level=2)
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Extract from table identifiers of persons or genotypes.
+    persons_relevance = copy.deepcopy(table["IID"].to_list())
+    # Determine priority persons for kinship filter.
+    if (
+        (priority_variable is not None) and (len(priority_values) > 0)
+    ):
+        # Select identifiers of priority persons.
+        table_priority = table.loc[
+            (table[priority_variable].isin(priority_values)), :
+        ]
+        persons_priority = copy.deepcopy(table_priority["IID"].to_list())
+    else:
+        persons_priority = []
+        pass
+    # Select unrelated persons to keep in the cohort table.
+    persons_keep = filter_cohort_relevance_persons_by_priority_kinship(
+        persons_relevance=persons_relevance,
+        persons_priority=persons_priority,
+        threshold_kinship=threshold_kinship,
+        table_kinship_pairs=table_kinship_pairs,
+        report=report,
+    )
+    # Select table records for relevant, unrelated persons in cohort.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False, # remove index; do not move to regular columns
+    )
+    table.set_index(
+        "IID",
+        append=False,
+        drop=True, # move regular column to index; remove original column
+        inplace=True,
+    )
+    table = table.loc[
+        table.index.isin(persons_keep), :
+    ]
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False, # remove index; do not move to regular columns
+    )
+    # Report.
+    if report:
+        # Organization information.
+        count_persons_keep = copy.deepcopy(table.shape[0])
+        # Report.
+        utility.print_terminal_partition(level=3)
+        print(
+            "report: " +
+            "filter_table_phenotype_persons_by_kinship()"
+        )
+        utility.print_terminal_partition(level=5)
+        print("count_persons_keep: " + str(count_persons_keep))
+        # Test kinship filter.
+        persons_test = copy.deepcopy(table["IID"].to_list())
+        kinship_maximum = test_persons_relevance_maximal_kinship(
+            persons_relevance=persons_test,
+            table_kinship_pairs=table_kinship_pairs,
+            report=report,
+        )
+        pass
+    # Return information.
+    return table
+
+
+def report_kinship_filter_priority_selection(
+    name=None,
+    priority_values=None,
+    priority_variable=None,
+    table_full=None,
+    table_simple=None,
+    table_priority=None,
+    report=None,
+):
+    """
+    Reports counts of records for priority persons in cohort tables after
+    Kinship Filter for genetic analyses.
+
+    Counts are specific to the "IID" identifier to represent records that match to
+    genotypes.
+
+    arguments:
+        name (str): unique name for the relevant cohort, model, and phenotype
+        priority_values (list<int>): which values of "priority_variable" to use
+            to select priority persons in kinship filter
+        priority_variable (list<str>): name of column for variable to consider
+            to select priority persons in kinship filter
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+        table (object): Pandas data frame of values
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+
+    """
+
+    # Report.
+    if report:
+        # Report.
+        utility.print_terminal_partition(level=2)
+        print(
+            "report: " +
+            "report_kinship_filter_priority_selection()"
+        )
+        utility.print_terminal_partition(level=3)
+        print(name)
+        pass
+    # Copy information.
+    table_full = table_full.copy(deep=True)
+    table_simple = table_simple.copy(deep=True)
+    table_priority = table_priority.copy(deep=True)
+    # Organize tables.
+    records = list()
+    record = {
+        "table": table_full,
+        "description": "full phenotype table before Kinship Filter",
+    }
+    records.append(record)
+    record = {
+        "table": table_simple,
+        "description": "table after Kinship Filter without priority",
+    }
+    records.append(record)
+    record = {
+        "table": table_priority,
+        "description": "table after Kinship Filter with priority",
+    }
+    records.append(record)
+    # Collect information for tables.
+    for record in records:
+        # Remove any table rows for records with null values in genotype
+        # identifier ("IID") or priority variable.
+        table_valid = record["table"].dropna(
+            axis="index",
+            how="any",
+            subset=["IID", priority_variable],
+            inplace=False,
+        )
+        # Select table rows for records representing priority persons.
+        table_preference = table_valid.loc[
+            (table_valid[priority_variable].isin(priority_values)), :
+        ]
+        table_not_preference = table_valid.loc[
+            (~table_valid[priority_variable].isin(priority_values)), :
+        ]
+        # Extract identifiers of genotypes for priority persons.
+        genotypes_preference = copy.deepcopy(
+            table_preference["IID"].to_list()
+        )
+        genotypes_preference = list(map(str, genotypes_preference)) # string
+        genotypes_preference = list(set(genotypes_preference)) # unique
+        genotypes_not_preference = copy.deepcopy(
+            table_not_preference["IID"].to_list()
+        )
+        genotypes_not_preference = list(map(str, genotypes_not_preference)) # string
+        genotypes_not_preference = list(set(genotypes_not_preference)) # unique
+
+        # Count genotypes.
+        count_genotypes_priority = len(genotypes_preference)
+        count_genotypes_not_priority = len(genotypes_not_preference)
+        # Report.
+        if report:
+            # Report.
+            utility.print_terminal_partition(level=4)
+            print(record["description"])
+            utility.print_terminal_partition(level=5)
+            print(
+                "Count of priority genotypes in table: " +
+                str(count_genotypes_priority)
+            )
+            print(
+                "Count of not priority genotypes in table: " +
+                str(count_genotypes_not_priority)
+            )
+            pass
+        pass
+    pass
+
+
+# TODO: TCW; 8 November 2022
+# TODO: Extend capabilities to accommodate kinship priority to "female" or "male" persons.
+def control_stratify_by_unrelated_kinship(
+    name=None,
+    kinship_unrelated=None,
+    priority_female=None,
+    table_kinship_pairs=None,
+    table=None,
+    report=None,
+):
+    """
+    Control filters, selections, stratifications on samples (rows) within a
+    table separately by sex.
+
+    arguments:
+        name (str): name of stratification cohort table
+        kinship_unrelated (int): logical binary whether to select persons with
+            unrelated kinship
+        priority_female (int): logical binary whether to give priority to
+            persons with female sex in selection of unrelated kinship
+        table_kinship_pairs (object): Pandas data frame table of kinship
+            coefficients across pairs of persons
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Stratify by unrelated kinship.
+    if (kinship_unrelated == 1):
+        if (priority_female == 1):
+            priority_values = ["female", ]
+            priority_variable = "sex_text"
+        else:
+            priority_values = []
+            priority_variable = None
+            pass
+        # Apply filters on kinship.
+        table = filter_table_phenotype_persons_by_kinship(
+            name=name,
+            priority_values=priority_values,
+            priority_variable=priority_variable,
+            threshold_kinship=0.1, # pairs with kinship >= threshold for exclusion
+            table_kinship_pairs=table_kinship_pairs,
+            table=table,
+            report=report,
+        )
+        pass
+    # Organize table.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=True, # remove index; do not move to regular columns
+    )
+    table.set_index(
+        "eid",
+        append=False,
+        drop=True, # move regular column to index; remove original column
+        inplace=True,
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "control_stratify_by_unrelated_kinship()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table_collection
 
 
 ##########
@@ -629,6 +1732,7 @@ def control_stratify_genotype_cohorts(
     independence=None,
     independence_prefix=None,
     independence_scale=None,
+    table_kinship_pairs=None,
     table=None,
     report=None,
 ):
@@ -648,6 +1752,7 @@ def control_stratify_genotype_cohorts(
         sex_text (list<str>): categorical values for selection
         female_age_grade (list<int>): categorical values for selection
         female_menopause (list<int>): categorical values for selection
+        female_menstruation (list<int>): categorical values for selection
         female_pregnancy (list<int>): categorical values for selection
         male_age_grade (list<int>): categorical values for selection
         kinship_unrelated (int): logical binary whether to select persons with
@@ -671,6 +1776,8 @@ def control_stratify_genotype_cohorts(
             for independent variables
         independence_scale (int): logical binary whether to apply Standard Z
             Score transformation to values of independent variables
+        table_kinship_pairs (object): Pandas data frame table of kinship
+            coefficients across pairs of persons
         table (object): Pandas data frame table of variables (features) across
             columns and samples (records) across rows
         report (bool): whether to print reports
@@ -689,7 +1796,7 @@ def control_stratify_genotype_cohorts(
 
     # Control filters, selections, stratifications on all samples (rows)
     # regardless of sex.
-    table = control_stratify_by_sex_together_categories(
+    table = stratify_by_sex_together_categories(
         identity_self_white=identity_self_white,
         ancestry_white_british=ancestry_white_british,
         bipolar_disorder=bipolar_disorder,
@@ -713,18 +1820,34 @@ def control_stratify_genotype_cohorts(
         report=report,
     )
 
-
     # Control filters, selections, stratifications on samples (rows) by the
     # non-missingness of values of variables (columns).
-
+    table = stratify_by_nonmissing_values_specific_variables(
+        names=variables_nonmissing,
+        prefixes=variables_prefix_nonmissing,
+        table=table,
+        drop_columns=True,
+        report=report,
+    )
 
     # Control filters, selections, stratifications on samples (rows) by the
     # kinship coefficient (relatedness) between persons in the cohort.
+    table = control_stratify_by_unrelated_kinship(
+        name=name,
+        kinship_unrelated=kinship_unrelated,
+        priority_female=priority_female,
+        table_kinship_pairs=table_kinship_pairs,
+        table=table,
+        report=report,
+    )
 
-
+    # Apply any transformations to the scale or distribution of values in
+    # dependent and independent variables.
 
     # Control filters, selections, stratifications on variables (columns) in the
     # final table.
+
+
 
     # Collect in record the cohort table after filters, selections, and
     # stratifications on samples (rows) and variables (columns).
@@ -845,12 +1968,31 @@ def execute_procedure(
             independence=pail["independence"],
             independence_prefix=pail["independence_prefix"],
             independence_scale=pail["independence_scale"],
+            table_kinship_pairs=table_kinship_pairs,
             table=source["table_phenotypes"],
             report=False,
         )
         # Collect records.
         records_cohorts.append(record_cohort)
         pass
+    # Report on a single cohort.
+    # Filter relevant cohorts.
+    names_cohorts = [
+        "white_british_unrelated_female_male_bipolar_control_body",
+        #"white_british_unrelated_female_male_bipolar_case_body",
+    ]
+    records_cohorts_test = utility.filter_records_by_name(
+        names=names_cohorts,
+        records=records_cohorts,
+        report=True,
+    )
+    table_test = records_cohorts_test[0]["table"]
+    print(table_test)
+    utility.report_table_column_categories_rows(
+    column="site",
+    table=table_test,
+    )
+
 
     # TODO: TCW; 11 October 2022
     # TODO: now write those 'records_cohorts' to file...

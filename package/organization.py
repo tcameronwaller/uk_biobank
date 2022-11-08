@@ -72,9 +72,6 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 ###############################################################################
 # Functionality
 
-# TODO: TCW; 24 October 2022
-# TODO: rename variable "ancestry_self_white" to "identity_self_white"
-
 # TODO: 28 October 2022
 # TODO: implement more versatile parsing of ICD9 and ICD10 diagnostic codes
 # TODO: read codes from file "table_diagnosis_icd_codes.tsv" within ".../parameters/uk_biobank/"
@@ -771,7 +768,6 @@ def organize_genotype_principal_component_variables(
 
 ##########
 # General assessment
-
 
 
 # review: TCW, 25 January 2022
@@ -1506,8 +1502,8 @@ def interpret_body_mass_index(
     return interpretation
 
 
-# review: TCW, 08 June 2022
-def interpret_self_report_ancestry_ethnicity(
+# review: TCW; 07 November 2022
+def interpret_self_identity_ancestry_race_ethnicity(
     field_21000=None,
 ):
     """
@@ -1945,6 +1941,7 @@ def determine_genotype_array(
     return value
 
 
+# review: TCW; 7 November 2022
 def determine_genotype_array_axiom_logical_binary(
     genotype_array=None,
 ):
@@ -2252,13 +2249,13 @@ def determine_body_mass_index(
     return value
 
 
-# review: TCW; 08 June 2022
-def determine_self_report_ancestry_ethnicity(
+# review: TCW; 07 November 2022
+def determine_self_identity_ancestry_race_ethnicity(
     field_21000=None,
 ):
     """
-    Determine whether person self reported ancestry and or ethnicity as
-    "white" or other.
+    Determine whether person self reported their identity of ancestry, race, and
+    or ethnicity as "white" or other.
 
     Code.
     0: "other"
@@ -2284,7 +2281,7 @@ def determine_self_report_ancestry_ethnicity(
     ]
 
     # Interpret self report of biological sex.
-    code = interpret_self_report_ancestry_ethnicity(
+    code = interpret_self_identity_ancestry_race_ethnicity(
         field_21000=field_21000,
     )
     # Interpret code.
@@ -3230,9 +3227,9 @@ def organize_assessment_basis_variables(
         axis="columns", # apply function to each row
     )
     # Determine self report of ancestry and or ethnicity.
-    table["ancestry_self_white"] = table.apply(
+    table["identity_self_white"] = table.apply(
         lambda row:
-            determine_self_report_ancestry_ethnicity(
+            determine_self_identity_ancestry_race_ethnicity(
                 field_21000=row["21000-0.0"],
             ),
         axis="columns", # apply function to each row
@@ -11191,6 +11188,13 @@ def determine_disorder_control_case_combination(
         value = float("nan")
     # Return information.
     return value
+
+
+# TODO: TCW; 07 November 2022
+# TODO: Stream-line the interpretation of ICD9 and ICD10 codes from UK Biobank data-fields.
+# TODO: Refer to ICD codes for Bipolar Disorder and Schizophrenia from Brandon.
+# TODO: - - originally defined in Howard et al, 2018
+# TODO: - - from communication on 28 October 2022 in Microsoft Teams
 
 
 def organize_psychology_variables(
