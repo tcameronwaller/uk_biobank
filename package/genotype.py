@@ -416,7 +416,7 @@ def extract_stratification_record_parameters(
     ):
         if (
             (not pandas.isna(field)) and
-            (len(str(field)) > 0) and
+            (len(str(field).strip()) > 0) and
             (str(field).strip() != "None")
         ):
             values = str(field).split(";")
@@ -565,8 +565,8 @@ def stratify_by_sex_together_categories(
                 (table[selection].isin(selections[selection])), :
             ]
             pass
-        if (selections[selection] is None):
-            print(str(selection) + " is None!")
+        #if (selections[selection] is None):
+        #    print(str(selection) + " is None!")
         pass
 
     # Report.
