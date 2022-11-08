@@ -1681,7 +1681,7 @@ def control_stratify_by_unrelated_kinship(
         utility.print_terminal_partition(level=3)
         pass
     # Return information.
-    return table_collection
+    return table
 
 
 ##########
