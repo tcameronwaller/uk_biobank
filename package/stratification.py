@@ -544,6 +544,7 @@ def organize_phenotype_covariate_table_plink_format(
 # TODO: TCW; 7 November 2022
 # TODO: I transfered the necessary functionality to the "genotype" module.
 # TODO: the structure of this function is no longer necessary.
+# TODO: OBSOLETE
 def select_records_by_female_specific_valid_variables_values(
     pregnancy=None,
     menstruation_regular=None,
@@ -636,6 +637,7 @@ def select_records_by_female_specific_valid_variables_values(
 # TODO: TCW; 7 November 2022
 # TODO: I transfered the necessary functionality to the "genotype" module.
 # TODO: the structure of this function is no longer necessary.
+# TODO: OBSOLETE
 def select_records_by_male_specific_valid_variables_values(
     age_grade_male=None,
     variables=None,
@@ -697,7 +699,8 @@ def select_records_by_male_specific_valid_variables_values(
     # Return information.
     return table
 
-
+# TODO: TCW; 8 November 2022
+# TODO: OBSOLETE
 def select_records_by_ancestry_sex_specific_valid_variables_values(
     name=None,
     priority_values=None,
@@ -826,6 +829,8 @@ def select_records_by_ancestry_sex_specific_valid_variables_values(
     return table_unrelated
 
 
+# TODO: TCW; 8 November 2022
+# TODO: OBSOLETE
 def select_records_by_ancestry_case_control_valid_variables_values(
     name=None,
     priority_values=None,

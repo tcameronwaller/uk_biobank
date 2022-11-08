@@ -581,6 +581,60 @@ def stratify_by_sex_together_categories(
     return table
 
 
+def control_report_category_values_in_cohort(
+    cohort=None,
+    variable=None,
+    records_cohorts=None,
+):
+    """
+    Control report on the values of a categorical variable that remain within a
+    specific cohort after stratification.
+
+    arguments:
+        cohort (str): name of a single cohort
+        variable (str): name of a single variable with categorical values
+        records_cohorts (list<dict>): records of information about cohorts
+
+    raises:
+
+    returns:
+
+    """
+
+    # Report.
+    utility.print_terminal_partition(level=2)
+    print("report: ")
+    name_function = (
+        "control_report_category_values_in_cohort()"
+    )
+    print(name_function)
+    print("cohort: " + str(cohort))
+    print("variable: " + str(variable))
+    utility.print_terminal_partition(level=3)
+
+    # Organize hashable entries for cohorts.
+    entries_cohorts = utility.structure_from_records_to_entries(
+        records=records_cohorts,
+    )
+    # Extract table for a specific cohort.
+    if (cohort in entries_cohorts.keys()):
+        # Copy information in table.
+        table = entries_cohorts[cohort]["table"].copy(deep=True)
+    else:
+        table = pandas.DataFrame()
+    # Determine whether the variable exists in the table's columns.
+    columns = table.columns.tolist()
+    if (variable in columns):
+        # Report.
+        utility.report_table_column_categories_rows(
+            column=variable,
+            table=table,
+        )
+    else:
+        print("The variable " + str(variable) + " is not available.")
+    pass
+
+
 ##########
 # Selections on samples for both sexes separate
 
@@ -1532,7 +1586,7 @@ def report_kinship_filter_priority_selection(
         utility.print_terminal_partition(level=3)
         print(name)
         pass
-    # Copy information.
+    # Copy information in tables.
     table_full = table_full.copy(deep=True)
     table_simple = table_simple.copy(deep=True)
     table_priority = table_priority.copy(deep=True)
@@ -1682,6 +1736,54 @@ def control_stratify_by_unrelated_kinship(
         pass
     # Return information.
     return table
+
+
+def control_report_unrelated_kinship_priority(
+    records_cohorts=None,
+    table_full=None,
+):
+    """
+    Control report on the prioritization of specific groups of people in the
+    otherwise random selection of persons with unrelated kinship.
+
+    arguments:
+        records_cohorts (list<dict>): records of information about cohorts
+        table_full (object): Pandas data frame table of variables (features)
+            across columns and samples (records) across rows
+
+    raises:
+
+    returns:
+
+    """
+
+    # Organize hashable entries for cohorts.
+    entries_cohorts = utility.structure_from_records_to_entries(
+        records=records_cohorts,
+    )
+    # Extract tables for specific cohorts.
+    name = "white_british_unrelated_female_male"
+    if (name in entries_cohorts.keys()):
+        table_simple = entries_cohorts[name]["table"]
+    else:
+        table_simple = pandas.DataFrame()
+    name = "white_british_unrelated_female_male_kinship_priority_female"
+    if (name in entries_cohorts.keys()):
+        table_priority = entries_cohorts[name]["table"]
+    else:
+        table_priority = pandas.DataFrame()
+
+    # Report.
+    report_kinship_filter_priority_selection(
+        name="... Comparison of priority to female persons in population ...",
+        priority_values=["female",],
+        priority_variable="sex_text",
+        table_full=table,
+        table_simple=table_priority_none,
+        table_priority=table_priority_female,
+        report=report,
+    )
+    pass
 
 
 ##########
@@ -1975,22 +2077,21 @@ def execute_procedure(
         # Collect records.
         records_cohorts.append(record_cohort)
         pass
-    # Report on a single cohort.
-    # Filter relevant cohorts.
-    names_cohorts = [
-        "white_british_unrelated_female_male_bipolar_control_body",
-        #"white_british_unrelated_female_male_bipolar_case_body",
-    ]
-    records_cohorts_test = utility.filter_records_by_name(
-        names=names_cohorts,
-        records=records_cohorts,
-        report=True,
+    # Report on priority kinship selection.
+    control_report_unrelated_kinship_priority(
+        records_cohorts=records_cohorts,
+        table_full=source["table_phenotypes"],
     )
-    table_test = records_cohorts_test[0]["table"]
-    print(table_test)
-    utility.report_table_column_categories_rows(
-    column="site",
-    table=table_test,
+    # Report on categorical values within a cohort of interest.
+    control_report_category_values_in_cohort(
+        cohort="white_british_unrelated_female_male_bipolar_control_body",
+        variable="site",
+        records_cohorts=records_cohorts,
+    )
+    control_report_category_values_in_cohort(
+        cohort="white_british_unrelated_female_male_bipolar_case_body",
+        variable="site",
+        records_cohorts=records_cohorts,
     )
 
 
