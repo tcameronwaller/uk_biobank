@@ -265,6 +265,7 @@ def read_source_table_stratification_cohorts_models(
             "male_age_grade": "string", # stratification variable values
             "kinship_unrelated": "int", # whether to select unrelated kinship
             "priority_female": "int", # whether to prioritize female kinship
+            "priority_male": "int", # whether to prioritize male kinship
             "dependence": "string", # names of dependent variables
             "dependence_scale_transforms": "int", # whether to transform
             "dependence_logical_binary": "int", # whether to translate to PLINK
@@ -481,6 +482,7 @@ def extract_stratification_record_parameters(
     )
     pail["kinship_unrelated"] = int(record["kinship_unrelated"])
     pail["priority_female"] = int(record["priority_female"])
+    pail["priority_male"] = int(record["priority_male"])
     pail["dependence"] = extract_variable_values_string(
         field=record["dependence"]
     )
@@ -1660,12 +1662,11 @@ def report_kinship_filter_priority_selection(
     pass
 
 
-# TODO: TCW; 8 November 2022
-# TODO: Extend capabilities to accommodate kinship priority to "female" or "male" persons.
 def control_stratify_by_unrelated_kinship(
     name=None,
     kinship_unrelated=None,
     priority_female=None,
+    priority_male=None,
     table_kinship_pairs=None,
     table=None,
     report=None,
@@ -1680,6 +1681,8 @@ def control_stratify_by_unrelated_kinship(
             unrelated kinship
         priority_female (int): logical binary whether to give priority to
             persons with female sex in selection of unrelated kinship
+        priority_male (int): logical binary whether to give priority to
+            persons with male sex in selection of unrelated kinship
         table_kinship_pairs (object): Pandas data frame table of kinship
             coefficients across pairs of persons
         table (object): Pandas data frame table of variables (features) across
@@ -1696,8 +1699,17 @@ def control_stratify_by_unrelated_kinship(
 
     # Stratify by unrelated kinship.
     if (kinship_unrelated == 1):
-        if (priority_female == 1):
+        if (
+            (priority_female == 1) and
+            (priority_male == 0)
+        ):
             priority_values = ["female", ]
+            priority_variable = "sex_text"
+        elif (
+            (priority_male == 1) and
+            (priority_female == 0)
+        ):
+            priority_values = ["male", ]
             priority_variable = "sex_text"
         else:
             priority_values = []
@@ -1769,7 +1781,7 @@ def control_report_unrelated_kinship_priority(
         table_simple = entries_cohorts[name]["table"]
     else:
         table_simple = pandas.DataFrame()
-    name = "white_british_unrelated_female_male_kinship_priority_female"
+    name = "white_british_unrelated_female_male_kinship_priority_male"
     if (name in entries_cohorts.keys()):
         table_priority = entries_cohorts[name]["table"]
     else:
@@ -1778,7 +1790,7 @@ def control_report_unrelated_kinship_priority(
     # Report.
     report_kinship_filter_priority_selection(
         name="... Comparison of priority to female persons in population ...",
-        priority_values=["female",],
+        priority_values=["male",],
         priority_variable="sex_text",
         table_full=table_full,
         table_simple=table_simple,
@@ -1793,8 +1805,10 @@ def control_report_unrelated_kinship_priority(
 
 # 6. select columns from union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
 # 7. select records by non-missing values in union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
+# - - I already did this...
 # 8. select records for unrelated kinship with any priority in random selection
-# 9. apply any transformations (scale or logical binary) to variables "dependence"
+# - - done
+# 9. apply any transformations (scale or logical binary) to variables "dependence" and "independence"
 
 
 
@@ -1815,6 +1829,7 @@ def control_stratify_genotype_cohorts(
     male_age_grade=None,
     kinship_unrelated=None,
     priority_female=None,
+    priority_male=None,
     dependence=None,
     dependence_scale_transforms=None,
     dependence_logical_binary=None,
@@ -1850,6 +1865,8 @@ def control_stratify_genotype_cohorts(
             unrelated kinship
         priority_female (int): logical binary whether to give priority to
             persons with female sex in selection of unrelated kinship
+        priority_male (int): logical binary whether to give priority to
+            persons with male sex in selection of unrelated kinship
         dependence (list<str>): names of table's columns for dependent variables
         dependence_scale_transforms (int): logical binary whether to apply
             distribution scale transformations to values of dependent variables
@@ -1927,6 +1944,7 @@ def control_stratify_genotype_cohorts(
         name=name,
         kinship_unrelated=kinship_unrelated,
         priority_female=priority_female,
+        priority_male=priority_male,
         table_kinship_pairs=table_kinship_pairs,
         table=table,
         report=report,
@@ -1966,7 +1984,6 @@ def control_stratify_genotype_cohorts(
 
 ###############################################################################
 # Procedure
-
 
 
 def execute_procedure(
@@ -2051,6 +2068,7 @@ def execute_procedure(
             male_age_grade=pail["male_age_grade"],
             kinship_unrelated=pail["kinship_unrelated"],
             priority_female=pail["priority_female"],
+            priority_male=pail["priority_male"],
             dependence=pail["dependence"],
             dependence_scale_transforms=pail["dependence_scale_transforms"],
             dependence_logical_binary=pail["dependence_logical_binary"],
