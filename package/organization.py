@@ -4979,7 +4979,11 @@ def organize_medication_code_atc_class_table(
         inplace=True,
         drop=True,
     )
-    table_wu["code_ukbiobank"].astype("string")
+    table_wu["code_ukbiobank"] = table_wu["code_ukbiobank"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_wu.dropna(
         axis="index",
         how="any",
@@ -5001,7 +5005,11 @@ def organize_medication_code_atc_class_table(
         inplace=True,
         drop=True,
     )
-    table_appleby["code_ukbiobank"].astype("string")
+    table_appleby["code_ukbiobank"] = table_appleby["code_ukbiobank"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_appleby.dropna(
         axis="index",
         how="any",

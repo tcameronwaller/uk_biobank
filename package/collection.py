@@ -494,7 +494,11 @@ def read_collect_organize_heritability_by_many_files_per_directory(
         level=None,
         inplace=True
     )
-    table["identifier"].astype("string")
+    table["identifier"] = table["identifier"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table.set_index(
         "identifier",
         drop=True,
@@ -1712,7 +1716,11 @@ def read_collect_primary_secondaries_genetic_correlations_by_files(
         level=None,
         inplace=True
     )
-    table["identifier"].astype("string")
+    table["identifier"] = table["identifier"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table.set_index(
         "identifier",
         drop=True,
@@ -1786,7 +1794,11 @@ def read_collect_primary_secondaries_genetic_correlations_by_directories(
         level=None,
         inplace=True
     )
-    table["identifier"].astype("string")
+    table["identifier"] = table["identifier"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table.set_index(
         "identifier",
         drop=True,
@@ -1953,7 +1965,11 @@ def organize_cohort_model_phenotype_reference_table(
     #    errors="coerce", # force any invalid values to missing or null
     #    downcast="float",
     #)
-    table["identifier"].astype("string")
+    table["identifier"] = table["identifier"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table.set_index(
         "identifier",
         drop=True,
@@ -2004,8 +2020,16 @@ def organize_table_adjust_unadjust_models(
         (table_unadjust["unadjust"] == 1), :
     ]
     # Set new index.
-    table_adjust["cohort_hormone"].astype("string")
-    table_unadjust["cohort_hormone"].astype("string")
+    table_adjust["cohort_hormone"] = table_adjust["cohort_hormone"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
+    table_unadjust["cohort_hormone"] = table_unadjust["cohort_hormone"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_adjust.set_index(
         "cohort_hormone",
         drop=True,

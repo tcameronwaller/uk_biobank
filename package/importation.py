@@ -286,7 +286,11 @@ def merge_table_variables_identifiers(
         inplace=True,
     )
     # Organize data.
-    table_main["eid"].astype("string")
+    table_main["eid"] = table_main["eid"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_main.set_index(
         "eid",
         append=False,
@@ -294,7 +298,11 @@ def merge_table_variables_identifiers(
         inplace=True
     )
 
-    table_import["eid"].astype("string")
+    table_import["eid"] = table_import["eid"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_import.set_index(
         "eid",
         append=False,

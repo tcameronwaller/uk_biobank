@@ -67,19 +67,6 @@ import promiscuity.scale as pscale
 ###############################################################################
 # Functionality
 
-# TODO: TCW; 11 October 2022
-# TODO: I think it would be helpful to have a new module named "genotype".
-# TODO: Within this module, control the stratification of phenotype records with matching gentoype records...
-# TODO: Try to keep the stratification and preparation of these genotype cohort tables modular and versatile.
-# TODO: 1. stratify the tables with selection of non-missing values for variables of interest.
-# TODO: - - drive this stratification for a group of cohort tables AND variables of interest... "stratification parameter" records?
-# TODO: - - each record should include a list of variables to include in the table
-# TODO: - - each record should also include information about selection of female or male cohorts (menopause, stage of life, pregnancy, etc)
-# TODO: - - this should probably look like a separate dictionary with variable names (keys) and acceptable values within a list
-# TODO: - - or this could include a specific and set collection of cohort variables (sex, pregnancy, menopause, life stage)
-# TODO: - - each record should also include a flag for whether or not to select unrelated persons to represent the cohort
-
-
 
 ##########
 # Initialization
@@ -289,98 +276,6 @@ def read_source_table_stratification_cohorts_models(
         pass
     # Return information.
     return table
-
-
-##########
-# Kinship
-
-
-def describe_report_table_kinship_pairs(
-    threshold_kinship=None,
-    table_kinship_pairs=None,
-):
-    """
-    Describes a table of kinship between pairs of persons.
-
-    arguments:
-        threshold_kinship (float): maximal value of kinship coefficient
-        table_kinship_pairs (object): Pandas data frame of kinship coefficients
-            across pairs of persons
-
-    raises:
-
-    returns:
-
-    """
-
-    # Copy information in table.
-    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
-    # Summarize values of the Kinship Coefficient.
-    array_kinship = copy.deepcopy(
-        table_kinship_pairs["Kinship"].dropna().to_numpy()
-    )
-    median = numpy.nanmedian(array_kinship)
-    minimum = numpy.nanmin(array_kinship)
-    maximum = numpy.nanmax(array_kinship)
-    # Summarize pairs for different filters on Kinship Coefficient.
-    count_pairs_total = copy.deepcopy(table_kinship_pairs.shape[0])
-
-    table_negative = table_kinship_pairs.loc[
-        (table_kinship_pairs["Kinship"] < 0), :
-    ]
-    count_pairs_negative = table_negative.shape[0]
-
-    table_positive = table_kinship_pairs.loc[
-        (table_kinship_pairs["Kinship"] >= 0), :
-    ]
-    count_pairs_positive = table_positive.shape[0]
-
-    table_below = table_kinship_pairs.loc[
-        (table_kinship_pairs["Kinship"] < threshold_kinship), :
-    ]
-    count_pairs_below = table_below.shape[0]
-
-
-    table_above = table_kinship_pairs.loc[
-        (table_kinship_pairs["Kinship"] >= threshold_kinship), :
-    ]
-    count_pairs_above = table_above.shape[0]
-
-    # Summarize values of the Kinship Coefficient that are positive.
-    array_positive = copy.deepcopy(
-        table_positive["Kinship"].dropna().to_numpy()
-    )
-    median_positive = numpy.nanmedian(array_positive)
-    minimum_positive = numpy.nanmin(array_positive)
-    maximum_positive = numpy.nanmax(array_positive)
-
-    # Print report.
-    utility.print_terminal_partition(level=2)
-    print(
-        "report: " +
-        "read_source_table_kinship_pairs()"
-    )
-    utility.print_terminal_partition(level=5)
-    print("... kinship coefficients across total pairs ...")
-    print("median kinship coefficient: " + str(median))
-    print("minimum kinship coefficient: " + str(minimum))
-    print("maximum kinship coefficient: " + str(maximum))
-    utility.print_terminal_partition(level=5)
-    print("... kinship coefficients across pairs with kinship >= 0 ...")
-    print("median kinship coefficient: " + str(median_positive))
-    print("minimum kinship coefficient: " + str(minimum_positive))
-    print("maximum kinship coefficient: " + str(maximum_positive))
-    utility.print_terminal_partition(level=5)
-    print("... kinship pairs ...")
-    print("total pairs: " + str(count_pairs_total))
-    print("pairs with kinship < 0: " + str(count_pairs_negative))
-    print("pairs with kinship >= 0: " + str(count_pairs_positive))
-    utility.print_terminal_partition(level=5)
-    print("Kinship Coefficient threshold: " + str(threshold_kinship))
-    print("pairs with kinship < threshold: " + str(count_pairs_below))
-    print("pairs with kinship >= threshold: " + str(count_pairs_above))
-
-    pass
 
 
 ##########
@@ -944,11 +839,95 @@ def stratify_by_nonmissing_values_specific_variables(
 
 
 ##########
-# Selections on samples by nonmissing values in specific variables
-
-
-##########
 # Cohort, model selection: kinship
+
+
+def describe_report_table_kinship_pairs(
+    threshold_kinship=None,
+    table_kinship_pairs=None,
+):
+    """
+    Describes a table of kinship between pairs of persons.
+
+    arguments:
+        threshold_kinship (float): maximal value of kinship coefficient
+        table_kinship_pairs (object): Pandas data frame of kinship coefficients
+            across pairs of persons
+
+    raises:
+
+    returns:
+
+    """
+
+    # Copy information in table.
+    table_kinship_pairs = table_kinship_pairs.copy(deep=True)
+    # Summarize values of the Kinship Coefficient.
+    array_kinship = copy.deepcopy(
+        table_kinship_pairs["Kinship"].dropna().to_numpy()
+    )
+    median = numpy.nanmedian(array_kinship)
+    minimum = numpy.nanmin(array_kinship)
+    maximum = numpy.nanmax(array_kinship)
+    # Summarize pairs for different filters on Kinship Coefficient.
+    count_pairs_total = copy.deepcopy(table_kinship_pairs.shape[0])
+
+    table_negative = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < 0), :
+    ]
+    count_pairs_negative = table_negative.shape[0]
+
+    table_positive = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] >= 0), :
+    ]
+    count_pairs_positive = table_positive.shape[0]
+
+    table_below = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] < threshold_kinship), :
+    ]
+    count_pairs_below = table_below.shape[0]
+
+
+    table_above = table_kinship_pairs.loc[
+        (table_kinship_pairs["Kinship"] >= threshold_kinship), :
+    ]
+    count_pairs_above = table_above.shape[0]
+
+    # Summarize values of the Kinship Coefficient that are positive.
+    array_positive = copy.deepcopy(
+        table_positive["Kinship"].dropna().to_numpy()
+    )
+    median_positive = numpy.nanmedian(array_positive)
+    minimum_positive = numpy.nanmin(array_positive)
+    maximum_positive = numpy.nanmax(array_positive)
+
+    # Print report.
+    utility.print_terminal_partition(level=2)
+    print(
+        "report: " +
+        "read_source_table_kinship_pairs()"
+    )
+    utility.print_terminal_partition(level=5)
+    print("... kinship coefficients across total pairs ...")
+    print("median kinship coefficient: " + str(median))
+    print("minimum kinship coefficient: " + str(minimum))
+    print("maximum kinship coefficient: " + str(maximum))
+    utility.print_terminal_partition(level=5)
+    print("... kinship coefficients across pairs with kinship >= 0 ...")
+    print("median kinship coefficient: " + str(median_positive))
+    print("minimum kinship coefficient: " + str(minimum_positive))
+    print("maximum kinship coefficient: " + str(maximum_positive))
+    utility.print_terminal_partition(level=5)
+    print("... kinship pairs ...")
+    print("total pairs: " + str(count_pairs_total))
+    print("pairs with kinship < 0: " + str(count_pairs_negative))
+    print("pairs with kinship >= 0: " + str(count_pairs_positive))
+    utility.print_terminal_partition(level=5)
+    print("Kinship Coefficient threshold: " + str(threshold_kinship))
+    print("pairs with kinship < threshold: " + str(count_pairs_below))
+    print("pairs with kinship >= threshold: " + str(count_pairs_above))
+
+    pass
 
 
 def filter_kinship_pairs_by_threshold_relevance(
@@ -1801,15 +1780,686 @@ def control_report_unrelated_kinship_priority(
 
 
 ##########
+# Selection of columns for relevant variables
+
+
+def select_table_columns_relevant_variables(
+    dependence=None,
+    variables_nonmissing=None,
+    variables_prefix_nonmissing=None,
+    independence=None,
+    independence_prefix=None,
+    table=None,
+    report=None,
+):
+    """
+    Control selection on relevan variables (columns) within a table.
+
+    arguments:
+        dependence (list<str>): names of table's columns for dependent variables
+        variables_nonmissing (list<str>): names of table's columns for variables
+            for which to select non-missing values
+        variables_prefix_nonmissing (list<str>): prefixes of names of table's
+            columns for variables for which to select non-missing values
+        independence (list<str>): names of table's columns for independent
+            variables
+        independence_prefix (list<str>): prefixes of names of table's columns
+            for independent variables
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+    # Collect columns to keep.
+    columns_keep = list()
+
+    # Columns with specific names.
+    columns_names = list(filter(
+        lambda column: (str(column) in variables_nonmissing),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+    columns_names = list(filter(
+        lambda column: (str(column) in dependence),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+    columns_names = list(filter(
+        lambda column: (str(column) in independence),
+        columns_all
+    ))
+    columns_keep.extend(columns_names)
+
+    # Columns with prefixes.
+    for prefix in variables_prefix_nonmissing:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_keep.extend(columns_prefix)
+    for prefix in independence_prefix:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_keep.extend(columns_prefix)
+
+    # Select columns for relevant variables.
+    table = table.loc[
+        :, table.columns.isin(columns_keep)
+    ]
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "select_table_columns_relevant_variables()"
+        )
+        print(name_function)
+        print("Columns to keep: ")
+        print(columns_keep)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+##########
+# Transformations on the scales of variables
+
+
+def control_transformations_on_variables(
+    dependence=None,
+    dependence_logical_binary=None,
+    dependence_scale_transforms=None,
+    independence=None,
+    independence_prefix=None,
+    independence_scale=None,
+    table=None,
+    report=None,
+):
+    """
+    Control selection on relevan variables (columns) within a table.
+
+    arguments:
+        dependence (list<str>): names of table's columns for dependent variables
+        dependence_logical_binary (int): logical binary whether to translate
+            values of logical binary dependent variable to code for PLINK2 with
+            zero mapping to one (0 --> 1; control) and one mapping to two
+            (1 --> 2; case)
+        dependence_scale_transforms (int): logical binary whether to apply
+            distribution scale transformations to values of dependent variables
+        independence (list<str>): names of table's columns for independent
+            variables
+        independence_prefix (list<str>): prefixes of names of table's columns
+            for independent variables
+        independence_scale (int): logical binary whether to apply Standard Z
+            Score transformation to values of independent variables
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+
+    # Confirm names of columns for dependent and independent variables.
+    columns_dependence = list(filter(
+        lambda column: (str(column) in dependence),
+        columns_all
+    ))
+    columns_independence = list(filter(
+        lambda column: (str(column) in independence),
+        columns_all
+    ))
+    for prefix in independence_prefix:
+        columns_prefix = list(filter(
+            lambda column: (str(prefix) in str(column)),
+            columns_all
+        ))
+        columns_independence.extend(columns_prefix)
+
+    # Confirm that all continuous-scale dependent and independent variables are
+    # in a float numerical type.
+    # Dependent variables or independent covariates that need conversion to
+    # float numerical type include measurement scale binary discrete, ordinal
+    # discrete, interval continuous, or ratio continuous.
+    if (
+        (not pandas.isna(dependence_logical_binary)) and
+        (dependence_logical_binary == 0)
+    ):
+        table = utility.convert_table_columns_variables_types_float(
+            columns=columns_dependence,
+            table=table,
+        )
+        pass
+    table = utility.convert_table_columns_variables_types_float(
+        columns=columns_independence,
+        table=table,
+    )
+
+    # Apply transformations on the scales of dependent variables.
+    if (
+        (not pandas.isna(dependence_scale_transforms)) and
+        (dependence_scale_transforms == 1)
+    ):
+        for variable in columns_dependence:
+            table = apply_transformations_to_variable_distribution_scale(
+                column=str(variable),
+                logarithm_e=True,
+                standard_z_score=True,
+                rank_inverse=True,
+                suffix_logarithm_e="_log",
+                suffix_standard_z_score="_z",
+                suffix_rank_inverse="_rank",
+                table=record["table"],
+                report=False,
+            )
+        pass
+    # Apply Standard Z-Score transformation on independent variables.
+    if (
+        (not pandas.isna(independence_scale)) and
+        (independence_scale == 1)
+    ):
+        table = pscale.drive_transform_variables_distribution_scale_z_score(
+            table=table,
+            columns=columns_independence,
+            report=False,
+        )
+        pass
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "control_transformations_on_variables()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+##########
+# Adjustment of table format for interpretation in PLINK2
+
+
+def translate_boolean_phenotype_plink2(
+    boolean_value=None,
+):
+    """
+    Translate information from simple binary representation to plink
+    representation.
+
+    Accommodate inexact float values and null values.
+
+    https://www.cog-genomics.org/plink/1.9/input
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "Missing phenotypes are normally expected to be encoded as -9. You can
+        change this to another integer with --missing-phenotype. (This is a
+        slight change from PLINK 1.07: floating point values are now disallowed
+        due to rounding issues, and nonnumeric values such as 'NA' are rejected
+        since they're treated as missing phenotypes no matter what. Note that
+        --output-missing-phenotype can be given a nonnumeric string.)
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. This also forces phenotypes to
+        be interpreted as case/control."
+
+    arguments:
+        boolean_value (float): boolean (False, True) representation of a
+            phenotype
+
+    raises:
+
+    returns:
+        (float): plink binary representation of a phenotype
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (not pandas.isna(boolean_value)):
+        # The variable has a valid value.
+        if (not boolean_value):
+            # control, original value: False
+            # control, Plink translation: 1
+            value = 1
+        elif (boolean_value):
+            # case, original value: True
+            # case, Plink translation: 2
+            value = 2
+    else:
+        # null
+        #value = -9
+        value = "nan"
+    # Return information.
+    return value
+
+
+# review: TCW; 9 November 2022
+def translate_binary_phenotype_plink2(
+    binary_value=None,
+):
+    """
+    Translate a dependent variable from logical binary representation to format
+    for interpretation in PLINK2.
+
+    Original code:
+    0: control
+    1: case
+
+    PLINK2 code:
+    1: control (unaffected)
+    2: case (affected)
+
+    https://www.cog-genomics.org/plink/2.0/input#phenotypes
+    Section: "Phenotypes"
+    Subsection: "Phenotype encoding"
+        "
+        Missing case/control or quantitative phenotypes are expected to be
+        encoded as 'NA'/'nan' (any capitalization) or -9. (Other strings which
+        don't start with a number are now interpreted as categorical
+        phenotype/covariate values.) You can change the numeric missing
+        phenotype code to another integer with --input-missing-phenotype, or
+        just disable -9 with --no-input-missing-phenotype.
+
+        Case/control phenotypes are expected to be encoded as 1=unaffected
+        (control), 2=affected (case); 0 is accepted as an alternate missing
+        value encoding. If you use the --1 flag, 0 is interpreted as unaffected
+        status instead, while 1 maps to affected. Note that this only affects
+        interpretation of input files; output files still use 1=control/2=case
+        encoding.
+        (Unlike PLINK 1.x, this does not force all phenotypes to be interpreted
+        as case/control.)
+        "
+
+    arguments:
+        binary_value (float): logical binary (0, 1) representation of a
+            case-control phenotype
+
+    raises:
+
+    returns:
+        (float): PLINK2 representation of a case-control phenotype
+
+    """
+
+    # Determine whether the variable has a valid (non-missing) value.
+    if (
+        (not pandas.isna(binary_value)) and
+        (-0.5 <= binary_value and binary_value < 1.5)
+    ):
+        # The variable has a valid value.
+        if (binary_value == 0):
+            # control, original value: 0
+            # control, PLINK2 translation: 1
+            value = 1
+        elif (binary_value == 1):
+            # case, original value: 1
+            # case, PLINK2 translation: 2
+            value = 2
+        else:
+            # missing value
+            #value = -9
+            value = "nan"
+    else:
+        # missing value
+        #value = -9
+        value = "nan"
+    # Return information.
+    return value
+
+
+def translate_binary_biological_sex_plink2(
+    sex_y=None,
+):
+    """
+    Translate biological sex to format for PLINK2.
+    2 : female (XX)
+    1 : male (XY)
+
+    arguments:
+        sex_y (float): sex as logical presence of Y chromosome
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(sex_y)) and
+        ((sex_y == 0) or (sex_y == 1))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (sex_y == 0):
+            # sex_y: 0, "female"
+            # PLINK2: 2, "female"
+            interpretation = 2
+        elif (sex_y == 1):
+            # sex_y: 1, "male"
+            # PLINK2: 1, "male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return information.
+    return interpretation
+
+
+# review: TCW; 9 November 2022
+def translate_text_biological_sex_plink2(
+    sex_text=None,
+):
+    """
+    Translate biological sex to format for PLINK2.
+
+    PLINK2 code:
+    2: female (XX)
+    1: male (XY)
+    NA: missing or unknown
+
+    https://www.cog-genomics.org/plink/2.0/formats#cov
+    Section: ".cov (covariate table)"
+
+    arguments:
+        sex_text (str): textual representation of biological sex, female or male
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret field code.
+    if (
+        (not pandas.isna(sex_text)) and
+        ((sex_text == "female") or (sex_text == "male"))
+    ):
+        # The variable has a valid value.
+        # Interpret the value.
+        if (sex_text == "female"):
+            # sex_text: "female"
+            # PLINK2: 2, "female"
+            interpretation = 2
+        elif (sex_text == "male"):
+            # sex_text: "male"
+            # PLINK2: 1, "male"
+            interpretation = 1
+        else:
+            # Uninterpretable value
+            interpretation = float("nan")
+    else:
+        # Missing or uninterpretable value
+        interpretation = float("nan")
+    # Return information.
+    return interpretation
+
+
+# review: TCW; 9 November 2022
+def translate_format_phenotype_covariate_table_plink2(
+    dependence_boolean=None,
+    dependence_binary=None,
+    sex_text=None,
+    remove_missing_rows=None,
+    table=None,
+):
+    """
+    Translate the format of a table for phenotype and covariate variables for
+    interpretation in PLINK2.
+
+    1. Remove any rows with missing, empty values.
+    PLINK2 cannot accommodate rows with empty cells.
+    This function removes table's rows with any missing values in any columns.
+    It might be advantageous to apply a separate function to remove missing
+    values only in the minimal essential columns, such as those for dependent
+    variables and independent covariates.
+
+    2. Introduce family identifiers.
+    Family (FID) and individual (IID) identifiers must match the ID_1 and ID_2
+    columns in the sample table.
+
+    3. If "SID", "PAT", and "MAT" are irrelevant, then omit these columns.
+    PLINK2 throws an error if these columns exist with empty values.
+
+    4. Sort column sequence.
+    PLINK2 requires FID and IID columns to come first.
+
+    https://www.cog-genomics.org/plink/2.0/formats#cov
+    Section: ".cov (covariate table)"
+        "
+        .cov (covariate table)
+        Produced by --write-covar, --make-[b]pgen/--make-bed, and --export when
+        covariates have been loaded/specified. Valid input for --covar.
+
+        A text file with a header line, and one line per sample with the
+            following columns:
+
+        Header Column set Contents
+        FID maybefid, fid Family ID
+        IID (required) Individual ID
+        SID maybesid, sid Source ID
+        PAT maybeparents, parents Paternal individual ID
+        MAT maybeparents, parents Maternal individual ID
+        SEX sex Sex (1 = male, 2 = female, 'NA' = unknown)
+        PHENO1 pheno1 All-missing phenotype column, if none loaded
+        <Pheno name>, ... pheno1, phenos Phenotype value(s) (only first if just
+            'pheno1')
+        <Covar name>, ... (required) Covariate values
+
+        (Note that --covar can also be used with files lacking a header row.)
+    "
+
+    arguments:
+        dependence_boolean (list<str>): names of columns with discrete boolean
+            (False: control or negative; True: case or positive) dependent
+            variables that need conversion to PLINK format (1: control; 2: case)
+        dependence_binary (list<str>): names of columns with discrete logical
+            binary (0: control or negative; 1: case or positive) dependent
+            variables that need conversion to PLINK format (control: 1, case: 2)
+        sex_text (str): name of column for textual representation of biological
+            sex ("female" or "male") for clarity
+        remove_missing_rows (bool): whether to remove table's rows with any
+            missing values in any columns
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows in format for GWAS in PLINK2
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Translate binary phenotype variables.
+    for boolean_variable in dependence_boolean:
+        name_plink = str(boolean_variable + "_plink")
+        table[name_plink] = table.apply(
+            lambda row:
+                translate_boolean_phenotype_plink2(
+                    boolean_value=row[boolean_variable],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+    # Translate binary phenotype variables.
+    for binary_variable in dependence_binary:
+        name_plink = str(binary_variable + "_plink")
+        table[name_plink] = table.apply(
+            lambda row:
+                translate_binary_phenotype_plink2(
+                    binary_value=row[binary_variable],
+                ),
+            axis="columns", # apply across rows
+        )
+        pass
+
+    # Sex.
+    # 2 : female (XX)
+    # 1 : male (XY)
+    # "NA": missing or unknown
+    table["SEX"] = table.apply(
+        lambda row:
+            translate_text_biological_sex_plink2(
+                sex_text=row[sex_text],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Organize.
+    table.reset_index(
+        level=None,
+        inplace=True,
+        drop=False, # remove index; do not move to regular columns
+    )
+    # Remove table's rows with any missing values in any columns.
+    if remove_missing_rows:
+        table.dropna(
+            axis="index",
+            how="any",
+            subset=None,
+            inplace=True,
+        )
+        pass
+
+    # Introduce family identifier.
+    table["FID"] = table["IID"]
+    # Introduce other PLINK2 columns.
+    #table["SID"] = ""
+    #table["PAT"] = ""
+    #table["MAT"] = ""
+    columns_special = [
+        "eid", "SEX", "MAT", "PAT", "SID", "IID", "FID",
+    ]
+    # Sort column sequence.
+    columns = copy.deepcopy(table.columns.to_list())
+    columns_sequence = list(filter(
+        lambda element: element not in columns_special,
+        columns
+    ))
+    columns_sequence.insert(0, "eid") # column 7
+    columns_sequence.insert(0, "SEX") # column 6
+    #columns_sequence.insert(0, "MAT") # column 5
+    #columns_sequence.insert(0, "PAT") # column 4
+    #columns_sequence.insert(0, "SID") # column 3
+    columns_sequence.insert(0, "IID") # column 2
+    columns_sequence.insert(0, "FID") # column 1
+    table = table.loc[
+        :, table.columns.isin(columns_sequence)
+    ]
+    table = table[[*columns_sequence]]
+    # Return information.
+    return table
+
+
+def control_translate_table_format_for_plink2(
+    dependence=None,
+    dependence_logical_binary=None,
+    table=None,
+    report=None,
+):
+    """
+    Control format translation of phenotype table after cohort stratification
+    for interpretation in PLINK2.
+
+    arguments:
+        dependence (list<str>): names of table's columns for dependent variables
+        dependence_logical_binary (int): logical binary whether to translate
+            values of logical binary dependent variable to code for PLINK2 with
+            zero mapping to one (0 --> 1; control) and one mapping to two
+            (1 --> 2; case)
+        table (object): Pandas data frame table of variables (features) across
+            columns and samples (records) across rows
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame table of variables (features) across columns
+            and samples (records) across rows
+
+    """
+
+    # Extract table columns.
+    columns_all = copy.deepcopy(table.columns.to_list())
+    # Confirm names of columns for dependent variables.
+    columns_dependence = list(filter(
+        lambda column: (str(column) in dependence),
+        columns_all
+    ))
+    # Translate table format for interpretation in PLINK2.
+    if (
+        (not pandas.isna(dependence_logical_binary)) and
+        (dependence_logical_binary == 1)
+    ):
+        table = translate_format_phenotype_covariate_table_plink2(
+            dependence_boolean=[],
+            dependence_binary=columns_dependence,
+            sex_text="sex_text",
+            remove_missing_rows=False, # remove NAs for specific columns only
+            table=table,
+        )
+    else:
+        table = translate_format_phenotype_covariate_table_plink2(
+            dependence_boolean=[],
+            dependence_binary=[],
+            sex_text="sex_text",
+            remove_missing_rows=False, # remove NAs for specific columns only
+            table=table,
+        )
+        pass
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "control_translate_table_format_for_plink2()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table
+
+
+##########
 # Control
-
-# 6. select columns from union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
-# 7. select records by non-missing values in union of "dependence", "variables_nonmissing", and "variables_prefix_nonmissing"
-# - - I already did this...
-# 8. select records for unrelated kinship with any priority in random selection
-# - - done
-# 9. apply any transformations (scale or logical binary) to variables "dependence" and "independence"
-
 
 
 def control_stratify_genotype_cohorts(
@@ -1934,7 +2584,7 @@ def control_stratify_genotype_cohorts(
         names=variables_nonmissing,
         prefixes=variables_prefix_nonmissing,
         table=table,
-        drop_columns=True,
+        drop_columns=False,
         report=report,
     )
 
@@ -1950,13 +2600,38 @@ def control_stratify_genotype_cohorts(
         report=report,
     )
 
-    # Apply any transformations to the scale or distribution of values in
-    # dependent and independent variables.
-
     # Control filters, selections, stratifications on variables (columns) in the
     # final table.
+    table = select_table_columns_relevant_variables(
+        dependence=dependence,
+        variables_nonmissing=variables_nonmissing,
+        variables_prefix_nonmissing=variables_prefix_nonmissing,
+        independence=independence,
+        independence_prefix=independence_prefix,
+        table=table,
+        report=report,
+    )
 
+    # Apply any transformations to the scale or distribution of values in
+    # dependent and independent variables.
+    table = control_transformations_on_variables(
+        dependence=dependence,
+        dependence_logical_binary=dependence_logical_binary,
+        dependence_scale_transforms=dependence_scale_transforms,
+        independence=independence,
+        independence_prefix=independence_prefix,
+        independence_scale=independence_scale,
+        table=table,
+        report=report,
+    )
 
+    # Translate format of table for interpretation in PLINK2.
+    table = control_translate_table_format_for_plink2(
+        dependence=dependence,
+        dependence_logical_binary=dependence_logical_binary,
+        table=table,
+        report=report,
+    )
 
     # Collect in record the cohort table after filters, selections, and
     # stratifications on samples (rows) and variables (columns).
@@ -1984,6 +2659,9 @@ def control_stratify_genotype_cohorts(
 
 ###############################################################################
 # Procedure
+
+# TODO: TCW; 8 November 2022
+# TODO: may I simply drop indicator variables for all "site" categories with fewer than 10 samples?
 
 
 def execute_procedure(
@@ -2107,35 +2785,16 @@ def execute_procedure(
     # TODO: the record's "group" value specifies the name of the directory
     # TODO: the record's "name" value specifies the name of the "table_*.tsv" file
 
-
-    #############old procedure###################
-
-    if False:
-
-        # Extract names of sets.
-        stratification_sets = list(set(table_stratification["set"].to_list()))
-        if (True):
-            stratification_sets.insert(0, "reference_population")
-        # Iterate on sets of stratification cohorts and models.
-        for stratification_set in stratification_sets:
-            # Stratify cohorts and models in set.
-            pail_set = execute_organize_stratification_genotype_cohorts_models(
-                table=source["table_phenotypes"],
-                table_kinship_pairs=table_kinship_pairs,
-                table_stratification=table_stratification,
-                stratification_set=stratification_set,
-                variance_scale=False, # whether to standardize variance scale
-                format_plink=True, # whether to convert table formats for PLINK2
-                report=True,
-            )
-            # Write product information to file.
-            write_genotype_product(
-                pail_write=pail_set,
-                directory=stratification_set,
-                paths=paths,
-            )
+    for record_cohort in records_cohorts:
+        # Write product information to file.
+        write_genotype_product(
+            pail_write=pail_set,
+            directory=stratification_set,
+            paths=paths,
+        )
         pass
     pass
+
 
 
 #

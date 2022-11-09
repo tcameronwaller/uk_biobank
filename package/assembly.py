@@ -329,7 +329,12 @@ def read_source(
         sep="\t",
         header=0,
     )
-    table_ukbiobank_variables["field"].astype("string")
+    table_ukbiobank_variables["field"] = (
+        table_ukbiobank_variables["field"].astype(
+            "string",
+            copy=True,
+            errors="raise",
+    ))
     variables_types = extract_organize_variables_types(
         table_ukbiobank_variables=table_ukbiobank_variables,
         columns=columns_accession,
@@ -570,7 +575,12 @@ def determine_ukbiobank_field_instance_columns_keep(
             "field", "array_collection", "instances_keep"
         ])
     ]
-    table_ukbiobank_variables["field"].astype("string")
+    table_ukbiobank_variables["field"] = (
+        table_ukbiobank_variables["field"].astype(
+            "string",
+            copy=True,
+            errors="raise",
+    ))
     table_ukbiobank_variables.set_index(
         "field",
         drop=True,
@@ -779,7 +789,11 @@ def simplify_field_values_array_columns(
     table_ukb = table_ukb_raw.copy(deep=True)
     table_variables = table_ukbiobank_variables.copy(deep=True)
     # Organize information.
-    table_variables["field"].astype("string")
+    table_variables["field"] = table_variables["field"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_variables = table_variables.loc[
         :, table_variables.columns.isin(["field", "type", "array_collection"])
     ]
@@ -920,25 +934,41 @@ def merge_table_variables_identifiers(
         inplace=True,
     )
     # Organize data.
-    table_identifier_pairs.astype("string")
+    table_identifier_pairs = table_identifier_pairs.astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_identifier_pairs.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    table_ukb_41826["eid"].astype("string")
+    table_ukb_41826["eid"] = table_ukb_41826["eid"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_ukb_41826.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    table_ukb_43878["eid"].astype("string")
+    table_ukb_43878["eid"] = table_ukb_43878["eid"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_ukb_43878.set_index(
         "eid",
         drop=True,
         inplace=True,
     )
-    table_ukb_47488["eid"].astype("string")
+    table_ukb_47488["eid"] = table_ukb_47488["eid"].astype(
+        "string",
+        copy=True,
+        errors="raise",
+    )
     table_ukb_47488.set_index(
         "eid",
         drop=True,
