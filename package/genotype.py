@@ -1964,7 +1964,7 @@ def control_transformations_on_variables(
         (dependence_scale_transforms == 1)
     ):
         for variable in columns_dependence:
-            table = apply_transformations_to_variable_distribution_scale(
+            table = pscale.apply_transformations_to_variable_distribution_scale(
                 column=str(variable),
                 logarithm_e=True,
                 standard_z_score=True,
@@ -2549,8 +2549,8 @@ def control_stratify_genotype_cohorts(
 
     # Collect information for record.
     record = dict()
-    record["group"] = str(group)
-    record["name"] = str(name)
+    record["group"] = str(group).strip()
+    record["name"] = str(name).strip()
 
     # Control filters, selections, stratifications on all samples (rows)
     # regardless of sex.
@@ -2651,10 +2651,83 @@ def control_stratify_genotype_cohorts(
     return record
 
 
-
-
 ##########
 # Write
+
+
+def write_genotype_product_table(
+    name=None,
+    table=None,
+    path_directory=None,
+):
+    """
+    Writes product information in a Pandas data frame table to file.
+
+    arguments:
+        name (str): base name for file
+        table (object): Pandas data frame table
+        path_directory (str): path to directory in which to write file
+
+    raises:
+
+    returns:
+
+    """
+
+    # Specify directories and files.
+    path_table = os.path.join(
+        path_directory, str(name + ".pickle")
+    )
+    path_table_text = os.path.join(
+        path_directory, str(name + ".tsv")
+    )
+    # Write information to file.
+    table.to_pickle(
+        path_table
+    )
+    table.to_csv(
+        path_or_buf=path_table_text,
+        sep="\t",
+        header=True,
+        index=False,
+        na_rep="NA",
+    )
+    pass
+
+
+def control_write_genotype_product(
+    pail_write=None,
+    directory=None,
+    path_parent=None,
+):
+    """
+    Writes product information to file.
+
+    arguments:
+        pail_write (dict): collection of information to write to file
+        directory (str): name of child directory to create within parent
+            directory
+        path_parent (str): path to parent directory
+
+    raises:
+
+    returns:
+
+    """
+
+    # Define path to directories.
+    path_directory = os.path.join(path_parent, directory)
+    # Initialize directories.
+    utility.create_directories(
+        path=path_directory,
+    )
+    # Write genotype cohort, model tables in PLINK format.
+    write_genotype_product_table(
+        name=pail_write["name"],
+        table=pail_write["table"],
+        path_directory=path_directory,
+    )
+    pass
 
 
 ###############################################################################
@@ -2683,7 +2756,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW; 11 October 2022")
+    print("version check: TCW; 9 November 2022")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -2779,18 +2852,12 @@ def execute_procedure(
         records_cohorts=records_cohorts,
     )
 
-
-    # TODO: TCW; 11 October 2022
-    # TODO: now write those 'records_cohorts' to file...
-    # TODO: the record's "group" value specifies the name of the directory
-    # TODO: the record's "name" value specifies the name of the "table_*.tsv" file
-
+    # Write product information to file.
     for record_cohort in records_cohorts:
-        # Write product information to file.
-        write_genotype_product(
-            pail_write=pail_set,
-            directory=stratification_set,
-            paths=paths,
+        control_write_genotype_product(
+            pail_write=record_cohort,
+            directory=record_cohort["group"],
+            path_parent=paths["genotype"],
         )
         pass
     pass
