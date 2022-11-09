@@ -1972,7 +1972,7 @@ def control_transformations_on_variables(
                 suffix_logarithm_e="_log",
                 suffix_standard_z_score="_z",
                 suffix_rank_inverse="_rank",
-                table=record["table"],
+                table=table,
                 report=False,
             )
         pass
