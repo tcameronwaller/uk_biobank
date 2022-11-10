@@ -1768,7 +1768,7 @@ def control_report_unrelated_kinship_priority(
 
     # Report.
     report_kinship_filter_priority_selection(
-        name="... Comparison of priority to female persons in population ...",
+        name="... Comparison of priority to male persons in cohort ...",
         priority_values=["male",],
         priority_variable="sex_text",
         table_full=table_full,
@@ -2735,6 +2735,17 @@ def control_write_genotype_product(
 
 # TODO: TCW; 8 November 2022
 # TODO: may I simply drop indicator variables for all "site" categories with fewer than 10 samples?
+
+#"genotype_array_axiom"
+
+#Assessment Site
+#- Example: "site_indicator_manchester"
+#- Example: "site_indicator_oxford"
+#- Include all of these site indicator variables in the phenotype table for GWAS.
+#- Also include the "site" variable for convenience.
+#- Summarize counts for each site.
+#- - For each value of "site" variable, report counts of records.
+#- Select independent covariates accordingly.
 
 
 def execute_procedure(
