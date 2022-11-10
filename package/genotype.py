@@ -2637,6 +2637,20 @@ def control_stratify_genotype_cohorts(
         report=report,
     )
 
+    # Report count of samples in tables for special cohorts.
+    if (
+        (str("female_male_bipolar_case_body") in str(name)) or
+        (str("female_male_bipolar_control_body") in str(name))
+    ):
+        utility.print_terminal_partition(level=2)
+        print("Sample Counts for Special Cohort")
+        print("group: " + str(group))
+        print("cohort: " + str(name))
+        print("sample counts:")
+        print(str(table.shape[0]))
+        utility.print_terminal_partition(level=3)
+        pass
+
     # Collect in record the cohort table after filters, selections, and
     # stratifications on samples (rows) and variables (columns).
     record["table"] = table
