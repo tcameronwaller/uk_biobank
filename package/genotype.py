@@ -2590,7 +2590,10 @@ def control_stratify_genotype_cohorts(
 
     # Control filters, selections, stratifications on samples (rows) by the
     # kinship coefficient (relatedness) between persons in the cohort.
-    if (str("female_male_bipolar_case_body") in str(name)):
+    if (
+        (str("female_male_bipolar_case_body") in str(name)) or
+        (str("female_male_bipolar_control_body") in str(name))
+    ):
         report_kinship = True
     else:
         report_kinship = report
