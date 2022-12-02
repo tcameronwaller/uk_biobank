@@ -47,6 +47,9 @@ import promiscuity.utility as utility
 ###############################################################################
 # Functionality
 
+# TODO: TCW; 23 November 2022
+# TODO: Some functionality herein will move to "promiscuity.extraction".
+
 # TODO: TCW; 14 July 2022
 # TODO: For convenience in preparing the table(s) for the article, I'd like to change the format of the summaries, especially for heritability.
 # TODO: Refer to notes on the heritability table for the article.
@@ -325,121 +328,13 @@ def read_collect_organize_stratification_designs_studies(
 # Read heritability estimates
 
 
-def read_extract_heritability_design_study_detail(
-    file_name=None,
-    file_prefix=None,
-    file_suffix=None,
-    design=None,
-    study=None,
-    path_parent_directory=None,
-):
-    """
-    Reads and extracts information from log of LDSC for heritability estimation
-    from GWAS summary statistics.
-
-    arguments:
-        file_name (str): name of a file
-        file_prefix (str): file name prefix to recognize relevant files and to
-            extract identifier
-        file_suffix (str): file name suffix to recognize relevant files and to
-            extract identifier
-        design (str): name of design for set of studies
-        study (str): name of study
-        path_parent_directory (str): path to source parent directory
-            for stratification tables
-
-    raises:
-
-    returns:
-        (dict): information about estimation of a phenotype's heritability
-
-    """
-
-    # Define path to file.
-    path_file = os.path.join(
-        path_parent_directory, file_name
-    )
-    # Initialize variables for extraction.
-    variants = float("nan")
-    heritability = float("nan")
-    heritability_error = float("nan")
-    confidence_95_low = float("nan")
-    confidence_95_high = float("nan")
-    #confidence_95 = float("nan")
-    ratio = float("nan")
-    ratio_error = float("nan")
-    # Read relevant lines from file.
-    lines = utility.read_file_text_lines(
-        path_file=path_file,
-        start=22,
-        stop=30,
-    )
-    # Extract information from lines.
-    prefix_variants = "After merging with regression SNP LD, "
-    suffix_variants = " SNPs remain."
-    prefix_heritability = "Total Observed scale h2: "
-    prefix_ratio = "Ratio: "
-    for line in lines:
-        if prefix_variants in line:
-            variants = int(
-                line.replace(prefix_variants, "").replace(suffix_variants, "")
-            )
-        elif prefix_heritability in line:
-            content = line.replace(prefix_heritability, "")
-            contents = content.split(" (")
-            heritability_test = contents[0]
-            if (not "NA" in heritability_test):
-                heritability = float(contents[0])
-                heritability_error = float(contents[1].replace(")", ""))
-            pass
-        elif (
-            (not math.isnan(heritability)) and
-            (prefix_ratio in line)
-        ):
-            content = line.replace(prefix_ratio, "")
-            contents = content.split(" (")
-            ratio_test = contents[0]
-            if (not "NA" in ratio_test):
-                ratio = float(contents[0])
-                ratio_error = float(
-                    contents[1].replace(")", "")
-                )
-            pass
-        pass
-    # Organize information.
-    if (
-        (not pandas.isna(heritability)) and
-        (not pandas.isna(heritability_error))
-    ):
-        confidence_95_low = (heritability - (1.96 * heritability_error))
-        confidence_95_high = (heritability + (1.96 * heritability_error))
-        pass
-    confidence_95 = str(
-        str(round(confidence_95_low, 4)) + " ... " +
-        str(round(confidence_95_high, 4))
-    )
-    summary_error = str(
-        str(heritability) + " (" + str(round(heritability_error, 4)) + ")"
-    )
-    summary_interval = str(
-        "(h2: " + str(heritability) + "; 95% CI: " + str(confidence_95) + ")"
-    )
-    # Collect information.
-    record = dict()
-    record["design"] = design
-    record["study"] = study
-    record["summary_error"] = summary_error
-    record["summary_interval"] = summary_interval
-    record["variants"] = variants
-    record["heritability"] = heritability
-    record["standard_error"] = heritability_error
-    record["confidence_95_low"] = confidence_95_low
-    record["confidence_95_high"] = confidence_95_high
-    record["confidence_95_range"] = confidence_95
-    record["ratio"] = ratio
-    record["ratio_standard_error"] = ratio_error
-    # Return information.
-    return record
+# TODO: TCW; 23 November 2022
+# TODO: this function needs to be split up... write new function in "promiscuity.extraction" that includes basics...
+# previous function name: "read_extract_heritability_design_study_detail()"
+# moved to promiscuity.extraction on 28 November 2022
+# simplify the function, do not collect study or design name within the new function
+#    record["design"] = design
+#    record["study"] = study
 
 
 def read_collect_organize_heritability_by_many_files_per_directory(
@@ -700,179 +595,13 @@ def define_cohort_names_to_extract_from_table_names():
     return cohorts
 
 
-# TODO: TCW; 24 October 2022
-# TODO: introduce "interval_99"
 
-def read_extract_correlation_design_study_pair_detail(
-    file_name=None,
-    file_prefix=None,
-    file_suffix=None,
-    design=None,
-    study_primary=None,
-    study_secondary=None,
-    path_parent_directory=None,
-):
-    """
-    Reads and extracts information from log of LDSC for genetic correlation
-    estimation from GWAS summary statistics.
-
-    arguments:
-        file_name (str): name of a file
-        file_prefix (str): file name prefix to recognize relevant files and to
-            extract identifier
-        file_suffix (str): file name suffix to recognize relevant files and to
-            extract identifier
-        design (str): name of design for set of studies
-        study_primary (str): name of primary study
-        study_secondary (str): name of secondary study
-        path_parent_directory (str): path to source parent directory
-            for stratification tables
-
-    raises:
-
-    returns:
-        (dict): information about estimation of genetic correlation for a pair
-            of studies
-    """
-
-    # Define path to file.
-    path_file = os.path.join(
-        path_parent_directory, file_name
-    )
-    # Initialize variables.
-    variants = float("nan")
-    correlation = float("nan")
-    correlation_error = float("nan")
-    interval_95 = float("nan")
-    confidence_95_low = float("nan")
-    confidence_95_high = float("nan")
-    confidence_95_not_one = float("nan")
-    confidence_95_not_zero = float("nan")
-    correlation_absolute = float("nan")
-    probability = float("nan")
-    # Read relevant lines from file.
-    lines = utility.read_file_text_lines(
-        path_file=path_file,
-        start=25,
-        stop=57,
-    )
-    # Initialize flag.
-    missing_correlation = False
-    # Extract information from lines.
-    prefix_variants = ""
-    suffix_variants = " SNPs with valid alleles."
-    prefix_correlation = "Genetic Correlation: "
-    prefix_probability = "P: "
-    for line in lines:
-        if suffix_variants in line:
-            variants = float(
-                line.replace(prefix_variants, "").replace(suffix_variants, "")
-            )
-        elif prefix_correlation in line:
-            content = line.replace(prefix_correlation, "")
-            contents = content.split(" (")
-            correlation_test = contents[0]
-            if (not "nan" in correlation_test):
-                correlation = float(contents[0])
-                correlation_absolute = math.fabs(correlation)
-                correlation_error = float(contents[1].replace(")", ""))
-            else:
-                # Main report has a missing value ("nan") for correlation.
-                # Importantly, the report also has a prefix for genetic
-                # correlation.
-                missing_correlation = True
-            pass
-        elif (
-            (not math.isnan(correlation)) and
-            (prefix_probability in line)
-        ):
-            probability = float(line.replace(prefix_probability, ""))
-            pass
-        pass
-
-    # Determine whether main report has a missing value ("nan") correlation.
-    #if missing_correlation:
-    if False:
-        # Initialize flag.
-        summary_table = False
-        # Determine whether report has a summary table.
-        # Keep index of prefix title.
-        # Read relevant lines from file.
-        lines = utility.read_file_text_lines(
-            path_file=path_file,
-            start=50,
-            stop=250,
-        )
-        index = 50
-        index_title = float("nan")
-        count_lines = len(lines)
-        for line in lines:
-            if "Summary of Genetic Correlation Results" in line:
-                summary_table = True
-                index_title = index
-            index += 1
-        if summary_table:
-            # Read values from bottom table in report.
-            table = pandas.read_csv(
-                path_file,
-                sep="\s+",
-                header=(index_title + 2),
-                #skip_blank_lines=True,
-            )
-            print(path_file)
-            print(table)
-    # Organize information.
-    if (
-        (not pandas.isna(correlation)) and
-        (not pandas.isna(correlation_error))
-    ):
-        interval_95 = float(1.96 * correlation_error)
-        confidence_95_low = (correlation - interval_95)
-        confidence_95_high = (correlation + interval_95)
-        if (
-            (confidence_95_low < 1.0) and (confidence_95_high < 1.0)
-        ):
-            confidence_95_not_one = 1
-        else:
-            confidence_95_not_one = 0
-        if (
-            ((confidence_95_low > 0) and (confidence_95_high > 0)) or
-            ((confidence_95_low < 0) and (confidence_95_high < 0))
-        ):
-            confidence_95_not_zero = 1
-        else:
-            confidence_95_not_zero = 0
-        pass
-    confidence_95 = str(
-        str(round(confidence_95_low, 4)) + " ... " +
-        str(round(confidence_95_high, 4))
-    )
-    summary_error = str(
-        str(correlation) + " (" + str(round(correlation_error, 4)) + ")"
-    )
-    summary_interval = str(
-        "(rg: " + str(correlation) + "; 95% CI: " + str(confidence_95) + ")"
-    )
-    # Collect information.
-    record = dict()
-    record["design"] = design
-    record["study_primary"] = study_primary
-    record["study_secondary"] = study_secondary
-    record["summary_error"] = summary_error
-    record["summary_interval"] = summary_interval
-    record["variants"] = variants
-    record["correlation"] = correlation
-    record["standard_error"] = correlation_error
-    record["interval_95"] = interval_95
-    record["confidence_95_low"] = confidence_95_low
-    record["confidence_95_high"] = confidence_95_high
-    record["confidence_95_range"] = confidence_95
-    record["confidence_95_not_one"] = confidence_95_not_one
-    record["confidence_95_not_zero"] = confidence_95_not_zero
-    record["correlation_absolute"] = correlation_absolute
-    record["probability"] = probability
-    # Return information.
-    return record
+# TODO: TCW; 28 November 2022
+# previous function name: "read_extract_correlation_design_study_pair_detail()"
+# moved to promiscuity.extraction on 28 November 2022
+# simplify the function, do not collect study or design name within the new function
+#    record["design"] = design
+#    record["study"] = study
 
 
 def read_collect_organize_correlation_design_pairs(
