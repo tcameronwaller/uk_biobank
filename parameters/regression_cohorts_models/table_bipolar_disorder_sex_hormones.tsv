@@ -1,33 +1,43 @@
 execution	cohort	cohort_sort	dependence	dependence_sort	dependence_type	independence	model	model_sort	model_adjustment	model_context	model_note
-1	female	0	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone	1	1	adjust_full	null_hypothesis	full adjust null
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust_full	joint	full adjust joint
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	adjust_full	marginal	full adjust marginal oestradiol
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;oestradiol_bioavailable_imputation	4	4	adjust_full	marginal	full adjust marginal oestradiol bioavailable
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;oestradiol_free_imputation	5	5	adjust_full	marginal	full adjust marginal oestradiol free
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;testosterone_imputation	6	6	adjust_full	marginal	full adjust marginal testosterone
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;testosterone_bioavailable_imputation	7	7	adjust_full	marginal	full adjust marginal testosterone bioavailable
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;testosterone_free_imputation	8	8	adjust_full	marginal	full adjust marginal testosterone free
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;steroid_globulin_imputation	9	9	adjust_full	marginal	full adjust marginal steroid globulin
-0	female	1	bipolar_control_case_strict	1	logistic	births;menopause_ordinal;oophorectomy;hysterectomy;age;body;region;season;alteration_sex_hormone;albumin_imputation	10	10	adjust_full	marginal	full adjust marginal albumin
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;region;season;alteration_sex_hormone	11	11	adjust_partial	null_hypothesis	partial adjust null
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	12	12	adjust_partial	joint	partial adjust joint
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_imputation	13	13	adjust_partial	marginal	partial adjust marginal oestradiol
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_bioavailable_imputation	14	14	adjust_partial	marginal	partial adjust marginal oestradiol bioavailable
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_free_imputation	15	15	adjust_partial	marginal	partial adjust marginal oestradiol free
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_imputation	16	16	adjust_partial	marginal	partial adjust marginal testosterone
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_bioavailable_imputation	17	17	adjust_partial	marginal	partial adjust marginal testosterone bioavailable
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_free_imputation	18	18	adjust_partial	marginal	partial adjust marginal testosterone free
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;steroid_globulin_imputation	19	19	adjust_partial	marginal	partial adjust marginal steroid globulin
-1	female	1	bipolar_control_case_strict	1	logistic	age;body;albumin_imputation	20	20	adjust_partial	marginal	partial adjust marginal albumin
-1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	21	21	unadjust	joint	unadjust joint
-1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_imputation	22	22	unadjust	marginal	marginal unadjust oestradiol
-1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_bioavailable_imputation	23	23	unadjust	marginal	unadjust marginal oestradiol bioavailable
-1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_free_imputation	24	24	unadjust	marginal	unadjust marginal oestradiol free
-1	female	1	bipolar_control_case_strict	1	logistic	testosterone_imputation	25	25	unadjust	marginal	unadjust marginal testosterone
-1	female	1	bipolar_control_case_strict	1	logistic	testosterone_bioavailable_imputation	26	26	unadjust	marginal	unadjust marginal testosterone bioavailable
-1	female	1	bipolar_control_case_strict	1	logistic	testosterone_free_imputation	27	27	unadjust	marginal	unadjust marginal testosterone free
-1	female	1	bipolar_control_case_strict	1	logistic	steroid_globulin_imputation	28	28	unadjust	marginal	unadjust marginal steroid globulin
-1	female	1	bipolar_control_case_strict	1	logistic	albumin_imputation	29	29	unadjust	marginal	unadjust marginal albumin
+1	female	0	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season	1	1	adjust_full	null_hypothesis	full adjust null
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust_full	joint	full adjust joint
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;oestradiol_imputation	3	3	adjust_full	marginal	full adjust marginal oestradiol
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;oestradiol_bioavailable_imputation	4	4	adjust_full	marginal	full adjust marginal oestradiol bioavailable
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;oestradiol_free_imputation	5	5	adjust_full	marginal	full adjust marginal oestradiol free
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;testosterone_imputation	6	6	adjust_full	marginal	full adjust marginal testosterone
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;testosterone_bioavailable_imputation	7	7	adjust_full	marginal	full adjust marginal testosterone bioavailable
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;testosterone_free_imputation	8	8	adjust_full	marginal	full adjust marginal testosterone free
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;steroid_globulin_imputation	9	9	adjust_full	marginal	full adjust marginal steroid globulin
+0	female	1	bipolar_control_case_strict	1	logistic	births;oophorectomy;hysterectomy;menopause_ordinal;alteration_sex_hormone;age;body;region;season;albumin_imputation	10	10	adjust_full	marginal	full adjust marginal albumin
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body	11	11	adjust_partial	null_hypothesis	partial adjust null
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	12	12	adjust_partial	joint	partial adjust joint
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;oestradiol_imputation	13	13	adjust_partial	marginal	partial adjust marginal oestradiol
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;oestradiol_bioavailable_imputation	14	14	adjust_partial	marginal	partial adjust marginal oestradiol bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;oestradiol_free_imputation	15	15	adjust_partial	marginal	partial adjust marginal oestradiol free
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;testosterone_imputation	16	16	adjust_partial	marginal	partial adjust marginal testosterone
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;testosterone_bioavailable_imputation	17	17	adjust_partial	marginal	partial adjust marginal testosterone bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;testosterone_free_imputation	18	18	adjust_partial	marginal	partial adjust marginal testosterone free
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;steroid_globulin_imputation	19	19	adjust_partial	marginal	partial adjust marginal steroid globulin
+1	female	1	bipolar_control_case_strict	1	logistic	menopause_ordinal;alteration_sex_hormone;age;body;albumin_imputation	20	20	adjust_partial	marginal	partial adjust marginal albumin
+1	female	1	bipolar_control_case_strict	1	logistic	age;body	21	21	adjust_less	null_hypothesis	less adjust null
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	22	22	adjust_less	joint	less adjust joint
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_imputation	23	23	adjust_less	marginal	less adjust marginal oestradiol
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_bioavailable_imputation	24	24	adjust_less	marginal	less adjust marginal oestradiol bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;oestradiol_free_imputation	25	25	adjust_less	marginal	less adjust marginal oestradiol free
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_imputation	26	26	adjust_less	marginal	less adjust marginal testosterone
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_bioavailable_imputation	27	27	adjust_less	marginal	less adjust marginal testosterone bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;testosterone_free_imputation	28	28	adjust_less	marginal	less adjust marginal testosterone free
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;steroid_globulin_imputation	29	29	adjust_less	marginal	less adjust marginal steroid globulin
+1	female	1	bipolar_control_case_strict	1	logistic	age;body;albumin_imputation	30	30	adjust_less	marginal	less adjust marginal albumin
+1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	31	31	unadjust	joint	unadjust joint
+1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_imputation	32	32	unadjust	marginal	marginal unadjust oestradiol
+1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_bioavailable_imputation	33	33	unadjust	marginal	unadjust marginal oestradiol bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	oestradiol_free_imputation	34	34	unadjust	marginal	unadjust marginal oestradiol free
+1	female	1	bipolar_control_case_strict	1	logistic	testosterone_imputation	35	35	unadjust	marginal	unadjust marginal testosterone
+1	female	1	bipolar_control_case_strict	1	logistic	testosterone_bioavailable_imputation	36	36	unadjust	marginal	unadjust marginal testosterone bioavailable
+1	female	1	bipolar_control_case_strict	1	logistic	testosterone_free_imputation	37	37	unadjust	marginal	unadjust marginal testosterone free
+1	female	1	bipolar_control_case_strict	1	logistic	steroid_globulin_imputation	38	38	unadjust	marginal	unadjust marginal steroid globulin
+1	female	1	bipolar_control_case_strict	1	logistic	albumin_imputation	39	39	unadjust	marginal	unadjust marginal albumin
 0	female_menstruation_regular	2	bipolar_control_case_strict	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone	1	1	adjust	null_hypothesis	adjust null
 0	female_menstruation_regular	2	bipolar_control_case_strict	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;oestradiol_imputation;testosterone_imputation;steroid_globulin_imputation;albumin_imputation	2	2	adjust	joint	adjust joint
 0	female_menstruation_regular	2	bipolar_control_case_strict	1	logistic	menstruation_phase_cycle;births;menopause_ordinal;age;body;region;season;alteration_sex_hormone;oestradiol_imputation	3	3	adjust	marginal	adjust marginal oestradiol
