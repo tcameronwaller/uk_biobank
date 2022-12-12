@@ -1747,7 +1747,7 @@ def organize_description_table_quantitation(
         "albumin", "albumin_imputation",
         "steroid_globulin", "steroid_globulin_imputation",
         #"cholesterol", "cholesterol_imputation",
-        #"vitamin_d", "vitamin_d_imputation",
+        "vitamin_d", "vitamin_d_imputation",
         "oestradiol", "oestradiol_imputation",
         "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
         "oestradiol_free", "oestradiol_free_imputation",
@@ -1761,8 +1761,8 @@ def organize_description_table_quantitation(
         #"age_menopause_never_oophorectomy",
         #"age_oophorectomy", "age_hysterectomy",
         #"neuroticism",
-        "alcohol_frequency",
-        "alcohol_drinks_weekly", "alcohol_drinks_monthly",
+        #"alcohol_frequency",
+        #"alcohol_drinks_weekly", "alcohol_drinks_monthly",
         "alcohol_drinks_monthly_combination",
         "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
     ]
@@ -2108,11 +2108,10 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 ##########
 
 # TODO: TCW; 12 December 2022
-# For the most part, this function's structure looks good.
-# Follow pattern of function "prepare_phenotype_variables_in_stratification_cohorts"
-# within the "plot.py" module.
-# This function makes it possible to apply scale transformations that are specific to a cohort after stratification.
-
+# Organize the cohorts and variables for the "quantitation" table.
+# We want "age", "bmi", and maybe "alcohol_consumption_combination"
+# Also include Estradiol, Testosterone, SHBG, and Albumin
+# Heck, also include Vitamin D just for fun.
 
 def prepare_phenotype_variables_in_stratification_cohorts(
     set_tables=None,
@@ -2144,13 +2143,12 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     if ("attribution" in set_tables):
         # Initialize collection.
         records_cohorts = list()
-        # Histograms.
+        # Attribution Table.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
                 table=table,
         ))
-        # Filter relevant cohorts.
         # Filter relevant cohorts.
         names_cohorts = [
             #"female_male",
@@ -2210,11 +2208,56 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     elif ("quantitation" in set_tables):
         # Initialize collection.
         records_cohorts = list()
-        # Dot trajectory plots of menstrual cycle.
+        # Attribution Table.
+        # Stratify records within separate tables for cohorts.
         records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_female_menstruation(
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
                 table=table,
         ))
+        # Filter relevant cohorts.
+        names_cohorts = [
+            #"female_male",
+            #"female",
+            #"female_menstruation_regular",
+            #"female_premenopause",
+            #"female_perimenopause",
+            #"female_postmenopause",
+            #"male",
+            #"male_age_low",
+            #"male_age_middle",
+            #"male_age_high",
+            #"identity_white_female_male",
+            #"identity_white_female",
+            #"identity_white_female_menstruation_regular",
+            #"identity_white_female_premenopause",
+            #"identity_white_female_perimenopause",
+            #"identity_white_female_postmenopause",
+            #"identity_white_male",
+            #"identity_white_male_age_low",
+            #"identity_white_male_age_middle",
+            #"identity_white_male_age_high",
+            "bipolar_case_female_male",
+            "bipolar_case_female",
+            "bipolar_case_male",
+            "bipolar_control_female_male",
+            "bipolar_control_female",
+            "bipolar_control_male",
+            #"identity_white_alcohol_current_female_male",
+            #"identity_white_alcohol_current_female",
+            #"identity_white_alcohol_current_female_menstruation_regular",
+            #"identity_white_alcohol_current_female_premenopause",
+            #"identity_white_alcohol_current_female_perimenopause",
+            #"identity_white_alcohol_current_female_postmenopause",
+            #"identity_white_alcohol_current_male",
+            #"identity_white_alcohol_current_male_age_low",
+            #"identity_white_alcohol_current_male_age_middle",
+            #"identity_white_alcohol_current_male_age_high",
+        ]
+        records_cohorts = utility.filter_records_by_name(
+            names=names_cohorts,
+            records=records_cohorts,
+            report=True,
+        )
         # Apply Distribution Scale Transformations to variables of interest in
         # each cohort.
         records_cohorts = (
@@ -2468,7 +2511,7 @@ def execute_procedure(
         create_tables_for_phenotype_variables_in_cohorts(
             set_cohorts="phenotype",
             set_tables=[
-                "attribution",
+                "attribution", "quantitation",
             ], # "attribution", "missingness", "threshold", "quantitation",
             paths=paths,
             report=True,
