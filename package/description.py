@@ -100,22 +100,12 @@ def initialize_directories(
     # Define paths to directories.
     paths["dock"] = path_dock
     paths["description"] = os.path.join(path_dock, "description")
-    paths["description_tables"] = os.path.join(paths["description"], "tables")
-    paths["description_plots"] = os.path.join(paths["description"], "plots")
 
     # Remove previous files to avoid version or batch confusion.
     if restore:
         utility.remove_directory(path=paths["description"])
     # Initialize directories.
-    utility.create_directories(
-        path=paths["description"]
-    )
-    utility.create_directories(
-        path=paths["description_tables"]
-    )
-    utility.create_directories(
-        path=paths["description_plots"]
-    )
+    utility.create_directories(path=paths["description"])
     # Return information.
     return paths
 
@@ -403,13 +393,13 @@ def define_variables_description_table_attribution():
         # Variable: "ancestry_self_white"
 
         record = dict()
-        record["name"] = "ancestry_white"
+        record["name"] = "identity_white"
         record["variable"] = "ancestry_self_white" # cat. or discrete variable
         record["value"] = 1 # categorical or discrete value of variable
         records.append(record)
 
         record = dict()
-        record["name"] = "ancestry_other"
+        record["name"] = "identity_other"
         record["variable"] = "ancestry_self_white" # cat. or discrete variable
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
@@ -459,7 +449,7 @@ def define_variables_description_table_attribution():
         records.append(record)
 
     # Variable: "alteration_sex_hormone"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "alteration_sex_hormone_0"
@@ -475,7 +465,7 @@ def define_variables_description_table_attribution():
 
 
     # Variable: "pregnancy"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "pregnancy_0"
@@ -491,7 +481,7 @@ def define_variables_description_table_attribution():
 
 
     # Variable: "births_any"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "births_any_0"
@@ -702,7 +692,7 @@ def define_variables_description_table_attribution():
     # 3: "Once or twice a week"
     # 4: "Three or four times a week"
     # 5: "Daily or almost daily"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "alcohol_frequency_0"
@@ -2114,7 +2104,7 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 
 
 ##########
-# Management of tables on phenotype variables in stratification cohorts
+# Management of tables on phenotype variables within stratification cohorts
 ##########
 
 # TODO: TCW; 12 December 2022
@@ -2122,6 +2112,142 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 # Follow pattern of function "prepare_phenotype_variables_in_stratification_cohorts"
 # within the "plot.py" module.
 # This function makes it possible to apply scale transformations that are specific to a cohort after stratification.
+
+
+def prepare_phenotype_variables_in_stratification_cohorts(
+    set_tables=None,
+    table=None,
+    report=None,
+):
+    """
+    Prepare phenotype variables within stratification cohorts for relevant types
+    of plots.
+
+    arguments:
+        set_tables (list<str>): names of description tables to create
+        paths (dict<str>): collection of paths to directories for procedure's
+            files
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (dict<list<dict>>): collection of records with information about cohorts
+
+    """
+
+    # Collect information.
+    pail_cohorts = dict()
+
+    # Prepare phenotype variables in stratification cohorts specific to each
+    # type of plot.
+    if ("attribution" in set_tables):
+        # Initialize collection.
+        records_cohorts = list()
+        # Histograms.
+        # Stratify records within separate tables for cohorts.
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+                table=table,
+        ))
+        # Filter relevant cohorts.
+        # Filter relevant cohorts.
+        names_cohorts = [
+            #"female_male",
+            #"female",
+            #"female_menstruation_regular",
+            #"female_premenopause",
+            #"female_perimenopause",
+            #"female_postmenopause",
+            #"male",
+            #"male_age_low",
+            #"male_age_middle",
+            #"male_age_high",
+            #"identity_white_female_male",
+            #"identity_white_female",
+            #"identity_white_female_menstruation_regular",
+            #"identity_white_female_premenopause",
+            #"identity_white_female_perimenopause",
+            #"identity_white_female_postmenopause",
+            #"identity_white_male",
+            #"identity_white_male_age_low",
+            #"identity_white_male_age_middle",
+            #"identity_white_male_age_high",
+            "bipolar_case_female_male",
+            "bipolar_case_female",
+            "bipolar_case_male",
+            "bipolar_control_female_male",
+            "bipolar_control_female",
+            "bipolar_control_male",
+            #"identity_white_alcohol_current_female_male",
+            #"identity_white_alcohol_current_female",
+            #"identity_white_alcohol_current_female_menstruation_regular",
+            #"identity_white_alcohol_current_female_premenopause",
+            #"identity_white_alcohol_current_female_perimenopause",
+            #"identity_white_alcohol_current_female_postmenopause",
+            #"identity_white_alcohol_current_male",
+            #"identity_white_alcohol_current_male_age_low",
+            #"identity_white_alcohol_current_male_age_middle",
+            #"identity_white_alcohol_current_male_age_high",
+        ]
+        records_cohorts = utility.filter_records_by_name(
+            names=names_cohorts,
+            records=records_cohorts,
+            report=True,
+        )
+        # Collect information.
+        pail_cohorts["attribution"] = copy.deepcopy(records_cohorts)
+    elif ("missingness" in set_tables):
+        # Initialize collection.
+        records_cohorts = list()
+        # Box plots for groups.
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+                table=table,
+        ))
+        # Collect information.
+        pail_cohorts["missingness"] = copy.deepcopy(records_cohorts)
+    elif ("quantitation" in set_tables):
+        # Initialize collection.
+        records_cohorts = list()
+        # Dot trajectory plots of menstrual cycle.
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_female_menstruation(
+                table=table,
+        ))
+        # Apply Distribution Scale Transformations to variables of interest in
+        # each cohort.
+        records_cohorts = (
+            scale.drive_transformations_on_multiple_variables_in_cohorts(
+                variables=[
+                    #"body",
+                    #"alcohol_drinks_monthly_combination",
+                    #"alcohol_frequency",
+                    #"alcohol_auditc",
+                    #"vitamin_d_imputation",
+                    #"oestradiol_imputation",
+                    #"oestradiol_bioavailable_imputation",
+                    #"oestradiol_free_imputation",
+                    #"testosterone_imputation",
+                    #"testosterone_bioavailable_imputation",
+                    #"testosterone_free_imputation",
+                    "steroid_globulin_imputation",
+                    "albumin_imputation",
+                ],
+                records_cohorts=records_cohorts,
+                report=True,
+        ))
+        # Collect information.
+        pail_cohorts["quantitation"] = copy.deepcopy(records_cohorts)
+    else:
+        # Initialize collection.
+        records_cohorts = list()
+        records_cohorts = []
+        # Collect information.
+        pail_cohorts["other"] = copy.deepcopy(records_cohorts)
+        pass
+    # Return information
+    return pail_cohorts
 
 
 def create_tables_for_phenotype_variables_in_cohorts(
@@ -2170,48 +2296,14 @@ def create_tables_for_phenotype_variables_in_cohorts(
             path_dock=paths["dock"],
             report=True,
         )
-        records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
-                table=source["table_phenotypes"],
-        ))
-        # Filter relevant cohorts.
-        names_cohorts = [
-            "female_male",
-            "female",
-            "female_menstruation_regular",
-            "female_premenopause",
-            "female_perimenopause",
-            "female_postmenopause",
-            "male",
-            "male_age_low",
-            "male_age_middle",
-            "male_age_high",
-            "identity_white_female_male",
-            "identity_white_female",
-            "identity_white_female_menstruation_regular",
-            "identity_white_female_premenopause",
-            "identity_white_female_perimenopause",
-            "identity_white_female_postmenopause",
-            "identity_white_male",
-            "identity_white_male_age_low",
-            "identity_white_male_age_middle",
-            "identity_white_male_age_high",
-            #"identity_white_alcohol_current_female_male",
-            #"identity_white_alcohol_current_female",
-            #"identity_white_alcohol_current_female_menstruation_regular",
-            #"identity_white_alcohol_current_female_premenopause",
-            #"identity_white_alcohol_current_female_perimenopause",
-            #"identity_white_alcohol_current_female_postmenopause",
-            #"identity_white_alcohol_current_male",
-            #"identity_white_alcohol_current_male_age_low",
-            #"identity_white_alcohol_current_male_age_middle",
-            #"identity_white_alcohol_current_male_age_high",
-        ]
-        records_cohorts = utility.filter_records_by_name(
-            names=names_cohorts,
-            records=records_cohorts,
-            report=True,
+        # Prepare information about phenotype variables within stratification
+        # cohorts.
+        pail_cohorts = prepare_phenotype_variables_in_stratification_cohorts(
+            set_tables=set_tables,
+            table=source["table_phenotypes"],
+            report=report,
         )
+        pass
     elif (set_cohorts == "read"):
         path_directory = os.path.join(
             paths["dock"], "stratification", "vitamin_d_linear",
@@ -2227,7 +2319,7 @@ def create_tables_for_phenotype_variables_in_cohorts(
     # Attribution table.
     if ("attribution" in set_tables):
         table_attribution = organize_description_table_attribution(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["attribution"],
             report=report,
         )
     else:
@@ -2236,7 +2328,7 @@ def create_tables_for_phenotype_variables_in_cohorts(
     # Missingness table.
     if ("missingness" in set_tables):
         table_missingness = organize_description_table_missingness(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["missingness"],
             report=report,
         )
     else:
@@ -2247,7 +2339,7 @@ def create_tables_for_phenotype_variables_in_cohorts(
     # Quantitation table.
     if ("quantitation" in set_tables):
         table_quantitation = organize_description_table_quantitation(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["quantitation"],
             report=report,
         )
     else:
@@ -2269,7 +2361,7 @@ def create_tables_for_phenotype_variables_in_cohorts(
     # Write product information to file.
     write_product_tables(
         pail=pail,
-        path_parent=paths["description_tables"],
+        path_parent=paths["description"],
     )
     pass
 
