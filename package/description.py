@@ -272,8 +272,8 @@ def read_source_correlation_summary_tables(
                 "correlation": "float32",
                 "standard_error": "float32",
                 "interval_95": "float32",
-                "confidence_95_low": "float32",
-                "confidence_95_high": "float32",
+                "range_95_low": "float32",
+                "range_95_high": "float32",
                 "probability": "float32",
             },
             report=report,
@@ -1639,25 +1639,34 @@ def organize_quantitation_record(
     ]
 
     # Count records.
-    count_total = int(table.shape[0])
-    count_total_genotype = int(table_genotype.shape[0])
+    record["count_cohort_total_records"] = int(table.shape[0])
+    record["count_cohort_total_genotypes"] = int(table_genotype.shape[0])
+    count_total = record["count_cohort_total_records"]
+    count_total_genotype = record["count_cohort_total_genotypes"]
     percentage_total_genotype = round(
         ((count_total_genotype / count_total) * 100), 3
     )
+    record["percentage_cohort_total_genotypes"] = str(
+        str(record["count_cohort_total_genotypes"]) + " (" +
+        str(percentage_total_genotype) + "%)"
+    )
     # Initialize missing values.
-    count_variable = float("nan")
-    percentage_variable = float("nan")
-    count_genotype_variable = float("nan")
-    percentage_genotype_variable = float("nan")
-    mean = float("nan")
-    standard_error = float("nan")
-    interval_95 = float("nan")
-    confidence_95_low = float("nan")
-    confidence_95_high = float("nan")
-    median = float("nan")
-    standard_deviation = float("nan")
-    minimum = float("nan")
-    maximum = float("nan")
+    record["count_variable_non_missing"] = float("nan")
+    record["percentage_variable_non_missing"] = str("nan (nan%)")
+    record["count_variable_genotypes"] = float("nan")
+    record["percentage_variable_genotypes"] = str("nan (nan%)")
+    record["median"] = float("nan")
+    record["minimum"] = float("nan")
+    record["maximum"] = float("nan")
+    record["mean"] = float("nan")
+    record["standard_deviation"] = float("nan")
+    record["standard_error"] = float("nan")
+    record["interval_95"] = float("nan")
+    record["range_95_low"] = float("nan")
+    record["range_95_high"] = float("nan")
+    record["interval_99"] = float("nan")
+    record["range_99_low"] = float("nan")
+    record["range_99_high"] = float("nan")
     # Determine whether table has the column.
     if (variable in table.columns.to_list()):
         array = copy.deepcopy(table[variable].dropna().to_numpy()) # non-missing
@@ -1665,58 +1674,42 @@ def organize_quantitation_record(
             table_genotype[variable].dropna().to_numpy()
         ) # non-missing variable values with genotypes
         # Determine count of valid values.
-        count_variable = int(array.size)
+        record["count_variable_non_missing"] = int(array.size)
+        count_variable = record["count_variable_non_missing"]
         percentage_variable = round(
-            ((count_variable / count_total) * 100), 3
+            float((count_variable / count_total) * 100), 3
         )
-        count_genotype_variable = int(array_genotype.size)
+        record["percentage_variable_non_missing"] = str(
+            str(count_variable) + " (" +
+            str(percentage_variable) + "%)"
+        )
+        record["count_variable_genotypes"] = int(array_genotype.size)
+        count_genotype_variable = record["count_variable_genotypes"]
         percentage_genotype_variable = round(
             ((count_genotype_variable / count_total) * 100), 3
+        )
+        record["percentage_variable_genotypes"] = str(
+            str(count_genotype_variable) + " (" +
+            str(percentage_genotype_variable) + "%)"
         )
         if (count_variable > 10):
             # Determine mean, median, standard deviation, and standard error of
             # values in array.
-            mean = numpy.nanmean(array)
-            standard_error = scipy.stats.sem(array)
-            interval_95 = (1.96 * standard_error)
-            confidence_95_low = (mean - interval_95)
-            confidence_95_high = (mean + interval_95)
-            median = numpy.nanmedian(array)
-            standard_deviation = numpy.nanstd(array)
-            minimum = numpy.nanmin(array)
-            maximum = numpy.nanmax(array)
+            record["median"] = numpy.nanmedian(array)
+            record["minimum"] = numpy.nanmin(array)
+            record["maximum"] = numpy.nanmax(array)
+            record["mean"] = numpy.nanmean(array)
+            record["standard_deviation"] = numpy.nanstd(array)
+            record["standard_error"] = scipy.stats.sem(array)
+            # Confidence intervals and ranges.
+            pail_confidence = (
+                utility.determine_95_99_confidence_intervals_ranges(
+                    estimate=record["mean"],
+                    standard_error=record["standard_error"],
+            ))
+            record.update(pail_confidence)
             pass
         pass
-    # Collect information for record.
-    record["count_cohort_total_records"] = count_total
-    record["count_cohort_total_genotypes"] = count_total_genotype
-    record["percentage_cohort_total_genotypes"] = str(
-        str(count_total_genotype) + " (" +
-        str(percentage_total_genotype) + "%)"
-    )
-    record["count_variable_non_missing"] = str(count_variable)
-    record["percentage_variable_non_missing"] = str(
-        str(count_variable) + " (" + str(percentage_variable) + "%)"
-    )
-    record["count_variable_genotypes"] = str(count_genotype_variable)
-    record["percentage_variable_genotypes"] = str(
-        str(count_genotype_variable) + " (" +
-        str(percentage_genotype_variable) + "%)"
-    )
-    record["median"] = str(round(median, 7))
-    record["minimum"] = str(round(minimum, 7))
-    record["maximum"] = str(round(maximum, 7))
-    record["mean"] = str(round(mean, 7))
-    record["standard_deviation"] = str(round(standard_deviation, 7))
-    record["range_confidence_95"] = str(
-        str(round(confidence_95_low, 3)) + " ... " +
-        str(round(confidence_95_high, 3))
-    )
-    record["standard_error"] = str(round(standard_error, 7))
-    record["interval_95"] = str(round(interval_95, 7))
-    record["confidence_95_low"] = str(round(confidence_95_low, 7))
-    record["confidence_95_high"] = str(round(confidence_95_high, 7))
-
     # Return information.
     return record
 
@@ -1744,16 +1737,25 @@ def organize_description_table_quantitation(
     # Define variables.
     variables = [
         "age", "body",
-        "albumin", "albumin_imputation",
-        "steroid_globulin", "steroid_globulin_imputation",
+        #"albumin",
+        "albumin_imputation",
+        #"steroid_globulin",
+        "steroid_globulin_imputation",
         #"cholesterol", "cholesterol_imputation",
-        "vitamin_d", "vitamin_d_imputation",
-        "oestradiol", "oestradiol_imputation",
-        "oestradiol_bioavailable", "oestradiol_bioavailable_imputation",
-        "oestradiol_free", "oestradiol_free_imputation",
-        "testosterone", "testosterone_imputation",
-        "testosterone_bioavailable", "testosterone_bioavailable_imputation",
-        "testosterone_free", "testosterone_free_imputation",
+        #"vitamin_d",
+        "vitamin_d_imputation",
+        #"oestradiol",
+        "oestradiol_imputation",
+        #"oestradiol_bioavailable",
+        "oestradiol_bioavailable_imputation",
+        #"oestradiol_free",
+        "oestradiol_free_imputation",
+        #"testosterone",
+        "testosterone_imputation",
+        #"testosterone_bioavailable",
+        "testosterone_bioavailable_imputation",
+        #"testosterone_free",
+        "testosterone_free_imputation",
         #"menstruation_days", "menstruation_duration",
         #"pregnancies", "pregnancies_early", "births",
         #"age_menarche", # necessary data-field is unavailable
@@ -1801,11 +1803,15 @@ def organize_description_table_quantitation(
         "maximum",
         "mean",
         "standard_deviation",
-        "range_confidence_95",
         "standard_error",
+        "range_95",
+        "range_99",
         "interval_95",
-        "confidence_95_low",
-        "confidence_95_high",
+        "range_95_low",
+        "range_95_high",
+        "interval_99",
+        "range_99_low",
+        "range_99_high",
     ]
     table = table.loc[
         :, table.columns.isin(columns)
