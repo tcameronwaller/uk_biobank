@@ -1,4 +1,4 @@
-create_tables_for_phenotype_variables_in_cohorts"""
+"""
 Describe variables from data of the U.K. Biobank.
 
 Author:
