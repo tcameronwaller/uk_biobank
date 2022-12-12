@@ -2139,12 +2139,10 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     report=None,
 ):
     """
-    Drive creation of descriptive charts about phenotypes across cohorts from
-    the UK Biobank.
+    Prepare phenotype variables within stratification cohorts for relevant types
+    of plots.
 
     arguments:
-        set_cohorts (str): name of the set of cohorts for which to create
-            description tables; "genotype", "phenotype", or "read"
         set_plots (list<str>): names of plots to create
         paths (dict<str>): collection of paths to directories for procedure's
             files
@@ -2153,13 +2151,18 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     raises:
 
     returns:
-        (list<dict>): records with information about cohorts
+        (dict<list<dict>>): collection of records with information about cohorts
 
     """
+
+    # Collect information.
+    pail_cohorts = dict()
 
     # Prepare phenotype variables in stratification cohorts specific to each
     # type of plot.
     if ("histogram" in set_plots):
+        # Initialize collection.
+        records_cohorts = list()
         # Histograms.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
@@ -2216,23 +2219,37 @@ def prepare_phenotype_variables_in_stratification_cohorts(
                 records_cohorts=records_cohorts,
                 report=True,
         ))
+        # Collect information.
+        pail_cohorts["histogram"] = copy.deepcopy(records_cohorts)
     elif ("box" in set_plots):
+        # Initialize collection.
+        records_cohorts = list()
         # Box plots for groups.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
                 table=table,
         ))
+        # Collect information.
+        pail_cohorts["box"] = copy.deepcopy(records_cohorts)
     elif ("dot_trajectory_menstruation" in set_plots):
+        # Initialize collection.
+        records_cohorts = list()
         # Dot trajectory plots of menstrual cycle.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_female_menstruation(
                 table=table,
         ))
+        # Collect information.
+        pail_cohorts["dot"] = copy.deepcopy(records_cohorts)
     else:
+        # Initialize collection.
+        records_cohorts = list()
         records_cohorts = []
+        # Collect information.
+        pail_cohorts["other"] = copy.deepcopy(records_cohorts)
         pass
     # Return information
-    return records_cohorts
+    return pail_cohorts
 
 
 def create_plots_for_phenotype_variables_in_cohorts(
@@ -2270,7 +2287,7 @@ def create_plots_for_phenotype_variables_in_cohorts(
         )
         # Prepare information about phenotype variables within stratification
         # cohorts.
-        records_cohorts = prepare_phenotype_variables_in_stratification_cohorts(
+        pail_cohorts = prepare_phenotype_variables_in_stratification_cohorts(
             set_plots=set_plots,
             table=source["table_phenotypes"],
             report=report,
@@ -2281,7 +2298,7 @@ def create_plots_for_phenotype_variables_in_cohorts(
     # Histograms.
     if ("histogram" in set_plots):
         pail_histogram = drive_create_plots_histogram(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["histogram"],
             report=report,
         )
     else:
@@ -2290,7 +2307,7 @@ def create_plots_for_phenotype_variables_in_cohorts(
     # Box plots for groups.
     if ("box" in set_plots):
         pail_box = drive_create_plots_box(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["box"],
             report=report,
         )
     else:
@@ -2299,7 +2316,7 @@ def create_plots_for_phenotype_variables_in_cohorts(
     # Dot trajectory plots of menstrual cycle.
     if ("dot_trajectory_menstruation" in set_plots):
         pail_dot_menstruation = create_plots_dot_trajectory_menstruation(
-            records_cohorts=records_cohorts,
+            records_cohorts=pail_cohorts["dot"],
             report=report,
         )
     else:

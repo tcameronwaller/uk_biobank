@@ -2117,6 +2117,12 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 # Management of tables on phenotype variables in stratification cohorts
 ##########
 
+# TODO: TCW; 12 December 2022
+# For the most part, this function's structure looks good.
+# Follow pattern of function "prepare_phenotype_variables_in_stratification_cohorts"
+# within the "plot.py" module.
+# This function makes it possible to apply scale transformations that are specific to a cohort after stratification.
+
 
 def create_tables_for_phenotype_variables_in_cohorts(
     set_cohorts=None,
@@ -2355,7 +2361,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW, 18 August 2021")
+    print("version check: TCW, 12 December 2022")
     # Pause procedure.
     time.sleep(5.0)
 
