@@ -1784,6 +1784,9 @@ def drive_create_plots_box(
     return pail
 
 
+# Dot trajectory plot
+
+
 def plot_variable_means_dot_trajectory(
     label_title=None,
     column_phenotype=None,
@@ -1910,7 +1913,6 @@ def plot_variable_means_dot_trajectory(
     )
     # Return.
     return figure
-
 
 
 def organize_phenotypes_plots_dot_trajectory_month(
@@ -2671,6 +2673,7 @@ def read_organize_regression_summaries_create_forest_plots(
     return pail_plots
 
 
+
 ##########
 # Management of plots on sumaries of genetic correlation analyses
 ##########
@@ -3145,16 +3148,6 @@ def create_plots_for_analysis_summaries(
 # Write
 ##########
 
-
-
-###############################################################################
-# Drivers
-# The purpose of these driver functions is to make the module's functionality
-# accessible in modular parts.
-
-# TODO: TCW; 01 June 2022
-# TODO: Eventually, adapt this function so that it can create plots for cohors
-# TODO: from multiple sources, including genotype GWAS cohorts read from file.
 
 ################################################################################
 # Procedure
