@@ -72,6 +72,14 @@ import uk_biobank.organization as ukb_organization
 ###############################################################################
 # Functionality
 
+#####
+# TODO: TCW; 13 December 2022
+# It might be reasonable to move some of the functionality herein to the "promiscuity.utility" module
+# or to another module such as "promiscuity.report".
+# For example, the main record function for the quantitation table would be generally useful.
+#####
+
+
 
 ##########
 # Initialization
