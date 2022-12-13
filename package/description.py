@@ -65,6 +65,7 @@ import networkx
 import promiscuity.utility as utility
 import promiscuity.regression as pro_reg
 import promiscuity.plot as plot
+import promiscuity.scale as pscale
 import uk_biobank.stratification as ukb_strat
 import uk_biobank.organization as ukb_organization
 
@@ -2267,7 +2268,7 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         # Apply Distribution Scale Transformations to variables of interest in
         # each cohort.
         records_cohorts = (
-            scale.drive_transformations_on_multiple_variables_in_cohorts(
+            pscale.drive_transformations_on_multiple_variables_in_cohorts(
                 variables=[
                     #"body",
                     #"alcohol_drinks_monthly_combination",
