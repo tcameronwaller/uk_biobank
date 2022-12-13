@@ -2201,7 +2201,7 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         )
         # Collect information.
         pail_cohorts["attribution"] = copy.deepcopy(records_cohorts)
-    elif ("missingness" in set_tables):
+    if ("missingness" in set_tables):
         # Initialize collection.
         records_cohorts = list()
         # Box plots for groups.
@@ -2211,7 +2211,7 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         ))
         # Collect information.
         pail_cohorts["missingness"] = copy.deepcopy(records_cohorts)
-    elif ("quantitation" in set_tables):
+    if ("quantitation" in set_tables):
         # Initialize collection.
         records_cohorts = list()
         # Attribution Table.
@@ -2288,12 +2288,6 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         ))
         # Collect information.
         pail_cohorts["quantitation"] = copy.deepcopy(records_cohorts)
-    else:
-        # Initialize collection.
-        records_cohorts = list()
-        records_cohorts = []
-        # Collect information.
-        pail_cohorts["other"] = copy.deepcopy(records_cohorts)
         pass
     # Return information
     return pail_cohorts
