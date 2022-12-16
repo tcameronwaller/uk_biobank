@@ -1611,6 +1611,8 @@ def organize_description_table_quantitation(
     # Create a table from records of quantitation.
     table_quantitation = pdesc.drive_assemble_quantitation_table(
         variables=variables,
+        variable_attribution="genotype_availability",
+        value_attribution=1,
         records_cohorts=records_cohorts,
         report=report,
     )
