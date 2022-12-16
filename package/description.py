@@ -14,7 +14,7 @@ License:
     (https://github.com/tcameronwaller/uk_biobank/).
 
     UK_Biobank supports analyses on data from the U.K. Biobank.
-    Copyright (C) 2021 Thomas Cameron Waller
+    Copyright (C) 2022 Thomas Cameron Waller
 
     UK_Biobank is free software: you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
@@ -66,6 +66,7 @@ import promiscuity.utility as utility
 import promiscuity.regression as pro_reg
 import promiscuity.plot as plot
 import promiscuity.scale as pscale
+import promiscuity.description as pdesc
 import uk_biobank.stratification as ukb_strat
 import uk_biobank.organization as ukb_organization
 
@@ -75,9 +76,14 @@ import uk_biobank.organization as ukb_organization
 #####
 # TODO: TCW; 13 December 2022
 # It might be reasonable to move some of the functionality herein to the "promiscuity.utility" module
-# or to another module such as "promiscuity.report".
+# or to another module such as "promiscuity.description" (descriptive statistics, report summary tables, etc).
 # For example, the main record function for the quantitation table would be generally useful.
 #####
+
+# TODO: TCW; 15 December 2022
+# Restructure to move the "attribution record" and "quantitation record" functions to "promiscuity".
+# Also move the driver functions that assemble the tables to "promiscuity".
+# These driver functions can accept the list of cohorts and the parameters for reports on variables.
 
 
 
@@ -364,17 +370,17 @@ def read_organize_cohorts(
 ##########
 
 
-def define_variables_description_table_attribution():
+def define_variables_table_attribution():
     """
-    Defines categorical or discrete variables and their values for description
-    in attribution table.
+    Defines values of nominal, categorical, or discrete variables for
+    description in attribution table.
 
     arguments:
 
     raises:
 
     returns:
-        (list<dict>): records with information about cohorts
+        (list<dict>): records with information about values of variables
 
     """
 
@@ -810,74 +816,6 @@ def define_variables_description_table_attribution():
     return records
 
 
-def organize_attribution_record(
-    name_cohort=None,
-    name_variable_value=None,
-    variable=None,
-    value=None,
-    table=None,
-):
-    """
-    Organize a record (single row in table) to describe attribution of
-    categorical or discrete variable values across cohorts.
-
-    arguments:
-        name_cohort (str): name of cohort
-        name_variable_value (str): name of variable's value for report
-        variable (str): name of table's column for variable
-        value (object): categorical or discrete value of variable
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
-
-    raises:
-
-    returns:
-        (dict): information for summary table record on cohort
-
-    """
-
-    # Collect information for record.
-    record = dict()
-    record["cohort"] = str(name_cohort)
-    record["variable_value"] = str(name_variable_value)
-    record["variable"] = str(variable)
-    record["value"] = str(value)
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Stratify table.
-    # Select relevant rows of the table.
-    table_variable_value = table.loc[
-        (
-            (~pandas.isna(table[variable])) &
-            (table[variable] == value)
-        ), :
-    ]
-
-    # Count records.
-    count_total = table.shape[0]
-    count_variable_value = table_variable_value.shape[0]
-
-    # Calculate percentages.
-    if (count_total > 0):
-        percentage_variable_value = round(
-            ((count_variable_value / count_total) * 100), 3
-        )
-    else:
-        percentage_variable_value = float("nan")
-        pass
-
-    # Collect information for record.
-    record["count_cohort_total_records"] = count_total
-    record["count_variable_value"] = count_variable_value
-    record["count_variable_value_report"] = str(
-        str(count_variable_value) +
-        " (" + str(percentage_variable_value) + "%)"
-    )
-    # Return information.
-    return record
-
-
 def organize_description_table_attribution(
     records_cohorts=None,
     report=None,
@@ -897,39 +835,24 @@ def organize_description_table_attribution(
 
     """
 
-    # Define variables.
-    records_variables = define_variables_description_table_attribution()
-
-    # Collect summary records for rows within description table.
-    records_description = list()
-    # Iterate on cohorts.
-    for record_cohort in records_cohorts:
-        # Iterate on variables.
-        for record_variable in records_variables:
-            # Organize information for description record.
-            record_description = organize_attribution_record(
-                name_cohort=record_cohort["name"],
-                name_variable_value=record_variable["name"],
-                variable=record_variable["variable"],
-                value=record_variable["value"],
-                table=record_cohort["table"],
-            )
-            # Collect records.
-            records_description.append(record_description)
-            pass
-        pass
-    # Organize table.
-    table_description = pandas.DataFrame(data=records_description)
+    # Define values of variables for attribution.
+    records_attribution = define_variables_table_attribution()
+    # Create a table from records of attribution.
+    table_attribution = pdesc.drive_assemble_attribution_table(
+        records_attribution=records_attribution,
+        records_cohorts=records_cohorts,
+        report=report,
+    )
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("report: ")
         print("organize_description_table_attribution()")
         utility.print_terminal_partition(level=3)
-        print(table_description)
         pass
     # Return information.
-    return table_description
+    return table_attribution
+
 
 
 ##########
@@ -1607,139 +1530,17 @@ def organize_cohorts_hormone_deficiency(
 ##########
 
 
-def organize_quantitation_record(
-    name_cohort=None,
-    variable=None,
-    table=None,
-):
+def define_variables_table_quantitation():
     """
-    Organize a record (single row in table) to describe for measures on
-    quantitative variables across cohorts.
-
-    Report percentages relative to the total count of records in the cohort.
+    Defines discrete or continuous variables on ordinal, interval, or ratio
+    scales for description in quantitation table.
 
     arguments:
-        name_cohort (str): name of cohort
-        variable (str): name of table's column for variable
-        table (object): Pandas data frame of phenotype variables across UK
-            Biobank cohort
 
     raises:
 
     returns:
-        (dict): information for summary table record on cohort
-
-    """
-
-    # Collect information for record.
-    record = dict()
-    record["cohort"] = str(name_cohort)
-    record["variable"] = str(variable)
-    # Copy information.
-    table = table.copy(deep=True)
-
-    # Stratify table.
-    # Select relevant rows of the table.
-    table_genotype = table.loc[
-        (
-            (~pandas.isna(table["genotype_availability"])) &
-            (table["genotype_availability"] == 1)
-        ), :
-    ]
-
-    # Count records.
-    record["count_cohort_total_records"] = int(table.shape[0])
-    record["count_cohort_total_genotypes"] = int(table_genotype.shape[0])
-    count_total = record["count_cohort_total_records"]
-    count_total_genotype = record["count_cohort_total_genotypes"]
-    percentage_total_genotype = round(
-        ((count_total_genotype / count_total) * 100), 3
-    )
-    record["percentage_cohort_total_genotypes"] = str(
-        str(record["count_cohort_total_genotypes"]) + " (" +
-        str(percentage_total_genotype) + "%)"
-    )
-    # Initialize missing values.
-    record["count_variable_non_missing"] = float("nan")
-    record["percentage_variable_non_missing"] = str("nan (nan%)")
-    record["count_variable_genotypes"] = float("nan")
-    record["percentage_variable_genotypes"] = str("nan (nan%)")
-    record["median"] = float("nan")
-    record["minimum"] = float("nan")
-    record["maximum"] = float("nan")
-    record["mean"] = float("nan")
-    record["standard_deviation"] = float("nan")
-    record["standard_error"] = float("nan")
-    record["interval_95"] = float("nan")
-    record["range_95_low"] = float("nan")
-    record["range_95_high"] = float("nan")
-    record["interval_99"] = float("nan")
-    record["range_99_low"] = float("nan")
-    record["range_99_high"] = float("nan")
-    # Determine whether table has the column.
-    if (variable in table.columns.to_list()):
-        array = copy.deepcopy(table[variable].dropna().to_numpy()) # non-missing
-        array_genotype = copy.deepcopy(
-            table_genotype[variable].dropna().to_numpy()
-        ) # non-missing variable values with genotypes
-        # Determine count of valid values.
-        record["count_variable_non_missing"] = int(array.size)
-        count_variable = record["count_variable_non_missing"]
-        percentage_variable = round(
-            float((count_variable / count_total) * 100), 3
-        )
-        record["percentage_variable_non_missing"] = str(
-            str(count_variable) + " (" +
-            str(percentage_variable) + "%)"
-        )
-        record["count_variable_genotypes"] = int(array_genotype.size)
-        count_genotype_variable = record["count_variable_genotypes"]
-        percentage_genotype_variable = round(
-            ((count_genotype_variable / count_total) * 100), 3
-        )
-        record["percentage_variable_genotypes"] = str(
-            str(count_genotype_variable) + " (" +
-            str(percentage_genotype_variable) + "%)"
-        )
-        if (count_variable > 10):
-            # Determine mean, median, standard deviation, and standard error of
-            # values in array.
-            record["median"] = numpy.nanmedian(array)
-            record["minimum"] = numpy.nanmin(array)
-            record["maximum"] = numpy.nanmax(array)
-            record["mean"] = numpy.nanmean(array)
-            record["standard_deviation"] = numpy.nanstd(array)
-            record["standard_error"] = scipy.stats.sem(array)
-            # Confidence intervals and ranges.
-            pail_confidence = (
-                utility.determine_95_99_confidence_intervals_ranges(
-                    estimate=record["mean"],
-                    standard_error=record["standard_error"],
-            ))
-            record.update(pail_confidence)
-            pass
-        pass
-    # Return information.
-    return record
-
-
-def organize_description_table_quantitation(
-    records_cohorts=None,
-    report=None,
-):
-    """
-    Organizes a description table for measures on quantitative variables. Most
-    relevant for quantitative variables of Ratio Scale, but also informative for
-    Interval and Ordinal Scales.
-
-    arguments:
-        records_cohorts (list<dict>): records with information about cohorts
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of missingness of hormones in cohorts
+        (list<str>): names of variables
 
     """
 
@@ -1778,64 +1579,51 @@ def organize_description_table_quantitation(
         "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
     ]
 
-    # Collect summary records for rows within description table.
-    records_description = list()
-    # Iterate on cohorts.
-    for record_cohort in records_cohorts:
-        # Iterate on variables.
-        for variable in variables:
-            # Organize information for description record.
-            record_description = organize_quantitation_record(
-                name_cohort=record_cohort["name"],
-                variable=variable,
-                table=record_cohort["table"],
-            )
-            # Collect records.
-            records_description.append(record_description)
-            pass
-        pass
-    # Organize table.
-    table = pandas.DataFrame(data=records_description)
-    # Select and sort relevant columns from table.
-    columns = [
-        "cohort",
-        "variable",
-        "count_cohort_total_records",
-        "count_cohort_total_genotypes",
-        "percentage_cohort_total_genotypes",
-        "count_variable_non_missing",
-        "percentage_variable_non_missing",
-        "count_variable_genotypes",
-        "percentage_variable_genotypes",
-        "median",
-        "minimum",
-        "maximum",
-        "mean",
-        "standard_deviation",
-        "standard_error",
-        "range_95",
-        "range_99",
-        "interval_95",
-        "range_95_low",
-        "range_95_high",
-        "interval_99",
-        "range_99_low",
-        "range_99_high",
-    ]
-    table = table.loc[
-        :, table.columns.isin(columns)
-    ]
-    table = table[[*columns]]
+    # Return information
+    return variables
+
+
+def organize_description_table_quantitation(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Drives the assembly of a description table from records of quantitative
+    descriptive statistics on variables of interest.
+
+    These descriptive statistics are most appropriate for continuous variables
+    on interval, or ratio scales, but they can also be informative for discrete
+    variables on ordinal scales.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of missingness of hormones in cohorts
+
+    """
+
+    # Define variables.
+    variables = define_variables_table_quantitation()
+    # Create a table from records of quantitation.
+    table_quantitation = pdesc.drive_assemble_quantitation_table(
+        variables=variables,
+        records_cohorts=records_cohorts,
+        report=report,
+    )
+
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
         print("report: ")
         print("organize_description_table_quantitation()")
         utility.print_terminal_partition(level=3)
-        print(table)
         pass
     # Return information.
-    return table
+    return table_quantitation
 
 
 ##########
@@ -2122,11 +1910,6 @@ def organize_report_variables_summaries_record_hormone_cohort_ordinal(
 # Management of tables on phenotype variables within stratification cohorts
 ##########
 
-# TODO: TCW; 12 December 2022
-# Organize the cohorts and variables for the "quantitation" table.
-# We want "age", "bmi", and maybe "alcohol_consumption_combination"
-# Also include Estradiol, Testosterone, SHBG, and Albumin
-# Heck, also include Vitamin D just for fun.
 
 def prepare_phenotype_variables_in_stratification_cohorts(
     set_tables=None,
