@@ -72,10 +72,13 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 ###############################################################################
 # Functionality
 
-# TODO: 28 October 2022
-# TODO: implement more versatile parsing of ICD9 and ICD10 diagnostic codes
-# TODO: read codes from file "table_diagnosis_icd_codes.tsv" within ".../parameters/uk_biobank/"
-# TODO: include Schizophrenia, Bipolar Disorder, Alcohol, etc
+
+# "genotype_white_british"???
+# "ancestry_white_british"???
+
+# "ancestry_self_white" --> "identity_white"
+
+# "white_british" --> "ancestry_white_british"
 
 ##########
 # Initialization
@@ -182,6 +185,12 @@ def read_source(
         #"table_ukb_samples": table_ukb_samples,
     }
 
+
+# TODO: 22 February 2023
+# TODO: implement more versatile parsing of ICD9 and ICD10 diagnostic codes
+# TODO: read codes from file "table_diagnosis_icd_codes.tsv" within ".../parameters/uk_biobank/"
+# TODO: include Alcohol Dependence, Bipolar Disorder, Major Depressive Disorder, Schizophrenia, Multiple Personality Disorder, etc
+# TODO: Follow pattern of the parameter tables for other field codes, etc
 
 def read_source_fields_codes_interpretations(
     path_dock=None,
@@ -7733,7 +7742,7 @@ def determine_female_menstruation_cycle_regular_duration_range(
     return value
 
 
-# review: TCW on 20 January 2022
+# Review: TCW; 22 February 2023
 def determine_female_menopause_ordinal(
     sex_text=None,
     age=None,
@@ -7836,10 +7845,6 @@ def determine_female_menopause_ordinal(
             (
                 (not pandas.isna(menopause_self_report)) and
                 (menopause_self_report == 1)
-            ) or
-            (
-                (not pandas.isna(oophorectomy)) and
-                (oophorectomy == 1)
             )
         ):
             # Person qualifies for post-menopause.
