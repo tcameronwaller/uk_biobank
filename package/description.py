@@ -370,6 +370,12 @@ def read_organize_cohorts(
 ##########
 
 
+# TODO: TCW; 22 February 2023
+# TODO: calculate counts relevant to the manuscript
+# TODO: need counts in cohorts of any ancestry-race-ethnicity AND in "identity_white" and in "ancestry_white_british"
+
+
+
 def define_variables_table_attribution():
     """
     Defines values of nominal, categorical, or discrete variables for
@@ -448,18 +454,18 @@ def define_variables_table_attribution():
         record["value"] = "bileve" # categorical or discrete value of variable
         records.append(record)
 
-    # Variable: "white_british"
+    # Variable: "ancestry_white_british"
     if False:
 
         record = dict()
-        record["name"] = "white_british_0"
-        record["variable"] = "white_british" # categorical or discrete variable
+        record["name"] = "ancestry_white_british_0"
+        record["variable"] = "ancestry_white_british" # categorical or discrete variable
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
 
         record = dict()
-        record["name"] = "white_british_1"
-        record["variable"] = "white_british" # categorical or discrete variable
+        record["name"] = "ancestry_white_british_1"
+        record["variable"] = "ancestry_white_british" # categorical or discrete variable
         record["value"] = 1 # categorical or discrete value of variable
         records.append(record)
 

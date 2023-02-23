@@ -73,12 +73,7 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 # Functionality
 
 
-# "genotype_white_british"???
-# "ancestry_white_british"???
-
 # "ancestry_self_white" --> "identity_white"
-
-# "white_british" --> "ancestry_white_british"
 
 ##########
 # Initialization
@@ -734,7 +729,7 @@ def organize_genotype_principal_component_variables(
     )
     # Organize indicator variable for genetic ancestry in the category of
     # "white british".
-    table["white_british"] = table.apply(
+    table["ancestry_white_british"] = table.apply(
         lambda row:
             determine_ancestry_white_british(
                 field_22006=row["22006-0.0"],
@@ -766,11 +761,11 @@ def organize_genotype_principal_component_variables(
         # Categorical ancestry and ethnicity.
         utility.print_terminal_partition(level=2)
         print("Categorical ancestry and ethnicity")
-        table_white_british = table.loc[
-            (table["white_british"] == 1), :
+        table_ancestry_white_british = table.loc[
+            (table["ancestry_white_british"] == 1), :
         ]
         print("total persons: " + str(table.shape[0]))
-        print("white british persons: " + str(table_white_british.shape[0]))
+        print("white british persons: " + str(table_ancestry_white_british.shape[0]))
     # Return information.
     return table
 

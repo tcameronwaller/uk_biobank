@@ -135,6 +135,8 @@ import promiscuity.scale as pscale
 ############################################
 ############################################
 
+
+
 ##########
 # Phenotype cohorts
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
@@ -1289,6 +1291,10 @@ def drive_stratify_phenotype_cohorts_set_female_menstruation(
     return records
 
 
+# TODO: TCW; 22 February 2023
+# TODO: for manuscript, need to know counts in any ancestry-race-ethnicity, "identity_white", and "ancestry_white_british"
+
+
 # review: TCW; 24 October 2022
 def drive_stratify_phenotype_cohorts_set_description_tables(
     table=None,
@@ -1357,7 +1363,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="white_british",
+            column_special="ancestry_white_british",
             values_special=[1,],
             prefix_name="ancestry_white_british_",
             table=table,
@@ -1439,7 +1445,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
-            column_special="white_british",
+            column_special="ancestry_white_british",
             values_special=[1,],
             prefix_name="ancestry_white_british_genotype_",
             table=table,
