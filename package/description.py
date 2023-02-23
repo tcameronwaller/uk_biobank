@@ -411,17 +411,17 @@ def define_variables_table_attribution():
         records.append(record)
 
 
-        # Variable: "ancestry_self_white"
+        # Variable: "identity_white"
 
         record = dict()
         record["name"] = "identity_white"
-        record["variable"] = "ancestry_self_white" # cat. or discrete variable
+        record["variable"] = "identity_white" # cat. or discrete variable
         record["value"] = 1 # categorical or discrete value of variable
         records.append(record)
 
         record = dict()
         record["name"] = "identity_other"
-        record["variable"] = "ancestry_self_white" # cat. or discrete variable
+        record["variable"] = "identity_white" # cat. or discrete variable
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
 

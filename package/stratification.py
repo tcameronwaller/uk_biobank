@@ -956,7 +956,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
         ), :
     ]
@@ -974,7 +974,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0)
         ), :
@@ -990,7 +990,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "male")
         ), :
     ]
@@ -1007,7 +1007,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menstruation_regular_range"] == 1)
@@ -1026,7 +1026,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 0)
@@ -1043,7 +1043,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 1)
@@ -1060,7 +1060,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["menopause_ordinal"] == 2)
@@ -1079,7 +1079,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["age_grade_female"] == 0)
@@ -1096,7 +1096,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["age_grade_female"] == 1)
@@ -1113,7 +1113,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "female") &
             (table["pregnancy"] == 0) &
             (table["age_grade_female"] == 2)
@@ -1130,7 +1130,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "male") &
             (table["age_grade_male"] == 0)
         ), :
@@ -1146,7 +1146,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "male") &
             (table["age_grade_male"] == 1)
         ), :
@@ -1162,7 +1162,7 @@ def stratify_phenotype_cohorts_set_special_white_sex_age_menopause(
     record["table"] = table.loc[
         (
             (table[column_special].isin(values_special)) &
-            (table["ancestry_self_white"] == 1) &
+            (table["identity_white"] == 1) &
             (table["sex_text"] == "male") &
             (table["age_grade_male"] == 2)
         ), :
@@ -1331,7 +1331,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="ancestry_self_white",
+            column_special="identity_white",
             values_special=[1,],
             prefix_name="identity_white_",
             table=table,
@@ -1341,7 +1341,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_sex_age_menopause(
-            column_special="ancestry_self_white",
+            column_special="identity_white",
             values_special=[0,],
             prefix_name="identity_other_",
             table=table,
@@ -1425,7 +1425,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
-            column_special="ancestry_self_white",
+            column_special="identity_white",
             values_special=[1,],
             prefix_name="identity_white_genotype_",
             table=table,
@@ -1435,7 +1435,7 @@ def drive_stratify_phenotype_cohorts_set_description_tables(
 
     records_novel = (
         stratify_phenotype_cohorts_set_special_genotype_sex_age_menopause(
-            column_special="ancestry_self_white",
+            column_special="identity_white",
             values_special=[0,],
             prefix_name="self_other_genotype_",
             table=table,

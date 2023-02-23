@@ -74,6 +74,9 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 
 
 # "ancestry_self_white" --> "identity_white"
+# organization: check
+# stratification: ___
+# description: ___
 
 ##########
 # Initialization
@@ -3066,6 +3069,10 @@ def report_assessment_season_region(
     pass
 
 
+# "genetic_male_identity_female"
+# "genetic_female_identity_male"
+
+
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
@@ -3231,7 +3238,7 @@ def organize_assessment_basis_variables(
         axis="columns", # apply function to each row
     )
     # Determine self report of ancestry and or ethnicity.
-    table["identity_self_white"] = table.apply(
+    table["identity_white"] = table.apply(
         lambda row:
             determine_self_identity_ancestry_race_ethnicity(
                 field_21000=row["21000-0.0"],
