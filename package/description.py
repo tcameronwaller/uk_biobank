@@ -1,4 +1,4 @@
-"""
+drive_stratify_phenotype_cohorts_set_main"""
 Describe variables from data of the U.K. Biobank.
 
 Author:
@@ -369,38 +369,11 @@ def read_organize_cohorts(
 # variables
 ##########
 
-
-
-# Cohorts:
-#  1. pheno_yes_geno_any_sex_any_race_any_life_any_exclude_none
-#  2. pheno_yes_geno_any_sex_any_race_white_life_any_exclude_none
-#  3. pheno_yes_geno_any_sex_female_race_any_life_any_exclude_none
-#  4. pheno_yes_geno_any_sex_female_race_white_life_any_exclude_none
-#  5. pheno_yes_geno_any_sex_male_race_any_life_any_exclude_none
-#  6. pheno_yes_geno_any_sex_male_race_white_life_any_exclude_none
-#  7. pheno_yes_geno_yes_sex_any_race_any_life_any_exclude_none
-#  8. pheno_yes_geno_yes_sex_any_race_white_life_any_exclude_none
-#  9. pheno_yes_geno_yes_sex_female_race_any_life_any_exclude_none
-# 10. pheno_yes_geno_yes_sex_female_race_white_life_any_exclude_none
-# 11. pheno_yes_geno_yes_sex_male_race_any_life_any_exclude_none
-# 12. pheno_yes_geno_yes_sex_male_race_white_life_any_exclude_none
-
-
-
-
-# TODO: TCW; 22 February 2023
-# TODO: calculate counts relevant to the manuscript
-# TODO: need counts in cohorts of any ancestry-race-ethnicity AND in "race_white" and in "ancestry_white_british"
-
 # Variables:
-# "sex_chromosome_aneuploidy"
-# "sex_discrepancy_identity_genetic"
-# "genotype_availability" <-- that can also be a "cohort_name" of its own (and I think it already is)
 # "oestradiol_imputation_available"
 # "testosterone_imputation_available"
 # "steroid_globulin_imputation_available"
 # "albumin_imputation_available"
-# "race_white"
 
 
 def define_variables_table_attribution():
@@ -437,6 +410,17 @@ def define_variables_table_attribution():
         record["value"] = "male" # categorical or discrete value of variable
         records.append(record)
 
+        record = dict()
+        record["name"] = "sex_chromosome_aneuploidy_1"
+        record["variable"] = "sex_chromosome_aneuploidy" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
+
+        record = dict()
+        record["name"] = "sex_discrepancy_identity_genetic_1"
+        record["variable"] = "sex_discrepancy_identity_genetic" # categorical or discrete variable
+        record["value"] = 1 # categorical or discrete value of variable
+        records.append(record)
 
         # Variable: "race_white"
 
@@ -447,7 +431,7 @@ def define_variables_table_attribution():
         records.append(record)
 
         record = dict()
-        record["name"] = "race_other"
+        record["name"] = "race_non_white"
         record["variable"] = "race_white" # cat. or discrete variable
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
@@ -529,7 +513,7 @@ def define_variables_table_attribution():
 
 
     # Variable: "births_any"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "births_any_0"
@@ -561,7 +545,7 @@ def define_variables_table_attribution():
 
 
     # Variable: "hysterectomy"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "hysterectomy_0"
@@ -576,7 +560,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "oophorectomy"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "oophorectomy_0"
@@ -689,7 +673,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "bipolar_control_case_strict"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "bipolar_control_case_strict_0"
@@ -704,7 +688,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "bipolar_control_case_loose"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "bipolar_control_case_loose_0"
@@ -740,7 +724,7 @@ def define_variables_table_attribution():
     # 3: "Once or twice a week"
     # 4: "Three or four times a week"
     # 5: "Daily or almost daily"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "alcohol_frequency_0"
@@ -1979,53 +1963,54 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         # Attribution Table.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+            ukb_strat.drive_stratify_phenotype_cohorts_set_main(
                 table=table,
         ))
         # Filter relevant cohorts.
-        names_cohorts = [
-            #"female_male",
-            #"female",
-            #"female_menstruation_regular",
-            #"female_premenopause",
-            #"female_perimenopause",
-            #"female_postmenopause",
-            #"male",
-            #"male_age_low",
-            #"male_age_middle",
-            #"male_age_high",
-            #"race_white_female_male",
-            #"race_white_female",
-            #"race_white_female_menstruation_regular",
-            #"race_white_female_premenopause",
-            #"race_white_female_perimenopause",
-            #"race_white_female_postmenopause",
-            #"race_white_male",
-            #"race_white_male_age_low",
-            #"race_white_male_age_middle",
-            #"race_white_male_age_high",
-            "bipolar_case_female_male",
-            "bipolar_case_female",
-            "bipolar_case_male",
-            "bipolar_control_female_male",
-            "bipolar_control_female",
-            "bipolar_control_male",
-            #"race_white_alcohol_current_female_male",
-            #"race_white_alcohol_current_female",
-            #"race_white_alcohol_current_female_menstruation_regular",
-            #"race_white_alcohol_current_female_premenopause",
-            #"race_white_alcohol_current_female_perimenopause",
-            #"race_white_alcohol_current_female_postmenopause",
-            #"race_white_alcohol_current_male",
-            #"race_white_alcohol_current_male_age_low",
-            #"race_white_alcohol_current_male_age_middle",
-            #"race_white_alcohol_current_male_age_high",
-        ]
-        records_cohorts = utility.filter_records_by_name(
-            names=names_cohorts,
-            records=records_cohorts,
-            report=True,
-        )
+        if False:
+            names_cohorts = [
+                #"female_male",
+                #"female",
+                #"female_menstruation_regular",
+                #"female_premenopause",
+                #"female_perimenopause",
+                #"female_postmenopause",
+                #"male",
+                #"male_age_low",
+                #"male_age_middle",
+                #"male_age_high",
+                #"race_white_female_male",
+                #"race_white_female",
+                #"race_white_female_menstruation_regular",
+                #"race_white_female_premenopause",
+                #"race_white_female_perimenopause",
+                #"race_white_female_postmenopause",
+                #"race_white_male",
+                #"race_white_male_age_low",
+                #"race_white_male_age_middle",
+                #"race_white_male_age_high",
+                "bipolar_case_female_male",
+                "bipolar_case_female",
+                "bipolar_case_male",
+                "bipolar_control_female_male",
+                "bipolar_control_female",
+                "bipolar_control_male",
+                #"race_white_alcohol_current_female_male",
+                #"race_white_alcohol_current_female",
+                #"race_white_alcohol_current_female_menstruation_regular",
+                #"race_white_alcohol_current_female_premenopause",
+                #"race_white_alcohol_current_female_perimenopause",
+                #"race_white_alcohol_current_female_postmenopause",
+                #"race_white_alcohol_current_male",
+                #"race_white_alcohol_current_male_age_low",
+                #"race_white_alcohol_current_male_age_middle",
+                #"race_white_alcohol_current_male_age_high",
+            ]
+            records_cohorts = utility.filter_records_by_name(
+                names=names_cohorts,
+                records=records_cohorts,
+                report=True,
+            )
         # Collect information.
         pail_cohorts["attribution"] = copy.deepcopy(records_cohorts)
     if ("missingness" in set_tables):
@@ -2033,7 +2018,7 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         records_cohorts = list()
         # Box plots for groups.
         records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+            ukb_strat.drive_stratify_phenotype_cohorts_set_main(
                 table=table,
         ))
         # Collect information.
@@ -2044,75 +2029,77 @@ def prepare_phenotype_variables_in_stratification_cohorts(
         # Attribution Table.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_description_tables(
+            ukb_strat.drive_stratify_phenotype_cohorts_set_main(
                 table=table,
         ))
         # Filter relevant cohorts.
-        names_cohorts = [
-            #"female_male",
-            #"female",
-            #"female_menstruation_regular",
-            #"female_premenopause",
-            #"female_perimenopause",
-            #"female_postmenopause",
-            #"male",
-            #"male_age_low",
-            #"male_age_middle",
-            #"male_age_high",
-            #"race_white_female_male",
-            #"race_white_female",
-            #"race_white_female_menstruation_regular",
-            #"race_white_female_premenopause",
-            #"race_white_female_perimenopause",
-            #"race_white_female_postmenopause",
-            #"race_white_male",
-            #"race_white_male_age_low",
-            #"race_white_male_age_middle",
-            #"race_white_male_age_high",
-            "bipolar_case_female_male",
-            "bipolar_case_female",
-            "bipolar_case_male",
-            "bipolar_control_female_male",
-            "bipolar_control_female",
-            "bipolar_control_male",
-            #"race_white_alcohol_current_female_male",
-            #"race_white_alcohol_current_female",
-            #"race_white_alcohol_current_female_menstruation_regular",
-            #"race_white_alcohol_current_female_premenopause",
-            #"race_white_alcohol_current_female_perimenopause",
-            #"race_white_alcohol_current_female_postmenopause",
-            #"race_white_alcohol_current_male",
-            #"race_white_alcohol_current_male_age_low",
-            #"race_white_alcohol_current_male_age_middle",
-            #"race_white_alcohol_current_male_age_high",
-        ]
-        records_cohorts = utility.filter_records_by_name(
-            names=names_cohorts,
-            records=records_cohorts,
-            report=True,
-        )
+        if False:
+            names_cohorts = [
+                #"female_male",
+                #"female",
+                #"female_menstruation_regular",
+                #"female_premenopause",
+                #"female_perimenopause",
+                #"female_postmenopause",
+                #"male",
+                #"male_age_low",
+                #"male_age_middle",
+                #"male_age_high",
+                #"race_white_female_male",
+                #"race_white_female",
+                #"race_white_female_menstruation_regular",
+                #"race_white_female_premenopause",
+                #"race_white_female_perimenopause",
+                #"race_white_female_postmenopause",
+                #"race_white_male",
+                #"race_white_male_age_low",
+                #"race_white_male_age_middle",
+                #"race_white_male_age_high",
+                "bipolar_case_female_male",
+                "bipolar_case_female",
+                "bipolar_case_male",
+                "bipolar_control_female_male",
+                "bipolar_control_female",
+                "bipolar_control_male",
+                #"race_white_alcohol_current_female_male",
+                #"race_white_alcohol_current_female",
+                #"race_white_alcohol_current_female_menstruation_regular",
+                #"race_white_alcohol_current_female_premenopause",
+                #"race_white_alcohol_current_female_perimenopause",
+                #"race_white_alcohol_current_female_postmenopause",
+                #"race_white_alcohol_current_male",
+                #"race_white_alcohol_current_male_age_low",
+                #"race_white_alcohol_current_male_age_middle",
+                #"race_white_alcohol_current_male_age_high",
+            ]
+            records_cohorts = utility.filter_records_by_name(
+                names=names_cohorts,
+                records=records_cohorts,
+                report=True,
+            )
         # Apply Distribution Scale Transformations to variables of interest in
         # each cohort.
-        records_cohorts = (
-            pscale.drive_transformations_on_multiple_variables_in_cohorts(
-                variables=[
-                    #"body",
-                    #"alcohol_drinks_monthly_combination",
-                    #"alcohol_frequency",
-                    #"alcohol_auditc",
-                    #"vitamin_d_imputation",
-                    #"oestradiol_imputation",
-                    #"oestradiol_bioavailable_imputation",
-                    #"oestradiol_free_imputation",
-                    #"testosterone_imputation",
-                    #"testosterone_bioavailable_imputation",
-                    #"testosterone_free_imputation",
-                    #"steroid_globulin_imputation",
-                    #"albumin_imputation",
-                ],
-                records_cohorts=records_cohorts,
-                report=True,
-        ))
+        if False:
+            records_cohorts = (
+                pscale.drive_transformations_on_multiple_variables_in_cohorts(
+                    variables=[
+                        #"body",
+                        #"alcohol_drinks_monthly_combination",
+                        #"alcohol_frequency",
+                        #"alcohol_auditc",
+                        #"vitamin_d_imputation",
+                        #"oestradiol_imputation",
+                        #"oestradiol_bioavailable_imputation",
+                        #"oestradiol_free_imputation",
+                        #"testosterone_imputation",
+                        #"testosterone_bioavailable_imputation",
+                        #"testosterone_free_imputation",
+                        #"steroid_globulin_imputation",
+                        #"albumin_imputation",
+                    ],
+                    records_cohorts=records_cohorts,
+                    report=True,
+            ))
         # Collect information.
         pail_cohorts["quantitation"] = copy.deepcopy(records_cohorts)
         pass
@@ -2338,7 +2325,7 @@ def execute_procedure(
         create_tables_for_phenotype_variables_in_cohorts(
             set_cohorts="phenotype",
             set_tables=[
-                "attribution", "quantitation",
+                "attribution",
             ], # "attribution", "missingness", "threshold", "quantitation",
             paths=paths,
             report=True,

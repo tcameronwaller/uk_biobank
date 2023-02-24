@@ -160,92 +160,12 @@ import promiscuity.scale as pscale
 #  - - use the ".update()" dictionary method to change the corresponding variable
 
 
-# Variables in cohort record.
-# cohort_name: name of cohort   # necessary for description functions
-# cohort_phenotypes: "any", "yes", "no"   # availability of records
-# cohort_genotypes: "any", "yes", "no"   # availability of records
-# cohort_sex: "any", "female", "male"
-# cohort_race: "any", "white", etc   # ancestry, race, or ethnicity
-# cohort_life_stage: "young", "middle", "old", "premenopause",
-#     "perimenopause", "menstruation", "postmenopause", etc
-# cohort_exclusions: "none", "sex_aneuplidy;sex_discrepancy;pregnancy", etc
-
-
-# Variables (columns in table) relevant to each variable in cohort record.
-# cohort_phenotypes: always "yes"
-# cohort_genotypes: "genotype_availability"
-# cohort_sex: "sex_text"
-# cohort_race: "race_white"
-# cohort_life_stage: "menopause_ordinal"
-
 ##########
 # Phenotype cohorts
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
 
 
-
-def filter_stratification_cohort_records_by_single_variable_values(
-    records_attribution=None,
-    records_cohorts=None,
-    report=None,
-):
-    """
-    Filters tables within stratification cohort records by values of a single
-    nominal, categorical, or discrete variable.
-
-    arguments:
-        filter_variable (str): name variable (column in table) by which to
-            filter records in the table
-        filter_values (list): values of variable for special selection
-        cohort_record_variable (str): relevant variable in cohort record
-        cohort_record_value (str): value to
-        records_cohorts (list<dict>): records with information about cohorts
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of missingness of hormones in cohorts
-
-    """
-
-    # Collect summary records for rows within description table.
-    records_description = list()
-    # Iterate on cohorts.
-    for record_cohort in records_cohorts:
-        # Iterate on variables.
-        for record_attribution in records_attribution:
-            # Organize information for description record.
-            record_description = create_attribution_record(
-                cohort_name=record_cohort["cohort_name"],
-                name_variable_value=record_attribution["name"],
-                variable=record_attribution["variable"],
-                value=record_attribution["value"],
-                table=record_cohort["table"],
-            )
-            # Preserve information from stratification cohort record.
-            record_description.update(record_cohort)
-            # Collect records.
-            records_description.append(record_description)
-            pass
-        pass
-    # Organize table.
-    table = pandas.DataFrame(data=records_description)
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: ")
-        print("drive_assemble_attribution_table()")
-        utility.print_terminal_partition(level=3)
-        print(table)
-        pass
-    # Return information.
-    return table
-
-
-
-
-
+# review: TCW; 23 February 2023
 def stratify_phenotype_cohorts_set_sex_age_menopause(
     table=None,
 ):
@@ -268,254 +188,474 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     # Collect records of information about each cohort and model.
     records = list()
 
+    # Full.
 
     record = dict()
-    record["name"] = "female_male"
-    record["cohort"] = "female_male"
-    record["cohort_model"] = "female_male"
-    record["category"] = "sex_together"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    #record["table"] = table
-    record["table"] = table.loc[
-        (
-            (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
-        ), :
-    ]
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "any"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "any"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort
     records.append(record)
 
-    # Sex
 
-    # Females including current pregnancy.
-    record = dict()
-    record["name"] = "female_all"
-    record["cohort"] = "female_all"
-    record["cohort_model"] = "female_all"
-    record["category"] = "sex"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female")
-        ), :
-    ]
-    records.append(record)
+    # Sex.
 
     record = dict()
-    record["name"] = "female"
-    record["cohort"] = "female"
-    record["cohort_model"] = "female"
-    record["category"] = "sex"
-    record["phenotype"] = "null"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "any"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0)
+            (table_cohort["sex_text"] == "female")
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "male"
-    record["cohort"] = "male"
-    record["cohort_model"] = "male"
-    record["category"] = "sex"
-    record["menstruation"] = False
-    record["table"] = table.loc[
-        (table["sex_text"] == "male"), :
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "male"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "any"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
+        (
+            (table_cohort["sex_text"] == "male")
+        ), :
     ]
     records.append(record)
 
     # Menstruation
 
     record = dict()
-    record["name"] = "female_menstruation_regular"
-    record["cohort"] = "female_menstruation_regular"
-    record["cohort_model"] = "female_menstruation_regular"
-    record["category"] = "menstruation"
-    record["menstruation"] = True
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "menstruation"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menstruation_regular_range"] == 1)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["menstruation_regular_range"] == 1)
         ), :
     ]
     records.append(record)
-
-    #record = dict()
-    #record["name"] = "female_menstruation_regular_no_hormone_alteration"
-    #record["cohort"] = "female_menstruation_regular_no_hormone_alteration"
-    #record["cohort_model"] = "female_menstruation_regular_no_hormone_alteration"
-    #record["category"] = "menstruation"
-    #record["menstruation"] = True
-    #record["table"] = table.loc[
-    #    (
-    #        (table["sex_text"] == "female") &
-    #        (table["pregnancy"] == 0) &
-    #        (table["menstruation_regular_range"] == 1) &
-    #        (table["alteration_sex_hormone"] == 0)
-    #    ), :
-    #]
-    #records.append(record)
 
     # Menopause
 
     record = dict()
-    record["name"] = "female_premenopause"
-    record["cohort"] = "female_premenopause"
-    record["cohort_model"] = "female_premenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = True
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "premenopause"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 0)
-        ), :
-    ]
-    records.append(record)
-
-    #record = dict()
-    #record["name"] = "female_premenopause_no_hormone_alteration"
-    #record["cohort"] = "female_premenopause_no_hormone_alteration"
-    #record["cohort_model"] = "female_premenopause_no_hormone_alteration"
-    #record["category"] = "menopause_ordinal"
-    #record["menstruation"] = True
-    #record["table"] = table.loc[
-    #    (
-    #        (table["sex_text"] == "female") &
-    #        (table["pregnancy"] == 0) &
-    #        (table["menopause_ordinal"] == 0) &
-    #        (table["alteration_sex_hormone"] == 0)
-    #    ), :
-    #]
-    #records.append(record)
-
-
-
-    record = dict()
-    record["name"] = "female_perimenopause"
-    record["cohort"] = "female_perimenopause"
-    record["cohort_model"] = "female_perimenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = True
-    record["table"] = table.loc[
-        (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 1)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["menopause_ordinal"] == 0)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "female_postmenopause"
-    record["cohort"] = "female_postmenopause"
-    record["cohort_model"] = "female_postmenopause"
-    record["category"] = "menopause_ordinal"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "perimenopause"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["menopause_ordinal"] == 2)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["menopause_ordinal"] == 1)
         ), :
     ]
     records.append(record)
+
+    record = dict()
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "postmenopause"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
+        (
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["menopause_ordinal"] == 2)
+        ), :
+    ]
+    records.append(record)
+
 
     # Age
 
     record = dict()
-    record["name"] = "female_age_low"
-    record["cohort"] = "female_age_low"
-    record["cohort_model"] = "female_age_low"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "young"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 0)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["age_grade_female"] == 0)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "female_age_middle"
-    record["cohort"] = "female_age_middle"
-    record["cohort_model"] = "female_age_middle"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "middle"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 1)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["age_grade_female"] == 1)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "female_age_high"
-    record["cohort"] = "female_age_high"
-    record["cohort_model"] = "female_age_high"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "female"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "old"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "female") &
-            (table["pregnancy"] == 0) &
-            (table["age_grade_female"] == 2)
+            (table_cohort["sex_text"] == "female") &
+            (table_cohort["age_grade_female"] == 2)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "male_age_low"
-    record["cohort"] = "male_age_low"
-    record["cohort_model"] = "male_age_low"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "male"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "young"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 0)
+            (table_cohort["sex_text"] == "male") &
+            (table_cohort["age_grade_male"] == 0)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "male_age_middle"
-    record["cohort"] = "male_age_middle"
-    record["cohort_model"] = "male_age_middle"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "male"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "middle"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 1)
+            (table_cohort["sex_text"] == "male") &
+            (table_cohort["age_grade_male"] == 1)
         ), :
     ]
     records.append(record)
 
     record = dict()
-    record["name"] = "male_age_high"
-    record["cohort"] = "male_age_high"
-    record["cohort_model"] = "male_age_high"
-    record["category"] = "age"
-    record["menstruation"] = False
-    record["table"] = table.loc[
+    record["cohort_name"] = "space_holder"
+    record["cohort_phenotypes"] = "yes"
+    record["cohort_genotypes"] = "any"
+    record["cohort_sex"] = "male"
+    record["cohort_race"] = "any"
+    record["cohort_life_stage"] = "old"
+    record["cohort_exclusions"] = "none"
+    table_cohort = table.copy(deep=True)
+    record["table"] = table_cohort.loc[
         (
-            (table["sex_text"] == "male") &
-            (table["age_grade_male"] == 2)
+            (table_cohort["sex_text"] == "male") &
+            (table_cohort["age_grade_male"] == 2)
         ), :
     ]
     records.append(record)
 
     # Return information
     return records
+
+
+# review: TCW; 23 February 2023
+def filter_stratification_cohort_records_by_single_variable_values(
+    filter_variable=None,
+    filter_values=None,
+    cohort_record_variable=None,
+    cohort_record_value=None,
+    records_cohorts=None,
+):
+    """
+    Filters tables within stratification cohort records by values of a single
+    nominal, categorical, or discrete variable.
+
+    arguments:
+        filter_variable (str): name of variable (column in table) by which to
+            filter records in the stratification cohort table
+        filter_values (list): values of variable by which to filter
+        cohort_record_variable (str): relevant variable in cohort record to
+            change
+        cohort_record_value (str): new value to assign to the relevant cohort
+            record variable
+        records_cohorts (list<dict>): records with information about cohorts
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Iterate on cohort cohorts.
+    for record_cohort in records_cohorts:
+        # Copy information in table.
+        table = record_cohort["table"].copy(deep=True)
+        record_cohort["table"] = table.loc[
+            (table[filter_variable].isin(filter_values)), :
+        ]
+        record_cohort[cohort_record_variable] = copy.deepcopy(
+            cohort_record_value
+        )
+        pass
+    # Return information.
+    return records_cohorts
+
+
+# review: TCW; 23 February 2023
+def filter_stratification_cohort_records_by_exclusions(
+    cohort_record_variable=None,
+    cohort_record_value=None,
+    records_cohorts=None,
+):
+    """
+    Filters tables within stratification cohort records by values of a single
+    nominal, categorical, or discrete variable.
+
+    arguments:
+        cohort_record_variable (str): relevant variable in cohort record to
+            change
+        cohort_record_value (str): new value to assign to the relevant cohort
+            record variable
+        records_cohorts (list<dict>): records with information about cohorts
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Iterate on cohort cohorts.
+    for record_cohort in records_cohorts:
+        # Copy information in table.
+        table = record_cohort["table"].copy(deep=True)
+        record_cohort["table"] = table.loc[
+            (
+                (table["sex_chromosome_aneuploidy"] == 0) &
+                (table["sex_discrepancy_identity_genetic"] == 0) &
+                (pandas.isna(table["pregnancy"]) | (table["pregnancy"] == 0))
+            ), :
+        ]
+        record_cohort[cohort_record_variable] = copy.deepcopy(
+            cohort_record_value
+        )
+        pass
+    # Return information.
+    return records_cohorts
+
+# TODO: TCW; 23 February 2023
+# TODO: Need a new variable within the cohort records
+# TODO: new variable will be "cohort_disorders": "bipolar_disorder", "alcoholism", "alcohol_ever", etc
+
+
+# "ancestry_white_british" <-- will need eventually
+# review: TCW; 23 February 2023
+def drive_stratify_phenotype_cohorts_set_main(
+    table=None,
+    report=None,
+):
+    """
+    Stratify phenotype records in cohorts specifically for description tables.
+
+    Variables in cohort record.
+    cohort_name: name of cohort   # necessary for description functions
+    cohort_phenotypes: "any", "yes", "no"   # availability of records
+    cohort_genotypes: "any", "yes", "no"   # availability of records
+    cohort_sex: "any", "female", "male"
+    cohort_race: "any", "white", etc   # ancestry, race, or ethnicity
+    cohort_life_stage: "any", "young", "middle", "old", "menstruation",
+      "premenopause", "perimenopause", "postmenopause", etc
+    cohort_exclusions: "none", "sex_aneuplidy;sex_discrepancy;pregnancy", etc
+
+    Variables (columns in table) relevant to each variable in cohort record.
+    cohort_phenotypes: always "yes"
+    cohort_genotypes: "genotype_availability"
+    cohort_sex: "sex_text"
+    cohort_race: "race_white"
+    cohort_life_stage: "menopause_ordinal", "menstruation_regular_range",
+      "age_grade_male"
+    cohort_exclusions: "sex_chromosome_aneuploidy",
+      "sex_discrepancy_identity_genetic", "pregnancy",
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True) # not actually necessary
+
+    # Collect records of information about each cohort.
+    records = list()
+
+    # Standard, base stratifications by sex and stage of life.
+    records_novel = stratify_phenotype_cohorts_set_sex_age_menopause(
+        table=table,
+    )
+    records.extend(records_novel)
+    records_base = copy.deepcopy(records_novel)
+
+    # Base; exclusions.
+    records_novel = (
+        filter_stratification_cohort_records_by_exclusions(
+            cohort_record_variable="cohort_exclusions",
+            cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
+            records_cohorts=records_base,
+        )
+    )
+    records.extend(records_novel)
+    records_base_exclusions = copy.deepcopy(records_novel)
+
+    # Base; race white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[1,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="white",
+            records_cohorts=records_base,
+        )
+    )
+    records.extend(records_novel)
+
+    # Base; race non-white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[0,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="non_white",
+            records_cohorts=records_base,
+        )
+    )
+    records.extend(records_novel)
+
+    # Base; genotypes.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="genotype_availability",
+            filter_values=[1,],
+            cohort_record_variable="cohort_genotypes",
+            cohort_record_value="yes",
+            records_cohorts=records_base,
+        )
+    )
+    records.extend(records_novel)
+    records_base_genotypes = copy.deepcopy(records_novel)
+
+    # Base; genotypes; race white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[1,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="white",
+            records_cohorts=records_base_genotypes,
+        )
+    )
+    records.extend(records_novel)
+
+    # Base; genotypes; race non-white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[0,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="non_white",
+            records_cohorts=records_base_genotypes,
+        )
+    )
+    records.extend(records_novel)
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        name_function = (
+            "drive_stratify_phenotype_cohorts_set_main()"
+        )
+        print(name_function)
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information
+    return records
+
+
+
+
+
+
+
+
+
 
 
 def stratify_phenotype_cohorts_set_special_sex_age_menopause(
