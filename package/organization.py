@@ -73,10 +73,6 @@ import uk_biobank.stratification as ukb_strat # problem when executing uk_bioban
 # Functionality
 
 
-# "ancestry_self_white" --> "identity_white"
-# organization: check
-# stratification: ___
-# description: ___
 
 ##########
 # Initialization
@@ -1296,8 +1292,9 @@ def interpret_assessment_month_season_stratification(
     return interpretation
 
 
+# review: TCW; 23 February 2023
 # review: TCW, 25 January 2022
-def interpret_sex_self_report(
+def interpret_sex_identity(
     field_31=None,
 ):
     """
@@ -1348,6 +1345,7 @@ def interpret_sex_self_report(
     return interpretation
 
 
+# review: TCW; 23 February 2023
 # review: TCW, 25 January 2022
 def interpret_sex_genetic(
     field_22001=None,
@@ -1399,6 +1397,7 @@ def interpret_sex_genetic(
     return interpretation
 
 
+# review: TCW; 23 February 2023
 # review: TCW, 25 January 2022
 def interpret_sex_chromosome_aneuploidy(
     field_22019=None,
@@ -1509,8 +1508,8 @@ def interpret_body_mass_index(
     return interpretation
 
 
-# review: TCW; 07 November 2022
-def interpret_self_identity_ancestry_race_ethnicity(
+# review: TCW; 23 February 2023
+def interpret_identity_ancestry_race_ethnicity(
     field_21000=None,
 ):
     """
@@ -1542,24 +1541,14 @@ def interpret_self_identity_ancestry_race_ethnicity(
         (-3.5 <= field_21000 and field_21000 < 5000)
     ):
         # The variable has a valid value.
-        # Interpret the value.
-        if (0.5 <= field_21000 and field_21000 < 5000):
-            # Value is one of many interpretable codes.
-            value = str(int(copy.deepcopy(field_21000)))
-        elif (-1.5 <= field_21000 and field_21000 < -0.5):
-            # -1: "Do not know"
-            value = "NA"
-        elif (-3.5 <= field_21000 and field_21000 < -2.5):
-            # -3: "Prefer not to answer"
-            value = "NA"
-        else:
-            # Uninterpretable value
-            value = "NA"
+        # Value is one of many interpretable codes.
+        interpretation = str(int(copy.deepcopy(field_21000)))
     else:
-        # Missing or uninterpretable value
-        value = "NA"
+        # Missing or uninterpretable value.
+        # Assign record to "other" group.
+        interpretation = "NA"
     # Return.
-    return value
+    return interpretation
 
 
 def interpret_genotype_batch(
@@ -2027,30 +2016,82 @@ def determine_genotype_availability(
     return interpretation
 
 
-# review: TCW, 25 January 2022
-def determine_consensus_biological_sex_y(
+# review: TCW; 23 February 2023
+def determine_sex_y_identity(
     field_31=None,
-    field_22001=None,
-    field_22019=None,
 ):
     """
-    Determine consensus biological sex (not social gender).
+    Determine sex from medical records with potential changes on request from
+    person.
 
-    Prioritize interpretation of the genetic sex variable, and use self report
-    to fill in any missing values. Exclude records for persons whose genotypes
-    suggested aneuploidy in the sex chromosomes.
-
-    Use a logical binary encoding for presence of Y chromosome.
-    0 : female (false, XX)
-    1 : male (true, XY)
-
-    Code is same as UK Biobank for data-fields "31" and "22001".
-    0: "Female"
-    1: "Male"
+    Code:
+    0: female (XX)
+    1: male (XY)
 
     arguments:
         field_31 (float): UK Biobank data-field 31, person's self-reported sex
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret sex identity.
+    interpretation = interpret_sex_identity(
+        field_31=field_31,
+    )
+    # Comparison.
+    sex_y = interpretation
+    # Return information.
+    return sex_y
+
+
+# review: TCW; 23 February 2023
+def determine_sex_y_genetic(
+    field_22001=None,
+):
+    """
+    Determine sex as defined from genotype.
+
+    Code:
+    0: female (XX)
+    1: male (XY)
+
+    arguments:
         field_22001 (float): UK Biobank data-field 22001, genetic sex
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret sex identity.
+    interpretation = interpret_sex_genetic(
+        field_22001=field_22001,
+    )
+    # Comparison.
+    sex_y = interpretation
+    # Return information.
+    return sex_y
+
+
+# review: TCW; 23 February 2023
+def determine_sex_chromosome_aneuploidy(
+    field_22019=None,
+):
+    """
+    Determine whether there was genetic evidence of aneuploidy in the sex
+    chromosomes.
+
+    As interpreted, a value of "0" is not informative beyond absence of a value
+    of "1". Values of "0" might exist even if a person did not have a gentoype
+    available.
+
+    arguments:
         field_22019 (float): UK Biobank data-field 22019, sex-chromosome
             aneuploidy
 
@@ -2061,55 +2102,142 @@ def determine_consensus_biological_sex_y(
 
     """
 
-    # Interpret self report of biological sex.
-    sex_self_report = interpret_sex_self_report(
-        field_31=field_31,
-    )
-    # Interpret genetic biological sex.
-    sex_genetic = interpret_sex_genetic(
-        field_22001=field_22001,
-    )
-    aneuploidy_sex = interpret_sex_chromosome_aneuploidy(
+    # Interpret whether there was evidence of sex chromosome aneuploidy.
+    interpretation = interpret_sex_chromosome_aneuploidy(
         field_22019=field_22019,
     )
     # Comparison.
-    # Determine whether there was aneuploidy in the sex chromosomes.
-    if (
-        (not pandas.isna(aneuploidy_sex)) and
-        (aneuploidy_sex == 0)
-    ):
-        # Prioritize genetic sex.
-        if (not pandas.isna(sex_genetic)):
-            # Genetic sex variable has a valid value.
-            # Prioritize this variable.
-            value = sex_genetic
-        elif (not pandas.isna(sex_self_report)):
-            # Person has missing value for genetic sex.
-            # Self-report sex variable has a valid value.
-            # Resort to self-report sex in absence of genetic sex.
-            value = sex_self_report
-        else:
-            # Missing information.
-            value = float("nan")
-    else:
-        # Aneuploidy in the sex chromosomes complicates definition of biological
-        # sex.
-        value = float("nan")
+    sex_chromosome_aneuploidy = interpretation
     # Return information.
-    return value
+    return sex_chromosome_aneuploidy
 
 
+# review: TCW; 23 February 2023
+def determine_sex_discrepancy_identity_genetic(
+    sex_y_identity=None,
+    sex_y_genetic=None,
+):
+    """
+    Determine whether there was a discrepancy in sex from health records and
+    personal request to change (sex identity) and sex determined from genotype
+    (sex genetic).
+
+    Code.
+    0: No evidence of discrepancy;
+       if both are available then sex identity matches sex genetic
+    1: Evidence of discrepancy
+       both sex identity and sex genetic are available and do not match
+
+    arguments:
+        sex_y_identity (float): sex relative to Y chromosome by identity
+        sex_y_genetic (float): sex relative to Y chromosome by genotype
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Comparison.
+    # Determine whether both definitions of sex had valid, non-missing values.
+    if (
+        (
+            (not pandas.isna(sex_y_identity)) and
+            ((sex_y_identity == 0) or (sex_y_identity == 1))
+        ) and
+        (
+            (not pandas.isna(sex_y_genetic)) and
+            ((sex_y_genetic == 0) or (sex_y_genetic == 1))
+        )
+    ):
+        # Nonmissing values available for both sex identity and sex genetic.
+        # Determine whether definitions match.
+        if (sex_y_identity == sex_y_genetic):
+            # No discrepancy.
+            discrepancy = 0
+        elif (sex_y_identity != sex_y_genetic):
+            # Discrepancy.
+            discrepancy = 1
+        else:
+            # Assume no discrepancy.
+            discrepancy = 0
+    else:
+        # One or both definitions of sex were missing or otherwise
+        # uninterpretable.
+        # Hence there could not be a discrepancy.
+        discrepancy = 0
+    # Return information.
+    return discrepancy
+
+
+# review: TCW; 23 February 2023
+def determine_consensus_biological_sex_y(
+    sex_y_identity=None,
+    sex_y_genetic=None,
+):
+    """
+    Determine consensus biological sex (not social gender) as a logical binary
+    representation of presence of the Y sex chromosome.
+
+    Prioritize interpretation of genetically-determined sex where available, and
+    use sex determined from medical records or personal choice to fill in any
+    missing values.
+
+    Use a logical binary encoding for presence of Y chromosome.
+    Code.
+    0 : female (XX)
+    1 : male (XY)
+
+    Code is same as UK Biobank for data-fields "31" and "22001".
+    0: "Female"
+    1: "Male"
+
+    arguments:
+        sex_y_identity (float): sex relative to Y chromosome by identity
+        sex_y_genetic (float): sex relative to Y chromosome by genotype
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Determine consensus biological sex with priority to genetic sex.
+    if (
+        (not pandas.isna(sex_y_genetic)) and
+        ((sex_y_genetic == 0) or (sex_y_genetic == 1))
+    ):
+        # Valid, non-missing definition of sex by genotype.
+        sex_y = copy.deepcopy(sex_y_genetic)
+    elif (
+        (not pandas.isna(sex_y_identity)) and
+        ((sex_y_identity == 0) or (sex_y_identity == 1))
+    ):
+        # Valid, non-missing definition of sex by identity.
+        sex_y = copy.deepcopy(sex_y_identity)
+    else:
+        # Missing or uninterpretable information.
+        sex_y = float("nan")
+    # Return information.
+    return sex_y
+
+
+# review: TCW; 23 February 2023
 def determine_biological_sex_x(
     sex_y=None,
 ):
     """
-    Determine biological sex, using an integer encoding for the count of X
-    chromosomes.
+    Represent biological sex as the count of X sex chromosomes.
+
+    Code.
     2 : female (XX)
     1 : male (XY)
 
     arguments:
-        sex_y (float): sex as logical presence of Y chromosome
+        sex_y (float): sex as a logical binary representation of presence of the
+            Y sex chromosome
 
     raises:
 
@@ -2128,21 +2256,22 @@ def determine_biological_sex_x(
         if (sex_y == 0):
             # sex_y: 0, "female"
             # sex_x: 2, "female"
-            interpretation = 2
+            sex_x = 2
         elif (sex_y == 1):
             # sex_y: 1, "male"
             # sex_x: 1, "male"
-            interpretation = 1
+            sex_x = 1
         else:
             # Uninterpretable value
-            interpretation = float("nan")
+            sex_x = float("nan")
     else:
         # Missing or uninterpretable value
-        interpretation = float("nan")
+        sex_x = float("nan")
     # Return information.
-    return interpretation
+    return sex_x
 
 
+# review: TCW; 23 February 2023
 def determine_biological_sex_text(
     sex_y=None,
 ):
@@ -2150,7 +2279,8 @@ def determine_biological_sex_text(
     Translate binary representation of sex to textual representation.
 
     arguments:
-        sex_y (float): sex as logical presence of Y chromosome
+        sex_y (float): sex as a logical binary representation of presence of the
+            Y sex chromosome
 
     raises:
 
@@ -2179,6 +2309,100 @@ def determine_biological_sex_text(
         sex_text = ""
     # Return information.
     return sex_text
+
+
+# review: TCW; 23 February 2023
+def organize_sex_variables(
+    table=None,
+    report=None,
+):
+    """
+    Organizes variables that are relevant to biological sex and maybe social
+    gender.
+
+    Reserve the variable names "sex" or "SEX" for use in analyses with PLINK2.
+
+    Use logical binary representations of sex in relation to presence of the
+    Y ("sex_y") or X ("sex_x") sex chromosomes.
+
+    arguments:
+        table (object): Pandas data frame of phenotype variables across UK
+            Biobank cohort
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of phenotype variables across UK Biobank
+            cohort
+
+    """
+
+    # Copy information in table.
+    table = table.copy(deep=True)
+
+    # Determine variables relevant to biological sex.
+    table["sex_y_identity"] = table.apply(
+        lambda row:
+            determine_sex_y_identity(
+                field_31=row["31-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_y_genetic"] = table.apply(
+        lambda row:
+            determine_sex_y_genetic(
+                field_22001=row["22001-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_chromosome_aneuploidy"] = table.apply(
+        lambda row:
+            determine_sex_chromosome_aneuploidy(
+                field_22019=row["22019-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_discrepancy_identity_genetic"] = table.apply(
+        lambda row:
+            determine_sex_discrepancy_identity_genetic(
+                sex_y_identity=row["sex_y_identity"],
+                sex_y_genetic=row["sex_y_genetic"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_y"] = table.apply(
+        lambda row:
+            determine_consensus_biological_sex_y(
+                sex_y_identity=row["sex_y_identity"],
+                sex_y_genetic=row["sex_y_genetic"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_x"] = table.apply(
+        lambda row:
+            determine_biological_sex_x(
+                sex_y=row["sex_y"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["sex_text"] = table.apply(
+        lambda row:
+            determine_biological_sex_text(
+                sex_y=row["sex_y"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_sex_variables()")
+        utility.print_terminal_partition(level=3)
+        # ...
+        pass
+    # Return information.
+    return table
 
 
 # I copied this functionality to "utility.determine_human_physiology_age"
@@ -2256,13 +2480,67 @@ def determine_body_mass_index(
     return value
 
 
-# review: TCW; 07 November 2022
-def determine_self_identity_ancestry_race_ethnicity(
+# review: TCW; 23 February 2023
+def determine_identity_ancestry_race_ethnicity_group(
     field_21000=None,
 ):
     """
-    Determine whether person self reported their identity of ancestry, race, and
-    or ethnicity as "white" or other.
+    Determine a person's self-designated the identity group by ancestry, race,
+    or ethnicity.
+
+    arguments:
+        field_21000 (float): UK Biobank data-field 21000, person's self-report
+            of ancestry and or ethnicity
+
+    raises:
+
+    returns:
+        (float): interpretation value
+
+    """
+
+    # Interpret self report of biological sex.
+    code = interpret_identity_ancestry_race_ethnicity(
+        field_21000=field_21000,
+    )
+    # Interpret code.
+    if (code in ["1001",]):
+        group = "white_british"
+    elif (code in ["1002",]):
+        group = "white_irish"
+    elif (code in ["1", "1003",]):
+        group = "white_other"
+    elif (code in ["2001", "2002",]):
+        group = "mixed_white_black"
+    elif (code in ["2", "2003", "2004",]):
+        group = "mixed_other"
+    elif (code in ["3001",]):
+        group = "asian_indian"
+    elif (code in ["3002",]):
+        group = "asian_pakistani"
+    elif (code in ["3", "3003", "3004",]):
+        group = "asian_other"
+    elif (code in ["5",]):
+        group = "chinese"
+    elif (code in ["4001",]):
+        group = "black_caribbean"
+    elif (code in ["4002", "4", "4003",]):
+        group = "black_african"
+    elif (code in ["6","-1", "-3", "NA",]):
+        group = "other"
+    else:
+        group = "other"
+    # Return information.
+    return group
+
+
+# review: TCW; 23 February 2023
+def determine_identity_ancestry_race_ethnicity_white(
+    field_21000=None,
+):
+    """
+    Determine whether person self reported their identity of ancestry, race, or
+    ethnicity as "white" or other.
 
     Code.
     0: "other"
@@ -2284,32 +2562,24 @@ def determine_self_identity_ancestry_race_ethnicity(
     codes_other = [
         "2", "2001", "2002", "2003", "2004",
         "3", "3001", "3002", "3003", "3004",
-        "4", "4001", "4002", "4003", "5", "6"
+        "4", "4001", "4002", "4003", "5", "6",
+        "-1", "-3", "NA",
     ]
 
     # Interpret self report of biological sex.
-    code = interpret_self_identity_ancestry_race_ethnicity(
+    code = interpret_identity_ancestry_race_ethnicity(
         field_21000=field_21000,
     )
     # Interpret code.
-    if (
-        (not pandas.isna(code)) and
-        (code in codes_white)
-    ):
-        # Person self reported ancestry and or ethnicity as "white".
-        value = 1
-    elif (
-        (not pandas.isna(code)) and
-        (code in codes_other)
-    ):
-        # Person self reported ancestry and or ethnicity in one of several
-        # categories "other".
-        value = 0
+    if (code in codes_white):
+        race_white = 1
+    elif (code in codes_other):
+        race_white = 0
     else:
-        # Ambiguous, uninterpretable, or missing information.
-        value = float("nan")
+        race_white = 0
     # Return information.
-    return value
+    return race_white
+
 
 
 # review: TCW, 26 January 2022
@@ -3069,10 +3339,6 @@ def report_assessment_season_region(
     pass
 
 
-# "genetic_male_identity_female"
-# "genetic_female_identity_male"
-
-
 def organize_assessment_basis_variables(
     table=None,
     path_dock=None,
@@ -3193,34 +3459,13 @@ def organize_assessment_basis_variables(
         separator="_",
         report=True,
     )
-    # Determine sex consensus between self-report and genotypic sex.
-    # Reserve the variable names "sex" or "SEX" for recognition in PLINK2.
-    # Use logical binary representation of presence of Y chromosome.
-    table["sex_y"] = table.apply(
-        lambda row:
-            determine_consensus_biological_sex_y(
-                field_31=row["31-0.0"],
-                field_22001=row["22001-0.0"],
-                field_22019=row["22019-0.0"],
-            ),
-        axis="columns", # apply function to each row
+
+    # Define variables relevant to biological sex.
+    table = organize_sex_variables(
+        table=table,
+        report=True,
     )
-    # Use integer representation of count of X chromosomes.
-    table["sex_x"] = table.apply(
-        lambda row:
-            determine_biological_sex_x(
-                sex_y=row["sex_y"],
-            ),
-        axis="columns", # apply function to each row
-    )
-    # Determine text representation of person's sex.
-    table["sex_text"] = table.apply(
-        lambda row:
-            determine_biological_sex_text(
-                sex_y=row["sex_y"],
-            ),
-        axis="columns", # apply function to each row
-    )
+
     # Determine age.
     table["age"] = table.apply(
         lambda row:
@@ -3237,10 +3482,18 @@ def organize_assessment_basis_variables(
             ),
         axis="columns", # apply function to each row
     )
-    # Determine self report of ancestry and or ethnicity.
-    table["identity_white"] = table.apply(
+    # Determine self choice of identity with regard to ancestry, race, or
+    # ethnicity.
+    table["race_group"] = table.apply(
         lambda row:
-            determine_self_identity_ancestry_race_ethnicity(
+            determine_identity_ancestry_race_ethnicity_group(
+                field_21000=row["21000-0.0"],
+            ),
+        axis="columns", # apply function to each row
+    )
+    table["race_white"] = table.apply(
+        lambda row:
+            determine_identity_ancestry_race_ethnicity_white(
                 field_21000=row["21000-0.0"],
             ),
         axis="columns", # apply function to each row
@@ -3324,7 +3577,7 @@ def organize_assessment_basis_variables(
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
-        print("report: organize_sex_age_body_variables()")
+        print("report: organize_assessment_basis_variables()")
         utility.print_terminal_partition(level=3)
         print(table_report)
         utility.print_terminal_partition(level=3)
@@ -10021,7 +10274,7 @@ def organize_female_menstruation_pregnancy_menopause_variables(
         axis="columns", # apply function to each row
     )
 
-    # Determine whether female persons were pregnant.
+    # Determine whether female persons were pregnant at initial assessment.
     table["pregnancy"] = table.apply(
         lambda row:
             determine_female_pregnancy(

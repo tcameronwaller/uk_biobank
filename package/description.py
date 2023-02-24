@@ -205,7 +205,7 @@ def read_source_regression_summary_tables(
         utility.read_all_pandas_tables_files_within_parent_directory(
             path_directory_parent=path_directory_parent,
             types_pandas_table_read={
-                "cohort": "string",
+                "cohort_name": "string",
                 "dependence": "string",
                 "dependence_type": "string",
                 "model_adjustment": "string",
@@ -278,7 +278,7 @@ def read_source_correlation_summary_tables(
             types_pandas_table_read={
                 "study_primary": "string",
                 "study_secondary": "string",
-                "cohort": "string",
+                "cohort_name": "string",
                 "phenotype_primary": "string",
                 "dependence_type": "string",
                 "model_adjustment": "string",
@@ -341,7 +341,7 @@ def read_organize_cohorts(
     # Iterate on files within directory.
     for file_name in files_names_keep:
         # Determine name of cohort.
-        name_cohort = str(file_name).replace(".pickle", "").replace("table_", "")
+        cohort_name = str(file_name).replace(".pickle", "").replace("table_", "")
         # Specify directories and files.
         path_file = os.path.join(
             path_directory, file_name,
@@ -353,8 +353,8 @@ def read_organize_cohorts(
 
         # Collect information about cohort.
         record = dict()
-        record["name"] = name_cohort
-        record["cohort"] = name_cohort
+        record["name"] = cohort_name
+        record["cohort_name"] = cohort_name
         record["table"] = table_cohort
         records.append(record)
         pass
@@ -370,10 +370,37 @@ def read_organize_cohorts(
 ##########
 
 
+
+# Cohorts:
+#  1. pheno_yes_geno_any_sex_any_race_any_life_any_exclude_none
+#  2. pheno_yes_geno_any_sex_any_race_white_life_any_exclude_none
+#  3. pheno_yes_geno_any_sex_female_race_any_life_any_exclude_none
+#  4. pheno_yes_geno_any_sex_female_race_white_life_any_exclude_none
+#  5. pheno_yes_geno_any_sex_male_race_any_life_any_exclude_none
+#  6. pheno_yes_geno_any_sex_male_race_white_life_any_exclude_none
+#  7. pheno_yes_geno_yes_sex_any_race_any_life_any_exclude_none
+#  8. pheno_yes_geno_yes_sex_any_race_white_life_any_exclude_none
+#  9. pheno_yes_geno_yes_sex_female_race_any_life_any_exclude_none
+# 10. pheno_yes_geno_yes_sex_female_race_white_life_any_exclude_none
+# 11. pheno_yes_geno_yes_sex_male_race_any_life_any_exclude_none
+# 12. pheno_yes_geno_yes_sex_male_race_white_life_any_exclude_none
+
+
+
+
 # TODO: TCW; 22 February 2023
 # TODO: calculate counts relevant to the manuscript
-# TODO: need counts in cohorts of any ancestry-race-ethnicity AND in "identity_white" and in "ancestry_white_british"
+# TODO: need counts in cohorts of any ancestry-race-ethnicity AND in "race_white" and in "ancestry_white_british"
 
+# Variables:
+# "sex_chromosome_aneuploidy"
+# "sex_discrepancy_identity_genetic"
+# "genotype_availability" <-- that can also be a "cohort_name" of its own (and I think it already is)
+# "oestradiol_imputation_available"
+# "testosterone_imputation_available"
+# "steroid_globulin_imputation_available"
+# "albumin_imputation_available"
+# "race_white"
 
 
 def define_variables_table_attribution():
@@ -411,17 +438,17 @@ def define_variables_table_attribution():
         records.append(record)
 
 
-        # Variable: "identity_white"
+        # Variable: "race_white"
 
         record = dict()
-        record["name"] = "identity_white"
-        record["variable"] = "identity_white" # cat. or discrete variable
+        record["name"] = "race_white"
+        record["variable"] = "race_white" # cat. or discrete variable
         record["value"] = 1 # categorical or discrete value of variable
         records.append(record)
 
         record = dict()
-        record["name"] = "identity_other"
-        record["variable"] = "identity_white" # cat. or discrete variable
+        record["name"] = "race_other"
+        record["variable"] = "race_white" # cat. or discrete variable
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
 
@@ -868,7 +895,7 @@ def organize_description_table_attribution(
 
 
 def organize_missingness_record_basis(
-    name_cohort=None,
+    cohort_name=None,
     name_variable=None,
     column_measurement=None,
     column_detection=None,
@@ -889,7 +916,7 @@ def organize_missingness_record_basis(
     greater than limit of detection
 
     arguments:
-        name_cohort (str): name of cohort
+        cohort_name (str): name of cohort
         name_variable (str): name of variable for report
         column_measurement (str): name of table's column for variable's
             measurements
@@ -911,7 +938,7 @@ def organize_missingness_record_basis(
 
     # Collect information for record.
     record = dict()
-    record["cohort"] = str(name_cohort)
+    record["cohort_name"] = str(cohort_name)
     record["variable"] = str(name_variable)
     # Copy information.
     table = table.copy(deep=True)
@@ -1009,7 +1036,7 @@ def organize_missingness_record_basis(
 
 
 def organize_missingness_record_description(
-    name_cohort=None,
+    cohort_name=None,
     name_variable=None,
     column_measurement=None,
     column_detection=None,
@@ -1030,7 +1057,7 @@ def organize_missingness_record_description(
     greater than limit of detection
 
     arguments:
-        name_cohort (str): name of cohort
+        cohort_name (str): name of cohort
         name_variable (str): name of variable for report
         column_measurement (str): name of table's column for variable's
             measurements
@@ -1052,7 +1079,7 @@ def organize_missingness_record_description(
 
     # Collect information for record.
     record = dict()
-    record["cohort"] = str(name_cohort)
+    record["cohort_name"] = str(cohort_name)
     record["variable"] = str(name_variable)
     # Copy information.
     table = table.copy(deep=True)
@@ -1208,7 +1235,7 @@ def organize_missingness_record_description(
 
 
 def organize_missingness_record(
-    name_cohort=None,
+    cohort_name=None,
     name_variable=None,
     column_measurement=None,
     column_detection=None,
@@ -1229,7 +1256,7 @@ def organize_missingness_record(
     greater than limit of detection
 
     arguments:
-        name_cohort (str): name of cohort
+        cohort_name (str): name of cohort
         name_variable (str): name of variable for report
         column_measurement (str): name of table's column for variable's
             measurements
@@ -1255,7 +1282,7 @@ def organize_missingness_record(
         (column_reportability_limit in table.columns.to_list())
     ):
         record = organize_missingness_record_description(
-            name_cohort=name_cohort,
+            cohort_name=cohort_name,
             name_variable=name_variable,
             column_measurement=column_measurement,
             column_detection=column_detection,
@@ -1265,7 +1292,7 @@ def organize_missingness_record(
         )
     else:
         record = organize_missingness_record_basis(
-            name_cohort=name_cohort,
+            cohort_name=cohort_name,
             name_variable=name_variable,
             column_measurement=column_measurement,
             column_detection=column_detection,
@@ -1322,7 +1349,7 @@ def organize_description_table_missingness(
             reportability_limit = str(str(variable) + "_reportability_limit")
             # Organize information for description record.
             record_description = organize_missingness_record(
-                name_cohort=record_cohort["name"],
+                cohort_name=record_cohort["name"],
                 name_variable=variable,
                 column_measurement=variable,
                 column_detection=detection,
@@ -1360,7 +1387,7 @@ def organize_description_table_missingness(
 
 
 def organize_cohort_hormone_deficiency_record(
-    name_cohort=None,
+    cohort_name=None,
     name_variable=None,
     column_variable=None,
     threshold=None,
@@ -1386,7 +1413,7 @@ def organize_cohort_hormone_deficiency_record(
     greater than limit of detection
 
     arguments:
-        name_cohort (str): name of cohort
+        cohort_name (str): name of cohort
         name_variable (str): name of variable for report
         column_variable (str): name of table's column for variable's
             measurements
@@ -1403,7 +1430,7 @@ def organize_cohort_hormone_deficiency_record(
 
     # Collect information for record.
     record = dict()
-    record["cohort"] = str(name_cohort)
+    record["cohort_name"] = str(cohort_name)
     record["variable"] = str(name_variable)
     record["column"] = str(column_variable)
     record["threshold"] = str(threshold)
@@ -1507,7 +1534,7 @@ def organize_cohorts_hormone_deficiency(
     for collection_cohort in records_cohorts:
         # Organize information in record.
         record = organize_cohort_hormone_deficiency_record(
-            name_cohort=collection_cohort["name"],
+            cohort_name=collection_cohort["name"],
             name_variable=name_variable,
             column_variable=column_variable,
             threshold=threshold,
@@ -1967,32 +1994,32 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             #"male_age_low",
             #"male_age_middle",
             #"male_age_high",
-            #"identity_white_female_male",
-            #"identity_white_female",
-            #"identity_white_female_menstruation_regular",
-            #"identity_white_female_premenopause",
-            #"identity_white_female_perimenopause",
-            #"identity_white_female_postmenopause",
-            #"identity_white_male",
-            #"identity_white_male_age_low",
-            #"identity_white_male_age_middle",
-            #"identity_white_male_age_high",
+            #"race_white_female_male",
+            #"race_white_female",
+            #"race_white_female_menstruation_regular",
+            #"race_white_female_premenopause",
+            #"race_white_female_perimenopause",
+            #"race_white_female_postmenopause",
+            #"race_white_male",
+            #"race_white_male_age_low",
+            #"race_white_male_age_middle",
+            #"race_white_male_age_high",
             "bipolar_case_female_male",
             "bipolar_case_female",
             "bipolar_case_male",
             "bipolar_control_female_male",
             "bipolar_control_female",
             "bipolar_control_male",
-            #"identity_white_alcohol_current_female_male",
-            #"identity_white_alcohol_current_female",
-            #"identity_white_alcohol_current_female_menstruation_regular",
-            #"identity_white_alcohol_current_female_premenopause",
-            #"identity_white_alcohol_current_female_perimenopause",
-            #"identity_white_alcohol_current_female_postmenopause",
-            #"identity_white_alcohol_current_male",
-            #"identity_white_alcohol_current_male_age_low",
-            #"identity_white_alcohol_current_male_age_middle",
-            #"identity_white_alcohol_current_male_age_high",
+            #"race_white_alcohol_current_female_male",
+            #"race_white_alcohol_current_female",
+            #"race_white_alcohol_current_female_menstruation_regular",
+            #"race_white_alcohol_current_female_premenopause",
+            #"race_white_alcohol_current_female_perimenopause",
+            #"race_white_alcohol_current_female_postmenopause",
+            #"race_white_alcohol_current_male",
+            #"race_white_alcohol_current_male_age_low",
+            #"race_white_alcohol_current_male_age_middle",
+            #"race_white_alcohol_current_male_age_high",
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
@@ -2032,32 +2059,32 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             #"male_age_low",
             #"male_age_middle",
             #"male_age_high",
-            #"identity_white_female_male",
-            #"identity_white_female",
-            #"identity_white_female_menstruation_regular",
-            #"identity_white_female_premenopause",
-            #"identity_white_female_perimenopause",
-            #"identity_white_female_postmenopause",
-            #"identity_white_male",
-            #"identity_white_male_age_low",
-            #"identity_white_male_age_middle",
-            #"identity_white_male_age_high",
+            #"race_white_female_male",
+            #"race_white_female",
+            #"race_white_female_menstruation_regular",
+            #"race_white_female_premenopause",
+            #"race_white_female_perimenopause",
+            #"race_white_female_postmenopause",
+            #"race_white_male",
+            #"race_white_male_age_low",
+            #"race_white_male_age_middle",
+            #"race_white_male_age_high",
             "bipolar_case_female_male",
             "bipolar_case_female",
             "bipolar_case_male",
             "bipolar_control_female_male",
             "bipolar_control_female",
             "bipolar_control_male",
-            #"identity_white_alcohol_current_female_male",
-            #"identity_white_alcohol_current_female",
-            #"identity_white_alcohol_current_female_menstruation_regular",
-            #"identity_white_alcohol_current_female_premenopause",
-            #"identity_white_alcohol_current_female_perimenopause",
-            #"identity_white_alcohol_current_female_postmenopause",
-            #"identity_white_alcohol_current_male",
-            #"identity_white_alcohol_current_male_age_low",
-            #"identity_white_alcohol_current_male_age_middle",
-            #"identity_white_alcohol_current_male_age_high",
+            #"race_white_alcohol_current_female_male",
+            #"race_white_alcohol_current_female",
+            #"race_white_alcohol_current_female_menstruation_regular",
+            #"race_white_alcohol_current_female_premenopause",
+            #"race_white_alcohol_current_female_perimenopause",
+            #"race_white_alcohol_current_female_postmenopause",
+            #"race_white_alcohol_current_male",
+            #"race_white_alcohol_current_male_age_low",
+            #"race_white_alcohol_current_male_age_middle",
+            #"race_white_alcohol_current_male_age_high",
         ]
         records_cohorts = utility.filter_records_by_name(
             names=names_cohorts,
