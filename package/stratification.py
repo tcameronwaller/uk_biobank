@@ -568,7 +568,7 @@ def drive_stratify_phenotype_cohorts_set_main(
         filter_stratification_cohort_records_by_exclusions(
             cohort_record_variable="cohort_exclusions",
             cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
-            records_cohorts=records_base,
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
@@ -581,7 +581,7 @@ def drive_stratify_phenotype_cohorts_set_main(
             filter_values=[1,],
             cohort_record_variable="cohort_race",
             cohort_record_value="white",
-            records_cohorts=records_base,
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
@@ -593,7 +593,7 @@ def drive_stratify_phenotype_cohorts_set_main(
             filter_values=[0,],
             cohort_record_variable="cohort_race",
             cohort_record_value="non_white",
-            records_cohorts=records_base,
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
@@ -605,7 +605,7 @@ def drive_stratify_phenotype_cohorts_set_main(
             filter_values=[1,],
             cohort_record_variable="cohort_genotypes",
             cohort_record_value="yes",
-            records_cohorts=records_base,
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
@@ -618,7 +618,7 @@ def drive_stratify_phenotype_cohorts_set_main(
             filter_values=[1,],
             cohort_record_variable="cohort_race",
             cohort_record_value="white",
-            records_cohorts=records_base_genotypes,
+            records_cohorts=copy.deepcopy(records_base_genotypes),
         )
     )
     records.extend(records_novel)
@@ -630,7 +630,7 @@ def drive_stratify_phenotype_cohorts_set_main(
             filter_values=[0,],
             cohort_record_variable="cohort_race",
             cohort_record_value="non_white",
-            records_cohorts=records_base_genotypes,
+            records_cohorts=copy.deepcopy(records_base_genotypes),
         )
     )
     records.extend(records_novel)
