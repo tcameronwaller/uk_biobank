@@ -1,4 +1,4 @@
-drive_stratify_phenotype_cohorts_set_main"""
+"""
 Describe variables from data of the U.K. Biobank.
 
 Author:
