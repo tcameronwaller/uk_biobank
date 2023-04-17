@@ -785,6 +785,14 @@ def drive_create_plots_histogram(
             )
             pass
         pass
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=3)
+        print("report: ")
+        print("drive_create_plots_histogram()")
+        utility.print_terminal_partition(level=4)
+        print("count of plots: " + str(len(pail.keys())))
+        pass
     # Return information.
     return pail
 
