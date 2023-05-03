@@ -1645,8 +1645,8 @@ def define_parameters_for_plots_groups_box():
     records = list()
 
     # Plots of Female and Male cohorts together.
-    records_both = define_parameters_box_plots_female_male()
-    records.extend(records_both)
+    #records_both = define_parameters_box_plots_female_male()
+    #records.extend(records_both)
 
     # Plots of Female cohorts separate.
     records_female = define_parameters_box_plots_female()
