@@ -196,6 +196,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "any"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "any"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -211,6 +212,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "any"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -227,6 +229,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "male"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "any"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -245,6 +248,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "menstruation"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -264,6 +268,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "premenopause"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -281,6 +286,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "perimenopause"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -298,6 +304,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "postmenopause"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -318,6 +325,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "young"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -335,6 +343,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "middle"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -352,6 +361,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "female"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "old"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -369,6 +379,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "male"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "young"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -386,6 +397,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "male"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "middle"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -403,6 +415,7 @@ def stratify_phenotype_cohorts_set_sex_age_menopause(
     record["cohort_genotypes"] = "any"
     record["cohort_sex"] = "male"
     record["cohort_race"] = "any"
+    record["cohort_ancestry"] = "any"
     record["cohort_life_stage"] = "old"
     record["cohort_exclusions"] = "none"
     table_cohort = table.copy(deep=True)
@@ -509,6 +522,67 @@ def filter_stratification_cohort_records_by_exclusions(
 # TODO: new variable will be "cohort_disorders": "bipolar_disorder", "alcoholism", "alcohol_ever", etc
 
 
+def filter_previous_stratification_cohort_records(
+    records_cohorts=None,
+    cohort_name=None,
+    cohort_phenotypes=None,
+    cohort_genotypes=None,
+    cohort_sex=None,
+    cohort_race=None,
+    cohort_ancestry=None,
+    cohort_life_stage=None,
+    cohort_exclusions=None,
+):
+    """
+    Filters tables within stratification cohort records by values of a single
+    nominal, categorical, or discrete variable.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        cohort_name (list<str>): "None" or values to keep
+        cohort_phenotypes (list<str>): "None" or values to keep
+        cohort_genotypes (list<str>): "None" or values to keep
+        cohort_sex (list<str>): "None" or values to keep
+        cohort_race (list<str>): "None" or values to keep
+        cohort_ancestry (list<str>): "None" or values to keep
+        cohort_life_stage (list<str>): "None" or values to keep
+        cohort_exclusions (list<str>): "None" or values to keep
+
+    raises:
+
+    returns:
+        (list<dict>): records with information about cohorts
+
+    """
+
+    # Prepare entry pairs.
+    entry_pairs = dict()
+    if cohort_name is not None:
+        entry_pairs["cohort_name"] = cohort_name
+    if cohort_phenotypes is not None:
+        entry_pairs["cohort_phenotypes"] = cohort_phenotypes
+    if cohort_genotypes is not None:
+        entry_pairs["cohort_genotypes"] = cohort_genotypes
+    if cohort_sex is not None:
+        entry_pairs["cohort_sex"] = cohort_sex
+    if cohort_race is not None:
+        entry_pairs["cohort_race"] = cohort_race
+    if cohort_ancestry is not None:
+        entry_pairs["cohort_ancestry"] = cohort_ancestry
+    if cohort_life_stage is not None:
+        entry_pairs["cohort_life_stage"] = cohort_life_stage
+    if cohort_exclusions is not None:
+        entry_pairs["cohort_exclusions"] = cohort_exclusions
+    # Filter records.
+    records_filter = utility.filter_records_by_multiple_keys(
+        entry_pairs=entry_pairs,
+        records=records_cohorts,
+        report=True,
+    )
+    # Return information.
+    return records_filter
+
+
 # "ancestry_white_british" <-- will need eventually
 # review: TCW; 23 February 2023
 def drive_stratify_phenotype_cohorts_set_main(
@@ -519,20 +593,22 @@ def drive_stratify_phenotype_cohorts_set_main(
     Stratify phenotype records in cohorts specifically for description tables.
 
     Variables in cohort record.
-    cohort_name: name of cohort   # necessary for description functions
+    cohort_name: name of cohort   # potential convenience for descriptions
     cohort_phenotypes: "any", "yes", "no"   # availability of records
     cohort_genotypes: "any", "yes", "no"   # availability of records
     cohort_sex: "any", "female", "male"
     cohort_race: "any", "white", etc   # ancestry, race, or ethnicity
+    cohort_ancestry: "any", "white", etc   # ancestry from formal genetics
     cohort_life_stage: "any", "young", "middle", "old", "menstruation",
       "premenopause", "perimenopause", "postmenopause", etc
-    cohort_exclusions: "none", "sex_aneuplidy;sex_discrepancy;pregnancy", etc
+    cohort_exclusions: "none", "sex_aneuploidy;sex_discrepancy;pregnancy", etc
 
     Variables (columns in table) relevant to each variable in cohort record.
     cohort_phenotypes: always "yes"
     cohort_genotypes: "genotype_availability"
     cohort_sex: "sex_text"
     cohort_race: "race_white"
+    cohort_ancestry: "ancestry_white_british"
     cohort_life_stage: "menopause_ordinal", "menstruation_regular_range",
       "age_grade_male"
     cohort_exclusions: "sex_chromosome_aneuploidy",
@@ -556,23 +632,15 @@ def drive_stratify_phenotype_cohorts_set_main(
     # Collect records of information about each cohort.
     records = list()
 
+    ##########
+    # Parent: Base
+
     # Standard, base stratifications by sex and stage of life.
     records_novel = stratify_phenotype_cohorts_set_sex_age_menopause(
         table=table,
     )
     records.extend(records_novel)
     records_base = copy.deepcopy(records_novel)
-
-    # Base; exclusions.
-    records_novel = (
-        filter_stratification_cohort_records_by_exclusions(
-            cohort_record_variable="cohort_exclusions",
-            cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
-            records_cohorts=copy.deepcopy(records_base),
-        )
-    )
-    records.extend(records_novel)
-    records_base_exclusions = copy.deepcopy(records_novel)
 
     # Base; race white.
     records_novel = (
@@ -635,6 +703,57 @@ def drive_stratify_phenotype_cohorts_set_main(
     )
     records.extend(records_novel)
 
+    ##########
+    # Parent: Base; Genotypes; Exclusions
+
+    # Base; Genotypes; Exclusions.
+    records_novel = (
+        filter_stratification_cohort_records_by_exclusions(
+            cohort_record_variable="cohort_exclusions",
+            cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
+            records_cohorts=copy.deepcopy(records_base_genotypes),
+        )
+    )
+    records.extend(records_novel)
+    records_base_genotypes_exclusions = copy.deepcopy(records_novel)
+
+    # Base; exclusions; race white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[1,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="white",
+            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        )
+    )
+    records.extend(records_novel)
+
+    # Base; exclusions; race non-white.
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="race_white",
+            filter_values=[0,],
+            cohort_record_variable="cohort_race",
+            cohort_record_value="non_white",
+            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        )
+    )
+    records.extend(records_novel)
+
+    # Base; Exclusions; Ancestry "White British".
+    records_novel = (
+        filter_stratification_cohort_records_by_single_variable_values(
+            filter_variable="ancestry_white_british",
+            filter_values=[1,],
+            cohort_record_variable="cohort_ancestry",
+            cohort_record_value="white",
+            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        )
+    )
+    records.extend(records_novel)
+
+
     # Report.
     if report:
         utility.print_terminal_partition(level=2)
@@ -652,10 +771,7 @@ def drive_stratify_phenotype_cohorts_set_main(
 
 
 
-
-
-
-
+# Old stuff below here??? ###
 
 
 def stratify_phenotype_cohorts_set_special_sex_age_menopause(
