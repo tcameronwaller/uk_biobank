@@ -826,15 +826,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -867,15 +867,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -908,15 +908,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -949,15 +949,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -990,15 +990,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1031,15 +1031,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1072,15 +1072,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1113,15 +1113,15 @@ def define_parameters_box_plots_female_male():
     record["aspect"] = "portrait"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1176,11 +1176,11 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
-        #"ancestry_white_female_menstruation_regular",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
+        #"race_white_female_menstruation_regular",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1205,10 +1205,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1232,10 +1232,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1259,10 +1259,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1286,10 +1286,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1313,10 +1313,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1340,10 +1340,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1367,10 +1367,10 @@ def define_parameters_box_plots_female():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_female",
-        "ancestry_white_female_premenopause",
-        "ancestry_white_female_perimenopause",
-        "ancestry_white_female_postmenopause",
+        "race_white_female",
+        "race_white_female_premenopause",
+        "race_white_female_perimenopause",
+        "race_white_female_postmenopause",
     ]
     record["titles_abscissa_groups"] = [
         "Female-All",
@@ -1416,10 +1416,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1443,10 +1443,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1470,10 +1470,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1497,10 +1497,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1524,10 +1524,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1551,10 +1551,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1578,10 +1578,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -1605,10 +1605,10 @@ def define_parameters_box_plots_male():
     record["aspect"] = "portrait_half_width"
     record["orientation_box"] = "vertical"
     record["cohorts_groups"] = [
-        "ancestry_white_male",
-        "ancestry_white_male_age_low",
-        "ancestry_white_male_age_middle",
-        "ancestry_white_male_age_high",
+        "race_white_male",
+        "race_white_male_age_low",
+        "race_white_male_age_middle",
+        "race_white_male_age_high",
     ]
     record["titles_abscissa_groups"] = [
         "Male-All",
@@ -2259,6 +2259,8 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     # Return information
     return pail_cohorts
 
+# TODO: TCW; 3 May 2023
+# TODO: Start Here.
 
 def create_plots_for_phenotype_variables_in_cohorts(
     set_cohorts=None,
@@ -3203,7 +3205,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW, 6 October 2022")
+    print("version check: TCW; 3 May 2023")
     # Pause procedure.
     time.sleep(5.0)
 
@@ -3216,16 +3218,16 @@ def execute_procedure(
     # Create new description plots from phenotype tables for cohorts.
     create_plots_for_phenotype_variables_in_cohorts(
         set_cohorts="phenotype", # could change this...
-        set_plots=[], # ["box", "histogram", "dot_trajectory_menstruation",]
+        set_plots=["box",], # ["box", "histogram", "dot_trajectory_menstruation",]
         paths=paths,
         report=True,
     )
     # Create new description plots from summary tables for previous analyses.
-    create_plots_for_analysis_summaries(
-        set_plots=["forest_correlations",], # ["forest_regressions", "forest_correlations",],
-        paths=paths,
-        report=True,
-    )
+    #create_plots_for_analysis_summaries(
+    #    set_plots=["forest_correlations",], # ["forest_regressions", "forest_correlations",],
+    #    paths=paths,
+    #    report=True,
+    #)
 
     pass
 

@@ -163,7 +163,7 @@ import promiscuity.scale as pscale
 ##########
 # Phenotype cohorts
 # Cohort, model selection: sets for descriptions of phenotypes within cohorts
-
+# Review: TCW; 3 May 2023
 
 # review: TCW; 23 February 2023
 def stratify_phenotype_cohorts_set_sex_age_menopause(
@@ -792,9 +792,17 @@ def drive_stratify_phenotype_cohorts_set_main(
     return records
 
 
+##########
+# Phenotype cohorts
+# Special set for plotting functions. Probably temporary until plotting cohort
+# specification becomes more sophisticated as in the description tables.
+# Review: TCW; 3 May 2023
 
 
 
+
+
+##########
 # Old stuff below here??? ###
 
 
