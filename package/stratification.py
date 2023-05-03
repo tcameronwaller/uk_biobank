@@ -642,31 +642,7 @@ def drive_stratify_phenotype_cohorts_set_main(
     records.extend(records_novel)
     records_base = copy.deepcopy(records_novel)
 
-    # Base; race white.
-    records_novel = (
-        filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
-            filter_values=[1,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="white",
-            records_cohorts=copy.deepcopy(records_base),
-        )
-    )
-    records.extend(records_novel)
-
-    # Base; race non-white.
-    records_novel = (
-        filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
-            filter_values=[0,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="non_white",
-            records_cohorts=copy.deepcopy(records_base),
-        )
-    )
-    records.extend(records_novel)
-
-    # Base; genotypes.
+    # Base; Genotypes.
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
             filter_variable="genotype_availability",
@@ -679,79 +655,108 @@ def drive_stratify_phenotype_cohorts_set_main(
     records.extend(records_novel)
     records_base_genotypes = copy.deepcopy(records_novel)
 
-    # Base; genotypes; race white.
+    # Base; Race white.
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
             filter_variable="race_white",
             filter_values=[1,],
             cohort_record_variable="cohort_race",
             cohort_record_value="white",
-            records_cohorts=copy.deepcopy(records_base_genotypes),
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
 
-    # Base; genotypes; race non-white.
+    # Base; Race non-white.
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
             filter_variable="race_white",
             filter_values=[0,],
             cohort_record_variable="cohort_race",
             cohort_record_value="non_white",
-            records_cohorts=copy.deepcopy(records_base_genotypes),
+            records_cohorts=copy.deepcopy(records_base),
         )
     )
     records.extend(records_novel)
 
     ##########
+    # Parent: Base; Genotypes
+    if False:
+
+        # Base; genotypes; race white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[1,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="white",
+                records_cohorts=copy.deepcopy(records_base_genotypes),
+            )
+        )
+        records.extend(records_novel)
+
+        # Base; genotypes; race non-white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[0,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="non_white",
+                records_cohorts=copy.deepcopy(records_base_genotypes),
+            )
+        )
+        records.extend(records_novel)
+
+    ##########
     # Parent: Base; Genotypes; Exclusions
+    if True:
 
-    # Base; Genotypes; Exclusions.
-    records_novel = (
-        filter_stratification_cohort_records_by_exclusions(
-            cohort_record_variable="cohort_exclusions",
-            cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
-            records_cohorts=copy.deepcopy(records_base_genotypes),
+        # Base; Genotypes; Exclusions.
+        records_novel = (
+            filter_stratification_cohort_records_by_exclusions(
+                cohort_record_variable="cohort_exclusions",
+                cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
+                records_cohorts=copy.deepcopy(records_base_genotypes),
+            )
         )
-    )
-    records.extend(records_novel)
-    records_base_genotypes_exclusions = copy.deepcopy(records_novel)
+        records.extend(records_novel)
+        records_base_geno_exclusions = copy.deepcopy(records_novel)
 
-    # Base; exclusions; race white.
-    records_novel = (
-        filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
-            filter_values=[1,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="white",
-            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        # Base; exclusions; race white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[1,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="white",
+                records_cohorts=copy.deepcopy(records_base_geno_exclusions),
+            )
         )
-    )
-    records.extend(records_novel)
+        records.extend(records_novel)
 
-    # Base; exclusions; race non-white.
-    records_novel = (
-        filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
-            filter_values=[0,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="non_white",
-            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        # Base; exclusions; race non-white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[0,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="non_white",
+                records_cohorts=copy.deepcopy(records_base_geno_exclusions),
+            )
         )
-    )
-    records.extend(records_novel)
+        records.extend(records_novel)
 
-    # Base; Exclusions; Ancestry "White British".
-    records_novel = (
-        filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="ancestry_white_british",
-            filter_values=[1,],
-            cohort_record_variable="cohort_ancestry",
-            cohort_record_value="white",
-            records_cohorts=copy.deepcopy(records_base_genotypes_exclusions),
+        # Base; Exclusions; Ancestry "White British".
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="ancestry_white_british",
+                filter_values=[1,],
+                cohort_record_variable="cohort_ancestry",
+                cohort_record_value="white",
+                records_cohorts=copy.deepcopy(records_base_geno_exclusions),
+            )
         )
-    )
-    records.extend(records_novel)
+        records.extend(records_novel)
 
 
     # Report.
