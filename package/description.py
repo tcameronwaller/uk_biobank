@@ -466,7 +466,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "ancestry_white_british"
-    if False:
+    if True:
 
         record = dict()
         record["name"] = "ancestry_white_british_0"
@@ -497,7 +497,7 @@ def define_variables_table_attribution():
 
 
     # Variable: "pregnancy"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "pregnancy_0"
@@ -545,7 +545,7 @@ def define_variables_table_attribution():
 
 
     # Variable: "hysterectomy"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "hysterectomy_0"
@@ -560,7 +560,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "oophorectomy"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "oophorectomy_0"
@@ -2322,7 +2322,7 @@ def execute_procedure(
     # Report version.
     utility.print_terminal_partition(level=1)
     print(path_dock)
-    print("version check: TCW, 12 December 2022")
+    print("version check: TCW; 3 May 2023")
     # Pause procedure.
     time.sleep(5.0)
 
