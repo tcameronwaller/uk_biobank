@@ -875,6 +875,112 @@ def organize_description_table_attribution(
 
 
 ##########
+# Quantitation Table
+# Cohort, model, phenotype description
+##########
+
+
+def define_variables_table_quantitation():
+    """
+    Defines discrete or continuous variables on ordinal, interval, or ratio
+    scales for description in quantitation table.
+
+    arguments:
+
+    raises:
+
+    returns:
+        (list<str>): names of variables
+
+    """
+
+    # Define variables.
+    variables = [
+        "age", "body",
+        #"albumin",
+        #"albumin_imputation",
+        #"steroid_globulin",
+        #"steroid_globulin_imputation",
+        #"cholesterol", "cholesterol_imputation",
+        #"vitamin_d",
+        #"vitamin_d_imputation",
+        #"oestradiol",
+        #"oestradiol_imputation",
+        #"oestradiol_bioavailable",
+        #"oestradiol_bioavailable_imputation",
+        #"oestradiol_free",
+        #"oestradiol_free_imputation",
+        #"testosterone",
+        #"testosterone_imputation",
+        #"testosterone_bioavailable",
+        #"testosterone_bioavailable_imputation",
+        #"testosterone_free",
+        #"testosterone_free_imputation",
+        #"menstruation_days", "menstruation_duration",
+        #"pregnancies", "pregnancies_early", "births",
+        #"age_menarche", # necessary data-field is unavailable
+        #"age_menopause_self_report",
+        #"age_menopause_never_oophorectomy",
+        #"age_oophorectomy", "age_hysterectomy",
+        #"neuroticism",
+        #"alcohol_frequency",
+        #"alcohol_drinks_weekly", "alcohol_drinks_monthly",
+        #"alcohol_drinks_monthly_combination",
+        #"alcohol_auditc", "alcohol_auditp", "alcohol_audit",
+    ]
+
+    # Return information
+    return variables
+
+
+def organize_description_table_quantitation(
+    records_cohorts=None,
+    report=None,
+):
+    """
+    Drives the assembly of a description table from records of quantitative
+    descriptive statistics on variables of interest.
+
+    These descriptive statistics are most appropriate for continuous variables
+    on interval, or ratio scales, but they can also be informative for discrete
+    variables on ordinal scales.
+
+    arguments:
+        records_cohorts (list<dict>): records with information about cohorts
+        report (bool): whether to print reports
+
+    raises:
+
+    returns:
+        (object): Pandas data frame of missingness of hormones in cohorts
+
+    """
+
+    # Define variables.
+    variables = define_variables_table_quantitation()
+    # Create a table from records of quantitation.
+    table_quantitation = pdesc.drive_assemble_quantitation_table(
+        variables=variables,
+        variable_attribution="genotype_availability",
+        value_attribution=1,
+        records_cohorts=records_cohorts,
+        report=report,
+    )
+
+    # Report.
+    if report:
+        utility.print_terminal_partition(level=2)
+        print("report: ")
+        print("organize_description_table_quantitation()")
+        utility.print_terminal_partition(level=3)
+        pass
+    # Return information.
+    return table_quantitation
+
+
+
+
+##########
 # Missingness Table
 # Measurement missingness percentages across cohorts
 ##########
@@ -1544,110 +1650,6 @@ def organize_cohorts_hormone_deficiency(
 
 
 ##########
-# Quantitation Table
-# Cohort, model, phenotype description
-##########
-
-
-def define_variables_table_quantitation():
-    """
-    Defines discrete or continuous variables on ordinal, interval, or ratio
-    scales for description in quantitation table.
-
-    arguments:
-
-    raises:
-
-    returns:
-        (list<str>): names of variables
-
-    """
-
-    # Define variables.
-    variables = [
-        "age", "body",
-        #"albumin",
-        "albumin_imputation",
-        #"steroid_globulin",
-        "steroid_globulin_imputation",
-        #"cholesterol", "cholesterol_imputation",
-        #"vitamin_d",
-        "vitamin_d_imputation",
-        #"oestradiol",
-        "oestradiol_imputation",
-        #"oestradiol_bioavailable",
-        "oestradiol_bioavailable_imputation",
-        #"oestradiol_free",
-        "oestradiol_free_imputation",
-        #"testosterone",
-        "testosterone_imputation",
-        #"testosterone_bioavailable",
-        "testosterone_bioavailable_imputation",
-        #"testosterone_free",
-        "testosterone_free_imputation",
-        #"menstruation_days", "menstruation_duration",
-        #"pregnancies", "pregnancies_early", "births",
-        #"age_menarche", # necessary data-field is unavailable
-        #"age_menopause_self_report",
-        #"age_menopause_never_oophorectomy",
-        #"age_oophorectomy", "age_hysterectomy",
-        #"neuroticism",
-        #"alcohol_frequency",
-        #"alcohol_drinks_weekly", "alcohol_drinks_monthly",
-        "alcohol_drinks_monthly_combination",
-        "alcohol_auditc", "alcohol_auditp", "alcohol_audit",
-    ]
-
-    # Return information
-    return variables
-
-
-def organize_description_table_quantitation(
-    records_cohorts=None,
-    report=None,
-):
-    """
-    Drives the assembly of a description table from records of quantitative
-    descriptive statistics on variables of interest.
-
-    These descriptive statistics are most appropriate for continuous variables
-    on interval, or ratio scales, but they can also be informative for discrete
-    variables on ordinal scales.
-
-    arguments:
-        records_cohorts (list<dict>): records with information about cohorts
-        report (bool): whether to print reports
-
-    raises:
-
-    returns:
-        (object): Pandas data frame of missingness of hormones in cohorts
-
-    """
-
-    # Define variables.
-    variables = define_variables_table_quantitation()
-    # Create a table from records of quantitation.
-    table_quantitation = pdesc.drive_assemble_quantitation_table(
-        variables=variables,
-        variable_attribution="genotype_availability",
-        value_attribution=1,
-        records_cohorts=records_cohorts,
-        report=report,
-    )
-
-    # Report.
-    if report:
-        utility.print_terminal_partition(level=2)
-        print("report: ")
-        print("organize_description_table_quantitation()")
-        utility.print_terminal_partition(level=3)
-        pass
-    # Return information.
-    return table_quantitation
-
-
-##########
 # Other Tables
 # Not currently in use
 ##########
@@ -2283,8 +2285,8 @@ def execute_procedure(
         create_tables_for_phenotype_variables_in_cohorts(
             set_cohorts="phenotype",
             set_tables=[
-                "attribution",
-            ], # "attribution", "missingness", "threshold", "quantitation",
+                "attribution", "quantitation",
+            ], # "attribution", "quantitation", "missingness", "threshold",
             paths=paths,
             report=True,
         )
