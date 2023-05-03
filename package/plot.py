@@ -852,10 +852,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -893,10 +893,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -934,10 +934,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -975,10 +975,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1016,10 +1016,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1057,10 +1057,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1098,10 +1098,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1139,10 +1139,10 @@ def define_parameters_box_plots_female_male():
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
         (0.196, 0.588, 1.0, 1.0), # "blue_sky"
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1428,10 +1428,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1455,10 +1455,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1482,10 +1482,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1509,10 +1509,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1536,10 +1536,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1563,10 +1563,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1590,10 +1590,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
@@ -1617,10 +1617,10 @@ def define_parameters_box_plots_male():
         "Male-Older",
     ]
     record["colors_groups"] = [
-        (0.510, 0.039, 0.118, 1.0) # "red_burgundy"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
-        (0.784, 0.118, 0.196, 1.0) # "red_crimson"
+        (0.510, 0.039, 0.118, 1.0), # "red_burgundy"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
+        (0.784, 0.118, 0.196, 1.0), # "red_crimson"
     ]
     records.append(record)
 
