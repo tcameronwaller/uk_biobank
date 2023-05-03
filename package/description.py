@@ -394,8 +394,8 @@ def define_variables_table_attribution():
     records = list()
 
     # General variables.
-    if True:
 
+    if False:
         # Variable: "sex_text"
 
         record = dict()
@@ -422,7 +422,8 @@ def define_variables_table_attribution():
         record["value"] = 1 # categorical or discrete value of variable
         records.append(record)
 
-        # Variable: "race_white"
+    # Variable: "race_white"
+    if True:
 
         record = dict()
         record["name"] = "race_white"
@@ -436,7 +437,8 @@ def define_variables_table_attribution():
         record["value"] = 0 # categorical or discrete value of variable
         records.append(record)
 
-        # Variable: "genotype_availability"
+    # Variable: "genotype_availability"
+    if True:
 
         record = dict()
         record["name"] = "genotype_availability_0"
@@ -481,7 +483,7 @@ def define_variables_table_attribution():
         records.append(record)
 
     # Variable: "alteration_sex_hormone"
-    if True:
+    if False:
 
         record = dict()
         record["name"] = "alteration_sex_hormone_0"
