@@ -1958,17 +1958,18 @@ def prepare_phenotype_variables_in_stratification_cohorts(
     pail_cohorts = dict()
 
     # Prepare phenotype variables in stratification cohorts specific to each
-    # type of plot.
+    # type of table.
+
+    # Attribution Table.
     if ("attribution" in set_tables):
         # Initialize collection.
         records_cohorts = list()
-        # Attribution Table.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_main(
                 table=table,
         ))
-        # Filter relevant cohorts.
+        # Filter records by multiple keys.
         records_cohorts = (
             ukb_strat.filter_previous_stratification_cohort_records(
                 records_cohorts=records_cohorts,
@@ -1985,45 +1986,9 @@ def prepare_phenotype_variables_in_stratification_cohorts(
                 ],
                 cohort_exclusions=["sex_aneuploidy;sex_discrepancy;pregnancy",],
         ))
+        # Filter records by name.
         if False:
-            names_cohorts = [
-                #"female_male",
-                #"female",
-                #"female_menstruation_regular",
-                #"female_premenopause",
-                #"female_perimenopause",
-                #"female_postmenopause",
-                #"male",
-                #"male_age_low",
-                #"male_age_middle",
-                #"male_age_high",
-                #"race_white_female_male",
-                "race_white_female",
-                #"race_white_female_menstruation_regular",
-                "race_white_female_premenopause",
-                "race_white_female_perimenopause",
-                "race_white_female_postmenopause",
-                "race_white_male",
-                "race_white_male_age_low",
-                "race_white_male_age_middle",
-                "race_white_male_age_high",
-                #"bipolar_case_female_male",
-                #"bipolar_case_female",
-                #"bipolar_case_male",
-                #"bipolar_control_female_male",
-                #"bipolar_control_female",
-                #"bipolar_control_male",
-                #"race_white_alcohol_current_female_male",
-                #"race_white_alcohol_current_female",
-                #"race_white_alcohol_current_female_menstruation_regular",
-                #"race_white_alcohol_current_female_premenopause",
-                #"race_white_alcohol_current_female_perimenopause",
-                #"race_white_alcohol_current_female_postmenopause",
-                #"race_white_alcohol_current_male",
-                #"race_white_alcohol_current_male_age_low",
-                #"race_white_alcohol_current_male_age_middle",
-                #"race_white_alcohol_current_male_age_high",
-            ]
+            names_cohorts = ["female_male",]
             records_cohorts = utility.filter_records_by_name(
                 names=names_cohorts,
                 records=records_cohorts,
@@ -2031,70 +1996,33 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             )
         # Collect information.
         pail_cohorts["attribution"] = copy.deepcopy(records_cohorts)
-    if ("missingness" in set_tables):
-        # Initialize collection.
-        records_cohorts = list()
-        # Box plots for groups.
-        records_cohorts = (
-            ukb_strat.drive_stratify_phenotype_cohorts_set_main(
-                table=table,
-        ))
-        # Collect information.
-        pail_cohorts["missingness"] = copy.deepcopy(records_cohorts)
+
+    # Quantitation Table.
     if ("quantitation" in set_tables):
         # Initialize collection.
         records_cohorts = list()
-        # Attribution Table.
         # Stratify records within separate tables for cohorts.
         records_cohorts = (
             ukb_strat.drive_stratify_phenotype_cohorts_set_main(
                 table=table,
         ))
-        # Filter relevant cohorts.
-        if False:
-            names_cohorts = [
-                #"female_male",
-                #"female",
-                #"female_menstruation_regular",
-                #"female_premenopause",
-                #"female_perimenopause",
-                #"female_postmenopause",
-                #"male",
-                #"male_age_low",
-                #"male_age_middle",
-                #"male_age_high",
-                #"race_white_female_male",
-                #"race_white_female",
-                #"race_white_female_menstruation_regular",
-                #"race_white_female_premenopause",
-                #"race_white_female_perimenopause",
-                #"race_white_female_postmenopause",
-                #"race_white_male",
-                #"race_white_male_age_low",
-                #"race_white_male_age_middle",
-                #"race_white_male_age_high",
-                "bipolar_case_female_male",
-                "bipolar_case_female",
-                "bipolar_case_male",
-                "bipolar_control_female_male",
-                "bipolar_control_female",
-                "bipolar_control_male",
-                #"race_white_alcohol_current_female_male",
-                #"race_white_alcohol_current_female",
-                #"race_white_alcohol_current_female_menstruation_regular",
-                #"race_white_alcohol_current_female_premenopause",
-                #"race_white_alcohol_current_female_perimenopause",
-                #"race_white_alcohol_current_female_postmenopause",
-                #"race_white_alcohol_current_male",
-                #"race_white_alcohol_current_male_age_low",
-                #"race_white_alcohol_current_male_age_middle",
-                #"race_white_alcohol_current_male_age_high",
-            ]
-            records_cohorts = utility.filter_records_by_name(
-                names=names_cohorts,
-                records=records_cohorts,
-                report=True,
-            )
+        # Filter records by multiple keys.
+        records_cohorts = (
+            ukb_strat.filter_previous_stratification_cohort_records(
+                records_cohorts=records_cohorts,
+                cohort_name=None,
+                cohort_phenotypes=["yes",],
+                cohort_genotypes=["yes",],
+                cohort_sex=["any", "female", "male",],
+                cohort_race=["any", "white", "non_white",],
+                cohort_ancestry=["white",],
+                cohort_life_stage=[
+                    "any",
+                    "premenopause", "perimenopause", "postmenopause",
+                    "young", "middle", "old",
+                ],
+                cohort_exclusions=["sex_aneuploidy;sex_discrepancy;pregnancy",],
+        ))
         # Apply Distribution Scale Transformations to variables of interest in
         # each cohort.
         if False:
@@ -2120,6 +2048,18 @@ def prepare_phenotype_variables_in_stratification_cohorts(
             ))
         # Collect information.
         pail_cohorts["quantitation"] = copy.deepcopy(records_cohorts)
+
+    # Missingness Table.
+    if ("missingness" in set_tables):
+        # Initialize collection.
+        records_cohorts = list()
+        # Stratify records within separate tables for cohorts.
+        records_cohorts = (
+            ukb_strat.drive_stratify_phenotype_cohorts_set_main(
+                table=table,
+        ))
+        # Collect information.
+        pail_cohorts["missingness"] = copy.deepcopy(records_cohorts)
         pass
     # Return information
     return pail_cohorts

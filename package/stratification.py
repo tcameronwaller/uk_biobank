@@ -633,7 +633,7 @@ def drive_stratify_phenotype_cohorts_set_main(
     records = list()
 
     ##########
-    # Parent: Base
+    # Base
 
     # Standard, base stratifications by sex and stage of life.
     records_novel = stratify_phenotype_cohorts_set_sex_age_menopause(
@@ -642,7 +642,18 @@ def drive_stratify_phenotype_cohorts_set_main(
     records.extend(records_novel)
     records_base = copy.deepcopy(records_novel)
 
-    # Base; Genotypes.
+    # Base; Exclusions;
+    records_novel = (
+        filter_stratification_cohort_records_by_exclusions(
+            cohort_record_variable="cohort_exclusions",
+            cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
+            records_cohorts=copy.deepcopy(records_base),
+        )
+    )
+    records.extend(records_novel)
+    records_base_exclusions = copy.deepcopy(records_novel)
+
+    # Base; Genotypes;
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
             filter_variable="genotype_availability",
@@ -655,29 +666,61 @@ def drive_stratify_phenotype_cohorts_set_main(
     records.extend(records_novel)
     records_base_genotypes = copy.deepcopy(records_novel)
 
-    # Base; Race white.
+    # Base; Exclusions; Genotypes;
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
+            filter_variable="genotype_availability",
             filter_values=[1,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="white",
-            records_cohorts=copy.deepcopy(records_base),
+            cohort_record_variable="cohort_genotypes",
+            cohort_record_value="yes",
+            records_cohorts=copy.deepcopy(records_base_exclusions),
         )
     )
     records.extend(records_novel)
+    records_base_exclusions_geno = copy.deepcopy(records_novel)
 
-    # Base; Race non-white.
+    # Base; Exclusions; Genotypes; Ancestry-White
     records_novel = (
         filter_stratification_cohort_records_by_single_variable_values(
-            filter_variable="race_white",
-            filter_values=[0,],
-            cohort_record_variable="cohort_race",
-            cohort_record_value="non_white",
-            records_cohorts=copy.deepcopy(records_base),
+            filter_variable="ancestry_white_british",
+            filter_values=[1,],
+            cohort_record_variable="cohort_ancestry",
+            cohort_record_value="white",
+            records_cohorts=copy.deepcopy(records_base_exclusions_geno),
         )
     )
     records.extend(records_novel)
+    records_base_excl_geno_antrywhite = copy.deepcopy(records_novel)
+
+
+
+    ##########
+    # Parent: Base
+    if False:
+
+        # Base; Race white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[1,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="white",
+                records_cohorts=copy.deepcopy(records_base),
+            )
+        )
+        records.extend(records_novel)
+
+        # Base; Race non-white.
+        records_novel = (
+            filter_stratification_cohort_records_by_single_variable_values(
+                filter_variable="race_white",
+                filter_values=[0,],
+                cohort_record_variable="cohort_race",
+                cohort_record_value="non_white",
+                records_cohorts=copy.deepcopy(records_base),
+            )
+        )
+        records.extend(records_novel)
 
     ##########
     # Parent: Base; Genotypes
@@ -709,18 +752,7 @@ def drive_stratify_phenotype_cohorts_set_main(
 
     ##########
     # Parent: Base; Genotypes; Exclusions
-    if True:
-
-        # Base; Genotypes; Exclusions.
-        records_novel = (
-            filter_stratification_cohort_records_by_exclusions(
-                cohort_record_variable="cohort_exclusions",
-                cohort_record_value="sex_aneuploidy;sex_discrepancy;pregnancy",
-                records_cohorts=copy.deepcopy(records_base_genotypes),
-            )
-        )
-        records.extend(records_novel)
-        records_base_geno_exclusions = copy.deepcopy(records_novel)
+    if False:
 
         # Base; exclusions; race white.
         records_novel = (
@@ -745,19 +777,6 @@ def drive_stratify_phenotype_cohorts_set_main(
             )
         )
         records.extend(records_novel)
-
-        # Base; Exclusions; Ancestry "White British".
-        records_novel = (
-            filter_stratification_cohort_records_by_single_variable_values(
-                filter_variable="ancestry_white_british",
-                filter_values=[1,],
-                cohort_record_variable="cohort_ancestry",
-                cohort_record_value="white",
-                records_cohorts=copy.deepcopy(records_base_geno_exclusions),
-            )
-        )
-        records.extend(records_novel)
-
 
     # Report.
     if report:
