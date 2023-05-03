@@ -1973,8 +1973,8 @@ def prepare_phenotype_variables_in_stratification_cohorts(
                 cohort_name=None,
                 cohort_phenotypes=["yes",],
                 cohort_genotypes=["yes",],
-                cohort_sex=["any",],
-                cohort_race=["any", "white",],
+                cohort_sex=["any", "female", "male",],
+                cohort_race=["any", "white", "non_white",],
                 cohort_ancestry=["white",],
                 cohort_life_stage=[
                     "any",
