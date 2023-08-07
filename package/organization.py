@@ -64,9 +64,9 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import networkx
 
 # Custom
-import promiscuity.utility as utility
-import promiscuity.scale as pscale
-import promiscuity.decomposition as decomp
+import partner.utility as utility
+import partner.scale as pscale
+import partner.decomposition as decomp
 import uk_biobank.stratification as ukb_strat # problem when executing uk_biobank not as sub-directory...
 
 ###############################################################################
@@ -13610,7 +13610,7 @@ def specify_self_alcoholism_diagnosis_codes():
 
 # TODO: TCW 14 September 2021
 # TODO: I could possibly rewrite this more efficiently using "any()" and "filter()"
-# TODO: the matching driver function in 'promiscuity.utility' could return TRUE as soon as it finds the first match
+# TODO: the matching driver function in 'partner.utility' could return TRUE as soon as it finds the first match
 
 
 def parse_interpret_match_diagnosis_codes(

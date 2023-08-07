@@ -45,8 +45,8 @@ import pandas
 import scipy.stats
 
 # Custom
-import promiscuity.utility as utility
-#import promiscuity.plot as plot
+import partner.utility as utility
+#import partner.plot as plot
 
 ###############################################################################
 # Functionality

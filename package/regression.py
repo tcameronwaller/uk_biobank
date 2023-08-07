@@ -61,9 +61,9 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import networkx
 
 # Custom
-import promiscuity.utility as utility
-import promiscuity.regression as pro_reg
-import promiscuity.decomposition as decomp
+import partner.utility as utility
+import partner.regression as pro_reg
+import partner.decomposition as decomp
 import uk_biobank.stratification as ukb_strat # problem when executing uk_biobank not as sub-directory...
 
 ###############################################################################

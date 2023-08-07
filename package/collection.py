@@ -42,13 +42,13 @@ import pandas
 import scipy.stats
 
 # Custom
-import promiscuity.utility as utility
+import partner.utility as utility
 
 ###############################################################################
 # Functionality
 
 # TODO: TCW; 23 November 2022
-# TODO: Some functionality herein will move to "promiscuity.extraction".
+# TODO: Some functionality herein will move to "partner.extraction".
 
 # TODO: TCW; 14 July 2022
 # TODO: For convenience in preparing the table(s) for the article, I'd like to change the format of the summaries, especially for heritability.
@@ -329,9 +329,9 @@ def read_collect_organize_stratification_designs_studies(
 
 
 # TODO: TCW; 23 November 2022
-# TODO: this function needs to be split up... write new function in "promiscuity.extraction" that includes basics...
+# TODO: this function needs to be split up... write new function in "partner.extraction" that includes basics...
 # previous function name: "read_extract_heritability_design_study_detail()"
-# moved to promiscuity.extraction on 28 November 2022
+# moved to partner.extraction on 28 November 2022
 # simplify the function, do not collect study or design name within the new function
 #    record["design"] = design
 #    record["study"] = study
@@ -598,7 +598,7 @@ def define_cohort_names_to_extract_from_table_names():
 
 # TODO: TCW; 28 November 2022
 # previous function name: "read_extract_correlation_design_study_pair_detail()"
-# moved to promiscuity.extraction on 28 November 2022
+# moved to partner.extraction on 28 November 2022
 # simplify the function, do not collect study or design name within the new function
 #    record["design"] = design
 #    record["study"] = study

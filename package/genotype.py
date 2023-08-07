@@ -61,8 +61,8 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import networkx
 
 # Custom
-import promiscuity.utility as utility
-import promiscuity.scale as pscale
+import partner.utility as utility
+import partner.scale as pscale
 
 ###############################################################################
 # Functionality

@@ -46,8 +46,8 @@ import scipy.linalg
 import statsmodels.multivariate.pca
 
 # Custom
-import promiscuity.utility as utility
-#import promiscuity.plot as plot
+import partner.utility as utility
+#import partner.plot as plot
 
 ###############################################################################
 # Functionality

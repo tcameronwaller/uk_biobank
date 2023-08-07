@@ -62,11 +62,11 @@ pandas.options.mode.chained_assignment = None # default = "warn"
 import networkx
 
 # Custom
-import promiscuity.utility as utility
-import promiscuity.regression as pro_reg
-import promiscuity.plot as plot
-import promiscuity.scale as pscale
-import promiscuity.description as pdesc
+import partner.utility as utility
+import partner.regression as pro_reg
+import partner.plot as plot
+import partner.scale as pscale
+import partner.description as pdesc
 import uk_biobank.stratification as ukb_strat
 import uk_biobank.organization as ukb_organization
 
@@ -75,14 +75,14 @@ import uk_biobank.organization as ukb_organization
 
 #####
 # TODO: TCW; 13 December 2022
-# It might be reasonable to move some of the functionality herein to the "promiscuity.utility" module
-# or to another module such as "promiscuity.description" (descriptive statistics, report summary tables, etc).
+# It might be reasonable to move some of the functionality herein to the "partner.utility" module
+# or to another module such as "partner.description" (descriptive statistics, report summary tables, etc).
 # For example, the main record function for the quantitation table would be generally useful.
 #####
 
 # TODO: TCW; 15 December 2022
-# Restructure to move the "attribution record" and "quantitation record" functions to "promiscuity".
-# Also move the driver functions that assemble the tables to "promiscuity".
+# Restructure to move the "attribution record" and "quantitation record" functions to "partner".
+# Also move the driver functions that assemble the tables to "partner".
 # These driver functions can accept the list of cohorts and the parameters for reports on variables.
 
 
